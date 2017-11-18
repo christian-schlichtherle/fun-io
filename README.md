@@ -68,13 +68,13 @@ Again, note that the `store` and `connectedCodec` objects are virtually stateles
 
 Fun I/O has a modular architecture, providing the following modules:
 
-+ fun-io-api: The API provides interfaces for loans, stores, transformations, codecs et al, but no implementations.
-+ fun-io-scala-api: The Scala API wraps the Java API to enhance the syntax with a domain specific language (DSL).
-+ fun-io-bios: The Basic I/O System (pun intended) provides essential implementations for encoding, transforming, 
++ `fun-io-api`: The API provides interfaces for loans, stores, transformations, codecs et al, but no implementations.
++ `fun-io-scala-api`: The Scala API wraps the Java API to enhance the syntax with a domain specific language (DSL).
++ `fun-io-bios`: The Basic I/O System (pun intended) provides essential implementations for encoding, transforming, 
   storing or streaming content.
-+ fun-io-jackson: Depends on [Jackson Databind] to provide a JSON codec.
-+ fun-io-commons-codec: Depends on [Apache Commons Compress] to provide many compression transformations. 
-+ fun-io-xz: Depends on [XZ for Java] to provide the LZMA2 compression transformation.     
++ `fun-io-jackson`: Depends on [Jackson Databind] to provide a JSON codec.
++ `fun-io-commons-compress`: Depends on [Apache Commons Compress] to provide many compression transformations. 
++ `fun-io-xz`: Depends on [XZ for Java] to provide the LZMA2 compression transformation.     
 
 [Jackson Databind]: http://wiki.fasterxml.com/JacksonHome
 [Apache Commons Compress]: https://commons.apache.org/proper/commons-compress/
