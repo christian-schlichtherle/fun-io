@@ -62,6 +62,8 @@ Assuming a complete implementation of the `ciphers` function, the preceding code
 `"Hello world!"` to JSON, then compress the result using the GZIP format, then encrypt the result using the cipher 
 returned from a call to `ciphers.apply(true)` and finally save the result to the file `hello-world.gz.cipher`.
 
+Again, note that the `store` and `connectedCodec` objects are virtually stateless, and hence reusable.
+
 ## Modules
 
 Fun I/O has a modular architecture, providing the following modules:
