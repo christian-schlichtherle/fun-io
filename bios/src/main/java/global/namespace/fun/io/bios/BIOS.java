@@ -101,10 +101,10 @@ public final class BIOS {
     ////////// TRANSFORMATIONS //////////
     /////////////////////////////////////
 
-    /** Returns a transformation which encodes the content in Base64 using the basic encoder and decoder. */
+    /** Returns a transformation which encodes the data in Base64 using the basic encoder and decoder. */
     public static Transformation base64() { return base64(Base64.getEncoder(), Base64.getDecoder()); }
 
-    /** Returns a transformation which encodes the content in Base64 using the given encoder and decoder. */
+    /** Returns a transformation which encodes the data in Base64 using the given encoder and decoder. */
     public static Transformation base64(Base64.Encoder e, Base64.Decoder d) {
         return new Base64Transformation(requireNonNull(e), requireNonNull(d));
     }
@@ -116,7 +116,7 @@ public final class BIOS {
     public static Transformation buffer(int size) { return new BufferedIOTransformation(size); }
 
     /**
-     * Returns a transformation which encrypts or decrypts the content using the given cipher suppliers for output and
+     * Returns a transformation which encrypts or decrypts the data using the given cipher suppliers for output and
      * input.
      */
     public static Transformation cipher(XFunction<? super Boolean, ? extends Cipher> ciphers) {
@@ -125,12 +125,12 @@ public final class BIOS {
     }
 
     /**
-     * Returns a transformation which compresses the content using a ZIP deflater with the default compression level.
+     * Returns a transformation which compresses the data using a ZIP deflater with the default compression level.
      */
     public static Transformation deflate() { return deflate(Deflater.DEFAULT_COMPRESSION); }
 
     /**
-     * Returns a transformation which compresses the content using a ZIP deflater with the given compression level.
+     * Returns a transformation which compresses the data using a ZIP deflater with the given compression level.
      *
      * @see Deflater
      */
@@ -141,7 +141,7 @@ public final class BIOS {
         return deflate(() -> new Deflater(level), Inflater::new);
     }
 
-    /** Returns a transformation which compresses the content using a ZIP deflater. */
+    /** Returns a transformation which compresses the data using a ZIP deflater. */
     public static Transformation deflate(XSupplier<Deflater> ds, XSupplier<Inflater> is) {
         return new DeflateTransformation(requireNonNull(ds), requireNonNull(is));
     }
@@ -153,13 +153,13 @@ public final class BIOS {
     public static Transformation identity() { return Transformation.IDENTITY; }
 
     /**
-     * Returns a transformation which decompresses the content using a ZIP inflater.
+     * Returns a transformation which decompresses the data using a ZIP inflater.
      * For the reverse operation, the transformation uses a ZIP deflater with the default compression level.
      */
     public static Transformation inflate() { return inflate(Deflater.DEFAULT_COMPRESSION); }
 
     /**
-     * Returns a transformation which decompresses the content using a ZIP inflater.
+     * Returns a transformation which decompresses the data using a ZIP inflater.
      * For the reverse operation, the transformation uses a ZIP deflater with the given compression level.
      */
     public static Transformation inflate(int level) {
@@ -169,15 +169,15 @@ public final class BIOS {
         return inflate(Inflater::new, () -> new Deflater(level));
     }
 
-    /** Returns a transformation which decompresses the content using a ZIP inflater. */
+    /** Returns a transformation which decompresses the data using a ZIP inflater. */
     public static Transformation inflate(XSupplier<Inflater> is, XSupplier<Deflater> ds) {
         return new InflateTransformation(requireNonNull(is), requireNonNull(ds));
     }
 
     /**
-     * Returns a transformation which inverses the given transformation by buffering the entire content on the heap.
+     * Returns a transformation which inverses the given transformation by buffering the entire data on the heap.
      * <p>
-     * This is a general purpose implementation which incurs buffering the entire content produced by the original
+     * This is a general purpose implementation which incurs buffering the entire data produced by the original
      * transformation, so use with care!
      * For any given transformation, it's advisable to provide a specialized implementation of the inverse
      * transformation which does not incur this overhead.
@@ -185,10 +185,10 @@ public final class BIOS {
     public static Transformation inverse(Transformation t) { return inverse(t, (XSupplier<Store>) BIOS::memoryStore); }
 
     /**
-     * Returns a transformation which inverses the given transformation by buffering the entire content in a temporary
+     * Returns a transformation which inverses the given transformation by buffering the entire data in a temporary
      * store obtained from the given supplier.
      * <p>
-     * This is a general purpose implementation which incurs buffering the entire content produced by the original
+     * This is a general purpose implementation which incurs buffering the entire data produced by the original
      * transformation, so use with care!
      * For any given transformation, it's advisable to provide a specialized implementation of the inverse
      * transformation which does not incur this overhead.
@@ -199,10 +199,10 @@ public final class BIOS {
     }
 
     /**
-     * Returns a transformation which inverses the given transformation by buffering the entire content in a loaned
+     * Returns a transformation which inverses the given transformation by buffering the entire data in a loaned
      * buffer.
      * <p>
-     * This is a general purpose implementation which incurs buffering the entire content produced by the original
+     * This is a general purpose implementation which incurs buffering the entire data produced by the original
      * transformation, so use with care!
      * For any given transformation, it's advisable to provide a specialized implementation of the inverse
      * transformation which does not incur this overhead.
