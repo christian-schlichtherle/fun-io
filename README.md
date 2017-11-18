@@ -46,7 +46,9 @@ val connectedCodec: ConnectedCodec = jsonCodec << gzip << cipher(ciphers _) << s
 connectedCodec encode "Hello world!"
 ```
 
-... and it's equivalent in Java: 
+Note that the `<<` operator is associative.
+
+Here's the equivalent in Java: 
 
 ```java
 import global.namespace.fun.io.api.function.*;
