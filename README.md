@@ -17,6 +17,13 @@ This is a template for software documentation projects.
 + [PlantUML](http://plantuml.com):
   Renders UML diagrams.
 
+## Prerequisites
+
+```bash
+$ gem install jekyll
+$ brew install plantuml
+```
+
 ## Setup
 
 ```sh
