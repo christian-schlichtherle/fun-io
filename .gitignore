@@ -1,3 +1,6 @@
-_site
-.sass-cache
-.jekyll-metadata
+# Please maintain alphabetic ordering:
+/.idea
+/.jekyll-metadata
+/.sass-cache
+/_site
+*.iml
