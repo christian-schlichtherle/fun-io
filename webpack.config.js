@@ -2,10 +2,21 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-    entry: './webpack/app.js',
+    entry: './webpack/index.js',
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: [
+                    'style-loader',
+                    'css-loader'
+                ]
+            }
+        ]
+    },
     output: {
         path: path.resolve(__dirname, 'assets/javascripts'),
-        filename: 'app.js'
+        filename: 'bundle.js'
     },
     plugins: [
         new webpack.ProvidePlugin({
