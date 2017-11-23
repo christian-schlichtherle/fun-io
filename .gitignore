@@ -1,5 +1,9 @@
 /.idea
+/.jekyll-metadata
 /.sass-cache
 /_site
+/assets/javascripts/bundle.js
+/node_modules
+/public
 /uml
 /vendor/bundle

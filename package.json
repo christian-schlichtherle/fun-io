@@ -1,0 +1,26 @@
+{
+  "name": "software-documentation-template",
+  "version": "0.0.1",
+  "description": "This is a template for software documentation projects using Jekyll, PlantUML, webpack, Bootstrap, JQuery et al.",
+  "main": "bundle.js",
+  "scripts": {
+    "build": "webpack"
+  },
+  "keywords": [
+    "jekyll",
+    "plantuml",
+    "webpack",
+    "bootstrap",
+    "jquery"
+  ],
+  "author": "Christian Schlichtherle",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.0.0-beta.2",
+    "jquery": "^3.2.1",
+    "popper.js": "^1.12.9"
+  },
+  "devDependencies": {
+    "webpack": "^3.8.1"
+  }
+}

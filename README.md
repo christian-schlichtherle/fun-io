@@ -8,25 +8,36 @@ This is a template for software documentation projects.
   For page authoring using the Markdown format et al.
   + [Jekyll Livereload](https://github.com/RobertDeRose/jekyll-livereload):
   Reloads the browser page when updating a source file.
-  + [Jekyll PlantUML](https://github.com/yegor256/jekyll-plantuml): 
+  + [Jekyll PlantUML](https://github.com/yegor256/jekyll-plantuml):
   Renders UML diagrams contained in MarkDown.
 + [webpack](https://webpack.js.org): 
-  Packs all stylesheets, JavaScript et al in single files
+  Packs all stylesheets, JavaScript et al in single files.
   + [PlantUML file loader](https://github.com/lucsorel/plantuml-file-loader):
   Renders separate PlantUML files.
 + [PlantUML](http://plantuml.com):
   Renders UML diagrams.
++ [Bootstrap](https://getbootstrap.com):
+  Twitter's front-end component library.
++ [JQuery](https://jquery.com):
+  JavaScript library for simple DOM traversion and manipulation.
++ [Popper.js](https://popper.js.org):
+  JavaScript library for pop-ups.
 
-## Prerequisites
+## Installation
+
+The following assumes macOS:
 
 ```bash
-$ gem install jekyll
+$ brew install node
 $ brew install plantuml
+$ gem install jekyll
 ```
 
-## Setup
+## Building
 
 ```sh
-$ bundle install
+$ npm install
+$ npm run build
+$ bundle install --path vendor/bundle
 $ bundle exec jekyll build
 ```
