@@ -35,9 +35,11 @@ $ gem install jekyll
 
 ## Building
 
+The following commands will build the site and output the result in the `_site` directory:
+
 ```sh
 $ npm install
 $ npm run build
-$ bundle install --path vendor/bundle
+$ bundle install
 $ bundle exec jekyll build
 ```
