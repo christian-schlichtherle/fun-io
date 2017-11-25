@@ -58,11 +58,7 @@ public final class BIOS {
      */
     public static Loan<OutputStream> stream(OutputStream os) {
         requireNonNull(os);
-        return () -> new FilterOutputStream(os) {
-
-            @Override
-            public void close() throws IOException { out.flush(); }
-        };
+        return () -> new UncloseableOutputStream(os);
     }
 
     /**
@@ -72,11 +68,7 @@ public final class BIOS {
      */
     public static Loan<InputStream> stream(InputStream is) {
         requireNonNull(is);
-        return () -> new FilterInputStream(is) {
-
-            @Override
-            public void close() throws IOException { }
-        };
+        return () -> new UncloseableInputStream(is);
     }
 
     ////////////////////////////
