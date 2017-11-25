@@ -97,8 +97,8 @@ Fun I/O has a modular architecture, providing the following modules:
     + `pathStore` stores data in files or any other `java.nio.file.Path`.
     + `preferencesStore` stores data in preferences nodes using a given key.
   + For streaming `InputStream`/`OutputStream`, the `stream` functions are provided.
-+ `fun-io-commons-compress`: Depends on [Apache Commons Compress] to provide compression `Transformation` functions 
-  in the `CommonsCompress` class:
++ `fun-io-commons-compress`: Depends on [Apache Commons Compress] to provide the following compression `Transformation` 
+  functions in the `CommonsCompress` class:
   + `blockLZ4` compresses/decompresses data using the LZ4 block format.
   + `bzip2` compresses decompresses data using the BZIP2 format.
   + `deflate` deflates/inflates data using the ZIP compression.
@@ -107,9 +107,10 @@ Fun I/O has a modular architecture, providing the following modules:
   + `gzip` compresses/decompresses data using the GZIP compression format.
   + `lzma` compresses/decompresses data using the LZMA compression format.
   + `lzma2` compresses/decompresses data using the LZMA2 compression format.
-+ `fun-io-jackson`: Depends on [Jackson Databind] to provide `Codec` functions in the `Jackson` class:
++ `fun-io-jackson`: Depends on [Jackson Databind] to provide the following `Codec` functions in the `Jackson` class:
   + `jsonCodec` marshals/unmarshals objects to/from JSON using Jackson.
-+ `fun-io-xz`: Depends on [XZ for Java] to provide compression `Transformation` functions in the `XZ` class:
++ `fun-io-xz`: Depends on [XZ for Java] to provide the following compression `Transformation` functions in the `XZ` 
+  class:
   + `lzma2` compresses/decompresses data using the LZMA2 compression format.
   + `xz` compresses/decompresses data using the XZ compression format.
 
