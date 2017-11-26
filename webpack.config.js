@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-    entry: './webpack/index.js',
+    entry: path.resolve(__dirname, 'webpack', 'index.js'),
     module: {
         rules: [
             {
@@ -15,7 +15,7 @@ module.exports = {
         ]
     },
     output: {
-        path: path.resolve(__dirname, 'assets/javascripts'),
+        path: path.resolve(__dirname, 'assets', 'javascripts'),
         filename: 'bundle.js'
     },
     plugins: [
