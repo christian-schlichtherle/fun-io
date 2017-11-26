@@ -39,6 +39,7 @@ exclude:
 - LICENSE
 - node_modules
 - package.json
+- plantuml-loader.js
 - README.md
 - vendor
 - webpack

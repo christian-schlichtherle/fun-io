@@ -9,11 +9,9 @@ This is a template for software documentation projects.
   + [Jekyll Livereload](https://github.com/RobertDeRose/jekyll-livereload):
   Reloads the browser page when updating a source file.
   + [Jekyll PlantUML](https://github.com/yegor256/jekyll-plantuml):
-  Renders UML diagrams contained in MarkDown.
+  Renders UML diagrams which are inlined in Markdown.
 + [webpack](https://webpack.js.org): 
   Packs all stylesheets, JavaScript et al in single files.
-  + [PlantUML file loader](https://github.com/lucsorel/plantuml-file-loader):
-  Renders separate PlantUML files.
 + [PlantUML](http://plantuml.com):
   Renders UML diagrams.
 + [Bootstrap](https://getbootstrap.com):

@@ -1,4 +1,4 @@
-const ExtractTextWebpackPlugin = require("extract-text-webpack-plugin");
+const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 
@@ -25,6 +25,12 @@ module.exports = {
                     loader: 'sass-loader'
                 }]
             })
+        }, {
+            test: /\.p?uml$/,
+            use: [
+                'file-loader?name=[name].svg&outputPath=uml/',
+                path.resolve(__dirname, 'plantuml-loader')
+            ]
         }]
     },
     output: {
