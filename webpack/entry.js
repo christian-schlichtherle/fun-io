@@ -1,2 +1,3 @@
 require('bootstrap');
-require('bootstrap/dist/css/bootstrap.min.css');
+require('./_custom.scss');
+require('bootstrap/scss/bootstrap.scss');
