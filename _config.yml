@@ -40,7 +40,6 @@ exclude:
 - node_modules
 - package.json
 - README.md
-- uml
 - vendor
 - webpack
 - webpack.config.js
