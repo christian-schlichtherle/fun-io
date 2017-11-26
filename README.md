@@ -27,6 +27,6 @@ $ brew install plantuml
 ## Setup
 
 ```sh
-$ bundle install --path vendor/bundle
+$ bundle install
 $ bundle exec jekyll serve
 ```
