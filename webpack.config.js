@@ -6,6 +6,16 @@ module.exports = {
     entry: path.resolve(__dirname, 'webpack/entry.js'),
     module: {
         rules: [{
+            test: /\.js$/,
+            use: ["source-map-loader"],
+            enforce: "pre"
+        }, {
+            test: /\.p?uml$/,
+            use: [
+                'file-loader?name=[name].svg&outputPath=uml/',
+                path.resolve(__dirname, 'plantuml-loader')
+            ]
+        }, {
             test: /\.scss$/,
             use: ExtractTextWebpackPlugin.extract({
                 fallback: "style-loader",
@@ -25,12 +35,6 @@ module.exports = {
                     loader: 'sass-loader'
                 }]
             })
-        }, {
-            test: /\.p?uml$/,
-            use: [
-                'file-loader?name=[name].svg&outputPath=uml/',
-                path.resolve(__dirname, 'plantuml-loader')
-            ]
         }]
     },
     output: {
