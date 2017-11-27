@@ -3,7 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-    entry: path.resolve(__dirname, 'webpack/entry.js'),
+    entry: path.resolve(__dirname, 'webpack'),
     module: {
         rules: [{
             test: /\.js$/,
