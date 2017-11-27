@@ -14,4 +14,4 @@ Here's some fine UML diagram, freshly squeezed by PlantUML with the help of the
 
 Here's another fancy UML diagram, again squeezed by PlantUML, but with the help of a custom loader for webpack:
 
-![](/assets/bundle/uml/my-class-diagram.svg)
+![](/assets/uml/my-class-diagram.svg)

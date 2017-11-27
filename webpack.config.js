@@ -34,7 +34,7 @@ module.exports = {
         }]
     },
     output: {
-        path: path.resolve(__dirname, 'assets/bundle'),
+        path: path.resolve(__dirname, 'assets'),
         filename: 'main.js'
     },
     plugins: [

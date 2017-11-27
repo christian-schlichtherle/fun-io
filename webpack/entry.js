@@ -1,4 +1,3 @@
-require('bootstrap');
-require('./_custom.scss');
-require('bootstrap/scss/bootstrap.scss');
+require('./main.scss');
 require('./my-class-diagram.puml');
+require('bootstrap');
