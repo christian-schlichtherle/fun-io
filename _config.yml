@@ -31,6 +31,7 @@ exclude:
 - LICENSE
 - node_modules
 - package.json
+- package-lock.json
 - plantuml-loader.js
 - README.md
 - vendor

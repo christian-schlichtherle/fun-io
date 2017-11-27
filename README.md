@@ -36,8 +36,19 @@ $ gem install jekyll
 The following commands will build the site and output the result in the `_site` directory:
 
 ```sh
-$ npm install
+$ npm run clean # optional
+$ npm install   # required only once
 $ npm run build
-$ bundle install
-$ bundle exec jekyll build
 ```
+
+## Development
+
+The following commands will build the site and start a webserver at http://0.0.0.0:4000/ :
+
+```sh
+$ npm run clean # optional
+$ npm install   # required only once
+$ npm start
+```
+
+Press Ctrl-C to stop the processes.
