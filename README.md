@@ -53,7 +53,7 @@ $ npm start
 
 Press Ctrl-C to stop the processes.
 
-### Testing on a mobile device
+### Testing on Mobile Devices
 
 The web server binds to all host interfaces, which allows to conveniently test the site on mobile devices:
 
