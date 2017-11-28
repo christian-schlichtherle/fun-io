@@ -4,7 +4,7 @@ const { PassThrough } = require('stream');
 const { Buffer } = require('buffer');
 
 const LOADER_CONFIG_KEY = 'plantumlLoader';
-const DEFAULT_CONFIG = { format: 'svg' };
+const DEFAULT_CONFIG = { charset: 'UTF-8', format: 'svg' };
 
 function bufferAsReadableStream(buffer) {
     const bufferStream = new PassThrough();
@@ -22,7 +22,7 @@ module.exports = function (source) {
     }
     const loaderOptions = this.options[configKey] || { };
     const config = Object.assign(DEFAULT_CONFIG, loaderOptions, query);
-    const plantuml = childProcess.spawn('plantuml', ['-p', '-charset', 'utf8', `-t${config.format}`]);
+    const plantuml = childProcess.spawn('plantuml', ['-p', '-charset', config.charset, `-t${config.format}`]);
     bufferAsReadableStream(source).pipe(plantuml.stdin);
     const convertedChunks = [];
     const errors = [];
