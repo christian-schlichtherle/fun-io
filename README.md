@@ -23,7 +23,7 @@ This is a template for software documentation projects.
 
 ## Installation
 
-The following assumes macOS:
+The following assumes macOS with [Homebrew](https://brew.sh):
 
 ```bash
 $ brew install node
@@ -43,7 +43,7 @@ $ npm run build
 
 ## Development
 
-The following commands will build the site and start a webserver at http://0.0.0.0:4000/ :
+The following commands will build the site and start a webserver at [http://0.0.0.0:4000/]():
 
 ```sh
 $ npm run clean # optional
@@ -52,3 +52,12 @@ $ npm start
 ```
 
 Press Ctrl-C to stop the processes.
+
+### Testing on a mobile device
+
+The web server binds to all host interfaces, which allows to conveniently test the site on mobile devices:
+
+1. Allow access to port 4000 on the host or switch off its firewall entirely (not recommended).
+1. Run `npm start`.
+1. On the mobile device, browse to [http://A.B.C.D:4000/](), where `A.B.C.D` is the IP address of one of the network
+   interfaces of the host.
