@@ -31,16 +31,6 @@ $ brew install plantuml
 $ gem install jekyll
 ```
 
-## Building
-
-The following commands will build the site and output the result in the `_site` directory:
-
-```sh
-$ npm run clean # optional
-$ npm install   # required only once
-$ npm run build
-```
-
 ## Development
 
 The following commands will build the site and start a webserver at [http://0.0.0.0:4000/]():
@@ -61,3 +51,13 @@ The web server binds to all host interfaces, which allows to conveniently test t
 1. Run `npm start`.
 1. On the mobile device, browse to [http://A.B.C.D:4000/](), where `A.B.C.D` is the IP address of one of the network
    interfaces of the host.
+
+## Building
+
+The following commands will build the site and output the result in the `_site` directory:
+
+```sh
+$ npm run clean # optional
+$ npm install   # required only once
+$ npm run build
+```
