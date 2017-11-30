@@ -1,38 +1,30 @@
 <footer class="container">
-  <div>
-    <h2>{{ site.title | escape }}</h2>
-    <div>
-      <div>
-        <ul>
-          <li>
-            {% if site.author %}
-              {{ site.author | escape }}
-            {% else %}
-              {{ site.title | escape }}
-            {% endif %}
-            </li>
-            {% if site.email %}
-            <li><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
-            {% endif %}
-        </ul>
-      </div>
-      <div>
-        <ul>
-          {% if site.github_username %}
-          <li>
-            {% include icon-github.html username=site.github_username %}
-          </li>
-          {% endif %}
-          {% if site.twitter_username %}
-          <li>
-            {% include icon-twitter.html username=site.twitter_username %}
-          </li>
-          {% endif %}
-        </ul>
-      </div>
-      <div>
-        <p>{{ site.description | escape }}</p>
-      </div>
+  <h2>{{ site.title | escape }}</h2>
+  <div class="row">
+    <div class="col-sm">
+      <ul class="contact-list">
+        {% if site.author %}
+        <li>{{ site.author | escape }}</li>
+        {% endif %}
+        {% if site.email %}
+        <li><a href="mailto:{{ site.email | escape }}">{{ site.email | escape }}</a></li>
+        {% endif %}
+      </ul>
+    </div>
+    {% if site.github_username || site.twitter_username %}
+    <div class="col-sm">
+      <ul class="social-media-list">
+        {% if site.github_username %}
+        <li>{% include icon-github.html username=site.github_username %}</li>
+        {% endif %}
+        {% if site.twitter_username %}
+        <li>{% include icon-twitter.html username=site.twitter_username %}</li>
+        {% endif %}
+      </ul>
+    </div>
+    {% endif %}
+    <div class="col-md">
+      <p>{{ site.description }}</p>
     </div>
   </div>
 </footer>

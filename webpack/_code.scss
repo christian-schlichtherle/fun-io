@@ -1,0 +1,9 @@
+pre, code {
+  background-color: $pre-bg;
+  @include border-radius($border-radius);
+}
+
+pre {
+  padding: .66rem 1rem;
+  overflow-x: auto;
+}

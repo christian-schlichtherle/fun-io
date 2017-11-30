@@ -1,0 +1,35 @@
+.my-navbar {
+  @extend .navbar;
+  @extend .navbar-expand-sm;
+  @extend .navbar-dark;
+  @extend .bg-dark;
+}
+
+.my-navbar-brand {
+  @extend .navbar-brand;
+  @extend .mb-0;
+  @extend .h1
+}
+
+.my-navbar-toggler {
+  @extend .navbar-toggler;
+}
+
+.my-navbar-toggler-icon {
+  @extend .navbar-toggler-icon;
+  //@extend .btn-sm;
+}
+
+.my-navbar-collapse {
+  @extend .navbar-collapse;
+  @extend .collapse;
+}
+
+.my-navbar-nav {
+  @extend .navbar-nav;
+}
+
+.my-navbar-item-link {
+  @extend .nav-item;
+  @extend .nav-link;
+}
