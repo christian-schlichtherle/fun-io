@@ -24,7 +24,7 @@ object Dependencies {
   val Scalatest: ModuleID = "org.scalatest" %% "scalatest" % "3.0.4"
   val XZ: ModuleID = "org.tukaani" % "xz" % "1.6"
 
-  val ScalaVersion_2_10: String = sys.props.getOrElse("SCALA_VERSION_2_10", "2.10.6")
-  val ScalaVersion_2_11: String = sys.props.getOrElse("SCALA_VERSION_2_11", "2.11.11")
+  val ScalaVersion_2_10: String = sys.props.getOrElse("SCALA_VERSION_2_10", "2.10.7")
+  val ScalaVersion_2_11: String = sys.props.getOrElse("SCALA_VERSION_2_11", "2.11.12")
   val ScalaVersion_2_12: String = sys.props.getOrElse("SCALA_VERSION_2_12", "2.12.4")
 }
