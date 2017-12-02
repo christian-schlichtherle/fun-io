@@ -4,24 +4,24 @@
     <div class="col-sm">
       <ul class="contact-list">
         {% if site.author %}
-        <li>{{ site.author | escape }}</li>
+          <li>{{ site.author | escape }}</li>
         {% endif %}
         {% if site.email %}
-        <li><a href="mailto:{{ site.email | escape }}">{{ site.email | escape }}</a></li>
+          <li><a href="mailto:{{ site.email | escape }}">{{ site.email | escape }}</a></li>
         {% endif %}
       </ul>
     </div>
     {% if site.github_username || site.twitter_username %}
-    <div class="col-sm">
-      <ul class="social-media-list">
-        {% if site.github_username %}
-        <li>{% include icon-github.html username=site.github_username %}</li>
-        {% endif %}
-        {% if site.twitter_username %}
-        <li>{% include icon-twitter.html username=site.twitter_username %}</li>
-        {% endif %}
-      </ul>
-    </div>
+      <div class="col-sm">
+        <ul class="social-media-list">
+          {% if site.github_username %}
+            <li>{% include icon-github.html username=site.github_username %}</li>
+          {% endif %}
+          {% if site.twitter_username %}
+            <li>{% include icon-twitter.html username=site.twitter_username %}</li>
+          {% endif %}
+        </ul>
+      </div>
     {% endif %}
     <div class="col-md">
       <p>{{ site.description }}</p>
