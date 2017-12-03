@@ -68,7 +68,6 @@ package object api {
     def apply(a: A): B = function(a)
   }
 
-
   implicit def xSupplier[A](a: => A): XSupplier[A] = new XSupplier[A] {
 
     def get(): A = a
