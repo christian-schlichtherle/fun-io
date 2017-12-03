@@ -15,7 +15,7 @@
  */
 package global.namespace.fun.io.bios;
 
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.api.Transformation;
 
 import java.io.*;
@@ -37,8 +37,8 @@ final class ROTTransformation implements Transformation {
     }
 
     @Override
-    public Loan<OutputStream> apply(Loan<OutputStream> osl) {
-        return osl.map(out -> new FilterOutputStream(out) {
+    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
+        return oss.map(out -> new FilterOutputStream(out) {
 
             @Override
             public void write(int b) throws IOException { out.write(apply(b)); }
@@ -58,8 +58,8 @@ final class ROTTransformation implements Transformation {
     }
 
     @Override
-    public Loan<InputStream> unapply(Loan<InputStream> isl) {
-        return isl.map(in -> new FilterInputStream(in) {
+    public Socket<InputStream> unapply(Socket<InputStream> iss) {
+        return iss.map(in -> new FilterInputStream(in) {
 
             @Override
             public int read() throws IOException { return unapply(in.read()); }

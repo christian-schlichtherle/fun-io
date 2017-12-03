@@ -15,7 +15,7 @@
  */
 package global.namespace.fun.io.bios;
 
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.api.Store;
 
 import java.io.IOException;
@@ -33,10 +33,10 @@ final class PathStore implements Store {
     PathStore(final Path p) { this.path = p; }
 
     @Override
-    public Loan<OutputStream> output() { return () -> Files.newOutputStream(path); }
+    public Socket<OutputStream> output() { return () -> Files.newOutputStream(path); }
 
     @Override
-    public Loan<InputStream> input() { return () -> Files.newInputStream(path); }
+    public Socket<InputStream> input() { return () -> Files.newInputStream(path); }
 
     @Override
     public void delete() throws IOException {

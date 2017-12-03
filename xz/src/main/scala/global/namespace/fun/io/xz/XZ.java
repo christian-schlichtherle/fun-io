@@ -47,7 +47,7 @@ public final class XZ {
      * This method is equivalent to {@code xz(new FilterOptions[] { o }, checkType)}.
      * <p>
      * This method does not check the integrity of the provided parameters.
-     * Any error will only be detected when the transformed output stream loan gets used.
+     * Any error will only be detected when the transformed output stream socket gets used.
      *
      * @param checkType the type of the integrity check, e.g. @{code org.tukaani.xz.XZ.CHECK_CRC32}.
      */
@@ -60,7 +60,7 @@ public final class XZ {
      * This method is equivalent to {@code xz(o, org.tukaani.xz.XZ.CHECK_CRC64)}.
      * <p>
      * This method does not check the integrity of the provided parameter.
-     * Any error will only be detected when the transformed output stream loan gets used.
+     * Any error will only be detected when the transformed output stream socket gets used.
      */
     public static Transformation xz(FilterOptions[] o) { return xz(o, org.tukaani.xz.XZ.CHECK_CRC64); }
 
@@ -68,7 +68,7 @@ public final class XZ {
      * Returns a transformation which produces the XZ compression format.
      * <p>
      * This method does not check the integrity of the provided parameters.
-     * Any error will only be detected when the transformed output stream loan gets used.
+     * Any error will only be detected when the transformed output stream socket gets used.
      *
      * @param checkType the type of the integrity check, e.g. @{code org.tukaani.xz.XZ.CHECK_CRC32}.
      */

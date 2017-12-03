@@ -15,7 +15,7 @@
  */
 package global.namespace.fun.io.commons.compress;
 
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.bios.BufferedInvertibleTransformation;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
@@ -31,10 +31,10 @@ final class GZIPTransformation extends BufferedInvertibleTransformation {
     GZIPTransformation(final GzipParameters p) { this.parameters = p; }
 
     @Override
-    public Loan<OutputStream> apply(Loan<OutputStream> osl) {
-        return osl.map(out -> new GzipCompressorOutputStream(out, parameters));
+    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
+        return oss.map(out -> new GzipCompressorOutputStream(out, parameters));
     }
 
     @Override
-    public Loan<InputStream> unapply(Loan<InputStream> isl) { return isl.map(GzipCompressorInputStream::new); }
+    public Socket<InputStream> unapply(Socket<InputStream> iss) { return iss.map(GzipCompressorInputStream::new); }
 }

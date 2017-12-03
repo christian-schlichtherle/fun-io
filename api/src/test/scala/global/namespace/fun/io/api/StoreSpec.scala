@@ -38,7 +38,7 @@ class StoreSpec extends WordSpec {
         ts output () shouldBe null
         val io = inOrder(t, s)
         io verify s output ()
-        (io verify t)(any[Loan[OutputStream]])
+        (io verify t)(any[Socket[OutputStream]])
         io verifyNoMoreInteractions ()
       }
 
@@ -46,7 +46,7 @@ class StoreSpec extends WordSpec {
         ts input () shouldBe null
         val io = inOrder(t, s)
         io verify s input ()
-        io verify t unapply any[Loan[InputStream]]
+        io verify t unapply any[Socket[InputStream]]
         io verifyNoMoreInteractions ()
       }
     }

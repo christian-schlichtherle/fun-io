@@ -15,7 +15,7 @@
  */
 package global.namespace.fun.io.bios;
 
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.api.Store;
 
 import java.io.*;
@@ -36,10 +36,10 @@ final class MemoryStore implements Store {
     }
 
     @Override
-    public Loan<InputStream> input() { return () -> new ByteArrayInputStream(checkedContent()); }
+    public Socket<InputStream> input() { return () -> new ByteArrayInputStream(checkedContent()); }
 
     @Override
-    public Loan<OutputStream> output() {
+    public Socket<OutputStream> output() {
         return () -> new ByteArrayOutputStream(bufferSize) {
             @Override
             public void close() throws IOException { content(toByteArray()); }

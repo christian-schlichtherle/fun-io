@@ -18,7 +18,7 @@ package global.namespace.fun.io.bios;
 import global.namespace.fun.io.api.Codec;
 import global.namespace.fun.io.api.Decoder;
 import global.namespace.fun.io.api.Encoder;
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 
 import javax.xml.bind.JAXBContext;
 import java.io.InputStream;
@@ -32,12 +32,12 @@ final class JAXBCodec implements Codec {
     JAXBCodec(final JAXBContext c) { this.context = c; }
 
     @Override
-    public Encoder encoder(Loan<OutputStream> osl) {
+    public Encoder encoder(Socket<OutputStream> osl) {
         return obj -> osl.accept(out -> context.createMarshaller().marshal(obj, out));
     }
 
     @Override
-    public Decoder decoder(Loan<InputStream> isl) {
+    public Decoder decoder(Socket<InputStream> isl) {
         return new Decoder() {
             @SuppressWarnings("unchecked")
             @Override

@@ -15,7 +15,7 @@
  */
 package global.namespace.fun.io.commons.compress;
 
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.bios.BufferedInvertibleTransformation;
 import org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorInputStream;
 import org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorOutputStream;
@@ -30,10 +30,10 @@ final class FramedLZ4Transformation extends BufferedInvertibleTransformation {
     FramedLZ4Transformation(final FramedLZ4CompressorOutputStream.Parameters p) { this.parameters = p; }
 
     @Override
-    public Loan<OutputStream> apply(Loan<OutputStream> osl) {
-        return osl.map(os -> new FramedLZ4CompressorOutputStream(os, parameters));
+    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
+        return oss.map(os -> new FramedLZ4CompressorOutputStream(os, parameters));
     }
 
     @Override
-    public Loan<InputStream> unapply(Loan<InputStream> isl) { return isl.map(FramedLZ4CompressorInputStream::new); }
+    public Socket<InputStream> unapply(Socket<InputStream> iss) { return iss.map(FramedLZ4CompressorInputStream::new); }
 }

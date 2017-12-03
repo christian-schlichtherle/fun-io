@@ -15,7 +15,7 @@
  */
 package global.namespace.fun.io.xz;
 
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.api.Transformation;
 import global.namespace.fun.io.bios.BIOS;
 import org.tukaani.xz.FilterOptions;
@@ -37,12 +37,12 @@ final class XZTransformation implements Transformation {
     }
 
     @Override
-    public Loan<OutputStream> apply(Loan<OutputStream> osl) {
-        return osl.map(out -> new XZOutputStream(out, filterOptions, checkType));
+    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
+        return oss.map(out -> new XZOutputStream(out, filterOptions, checkType));
     }
 
     @Override
-    public Loan<InputStream> unapply(Loan<InputStream> isl) { return isl.map(XZInputStream::new); }
+    public Socket<InputStream> unapply(Socket<InputStream> iss) { return iss.map(XZInputStream::new); }
 
     @Override
     public Transformation inverse() { return BIOS.inverse(this); }

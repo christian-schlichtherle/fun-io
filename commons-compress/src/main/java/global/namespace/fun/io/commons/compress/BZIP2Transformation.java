@@ -15,7 +15,7 @@
  */
 package global.namespace.fun.io.commons.compress;
 
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.bios.BufferedInvertibleTransformation;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
@@ -38,10 +38,10 @@ final class BZIP2Transformation extends BufferedInvertibleTransformation {
     }
 
     @Override
-    public Loan<OutputStream> apply(Loan<OutputStream> osl) {
-        return osl.map(out -> new BZip2CompressorOutputStream(out, blockSize));
+    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
+        return oss.map(out -> new BZip2CompressorOutputStream(out, blockSize));
     }
 
     @Override
-    public Loan<InputStream> unapply(Loan<InputStream> isl) { return isl.map(BZip2CompressorInputStream::new); }
+    public Socket<InputStream> unapply(Socket<InputStream> iss) { return iss.map(BZip2CompressorInputStream::new); }
 }

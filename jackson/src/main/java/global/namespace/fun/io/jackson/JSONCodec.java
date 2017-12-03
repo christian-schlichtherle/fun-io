@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import global.namespace.fun.io.api.Codec;
 import global.namespace.fun.io.api.Decoder;
 import global.namespace.fun.io.api.Encoder;
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,10 +33,10 @@ final class JSONCodec implements Codec {
     JSONCodec(final ObjectMapper m) { this.mapper = Objects.requireNonNull(m); }
 
     @Override
-    public Encoder encoder(Loan<OutputStream> osl) { return obj -> osl.accept(out -> mapper.writeValue(out, obj)); }
+    public Encoder encoder(Socket<OutputStream> osl) { return obj -> osl.accept(out -> mapper.writeValue(out, obj)); }
 
     @Override
-    public Decoder decoder(final Loan<InputStream> isl) {
+    public Decoder decoder(final Socket<InputStream> isl) {
         return new Decoder() {
             @Override
             public <T> T decode(Type expected) throws Exception {

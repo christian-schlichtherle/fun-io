@@ -1,6 +1,6 @@
 package global.namespace.fun.io.bios;
 
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.api.Transformation;
 
 import java.io.BufferedInputStream;
@@ -20,12 +20,12 @@ final class BufferedIOTransformation implements Transformation {
     }
 
     @Override
-    public Loan<OutputStream> apply(Loan<OutputStream> osl) {
-        return osl.map(out -> new BufferedOutputStream(out, size));
+    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
+        return oss.map(out -> new BufferedOutputStream(out, size));
     }
 
     @Override
-    public Loan<InputStream> unapply(Loan<InputStream> isl) { return isl.map(in -> new BufferedInputStream(in, size)); }
+    public Socket<InputStream> unapply(Socket<InputStream> iss) { return iss.map(in -> new BufferedInputStream(in, size)); }
 
     @Override
     public Transformation inverse() { return this; }

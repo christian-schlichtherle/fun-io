@@ -15,7 +15,7 @@
  */
 package global.namespace.fun.io.commons.compress;
 
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.bios.BufferedInvertibleTransformation;
 import org.apache.commons.compress.compressors.lzma.LZMACompressorInputStream;
 import org.apache.commons.compress.compressors.lzma.LZMACompressorOutputStream;
@@ -26,8 +26,8 @@ import java.io.OutputStream;
 final class LZMATransformation extends BufferedInvertibleTransformation {
 
     @Override
-    public Loan<OutputStream> apply(Loan<OutputStream> osl) { return osl.map(LZMACompressorOutputStream::new); }
+    public Socket<OutputStream> apply(Socket<OutputStream> oss) { return oss.map(LZMACompressorOutputStream::new); }
 
     @Override
-    public Loan<InputStream> unapply(Loan<InputStream> isl) { return isl.map(LZMACompressorInputStream::new); }
+    public Socket<InputStream> unapply(Socket<InputStream> iss) { return iss.map(LZMACompressorInputStream::new); }
 }

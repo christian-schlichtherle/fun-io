@@ -15,7 +15,7 @@
  */
 package global.namespace.fun.io.bios;
 
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.api.Store;
 
 import java.io.InputStream;
@@ -26,12 +26,12 @@ import java.util.zip.GZIPOutputStream;
 final class GZIPTransformation extends BufferedInvertibleTransformation {
 
     @Override
-    public Loan<OutputStream> apply(Loan<OutputStream> osl) {
-        return osl.map(out -> new GZIPOutputStream(out, Store.BUFSIZE));
+    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
+        return oss.map(out -> new GZIPOutputStream(out, Store.BUFSIZE));
     }
 
     @Override
-    public Loan<InputStream> unapply(Loan<InputStream> isl) {
-        return isl.map(in -> new GZIPInputStream(in, Store.BUFSIZE));
+    public Socket<InputStream> unapply(Socket<InputStream> iss) {
+        return iss.map(in -> new GZIPInputStream(in, Store.BUFSIZE));
     }
 }

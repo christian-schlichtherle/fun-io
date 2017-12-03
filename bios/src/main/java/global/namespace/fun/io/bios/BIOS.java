@@ -36,7 +36,7 @@ import static global.namespace.fun.io.api.Store.BUFSIZE;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Provides static factory methods for loans, stores, transformations and codecs.
+ * Provides static factory methods for sockets, stores, transformations and codecs.
  * The abbreviation means Basic I/O System.
  *
  * @author Christian Schlichtherle
@@ -45,28 +45,28 @@ public final class BIOS {
 
     private BIOS() { }
 
-    ///////////////////////////
-    ////////// LOANS //////////
-    ///////////////////////////
+    /////////////////////////////
+    ////////// SOCKETS //////////
+    /////////////////////////////
 
     /**
-     * Returns a loan for the given output stream which will never close it.
+     * Returns a socket for the given output stream which will never close it.
      * This is intended to be used for data streaming or for interoperability with other libraries and frameworks where
-     * you dont want the given output stream to get closed by the returned loan.
+     * you dont want the given output stream to get closed by the returned socket.
      * Upon a call to the {@code close()} method on the loaned output stream, the {@code flush()} method gets called on
      * the given output stream.
      */
-    public static Loan<OutputStream> stream(OutputStream os) {
+    public static Socket<OutputStream> stream(OutputStream os) {
         requireNonNull(os);
         return () -> new UncloseableOutputStream(os);
     }
 
     /**
-     * Returns a loan for the given input stream which will never close it.
+     * Returns a socket for the given input stream which will never close it.
      * This is intended to be used for data streaming or for interoperability with other libraries and frameworks where
-     * you dont want the given input stream to get closed by the returned loan.
+     * you dont want the given input stream to get closed by the returned socket.
      */
-    public static Loan<InputStream> stream(InputStream is) {
+    public static Socket<InputStream> stream(InputStream is) {
         requireNonNull(is);
         return () -> new UncloseableInputStream(is);
     }
@@ -187,7 +187,7 @@ public final class BIOS {
      */
     public static Transformation inverse(Transformation t, XSupplier<Store> ss) {
         requireNonNull(ss);
-        return inverse(t, (Loan<Buffer>) () -> Buffer.of(ss.get()));
+        return inverse(t, (Socket<Buffer>) () -> Buffer.of(ss.get()));
     }
 
     /**
@@ -199,7 +199,7 @@ public final class BIOS {
      * For any given transformation, it's advisable to provide a specialized implementation of the inverse
      * transformation which does not incur this overhead.
      */
-    public static Transformation inverse(Transformation t, Loan<Buffer> bl) {
+    public static Transformation inverse(Transformation t, Socket<Buffer> bl) {
         return new BufferedInverseTransformation(requireNonNull(t), requireNonNull(bl));
     }
 

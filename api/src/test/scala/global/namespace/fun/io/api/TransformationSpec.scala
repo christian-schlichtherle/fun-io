@@ -30,13 +30,13 @@ class TransformationSpec extends WordSpec {
       IDENTITY should be theSameInstanceAs IDENTITY
     }
 
-    "return the given output stream loan" in {
-      val l = mock[Loan[OutputStream]]
+    "return the given output stream socket" in {
+      val l = mock[Socket[OutputStream]]
       IDENTITY apply l should be theSameInstanceAs l
     }
 
-    "return the given input stream loan" in {
-      val l = mock[Loan[InputStream]]
+    "return the given input stream socket" in {
+      val l = mock[Socket[InputStream]]
       IDENTITY unapply l should be theSameInstanceAs l
     }
 

@@ -15,7 +15,7 @@
  */
 package global.namespace.fun.io.commons.compress;
 
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.bios.BufferedInvertibleTransformation;
 import org.apache.commons.compress.compressors.deflate.DeflateCompressorInputStream;
 import org.apache.commons.compress.compressors.deflate.DeflateCompressorOutputStream;
@@ -31,12 +31,12 @@ final class DeflateTransformation extends BufferedInvertibleTransformation {
     DeflateTransformation(final DeflateParameters p) { this.parameters = p; }
 
     @Override
-    public Loan<OutputStream> apply(Loan<OutputStream> osl) {
-        return osl.map(out -> new DeflateCompressorOutputStream(out, parameters));
+    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
+        return oss.map(out -> new DeflateCompressorOutputStream(out, parameters));
     }
 
     @Override
-    public Loan<InputStream> unapply(Loan<InputStream> isl) {
-        return isl.map(in -> new DeflateCompressorInputStream(in, parameters));
+    public Socket<InputStream> unapply(Socket<InputStream> iss) {
+        return iss.map(in -> new DeflateCompressorInputStream(in, parameters));
     }
 }

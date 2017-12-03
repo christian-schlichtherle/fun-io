@@ -21,7 +21,7 @@ import java.io.OutputStream;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Decorates input and output stream {@linkplain Loan loans} in order to transform the transmitted content.
+ * Decorates input and output stream {@linkplain Socket sockets} in order to transform the transmitted content.
  * <p>
  * With an encryption transformation for example, the {@link #apply} method would decorate the loaned output streams
  * with a new {@link javax.crypto.CipherOutputStream} in order to encrypt the data before writing it to the underlying
@@ -47,8 +47,8 @@ import static java.util.Objects.requireNonNull;
  * Transformation compression = ...;
  * Transformation encryption = ...;
  * Store store = ...;
- * Loan<OutputStream> compressAndEncryptData = compression.apply(encryption.apply(store.output()));
- * Loan<InputStream> decryptAndDecompressData = compression.unapply(encryption.unapply(store.input()));
+ * Socket<OutputStream> compressAndEncryptData = compression.apply(encryption.apply(store.output()));
+ * Socket<InputStream> decryptAndDecompressData = compression.unapply(encryption.unapply(store.input()));
  * compressAndEncryptData.map(PrintWriter::new).accept(writer -> writer.println("Hello world!"));
  * decryptAndDecompressData.map(InputStreamReader::new).map(BufferedReader::new).accept(reader ->
  *     assertTrue("Hello world!".equals(reader.readLine())));
@@ -62,20 +62,20 @@ public interface Transformation {
     Transformation IDENTITY = new Transformation() {
 
         @Override
-        public Loan<OutputStream> apply(Loan<OutputStream> osl) { return osl; }
+        public Socket<OutputStream> apply(Socket<OutputStream> oss) { return oss; }
 
         @Override
-        public Loan<InputStream> unapply(Loan<InputStream> isl) { return isl; }
+        public Socket<InputStream> unapply(Socket<InputStream> iss) { return iss; }
 
         @Override
         public Transformation inverse() { return this; }
     };
 
-    /** Returns an output stream loan which decorates the given output stream loan. */
-    Loan<OutputStream> apply(Loan<OutputStream> osl);
+    /** Returns an output stream socket which decorates the given output stream socket. */
+    Socket<OutputStream> apply(Socket<OutputStream> oss);
 
-    /** Returns an input stream loan which decorates the given input stream loan. */
-    Loan<InputStream> unapply(Loan<InputStream> isl);
+    /** Returns an input stream socket which decorates the given input stream socket. */
+    Socket<InputStream> unapply(Socket<InputStream> iss);
 
     /**
      * Returns the inverse of this transformation (optional operation).

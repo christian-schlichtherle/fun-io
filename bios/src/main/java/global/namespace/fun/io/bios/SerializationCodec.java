@@ -18,7 +18,7 @@ package global.namespace.fun.io.bios;
 import global.namespace.fun.io.api.Codec;
 import global.namespace.fun.io.api.Decoder;
 import global.namespace.fun.io.api.Encoder;
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -29,12 +29,12 @@ import java.lang.reflect.Type;
 final class SerializationCodec implements Codec {
 
     @Override
-    public Encoder encoder(Loan<OutputStream> osl) {
+    public Encoder encoder(Socket<OutputStream> osl) {
         return obj -> osl.map(ObjectOutputStream::new).accept(oos -> oos.writeObject(obj));
     }
 
     @Override
-    public Decoder decoder(final Loan<InputStream> isl) {
+    public Decoder decoder(final Socket<InputStream> isl) {
         return new Decoder() {
             @Override
             @SuppressWarnings("unchecked")

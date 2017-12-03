@@ -1,6 +1,6 @@
 # Fun I/O [![Maven Central](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-api.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22) [![Build Status](https://api.travis-ci.org/christian-schlichtherle/fun-io.svg)](https://travis-ci.org/christian-schlichtherle/fun-io)
 
-Fun I/O provides functional, high level abstractions for composing ordinary input and output streams into loans, stores, 
+Fun I/O provides functional, high level abstractions for composing ordinary input and output streams into sockets, stores, 
 transformations, codecs et al.
 The resulting compositions are (re)usable, versatile and dont leak resources.
 Fun I/O supports Java 8 and Scala 2.10, 2.11 and 2.12 and comes with the Apache License, version 2.0.
@@ -32,7 +32,7 @@ encoder.encode("Hello world!");
 ```
 
 The preceding code would encode the string `"Hello world!` to JSON and write it to `System.out`.
-The call to `stream(System.out)` wraps it in a loan which ignores any call to the `OutputStream.close()` method as it 
+The call to `stream(System.out)` wraps it in a socket which ignores any call to the `OutputStream.close()` method as it 
 would be inappropriate to do that on `System.out`.
  
 Note that the `encoder` object is virtually stateless, and hence reusable.
@@ -74,7 +74,7 @@ Again, note that the `store` and `connectedCodec` objects are virtually stateles
 
 Fun I/O has a modular architecture, providing the following modules:
 
-+ `fun-io-api`: The API provides interfaces for loans, stores, transformations, codecs et al, but no implementations.
++ `fun-io-api`: The API provides interfaces for sockets, stores, transformations, codecs et al, but no implementations.
 + `fun-io-scala-api`: The Scala API wraps the Java API to enhance the syntax with a domain specific language (DSL).
 + `fun-io-bios`: The Basic I/O System (pun intended) provides basic implementations for encoding, transforming, storing 
   or streaming data.

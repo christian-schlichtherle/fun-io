@@ -15,7 +15,7 @@
  */
 package global.namespace.fun.io.bios;
 
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,8 +33,8 @@ final class Base64Transformation extends BufferedInvertibleTransformation {
     }
 
     @Override
-    public Loan<OutputStream> apply(Loan<OutputStream> osl) { return osl.map(encoder::wrap); }
+    public Socket<OutputStream> apply(Socket<OutputStream> oss) { return oss.map(encoder::wrap); }
 
     @Override
-    public Loan<InputStream> unapply(Loan<InputStream> isl) { return isl.map(decoder::wrap); }
+    public Socket<InputStream> unapply(Socket<InputStream> iss) { return iss.map(decoder::wrap); }
 }

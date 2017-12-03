@@ -15,7 +15,7 @@
  */
 package global.namespace.fun.io.bios;
 
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.api.Store;
 
 import java.io.*;
@@ -35,7 +35,7 @@ final class PreferencesStore implements Store {
     }
 
     @Override
-    public Loan<OutputStream> output() {
+    public Socket<OutputStream> output() {
         return () -> new ByteArrayOutputStream(BUFSIZE) {
             @Override
             public void close() throws IOException { content(toByteArray()); }
@@ -43,7 +43,7 @@ final class PreferencesStore implements Store {
     }
 
     @Override
-    public Loan<InputStream> input() { return () -> new ByteArrayInputStream(content()); }
+    public Socket<InputStream> input() { return () -> new ByteArrayInputStream(content()); }
 
     @Override
     public void delete() throws IOException {

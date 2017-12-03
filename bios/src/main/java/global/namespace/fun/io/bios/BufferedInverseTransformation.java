@@ -16,7 +16,7 @@
 package global.namespace.fun.io.bios;
 
 import global.namespace.fun.io.api.Buffer;
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.api.Store;
 import global.namespace.fun.io.api.Transformation;
 
@@ -25,16 +25,16 @@ import java.io.*;
 final class BufferedInverseTransformation implements Transformation {
 
     private final Transformation transformation;
-    private final Loan<Buffer> bufferLoan;
+    private final Socket<Buffer> bufferSocket;
 
-    BufferedInverseTransformation(final Transformation t, final Loan<Buffer> bl) {
+    BufferedInverseTransformation(final Transformation t, final Socket<Buffer> bl) {
         this.transformation = t;
-        this.bufferLoan = bl;
+        this.bufferSocket = bl;
     }
 
     @Override
-    public Loan<OutputStream> apply(Loan<OutputStream> osl) {
-        return osl.flatMap(originalOut -> bufferLoan.flatMap(buffer -> buffer.output().map(bufferOut -> decorate(bufferOut, () -> {
+    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
+        return oss.flatMap(originalOut -> bufferSocket.flatMap(buffer -> buffer.output().map(bufferOut -> decorate(bufferOut, () -> {
             if (buffer.exists()) { // for idempotence!
                 try (OutputStream out = originalOut) {
                     transformation.unapply(buffer.input()).accept(in -> copy(in, out));
@@ -46,8 +46,8 @@ final class BufferedInverseTransformation implements Transformation {
     }
 
     @Override
-    public Loan<InputStream> unapply(Loan<InputStream> isl) {
-        return isl.flatMap(originalIn -> bufferLoan.flatMap(buffer -> {
+    public Socket<InputStream> unapply(Socket<InputStream> iss) {
+        return iss.flatMap(originalIn -> bufferSocket.flatMap(buffer -> {
             try (InputStream in = originalIn) {
                 transformation.apply(buffer.output()).accept(out -> copy(in, out));
             }

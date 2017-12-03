@@ -15,21 +15,22 @@
  */
 package global.namespace.fun.io.scala
 
-import global.namespace.fun.io.api.Transformation.IDENTITY
-import global.namespace.fun.io.api.function.{XConsumer, XFunction, XSupplier}
+import global.namespace.fun.io.{ api => j }
+import j.Transformation.IDENTITY
+import j.function.{XConsumer, XFunction, XSupplier}
 
 import _root_.scala.language.implicitConversions
 
 package object api {
 
-  type Buffer = global.namespace.fun.io.api.Buffer
-  type Codec = global.namespace.fun.io.api.Codec
-  type ConnectedCodec = global.namespace.fun.io.api.ConnectedCodec
-  type Decoder = global.namespace.fun.io.api.Decoder
-  type Encoder = global.namespace.fun.io.api.Encoder
-  type Loan[T <: AutoCloseable] = global.namespace.fun.io.api.Loan[T]
-  type Store = global.namespace.fun.io.api.Store
-  type Transformation = global.namespace.fun.io.api.Transformation
+  type Buffer = j.Buffer
+  type Codec = j.Codec
+  type ConnectedCodec = j.ConnectedCodec
+  type Decoder = j.Decoder
+  type Encoder = j.Encoder
+  type Socket[T <: AutoCloseable] = j.Socket[T]
+  type Store = j.Store
+  type Transformation = j.Transformation
 
   implicit class WithTransformation(t1: Transformation) {
 

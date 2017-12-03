@@ -23,7 +23,7 @@ import java.util.OptionalLong;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Emits input and output stream {@linkplain Loan loans} in order to enable access to its stored content.
+ * Emits input and output stream {@linkplain Socket sockets} in order to enable access to its stored content.
  *
  * @author Christian Schlichtherle
  */
@@ -32,11 +32,11 @@ public interface Store {
     /** The default buffer size, which is {@value}. */
     int BUFSIZE = 8 * 1024;
 
-    /** Returns an output stream loan for (over)writing the content of the backing store. */
-    Loan<OutputStream> output();
+    /** Returns an output stream socket for (over)writing the content of the backing store. */
+    Socket<OutputStream> output();
 
-    /** Returns an input stream loan for reading the content of the backing store. */
-    Loan<InputStream> input();
+    /** Returns an input stream socket for reading the content of the backing store. */
+    Socket<InputStream> input();
 
     /** Deletes the content of this store. */
     void delete() throws IOException;
@@ -59,10 +59,10 @@ public interface Store {
         return new Store() {
 
             @Override
-            public Loan<OutputStream> output() { return t.apply(Store.this.output()); }
+            public Socket<OutputStream> output() { return t.apply(Store.this.output()); }
 
             @Override
-            public Loan<InputStream> input() { return t.unapply(Store.this.input()); }
+            public Socket<InputStream> input() { return t.unapply(Store.this.input()); }
 
             @Override
             public void delete() throws IOException { Store.this.delete(); }

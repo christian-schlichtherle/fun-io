@@ -15,7 +15,7 @@
  */
 package global.namespace.fun.io.bios;
 
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.api.Store;
 import global.namespace.fun.io.api.Transformation;
 import global.namespace.fun.io.api.function.XSupplier;
@@ -39,8 +39,8 @@ final class DeflateTransformation implements Transformation {
     }
 
     @Override
-    public Loan<OutputStream> apply(final Loan<OutputStream> osl) {
-        return osl.map(out -> new DeflaterOutputStream(out, deflaterSupplier.get(), Store.BUFSIZE) {
+    public Socket<OutputStream> apply(final Socket<OutputStream> oss) {
+        return oss.map(out -> new DeflaterOutputStream(out, deflaterSupplier.get(), Store.BUFSIZE) {
 
             boolean closed;
 
@@ -56,8 +56,8 @@ final class DeflateTransformation implements Transformation {
     }
 
     @Override
-    public Loan<InputStream> unapply(final Loan<InputStream> isl) {
-        return isl.map(in -> new InflaterInputStream(in, inflaterSupplier.get(), Store.BUFSIZE) {
+    public Socket<InputStream> unapply(final Socket<InputStream> iss) {
+        return iss.map(in -> new InflaterInputStream(in, inflaterSupplier.get(), Store.BUFSIZE) {
 
             boolean closed;
 

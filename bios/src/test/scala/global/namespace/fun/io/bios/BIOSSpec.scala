@@ -24,12 +24,12 @@ import org.scalatest.mockito.MockitoSugar.mock
 
 class BIOSSpec extends WordSpec {
 
-  "A loan returned from BIOS.stream" should {
+  "A socket returned from BIOS.stream" should {
     "never close the given stream" when {
       "given an input stream" in {
         val in = mock[InputStream]
-        val loan = BIOS stream in
-        loan accept new XConsumer[InputStream] {
+        val socket = BIOS stream in
+        socket accept new XConsumer[InputStream] {
           def accept(in: InputStream): Unit = in read ()
         }
         verify(in) read ()
@@ -38,8 +38,8 @@ class BIOSSpec extends WordSpec {
 
       "given an output stream" in {
         val out = mock[OutputStream]
-        val loan = BIOS stream out
-        loan accept new XConsumer[OutputStream] {
+        val socket = BIOS stream out
+        socket accept new XConsumer[OutputStream] {
           def accept(out: OutputStream): Unit = out write 0
         }
         verify(out) write 0

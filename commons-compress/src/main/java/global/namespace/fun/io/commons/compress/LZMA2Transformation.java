@@ -15,7 +15,7 @@
  */
 package global.namespace.fun.io.commons.compress;
 
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.bios.BufferedInvertibleTransformation;
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
@@ -30,10 +30,10 @@ final class LZMA2Transformation extends BufferedInvertibleTransformation {
     LZMA2Transformation(final int preset) { this.preset = preset; }
 
     @Override
-    public Loan<OutputStream> apply(Loan<OutputStream> osl) {
-        return osl.map(os -> new XZCompressorOutputStream(os, preset));
+    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
+        return oss.map(os -> new XZCompressorOutputStream(os, preset));
     }
 
     @Override
-    public Loan<InputStream> unapply(Loan<InputStream> isl) { return isl.map(XZCompressorInputStream::new); }
+    public Socket<InputStream> unapply(Socket<InputStream> iss) { return iss.map(XZCompressorInputStream::new); }
 }

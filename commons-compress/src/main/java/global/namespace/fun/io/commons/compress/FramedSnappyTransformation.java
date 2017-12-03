@@ -15,7 +15,7 @@
  */
 package global.namespace.fun.io.commons.compress;
 
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.bios.BufferedInvertibleTransformation;
 import org.apache.commons.compress.compressors.lz77support.Parameters;
 import org.apache.commons.compress.compressors.snappy.FramedSnappyCompressorInputStream;
@@ -36,12 +36,12 @@ final class FramedSnappyTransformation extends BufferedInvertibleTransformation 
     }
 
     @Override
-    public Loan<OutputStream> apply(Loan<OutputStream> osl) {
-        return osl.map(os -> new FramedSnappyCompressorOutputStream(os, outputParameters));
+    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
+        return oss.map(os -> new FramedSnappyCompressorOutputStream(os, outputParameters));
     }
 
     @Override
-    public Loan<InputStream> unapply(Loan<InputStream> isl) {
-        return isl.map(is -> new FramedSnappyCompressorInputStream(is, inputParameters));
+    public Socket<InputStream> unapply(Socket<InputStream> iss) {
+        return iss.map(is -> new FramedSnappyCompressorInputStream(is, inputParameters));
     }
 }

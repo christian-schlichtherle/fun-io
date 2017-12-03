@@ -29,13 +29,13 @@ public interface Buffer extends Store, Closeable {
             boolean closed;
 
             @Override
-            public Loan<OutputStream> output() {
+            public Socket<OutputStream> output() {
                 check();
                 return s.output();
             }
 
             @Override
-            public Loan<InputStream> input() {
+            public Socket<InputStream> input() {
                 check();
                 return s.input();
             }

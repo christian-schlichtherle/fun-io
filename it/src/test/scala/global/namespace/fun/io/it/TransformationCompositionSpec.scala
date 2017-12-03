@@ -117,11 +117,11 @@ private object TransformationCompositionSpec {
 
   private object stringCodec extends Codec {
 
-    def encoder(l: Loan[OutputStream]): Encoder = new Encoder {
+    def encoder(l: Socket[OutputStream]): Encoder = new Encoder {
       def encode(obj: AnyRef): Unit = l.accept((_: OutputStream).write(obj.toString.getBytes))
     }
 
-    def decoder(l: Loan[InputStream]): Decoder = new Decoder {
+    def decoder(l: Socket[InputStream]): Decoder = new Decoder {
       def decode[T](expected: Type): T = l(Source.fromInputStream(_: InputStream).mkString.asInstanceOf[T])
     }
   }
@@ -135,10 +135,10 @@ private object TransformationCompositionSpec {
 
   private[this] class MessageTransformation(message: String) extends BufferedInvertibleTransformation {
 
-    def apply(osl: Loan[OutputStream]): Loan[OutputStream] = {
-      osl.map((out: OutputStream) => { out write message.getBytes; out })
+    def apply(oss: Socket[OutputStream]): Socket[OutputStream] = {
+      oss.map((out: OutputStream) => { out write message.getBytes; out })
     }
 
-    def unapply(isl: Loan[InputStream]): Loan[InputStream] = isl
+    def unapply(iss: Socket[InputStream]): Socket[InputStream] = iss
   }
 }

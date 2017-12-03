@@ -18,7 +18,7 @@ package global.namespace.fun.io.bios;
 import global.namespace.fun.io.api.Codec;
 import global.namespace.fun.io.api.Decoder;
 import global.namespace.fun.io.api.Encoder;
-import global.namespace.fun.io.api.Loan;
+import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.api.function.XFunction;
 
 import java.beans.ExceptionListener;
@@ -40,7 +40,7 @@ final class XMLCodec implements Codec {
     }
 
     @Override
-    public Encoder encoder(final Loan<OutputStream> osl) {
+    public Encoder encoder(final Socket<OutputStream> osl) {
         return obj -> {
             final ZeroToleranceListener ztl = new ZeroToleranceListener();
             osl.map(xmlEncoders).accept(enc -> {
@@ -52,7 +52,7 @@ final class XMLCodec implements Codec {
     }
 
     @Override
-    public Decoder decoder(final Loan<InputStream> isl) {
+    public Decoder decoder(final Socket<InputStream> isl) {
         return new Decoder() {
             @SuppressWarnings("unchecked")
             @Override
