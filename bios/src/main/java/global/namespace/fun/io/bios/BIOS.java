@@ -37,7 +37,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Provides static factory methods for sockets, stores, transformations and codecs.
- * The abbreviation means Basic I/O System.
+ * The abbreviation stands for Basic Input/Output System (pun intended).
  *
  * @author Christian Schlichtherle
  */
@@ -50,7 +50,7 @@ public final class BIOS {
     /////////////////////////////
 
     /**
-     * Returns a socket for the given output stream which will never close it.
+     * Returns a socket which will never close the given output stream.
      * This is intended to be used for data streaming or for interoperability with other libraries and frameworks where
      * you dont want the given output stream to get closed by the returned socket.
      * Upon a call to the {@code close()} method on the loaned output stream, the {@code flush()} method gets called on
@@ -62,7 +62,7 @@ public final class BIOS {
     }
 
     /**
-     * Returns a socket for the given input stream which will never close it.
+     * Returns a socket which will never close the given input stream.
      * This is intended to be used for data streaming or for interoperability with other libraries and frameworks where
      * you dont want the given input stream to get closed by the returned socket.
      */

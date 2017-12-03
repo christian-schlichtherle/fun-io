@@ -76,8 +76,8 @@ Fun I/O has a modular architecture, providing the following modules:
 
 + `fun-io-api`: The API provides interfaces for sockets, stores, transformations, codecs et al, but no implementations.
 + `fun-io-scala-api`: The Scala API wraps the Java API to enhance the syntax with a domain specific language (DSL).
-+ `fun-io-bios`: The Basic I/O System (pun intended) provides basic implementations for encoding, transforming, storing 
-  or streaming data.
++ `fun-io-bios`: The Basic Input/Output System (pun intended) provides basic implementations for encoding, transforming, 
+  storing or streaming data.
   + The `BIOS` class provides the following `Codec` functions:
     + `jaxbCodec` marshals/unmarshals objects to/from XML using JAXB.
     + `serializationCodec` serializes/deserializes objects using `ObjectOutputStream`/`ObjectInputStream`.
