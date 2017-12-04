@@ -29,7 +29,20 @@
   @extend .navbar-nav;
 }
 
-.my-navbar-item-link {
+.my-nav-item {
   @extend .nav-item;
+}
+
+.my-nav-link {
   @extend .nav-link;
+}
+
+.my-nav-item-dropdown {
+  @extend .nav-item;
+  @extend .dropdown;
+}
+
+.my-nav-link-dropdown-toggle {
+  @extend .nav-link;
+  @extend .dropdown-toggle;
 }

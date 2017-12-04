@@ -2,28 +2,36 @@
   <nav class="my-navbar">
     <div class="container">
       <a class="my-navbar-brand" href="{{ '/' | relative_url }}">{{ site.title | escape }}</a>
+{%- assign default_paths = site.pages | map: "path" -%}
+{%- assign menu_paths = site.data.menu | default: default_paths -%}
+{% if menu_paths.first %}
       <button class="my-navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="my-navbar-toggler-icon"></span>
       </button>
-      {%- assign default_paths = site.pages | map: "path" -%}
-      {%- assign page_paths = site.header_pages | default: default_paths -%}
-      {% if page_paths %}
-        <div class="my-navbar-collapse" id="navbar">
-          <div class="my-navbar-nav">
-            {% for path in page_paths %}
-              {%- assign my_page = site.pages | where: "path", path | first -%}
-              {% if my_page.title %}
-                <a class="my-navbar-item-link{% if my_page.url == page.url %} active{% endif %}" href="{{ my_page.url | relative_url }}"">
-                  {{ my_page.title | escape }}
-                  {% if my_page.url == page.url %}
-                    <span class="sr-only">(current)</span>
-                  {% endif %}
-                </a>
-              {% endif %}
-            {% endfor %}
-          </div>
-        </div>
+      <div class="my-navbar-collapse" id="navbar">
+        <div class="my-navbar-nav">
+  {% for path in menu_paths %}
+    {% if path.first %}
+      {%- assign title = path.first[0] -%}
+      {%- assign paths = path.first[1] -%}
+      {% include nav-item-dropdown.html title=title paths=paths %}
+    {% else %}
+      {%- assign my_page = site.pages | where: "path", path | first -%}
+      {% if my_page.title %}
+          <li class="my-nav-item{% if my_page.url == page.url %} active{% endif %}">
+            <a class="my-nav-link" href="{{ my_page.url | relative_url }}">
+              {{ my_page.title | escape }}
+        {% if my_page.url == page.url %}
+              <span class="sr-only">(current)</span>
+        {% endif %}
+            </a>
+          </li>
       {% endif %}
+    {% endif %}
+  {% endfor %}
+        </div>
+      </div>
+{% endif %}
     </div>
   </nav>
 </header>

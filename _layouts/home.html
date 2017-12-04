@@ -6,15 +6,15 @@ layout: default
   <h1>Posts</h1>
   {{ content }}
   <ul>
-    {% for post in site.posts %}
-      <li>
-        {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
-        <span>{{ post.date | date: date_format }}</span>
-        <h2>
-          <a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
-        </h2>
-      </li>
-    {% endfor %}
+{% for post in site.posts %}
+  {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
+    <li>
+      <span>{{ post.date | date: date_format }}</span>
+      <h2>
+        <a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+      </h2>
+    </li>
+{% endfor %}
   </ul>
   <p>subscribe <a href="{{ '/feed.xml' | relative_url }}">via RSS</a></p>
 </div>
