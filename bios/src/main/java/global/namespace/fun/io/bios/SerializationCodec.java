@@ -39,7 +39,7 @@ final class SerializationCodec implements Codec {
             @Override
             @SuppressWarnings("unchecked")
             public <T> T decode(Type expected) throws Exception {
-                return isl.map(ObjectInputStream::new).apply(oin -> (T) oin.readObject());
+                return isl.map(ObjectInputStream::new).apply(ois -> (T) ois.readObject());
             }
         };
     }
