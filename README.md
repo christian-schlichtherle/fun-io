@@ -82,7 +82,7 @@ Fun I/O has a modular architecture, providing the following modules:
     + `jaxbCodec` marshals/unmarshals objects to/from XML using JAXB.
     + `serializationCodec` serializes/deserializes objects using `ObjectOutputStream`/`ObjectInputStream`.
     + `xmlCodec` encodes/decodes objects using `XMLEncoder`/`XMLDecoder`.
-  + The following `Transformation` functions are provided in the same class:
+  + The `BIOS` class also provides the following `Transformation` functions:
     + `base64` encodes/decodes data to/from Base64.
     + `buffer` buffers I/O operations.
     + `cipher` encrypts/decrypts data using a function which provides initialized `javax.security.Cipher` objects.
@@ -92,11 +92,11 @@ Fun I/O has a modular architecture, providing the following modules:
     + `inflate` inflates/deflates data using the ZIP compression.
     + `inverse` inverses a given transformation by buffering the entire data to a buffer, e.g. on the heap.
     + `rot` provides the (in)famous ROT transformation, e.g. [ROT13].
-  + The following `Store` functions are provided:
+  + The `BIOS` class also provides the following `Store` functions:
     + `memoryStore` stores data on the heap. This is primarily used for cloning objects or testing. 
     + `pathStore` stores data in files or any other `java.nio.file.Path`.
     + `preferencesStore` stores data in preferences nodes using a given key.
-  + For streaming `InputStream`/`OutputStream`, the `stream` functions are provided.
+  + The `BIOS` class also provides a `stream` function for streaming `InputStream`s and `OutputStream`s.
 + `fun-io-commons-compress`: Depends on [Apache Commons Compress] to provide the following compression `Transformation` 
   functions in the `CommonsCompress` class:
   + `blockLZ4` compresses/decompresses data using the LZ4 block format.
