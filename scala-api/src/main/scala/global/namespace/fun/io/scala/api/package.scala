@@ -15,9 +15,11 @@
  */
 package global.namespace.fun.io.scala
 
-import global.namespace.fun.io.{ api => j }
-import j.Transformation.IDENTITY
-import j.function.{XConsumer, XFunction, XSupplier}
+import java.io.{InputStream, OutputStream}
+
+import global.namespace.fun.io.api.Transformation.IDENTITY
+import global.namespace.fun.io.api.function.{XConsumer, XFunction, XSupplier}
+import global.namespace.fun.io.{api => j}
 
 import _root_.scala.language.implicitConversions
 
@@ -28,7 +30,9 @@ package object api {
   type ConnectedCodec = j.ConnectedCodec
   type Decoder = j.Decoder
   type Encoder = j.Encoder
+  type Sink = Socket[OutputStream]
   type Socket[T <: AutoCloseable] = j.Socket[T]
+  type Source = Socket[InputStream]
   type Store = j.Store
   type Transformation = j.Transformation
 

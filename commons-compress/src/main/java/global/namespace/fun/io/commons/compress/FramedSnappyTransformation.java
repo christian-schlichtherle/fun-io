@@ -36,12 +36,12 @@ final class FramedSnappyTransformation extends BufferedInvertibleTransformation 
     }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
-        return oss.map(os -> new FramedSnappyCompressorOutputStream(os, outputParameters));
+    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+        return output.map(os -> new FramedSnappyCompressorOutputStream(os, outputParameters));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> iss) {
-        return iss.map(is -> new FramedSnappyCompressorInputStream(is, inputParameters));
+    public Socket<InputStream> unapply(Socket<InputStream> input) {
+        return input.map(is -> new FramedSnappyCompressorInputStream(is, inputParameters));
     }
 }

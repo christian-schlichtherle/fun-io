@@ -29,17 +29,17 @@ import java.lang.reflect.Type;
 final class SerializationCodec implements Codec {
 
     @Override
-    public Encoder encoder(Socket<OutputStream> osl) {
-        return obj -> osl.map(ObjectOutputStream::new).accept(oos -> oos.writeObject(obj));
+    public Encoder encoder(Socket<OutputStream> output) {
+        return obj -> output.map(ObjectOutputStream::new).accept(oos -> oos.writeObject(obj));
     }
 
     @Override
-    public Decoder decoder(final Socket<InputStream> isl) {
+    public Decoder decoder(final Socket<InputStream> input) {
         return new Decoder() {
             @Override
             @SuppressWarnings("unchecked")
             public <T> T decode(Type expected) throws Exception {
-                return isl.map(ObjectInputStream::new).apply(ois -> (T) ois.readObject());
+                return input.map(ObjectInputStream::new).apply(ois -> (T) ois.readObject());
             }
         };
     }

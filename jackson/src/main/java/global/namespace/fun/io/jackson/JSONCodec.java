@@ -33,14 +33,14 @@ final class JSONCodec implements Codec {
     JSONCodec(final ObjectMapper m) { this.mapper = Objects.requireNonNull(m); }
 
     @Override
-    public Encoder encoder(Socket<OutputStream> osl) { return obj -> osl.accept(out -> mapper.writeValue(out, obj)); }
+    public Encoder encoder(Socket<OutputStream> output) { return obj -> output.accept(out -> mapper.writeValue(out, obj)); }
 
     @Override
-    public Decoder decoder(final Socket<InputStream> isl) {
+    public Decoder decoder(final Socket<InputStream> input) {
         return new Decoder() {
             @Override
             public <T> T decode(Type expected) throws Exception {
-                return isl.apply(in -> mapper.readValue(in, mapper.constructType(expected)));
+                return input.apply(in -> mapper.readValue(in, mapper.constructType(expected)));
             }
         };
     }

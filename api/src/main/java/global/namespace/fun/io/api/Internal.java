@@ -26,10 +26,10 @@ final class Internal {
         return new Transformation() {
 
             @Override
-            public Socket<OutputStream> apply(Socket<OutputStream> oss) { return second.apply(first.apply(oss)); }
+            public Socket<OutputStream> apply(Socket<OutputStream> output) { return second.apply(first.apply(output)); }
 
             @Override
-            public Socket<InputStream> unapply(Socket<InputStream> iss) { return second.unapply(first.unapply(iss)); }
+            public Socket<InputStream> unapply(Socket<InputStream> input) { return second.unapply(first.unapply(input)); }
 
             @Override
             public Transformation inverse() {
@@ -37,13 +37,13 @@ final class Internal {
                 return new Transformation() {
 
                     @Override
-                    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
-                        return first.inverse().apply(second.inverse().apply(oss));
+                    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+                        return first.inverse().apply(second.inverse().apply(output));
                     }
 
                     @Override
-                    public Socket<InputStream> unapply(Socket<InputStream> iss) {
-                        return first.inverse().unapply(second.inverse().unapply(iss));
+                    public Socket<InputStream> unapply(Socket<InputStream> input) {
+                        return first.inverse().unapply(second.inverse().unapply(input));
                     }
 
                     @Override

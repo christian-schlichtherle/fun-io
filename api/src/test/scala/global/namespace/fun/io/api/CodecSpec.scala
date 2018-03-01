@@ -35,20 +35,20 @@ class CodecSpec extends WordSpec {
       val tc = c map t
 
       "apply the transformation" in {
-        val l = mock[Socket[OutputStream]]
+        val l = mock[Sink]
         tc encoder l shouldBe null
         val io = inOrder(t, c)
         io verify t apply l
-        io verify c encoder any[Socket[OutputStream]]
+        io verify c encoder any[Sink]
         io verifyNoMoreInteractions ()
       }
 
       "unapply the transformation" in {
-        val l = mock[Socket[InputStream]]
+        val l = mock[Source]
         tc decoder l shouldBe null
         val io = inOrder(t, c)
         io verify t unapply l
-        io verify c decoder any[Socket[InputStream]]
+        io verify c decoder any[Source]
         io verifyNoMoreInteractions ()
       }
     }

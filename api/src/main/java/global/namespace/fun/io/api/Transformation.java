@@ -62,20 +62,20 @@ public interface Transformation {
     Transformation IDENTITY = new Transformation() {
 
         @Override
-        public Socket<OutputStream> apply(Socket<OutputStream> oss) { return oss; }
+        public Socket<OutputStream> apply(Socket<OutputStream> output) { return output; }
 
         @Override
-        public Socket<InputStream> unapply(Socket<InputStream> iss) { return iss; }
+        public Socket<InputStream> unapply(Socket<InputStream> input) { return input; }
 
         @Override
         public Transformation inverse() { return this; }
     };
 
     /** Returns an output stream socket which decorates the given output stream socket. */
-    Socket<OutputStream> apply(Socket<OutputStream> oss);
+    Socket<OutputStream> apply(Socket<OutputStream> output);
 
     /** Returns an input stream socket which decorates the given input stream socket. */
-    Socket<InputStream> unapply(Socket<InputStream> iss);
+    Socket<InputStream> unapply(Socket<InputStream> input);
 
     /**
      * Returns the inverse of this transformation (optional operation).

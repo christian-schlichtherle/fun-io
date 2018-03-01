@@ -30,26 +30,26 @@ import static java.util.Objects.requireNonNull;
 public interface Codec {
 
     /** Returns an encoder which writes object graphs to the given output stream socket. */
-    Encoder encoder(Socket<OutputStream> osl);
+    Encoder encoder(Socket<OutputStream> output);
 
     /** Returns a decoder which reads object graphs from the given input stream socket. */
-    Decoder decoder(Socket<InputStream> isl);
+    Decoder decoder(Socket<InputStream> input);
 
     /**
      * Returns a a clone of the given original by encoding it to a temporary store obtained from the given supplier and
      * decoding it again.
      */
-    default <T> T clone(T t, XSupplier<Store> ss) throws Exception {
-        return clone(t, (Socket<Buffer>) () -> Buffer.of(ss.get()));
+    default <T> T clone(T t, XSupplier<Store> storeSupplier) throws Exception {
+        return clone(t, (Socket<Buffer>) () -> Buffer.of(storeSupplier.get()));
     }
 
     /** Returns a clone of the given original by encoding it to a loaned buffer and decoding it again. */
-    default <T> T clone(T t, Socket<Buffer> bl) throws Exception {
-        return bl.apply(buffer -> connect(buffer).clone(t));
+    default <T> T clone(T t, Socket<Buffer> bufferSocket) throws Exception {
+        return bufferSocket.apply(buffer -> connect(buffer).clone(t));
     }
 
     /** Connects this codec to the given store. */
-    default ConnectedCodec connect(Store s) { return Internal.connect(this, requireNonNull(s)); }
+    default ConnectedCodec connect(Store store) { return Internal.connect(this, requireNonNull(store)); }
 
     /**
      * Returns a codec which applies the given transformation to the I/O streams loaned to this codec.
@@ -60,10 +60,10 @@ public interface Codec {
         return new Codec() {
 
             @Override
-            public Encoder encoder(Socket<OutputStream> osl) { return Codec.this.encoder(t.apply(osl)); }
+            public Encoder encoder(Socket<OutputStream> output) { return Codec.this.encoder(t.apply(output)); }
 
             @Override
-            public Decoder decoder(Socket<InputStream> isl) { return Codec.this.decoder(t.unapply(isl)); }
+            public Decoder decoder(Socket<InputStream> input) { return Codec.this.decoder(t.unapply(input)); }
         };
     }
 }

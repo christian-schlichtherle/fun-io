@@ -33,8 +33,8 @@ final class Base64Transformation extends BufferedInvertibleTransformation {
     }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> oss) { return oss.map(encoder::wrap); }
+    public Socket<OutputStream> apply(Socket<OutputStream> output) { return output.map(encoder::wrap); }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> iss) { return iss.map(decoder::wrap); }
+    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(decoder::wrap); }
 }

@@ -38,10 +38,10 @@ final class BZIP2Transformation extends BufferedInvertibleTransformation {
     }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
-        return oss.map(out -> new BZip2CompressorOutputStream(out, blockSize));
+    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+        return output.map(out -> new BZip2CompressorOutputStream(out, blockSize));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> iss) { return iss.map(BZip2CompressorInputStream::new); }
+    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(BZip2CompressorInputStream::new); }
 }

@@ -33,14 +33,14 @@ final class DeflateTransformation implements Transformation {
     private final XSupplier<Deflater> deflaterSupplier;
     private final XSupplier<Inflater> inflaterSupplier;
 
-    DeflateTransformation(final XSupplier<Deflater> ds, final XSupplier<Inflater> is) {
-        this.deflaterSupplier = ds;
-        this.inflaterSupplier = is;
+    DeflateTransformation(final XSupplier<Deflater> deflaterSupplier, final XSupplier<Inflater> inflaterSupplier) {
+        this.deflaterSupplier = deflaterSupplier;
+        this.inflaterSupplier = inflaterSupplier;
     }
 
     @Override
-    public Socket<OutputStream> apply(final Socket<OutputStream> oss) {
-        return oss.map(out -> new DeflaterOutputStream(out, deflaterSupplier.get(), Store.BUFSIZE) {
+    public Socket<OutputStream> apply(final Socket<OutputStream> output) {
+        return output.map(out -> new DeflaterOutputStream(out, deflaterSupplier.get(), Store.BUFSIZE) {
 
             boolean closed;
 
@@ -56,8 +56,8 @@ final class DeflateTransformation implements Transformation {
     }
 
     @Override
-    public Socket<InputStream> unapply(final Socket<InputStream> iss) {
-        return iss.map(in -> new InflaterInputStream(in, inflaterSupplier.get(), Store.BUFSIZE) {
+    public Socket<InputStream> unapply(final Socket<InputStream> input) {
+        return input.map(in -> new InflaterInputStream(in, inflaterSupplier.get(), Store.BUFSIZE) {
 
             boolean closed;
 

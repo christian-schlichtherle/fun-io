@@ -33,17 +33,17 @@ final class XMLCodec implements Codec {
     private final XFunction<? super OutputStream, ? extends XMLEncoder> xmlEncoders;
     private final XFunction<? super InputStream, ? extends XMLDecoder> xmlDecoders;
 
-    XMLCodec(final XFunction<? super OutputStream, ? extends XMLEncoder> e,
-             final XFunction<? super InputStream, ? extends XMLDecoder> d) {
-        this.xmlEncoders = e;
-        this.xmlDecoders = d;
+    XMLCodec(final XFunction<? super OutputStream, ? extends XMLEncoder> xmlEncoders,
+             final XFunction<? super InputStream, ? extends XMLDecoder> xmlDecoders) {
+        this.xmlEncoders = xmlEncoders;
+        this.xmlDecoders = xmlDecoders;
     }
 
     @Override
-    public Encoder encoder(final Socket<OutputStream> osl) {
+    public Encoder encoder(final Socket<OutputStream> output) {
         return obj -> {
             final ZeroToleranceListener ztl = new ZeroToleranceListener();
-            osl.map(xmlEncoders).accept(enc -> {
+            output.map(xmlEncoders).accept(enc -> {
                 enc.setExceptionListener(ztl);
                 enc.writeObject(obj);
             });
@@ -52,14 +52,14 @@ final class XMLCodec implements Codec {
     }
 
     @Override
-    public Decoder decoder(final Socket<InputStream> isl) {
+    public Decoder decoder(final Socket<InputStream> input) {
         return new Decoder() {
             @SuppressWarnings("unchecked")
             @Override
             public <T> T decode(final Type expected) throws Exception {
                 final ZeroToleranceListener ztl = new ZeroToleranceListener();
                 try {
-                    return isl.map(xmlDecoders).apply(dec -> {
+                    return input.map(xmlDecoders).apply(dec -> {
                         dec.setExceptionListener(ztl);
                         return (T) dec.readObject();
                     });
@@ -72,18 +72,18 @@ final class XMLCodec implements Codec {
 
     private static class ZeroToleranceListener implements ExceptionListener {
 
-        Exception ex;
+        Exception e;
 
         @Override
-        public void exceptionThrown(final Exception ex) {
-            if (null == this.ex) {
-                this.ex = ex; // don't overwrite prior exception
+        public void exceptionThrown(final Exception e) {
+            if (null == this.e) {
+                this.e = e; // don't overwrite prior exception
             }
         }
 
         void check() throws Exception {
-            if (null != ex) {
-                throw ex;
+            if (null != e) {
+                throw e;
             }
         }
     }

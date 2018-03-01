@@ -37,12 +37,12 @@ final class XZTransformation implements Transformation {
     }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
-        return oss.map(out -> new XZOutputStream(out, filterOptions, checkType));
+    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+        return output.map(out -> new XZOutputStream(out, filterOptions, checkType));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> iss) { return iss.map(XZInputStream::new); }
+    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(XZInputStream::new); }
 
     @Override
     public Transformation inverse() { return BIOS.inverse(this); }

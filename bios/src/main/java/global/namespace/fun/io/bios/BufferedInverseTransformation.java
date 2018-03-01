@@ -27,14 +27,14 @@ final class BufferedInverseTransformation implements Transformation {
     private final Transformation transformation;
     private final Socket<Buffer> bufferSocket;
 
-    BufferedInverseTransformation(final Transformation t, final Socket<Buffer> bl) {
+    BufferedInverseTransformation(final Transformation t, final Socket<Buffer> bufferSocket) {
         this.transformation = t;
-        this.bufferSocket = bl;
+        this.bufferSocket = bufferSocket;
     }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
-        return oss.flatMap(originalOut -> bufferSocket.flatMap(buffer -> buffer.output().map(bufferOut -> decorate(bufferOut, () -> {
+    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+        return output.flatMap(originalOut -> bufferSocket.flatMap(buffer -> buffer.output().map(bufferOut -> decorate(bufferOut, () -> {
             if (buffer.exists()) { // for idempotence!
                 try (OutputStream out = originalOut) {
                     transformation.unapply(buffer.input()).accept(in -> copy(in, out));
@@ -46,8 +46,8 @@ final class BufferedInverseTransformation implements Transformation {
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> iss) {
-        return iss.flatMap(originalIn -> bufferSocket.flatMap(buffer -> {
+    public Socket<InputStream> unapply(Socket<InputStream> input) {
+        return input.flatMap(originalIn -> bufferSocket.flatMap(buffer -> {
             try (InputStream in = originalIn) {
                 transformation.apply(buffer.output()).accept(out -> copy(in, out));
             }

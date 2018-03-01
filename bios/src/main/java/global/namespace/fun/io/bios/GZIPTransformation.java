@@ -26,12 +26,12 @@ import java.util.zip.GZIPOutputStream;
 final class GZIPTransformation extends BufferedInvertibleTransformation {
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
-        return oss.map(out -> new GZIPOutputStream(out, Store.BUFSIZE));
+    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+        return output.map(out -> new GZIPOutputStream(out, Store.BUFSIZE));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> iss) {
-        return iss.map(in -> new GZIPInputStream(in, Store.BUFSIZE));
+    public Socket<InputStream> unapply(Socket<InputStream> input) {
+        return input.map(in -> new GZIPInputStream(in, Store.BUFSIZE));
     }
 }

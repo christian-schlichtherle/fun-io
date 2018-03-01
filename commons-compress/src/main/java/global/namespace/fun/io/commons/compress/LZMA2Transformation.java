@@ -30,10 +30,10 @@ final class LZMA2Transformation extends BufferedInvertibleTransformation {
     LZMA2Transformation(final int preset) { this.preset = preset; }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
-        return oss.map(os -> new XZCompressorOutputStream(os, preset));
+    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+        return output.map(os -> new XZCompressorOutputStream(os, preset));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> iss) { return iss.map(XZCompressorInputStream::new); }
+    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(XZCompressorInputStream::new); }
 }

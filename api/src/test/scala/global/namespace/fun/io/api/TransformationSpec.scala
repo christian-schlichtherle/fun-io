@@ -31,12 +31,12 @@ class TransformationSpec extends WordSpec {
     }
 
     "return the given output stream socket" in {
-      val l = mock[Socket[OutputStream]]
+      val l = mock[Sink]
       IDENTITY apply l should be theSameInstanceAs l
     }
 
     "return the given input stream socket" in {
-      val l = mock[Socket[InputStream]]
+      val l = mock[Source]
       IDENTITY unapply l should be theSameInstanceAs l
     }
 

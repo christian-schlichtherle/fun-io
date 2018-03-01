@@ -32,18 +32,18 @@ class InternalSpec extends WordSpec {
 
     "apply its parameter transformations in order" when {
       "being applied" in {
-        c(mock[Socket[OutputStream]]) shouldBe null
+        c(mock[Sink]) shouldBe null
         val io = inOrder(a, b)
-        (io verify a)(any[Socket[OutputStream]])
-        (io verify b)(any[Socket[OutputStream]])
+        (io verify a)(any[Sink])
+        (io verify b)(any[Sink])
         io verifyNoMoreInteractions ()
       }
 
       "being unapplied" in {
-        c unapply mock[Socket[InputStream]] shouldBe null
+        c unapply mock[Source] shouldBe null
         val io = inOrder(a, b)
-        io verify a unapply any[Socket[InputStream]]
-        io verify b unapply any[Socket[InputStream]]
+        io verify a unapply any[Source]
+        io verify b unapply any[Source]
         io verifyNoMoreInteractions ()
       }
     }

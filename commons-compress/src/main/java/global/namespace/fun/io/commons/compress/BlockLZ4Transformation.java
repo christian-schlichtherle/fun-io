@@ -31,10 +31,10 @@ final class BlockLZ4Transformation extends BufferedInvertibleTransformation {
     BlockLZ4Transformation(Parameters p) { this.parameters = p; }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
-        return oss.map(os -> new BlockLZ4CompressorOutputStream(os, parameters));
+    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+        return output.map(os -> new BlockLZ4CompressorOutputStream(os, parameters));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> iss) { return iss.map(BlockLZ4CompressorInputStream::new); }
+    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(BlockLZ4CompressorInputStream::new); }
 }

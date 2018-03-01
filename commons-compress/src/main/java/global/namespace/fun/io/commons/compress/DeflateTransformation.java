@@ -31,12 +31,12 @@ final class DeflateTransformation extends BufferedInvertibleTransformation {
     DeflateTransformation(final DeflateParameters p) { this.parameters = p; }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
-        return oss.map(out -> new DeflateCompressorOutputStream(out, parameters));
+    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+        return output.map(out -> new DeflateCompressorOutputStream(out, parameters));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> iss) {
-        return iss.map(in -> new DeflateCompressorInputStream(in, parameters));
+    public Socket<InputStream> unapply(Socket<InputStream> input) {
+        return input.map(in -> new DeflateCompressorInputStream(in, parameters));
     }
 }

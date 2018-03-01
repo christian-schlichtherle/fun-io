@@ -37,8 +37,8 @@ final class ROTTransformation implements Transformation {
     }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
-        return oss.map(out -> new FilterOutputStream(out) {
+    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+        return output.map(out -> new FilterOutputStream(out) {
 
             @Override
             public void write(int b) throws IOException { out.write(apply(b)); }
@@ -58,8 +58,8 @@ final class ROTTransformation implements Transformation {
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> iss) {
-        return iss.map(in -> new FilterInputStream(in) {
+    public Socket<InputStream> unapply(Socket<InputStream> input) {
+        return input.map(in -> new FilterInputStream(in) {
 
             @Override
             public int read() throws IOException { return unapply(in.read()); }

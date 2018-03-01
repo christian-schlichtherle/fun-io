@@ -20,12 +20,12 @@ final class BufferedIOTransformation implements Transformation {
     }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
-        return oss.map(out -> new BufferedOutputStream(out, size));
+    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+        return output.map(out -> new BufferedOutputStream(out, size));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> iss) { return iss.map(in -> new BufferedInputStream(in, size)); }
+    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(in -> new BufferedInputStream(in, size)); }
 
     @Override
     public Transformation inverse() { return this; }

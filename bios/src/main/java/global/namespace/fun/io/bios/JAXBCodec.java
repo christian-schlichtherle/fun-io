@@ -32,17 +32,17 @@ final class JAXBCodec implements Codec {
     JAXBCodec(final JAXBContext c) { this.context = c; }
 
     @Override
-    public Encoder encoder(Socket<OutputStream> osl) {
-        return obj -> osl.accept(out -> context.createMarshaller().marshal(obj, out));
+    public Encoder encoder(Socket<OutputStream> output) {
+        return obj -> output.accept(out -> context.createMarshaller().marshal(obj, out));
     }
 
     @Override
-    public Decoder decoder(Socket<InputStream> isl) {
+    public Decoder decoder(Socket<InputStream> input) {
         return new Decoder() {
             @SuppressWarnings("unchecked")
             @Override
             public <T> T decode(Type expected) throws Exception {
-                return isl.apply(in -> (T) context.createUnmarshaller().unmarshal(in));
+                return input.apply(in -> (T) context.createUnmarshaller().unmarshal(in));
             }
         };
     }

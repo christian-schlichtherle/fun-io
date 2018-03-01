@@ -105,9 +105,9 @@ public interface Socket<T extends AutoCloseable> extends XSupplier<T> {
      * Loans a resource to the given consumer.
      * The resource is obtained from a call to {@link #get()} and will be closed upon return from this method.
      */
-    default void accept(final XConsumer<? super T> c) throws Exception {
+    default void accept(final XConsumer<? super T> consumer) throws Exception {
         try (T resource = get()) {
-            c.accept(resource);
+            consumer.accept(resource);
         }
     }
 
@@ -119,9 +119,9 @@ public interface Socket<T extends AutoCloseable> extends XSupplier<T> {
      * Use the {@link #map(XFunction)} or {@link #flatMap(XFunction)} methods instead if you need to transform the
      * resource.
      */
-    default <U> U apply(final XFunction<? super T, ? extends U> f) throws Exception {
+    default <U> U apply(final XFunction<? super T, ? extends U> function) throws Exception {
         try (T resource = get()) {
-            return f.apply(resource);
+            return function.apply(resource);
         }
     }
 
@@ -130,12 +130,12 @@ public interface Socket<T extends AutoCloseable> extends XSupplier<T> {
      * If the given function fails then the resource gets closed before this method terminates, which makes the
      * transformation fail-safe.
      */
-    default <U extends AutoCloseable> Socket<U> map(XFunction<? super T, ? extends U> f) {
-        Objects.requireNonNull(f);
+    default <U extends AutoCloseable> Socket<U> map(XFunction<? super T, ? extends U> function) {
+        Objects.requireNonNull(function);
         return () -> {
             final T resource = get();
             try {
-                return f.apply(resource);
+                return function.apply(resource);
             } catch (final Throwable t1) {
                 try {
                     resource.close();
@@ -152,7 +152,7 @@ public interface Socket<T extends AutoCloseable> extends XSupplier<T> {
      *
      * @see #map(XFunction)
      */
-    default <U extends AutoCloseable> Socket<U> flatMap(XFunction<? super T, ? extends Socket<? extends U>> f) {
-        return map(f.andThen(Socket::get));
+    default <U extends AutoCloseable> Socket<U> flatMap(XFunction<? super T, ? extends Socket<? extends U>> function) {
+        return map(function.andThen(Socket::get));
     }
 }

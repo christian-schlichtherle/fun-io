@@ -50,25 +50,25 @@ public final class BIOS {
     /////////////////////////////
 
     /**
+     * Returns a socket which will never close the given input stream.
+     * This is intended to be used for data streaming or for interoperability with other libraries and frameworks where
+     * you dont want the given input stream to get closed by the returned socket.
+     */
+    public static Socket<InputStream> stream(InputStream in) {
+        requireNonNull(in);
+        return () -> new UncloseableInputStream(in);
+    }
+
+    /**
      * Returns a socket which will never close the given output stream.
      * This is intended to be used for data streaming or for interoperability with other libraries and frameworks where
      * you dont want the given output stream to get closed by the returned socket.
      * Upon a call to the {@code close()} method on the loaned output stream, the {@code flush()} method gets called on
      * the given output stream.
      */
-    public static Socket<OutputStream> stream(OutputStream os) {
-        requireNonNull(os);
-        return () -> new UncloseableOutputStream(os);
-    }
-
-    /**
-     * Returns a socket which will never close the given input stream.
-     * This is intended to be used for data streaming or for interoperability with other libraries and frameworks where
-     * you dont want the given input stream to get closed by the returned socket.
-     */
-    public static Socket<InputStream> stream(InputStream is) {
-        requireNonNull(is);
-        return () -> new UncloseableInputStream(is);
+    public static Socket<OutputStream> stream(OutputStream out) {
+        requireNonNull(out);
+        return () -> new UncloseableOutputStream(out);
     }
 
     ////////////////////////////
@@ -134,8 +134,8 @@ public final class BIOS {
     }
 
     /** Returns a transformation which compresses the data using a ZIP deflater. */
-    public static Transformation deflate(XSupplier<Deflater> ds, XSupplier<Inflater> is) {
-        return new DeflateTransformation(requireNonNull(ds), requireNonNull(is));
+    public static Transformation deflate(XSupplier<Deflater> deflaterSupplier, XSupplier<Inflater> inflaterSupplier) {
+        return new DeflateTransformation(requireNonNull(deflaterSupplier), requireNonNull(inflaterSupplier));
     }
 
     /** Returns a transformation which produces the GZIP compression format. */
@@ -162,8 +162,8 @@ public final class BIOS {
     }
 
     /** Returns a transformation which decompresses the data using a ZIP inflater. */
-    public static Transformation inflate(XSupplier<Inflater> is, XSupplier<Deflater> ds) {
-        return new InflateTransformation(requireNonNull(is), requireNonNull(ds));
+    public static Transformation inflate(XSupplier<Inflater> inflaterSupplier, XSupplier<Deflater> deflaterSupplier) {
+        return new InflateTransformation(requireNonNull(inflaterSupplier), requireNonNull(deflaterSupplier));
     }
 
     /**
@@ -185,9 +185,9 @@ public final class BIOS {
      * For any given transformation, it's advisable to provide a specialized implementation of the inverse
      * transformation which does not incur this overhead.
      */
-    public static Transformation inverse(Transformation t, XSupplier<Store> ss) {
-        requireNonNull(ss);
-        return inverse(t, (Socket<Buffer>) () -> Buffer.of(ss.get()));
+    public static Transformation inverse(Transformation t, XSupplier<Store> storeSupplier) {
+        requireNonNull(storeSupplier);
+        return inverse(t, (Socket<Buffer>) () -> Buffer.of(storeSupplier.get()));
     }
 
     /**
@@ -199,8 +199,8 @@ public final class BIOS {
      * For any given transformation, it's advisable to provide a specialized implementation of the inverse
      * transformation which does not incur this overhead.
      */
-    public static Transformation inverse(Transformation t, Socket<Buffer> bl) {
-        return new BufferedInverseTransformation(requireNonNull(t), requireNonNull(bl));
+    public static Transformation inverse(Transformation t, Socket<Buffer> bufferSocket) {
+        return new BufferedInverseTransformation(requireNonNull(t), requireNonNull(bufferSocket));
     }
 
     /** Returns a transformation which rotates each ASCII letter by 13 positions. */
@@ -235,8 +235,8 @@ public final class BIOS {
      * Uses new {@link XMLEncoder}s and {@link XMLDecoder}s obtained by the given functions in order to encode and
      * decode object graphs to and from octet streams.
      */
-    public static Codec xmlCodec(XFunction<? super OutputStream, ? extends XMLEncoder> e,
-                                 XFunction<? super InputStream, ? extends XMLDecoder> d) {
-        return new XMLCodec(requireNonNull(e), requireNonNull(d));
+    public static Codec xmlCodec(XFunction<? super OutputStream, ? extends XMLEncoder> xmlEncoders,
+                                 XFunction<? super InputStream, ? extends XMLDecoder> xmlDecoders) {
+        return new XMLCodec(requireNonNull(xmlEncoders), requireNonNull(xmlDecoders));
     }
 }

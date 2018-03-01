@@ -31,10 +31,10 @@ final class GZIPTransformation extends BufferedInvertibleTransformation {
     GZIPTransformation(final GzipParameters p) { this.parameters = p; }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> oss) {
-        return oss.map(out -> new GzipCompressorOutputStream(out, parameters));
+    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+        return output.map(out -> new GzipCompressorOutputStream(out, parameters));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> iss) { return iss.map(GzipCompressorInputStream::new); }
+    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(GzipCompressorInputStream::new); }
 }

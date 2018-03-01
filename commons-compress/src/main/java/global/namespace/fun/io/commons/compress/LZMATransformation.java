@@ -26,8 +26,8 @@ import java.io.OutputStream;
 final class LZMATransformation extends BufferedInvertibleTransformation {
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> oss) { return oss.map(LZMACompressorOutputStream::new); }
+    public Socket<OutputStream> apply(Socket<OutputStream> output) { return output.map(LZMACompressorOutputStream::new); }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> iss) { return iss.map(LZMACompressorInputStream::new); }
+    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(LZMACompressorInputStream::new); }
 }
