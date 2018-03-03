@@ -34,7 +34,7 @@ public interface ConnectedCodec extends Encoder, Decoder {
 
     default <T> T decode(Type expected) throws Exception { return codec().decoder(store().input()).decode(expected); }
 
-    /** Returns a clone of the given original by encoding it to the underlying store and decoding it again. */
+    /** Returns a deep clone of the given object by encoding it to the underlying store and decoding it again. */
     default <T> T clone(T t) throws Exception {
         encode(t);
         return decode(t.getClass());
