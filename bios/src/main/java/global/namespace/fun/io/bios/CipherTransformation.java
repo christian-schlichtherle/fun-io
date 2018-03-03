@@ -33,12 +33,12 @@ final class CipherTransformation implements Transformation {
     }
 
     @Override
-    public Socket<OutputStream> apply(final Socket<OutputStream> output) {
+    public Socket<OutputStream> apply(Socket<OutputStream> output) {
         return output.map(out -> new CipherOutputStream(out, outputCipherSupplier.get()));
     }
 
     @Override
-    public Socket<InputStream> unapply(final Socket<InputStream> input) {
+    public Socket<InputStream> unapply(Socket<InputStream> input) {
         return input.map(in -> new CipherInputStream(in, inputCipherSupplier.get()));
     }
 
