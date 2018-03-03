@@ -36,14 +36,14 @@ public interface Codec {
     Decoder decoder(Socket<InputStream> input);
 
     /**
-     * Returns a a clone of the given original by encoding it to a temporary store obtained from the given supplier and
+     * Returns a a clone of the given object by encoding it to a temporary store obtained from the given supplier and
      * decoding it again.
      */
     default <T> T clone(T t, XSupplier<Store> storeSupplier) throws Exception {
         return clone(t, (Socket<Buffer>) () -> Buffer.of(storeSupplier.get()));
     }
 
-    /** Returns a clone of the given original by encoding it to a loaned buffer and decoding it again. */
+    /** Returns a clone of the given object by encoding it to a loaned buffer and decoding it again. */
     default <T> T clone(T t, Socket<Buffer> bufferSocket) throws Exception {
         return bufferSocket.apply(buffer -> connect(buffer).clone(t));
     }
