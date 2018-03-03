@@ -28,6 +28,7 @@ import java.beans.XMLEncoder;
 import java.io.*;
 import java.nio.file.Path;
 import java.util.Base64;
+import java.util.Optional;
 import java.util.prefs.Preferences;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -36,7 +37,7 @@ import static global.namespace.fun.io.api.Store.BUFSIZE;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Provides static factory methods for sockets, stores, transformations and codecs.
+ * Provides static factory methods for sockets, stores, transformations, codecs and more.
  * The abbreviation stands for Basic Input/Output System (pun intended).
  *
  * @author Christian Schlichtherle
@@ -50,6 +51,39 @@ public final class BIOS {
     /////////////////////////////
 
     /**
+     * Returns an input stream socket which loads the resource with the given {@code name} using
+     * {@link ClassLoader#getSystemResourceAsStream(String)}.
+     *
+     * @param  name the name of the resource to load.
+     */
+    public static Socket<InputStream> resource(String name) {
+        return () -> Optional
+                .ofNullable(ClassLoader.getSystemResourceAsStream(name))
+                .orElseThrow(() -> new FileNotFoundException(name));
+    }
+
+    /**
+     * Returns an input stream socket which loads the resource with the given {@code name} using
+     * {@link ClassLoader#getResourceAsStream(String)}.
+     *
+     * @param  name the name of the resource to load.
+     * @param  classLoader
+     *         The class loader to use for loading the resource.
+     */
+    public static Socket<InputStream> resource(String name, ClassLoader classLoader) {
+        return () -> Optional
+                .ofNullable(classLoader.getResourceAsStream(name))
+                .orElseThrow(() -> new FileNotFoundException(name));
+    }
+
+    /**
+     * Returns an input stream socket which reads from standard input without ever closing it.
+     *
+     * @see #stream(InputStream)
+     */
+    public static Socket<InputStream> stdin() { return stream(System.in); }
+
+    /**
      * Returns a socket which will never close the given input stream.
      * This is intended to be used for data streaming or for interoperability with other libraries and frameworks where
      * you dont want the given input stream to get closed by the returned socket.
@@ -58,6 +92,20 @@ public final class BIOS {
         requireNonNull(in);
         return () -> new UncloseableInputStream(in);
     }
+
+    /**
+     * Returns an output stream socket which writes to standard output without ever closing it.
+     *
+     * @see #stream(OutputStream)
+     */
+    public static Socket<OutputStream> stdout() { return stream(System.out); }
+
+    /**
+     * Returns an output stream socket which writes to standard error without ever closing it.
+     *
+     * @see #stream(OutputStream)
+     */
+    public static Socket<OutputStream> stderr() { return stream(System.err); }
 
     /**
      * Returns a socket which will never close the given output stream.
@@ -83,6 +131,16 @@ public final class BIOS {
 
     /** Returns a path store for the given file. */
     public static Store pathStore(Path p) { return new PathStore(requireNonNull(p)); }
+
+    /** Returns a store for the system preferences node for the package of the given class and the given key. */
+    public static Store systemPreferencesStore(Class<?> classInPackage, String key) {
+        return preferencesStore(Preferences.systemNodeForPackage(classInPackage), key);
+    }
+
+    /** Returns a store for the user preferences node for the package of the given class and the given key. */
+    public static Store userPreferencesStore(Class<?> classInPackage, String key) {
+        return preferencesStore(Preferences.userNodeForPackage(classInPackage), key);
+    }
 
     /** Returns a preferences store for the given preferences node and key. */
     public static Store preferencesStore(Preferences p, String key) {
@@ -238,5 +296,46 @@ public final class BIOS {
     public static Codec xmlCodec(XFunction<? super OutputStream, ? extends XMLEncoder> xmlEncoders,
                                  XFunction<? super InputStream, ? extends XMLDecoder> xmlDecoders) {
         return new XMLCodec(requireNonNull(xmlEncoders), requireNonNull(xmlDecoders));
+    }
+
+    ////////////////////////////
+    //////// UTILITIES /////////
+    ////////////////////////////
+
+    /**
+     * Copies the data from the given source to the given sink.
+     * <p>
+     * The implementation in this class is suitable for only small amounts of data, say a few kilobytes.
+     */
+    public static void copy(final Socket<? extends InputStream> input, final Socket<? extends OutputStream> output)
+    throws Exception {
+        input.accept(in -> {
+            output.accept(out -> {
+                final byte[] buffer = new byte[Store.BUFSIZE];
+                int read;
+                while (0 <= (read = in.read(buffer))) {
+                    out.write(buffer, 0, read);
+                }
+            });
+        });
+    }
+
+    /**
+     * Returns a deep clone of the given object by serializing and deserializing it to and from a memory store.
+     *
+     * @see #serializationCodec()
+     * @see #memoryStore()
+     */
+    public static <T extends Serializable> T clone(T t) throws Exception { return clone(t, Store.BUFSIZE); }
+
+    /**
+     * Returns a deep clone of the given object by serializing and deserializing it to and from a memory store with the
+     * given buffer size.
+     *
+     * @see #serializationCodec()
+     * @see #memoryStore(int)
+     */
+    public static <T extends Serializable> T clone(T t, int bufferSize) throws Exception {
+        return serializationCodec().connect(memoryStore(bufferSize)).clone(t);
     }
 }

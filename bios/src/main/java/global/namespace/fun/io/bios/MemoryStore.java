@@ -64,12 +64,13 @@ final class MemoryStore implements Store {
         return optContent.orElseThrow(FileNotFoundException::new);
     }
 
-    /** Returns a duplicate of the content of this store. */
-    private byte[] content() { return optContent.map(byte[]::clone).orElseThrow(IllegalStateException::new); }
+    @Override
+    public byte[] content() throws IOException {
+        return optContent.map(byte[]::clone).orElseThrow(FileNotFoundException::new);
+    }
 
-    /** Assigns a duplicate of the given byte array as the content of this store. */
-    private MemoryStore content(final byte[] content) {
-        optContent = Optional.ofNullable(content.clone());
-        return this;
+    @Override
+    public void content(byte[] content) throws IOException {
+        optContent = Optional.of(content.clone());
     }
 }

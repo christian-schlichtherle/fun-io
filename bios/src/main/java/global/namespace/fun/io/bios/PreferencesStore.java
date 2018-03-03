@@ -66,7 +66,8 @@ final class PreferencesStore implements Store {
         }
     }
 
-    private byte[] content() throws IOException {
+    @Override
+    public byte[] content() throws IOException {
         return optContent()
                 .orElseThrow(() -> new FileNotFoundException(
                         "Cannot locate the key \"" + key + "\" in the " +
@@ -75,8 +76,9 @@ final class PreferencesStore implements Store {
                                 prefs.absolutePath() + "\"."));
     }
 
-    private void content(byte[] data) throws IOException {
-        prefs.putByteArray(key, data);
+    @Override
+    public void content(final byte[] content) throws IOException {
+        prefs.putByteArray(key, content);
         sync();
     }
 

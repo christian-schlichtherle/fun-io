@@ -15,6 +15,7 @@
  */
 package global.namespace.fun.io.api;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,16 +33,16 @@ public interface Store {
     /** The default buffer size, which is {@value}. */
     int BUFSIZE = 8 * 1024;
 
-    /** Returns an output stream socket for (over)writing the content of the backing store. */
+    /** Returns an output stream socket for (over)writing the content of this store. */
     Socket<OutputStream> output();
 
-    /** Returns an input stream socket for reading the content of the backing store. */
+    /** Returns an input stream socket for reading the content of this store. */
     Socket<InputStream> input();
 
     /** Deletes the content of this store. */
     void delete() throws IOException;
 
-    /** Returns the size of the content in this store, if any. */
+    /** Returns the size of the content of this store, if present. */
     OptionalLong size() throws IOException;
 
     /** Returns {@code true} if and only if some content exists in this store. */
@@ -70,5 +71,41 @@ public interface Store {
             @Override
             public OptionalLong size() throws IOException { return Store.this.size(); }
         };
+    }
+
+    /**
+     * Returns the content of this store.
+     *
+     * @throws IOException if co content is present or cannot be read for some reason.
+     * @throws IllegalStateException if the content length exceeds {@link Integer#MAX_VALUE}.
+     */
+    default byte[] content() throws IOException {
+        try {
+            return input().map(DataInputStream::new).apply(in -> {
+                @SuppressWarnings("ConstantConditions")
+                final long length = size().getAsLong();
+                if (length > Integer.MAX_VALUE) {
+                    throw new IllegalStateException("Content length " + length + " exceeds Integer.MAX_VALUE.");
+                }
+                final byte[] content = new byte[(int) length];
+                in.readFully(content);
+                return content;
+            });
+        } catch (IOException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new IOException(e);
+        }
+    }
+
+    /** Sets the content of this store. */
+    default void content(final byte[] content) throws IOException {
+        try {
+            output().accept(out -> out.write(content));
+        } catch (IOException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new IOException(e);
+        }
     }
 }
