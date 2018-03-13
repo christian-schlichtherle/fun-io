@@ -32,8 +32,14 @@ public interface Codec {
     /** Returns an encoder which writes object graphs to the given output stream socket. */
     Encoder encoder(Socket<OutputStream> output);
 
+    /** Returns an encoder which writes object graphs to the given store. */
+    default Encoder encoder(Store store) { return encoder(store.output()); }
+
     /** Returns a decoder which reads object graphs from the given input stream socket. */
     Decoder decoder(Socket<InputStream> input);
+
+    /** Returns a decoder which reads object graphs from the given store. */
+    default Decoder decoder(Store store) { return decoder(store.input()); }
 
     /**
      * Returns a deep clone of the given object by encoding it to a temporary store obtained from the given supplier and

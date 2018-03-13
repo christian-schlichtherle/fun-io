@@ -30,9 +30,9 @@ public interface ConnectedCodec extends Encoder, Decoder {
     /** Returns the underlying store. */
     Store store();
 
-    default void encode(Object o) throws Exception { codec().encoder(store().output()).encode(o); }
+    default void encode(Object o) throws Exception { codec().encoder(store()).encode(o); }
 
-    default <T> T decode(Type expected) throws Exception { return codec().decoder(store().input()).decode(expected); }
+    default <T> T decode(Type expected) throws Exception { return codec().decoder(store()).decode(expected); }
 
     /** Returns a deep clone of the given object by encoding it to the underlying store and decoding it again. */
     default <T> T clone(T t) throws Exception {
