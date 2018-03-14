@@ -17,10 +17,11 @@ package global.namespace.fun.io.bios;
 
 import global.namespace.fun.io.api.Buffer;
 import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.api.Store;
 import global.namespace.fun.io.api.Transformation;
 
 import java.io.*;
+
+import static global.namespace.fun.io.bios.BIOS.copy;
 
 final class BufferedInverseTransformation implements Transformation {
 
@@ -34,32 +35,26 @@ final class BufferedInverseTransformation implements Transformation {
 
     @Override
     public Socket<OutputStream> apply(Socket<OutputStream> output) {
-        return output.flatMap(originalOut -> bufferSocket.flatMap(buffer -> buffer.output().map(bufferOut -> decorate(bufferOut, () -> {
-            if (buffer.exists()) { // for idempotence!
-                try (OutputStream out = originalOut) {
-                    transformation.unapply(buffer.input()).accept(in -> copy(in, out));
-                } finally {
-                    buffer.close();
+        return bufferSocket.flatMap(buffer -> {
+            final AutoCloseable afterWritingBuffer = () -> {
+                if (buffer.exists()) { // for idempotence!
+                    try {
+                        copy(transformation.unapply(buffer.input()), output);
+                    } finally {
+                        buffer.close();
+                    }
                 }
-            }
-        }))));
+            };
+            return buffer.output().map(bufferOut -> decorate(bufferOut, afterWritingBuffer));
+        });
     }
 
     @Override
     public Socket<InputStream> unapply(Socket<InputStream> input) {
-        return input.flatMap(originalIn -> bufferSocket.flatMap(buffer -> {
-            try (InputStream in = originalIn) {
-                transformation.apply(buffer.output()).accept(out -> copy(in, out));
-            }
+        return bufferSocket.flatMap(buffer -> {
+            copy(input, transformation.apply(buffer.output()));
             return buffer.input().map(bufferIn -> decorate(bufferIn, buffer));
-        }));
-    }
-
-    private static void copy(final InputStream in, final OutputStream out) throws IOException {
-        final byte[] buffer = new byte[Store.BUFSIZE];
-        for (int read; (read = in.read(buffer)) >= 0; ) {
-            out.write(buffer, 0, read);
-        }
+        });
     }
 
     private static OutputStream decorate(OutputStream out, AutoCloseable second) {

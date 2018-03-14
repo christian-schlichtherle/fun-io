@@ -29,7 +29,6 @@ final class Close {
         } catch (Exception e) {
             throw new IOException(e);
         }
-
     }
 
     private static void both(final AutoCloseable first, final AutoCloseable second) throws Exception {
