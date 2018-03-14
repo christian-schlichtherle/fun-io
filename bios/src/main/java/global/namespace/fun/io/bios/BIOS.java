@@ -307,6 +307,13 @@ public final class BIOS {
      * <p>
      * The implementation in this class is suitable for only small amounts of data, say a few kilobytes.
      */
+    public static void copy(Store source, Store sink) throws Exception { copy(source.input(), sink.output()); }
+
+    /**
+     * Copies the data from the given input to the given output.
+     * <p>
+     * The implementation in this class is suitable for only small amounts of data, say a few kilobytes.
+     */
     public static void copy(final Socket<? extends InputStream> input, final Socket<? extends OutputStream> output)
     throws Exception {
         input.accept(in -> {
@@ -321,7 +328,8 @@ public final class BIOS {
     }
 
     /**
-     * Returns a deep clone of the given object by serializing and deserializing it to and from a memory store.
+     * Returns a deep clone of the given object by serializing it to a memory store and de-serializing it again.
+     * The memory store uses {@value Store#BUFSIZE} bytes as its initial buffer size.
      *
      * @see #serializationCodec()
      * @see #memoryStore()
@@ -329,8 +337,8 @@ public final class BIOS {
     public static <T extends Serializable> T clone(T t) throws Exception { return clone(t, Store.BUFSIZE); }
 
     /**
-     * Returns a deep clone of the given object by serializing and deserializing it to and from a memory store with the
-     * given buffer size.
+     * Returns a deep clone of the given object by serializing it to a memory store and de-serializing it again.
+     * The memory store uses the given number of byes as its initial buffer size.
      *
      * @see #serializationCodec()
      * @see #memoryStore(int)
