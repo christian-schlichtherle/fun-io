@@ -20,9 +20,6 @@ import global.namespace.fun.io.api.function.XFunction;
 import global.namespace.fun.io.api.function.XSupplier;
 
 import javax.crypto.Cipher;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
@@ -270,12 +267,6 @@ public final class BIOS {
     ////////////////////////////
     ////////// CODECS //////////
     ////////////////////////////
-
-    /**
-     * Uses {@link Marshaller}s and {@link Unmarshaller}s derived from the given {@link JAXBContext} to encode and
-     * decode object graphs to and from octet streams.
-     */
-    public static Codec jaxbCodec(JAXBContext c) { return new JAXBCodec(requireNonNull(c)); }
 
     /**
      * Uses {@link ObjectOutputStream}s and {@link ObjectInputStream}s to encode and decode object graphs to and from

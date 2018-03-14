@@ -18,7 +18,7 @@ import Dependencies._
 
 lazy val root: Project = project
   .in(file("."))
-  .aggregate(api, bios, commonsCompress, it, jackson, scalaApi, xz)
+  .aggregate(api, bios, commonsCompress, it, jackson, jaxb, scalaApi, xz)
   .settings(releaseSettings)
   .settings(aggregateSettings)
   .settings(name := "Fun I/O")
@@ -63,7 +63,7 @@ lazy val commonsCompress: Project = project
 
 lazy val it: Project = project
   .in(file("it"))
-  .dependsOn(bios, commonsCompress, jackson, scalaApi, xz)
+  .dependsOn(bios, commonsCompress, jackson, jaxb, scalaApi, xz)
   .settings(scalaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -86,6 +86,20 @@ lazy val jackson: Project = project
     ),
     name := "Fun I/O Jackson",
     normalizedName := "fun-io-jackson"
+  )
+
+lazy val jaxb: Project = project
+  .in(file("jaxb"))
+  .dependsOn(api)
+  .settings(javaLibrarySettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      Activation_API,
+      JAXB_API,
+      JAXB_Runtime
+    ),
+    name := "Fun I/O JAXB",
+    normalizedName := "fun-io-jaxb"
   )
 
 lazy val scalaApi: Project = project

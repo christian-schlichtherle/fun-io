@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package global.namespace.fun.io.bios;
+package global.namespace.fun.io.jaxb;
 
 import global.namespace.fun.io.api.Codec;
 import global.namespace.fun.io.api.Decoder;
@@ -25,11 +25,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 
-final class JAXBCodec implements Codec {
+final class XMLCodec implements Codec {
 
     private final JAXBContext context;
 
-    JAXBCodec(final JAXBContext c) { this.context = c; }
+    XMLCodec(final JAXBContext c) { this.context = c; }
 
     @Override
     public Encoder encoder(Socket<OutputStream> output) {

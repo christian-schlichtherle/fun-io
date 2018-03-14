@@ -14,7 +14,7 @@ import global.namespace.fun.io.bios.BIOS._       // from module `fun-io-bios`
 import global.namespace.fun.io.jackson.Jackson._ // from module `fun-io-jackson`
 import global.namespace.fun.io.scala.api._       // from module `fun-io-scala-api`
 
-val encoder: Encoder = jsonCodec encoder stream(System.out)
+val encoder: Encoder = jsonCodec encoder stdout
 encoder encode "Hello world!"
 ```
 
@@ -27,13 +27,14 @@ import static global.namespace.fun.io.jackson.Jackson.*;
 
 ...
 
-Encoder encoder = jsonCodec().encoder(stream(System.out));
+Encoder encoder = jsonCodec().encoder(stdout());
 encoder.encode("Hello world!");
 ```
 
 The preceding code would encode the string `"Hello world!` to JSON and write it to `System.out`.
-The call to `stream(System.out)` wraps it in a socket which ignores any call to the `OutputStream.close()` method as it 
+The call to `stdout()` wraps `System.out` in a socket which ignores any call to the `OutputStream.close()` method as it 
 would be inappropriate to do that on `System.out`.
+The `stream` function allows to do the same for any given `InputStream` or `OutputStream`.
  
 Note that the `encoder` object is virtually stateless, and hence reusable.
 
@@ -79,7 +80,6 @@ Fun I/O has a modular architecture, providing the following modules:
 + `fun-io-bios`: The Basic Input/Output System (pun intended) provides basic implementations for encoding, transforming, 
   storing or streaming data.
   + The `BIOS` class provides the following `Codec` functions:
-    + `jaxbCodec` marshals/unmarshals objects to/from XML using JAXB.
     + `serializationCodec` serializes/deserializes objects using `ObjectOutputStream`/`ObjectInputStream`.
     + `xmlCodec` encodes/decodes objects using `XMLEncoder`/`XMLDecoder`.
   + The `BIOS` class also provides the following `Transformation` functions:
@@ -109,6 +109,8 @@ Fun I/O has a modular architecture, providing the following modules:
   + `lzma2` compresses/decompresses data using the LZMA2 compression format.
 + `fun-io-jackson`: Depends on [Jackson Databind] to provide the following `Codec` functions in the `Jackson` class:
   + `jsonCodec` marshals/unmarshals objects to/from JSON using Jackson.
++ `fun-io-jaxb`: Depends on [JAXB] to provide the following `Codec` functions in the `JAXB` class:
+  + `xmlCodec` marshals/unmarshals objects to/from XML using JAXB.
 + `fun-io-xz`: Depends on [XZ for Java] to provide the following compression `Transformation` functions in the `XZ` 
   class:
   + `lzma2` compresses/decompresses data using the LZMA2 compression format.
@@ -116,6 +118,7 @@ Fun I/O has a modular architecture, providing the following modules:
 
 [Apache Commons Compress]: https://commons.apache.org/proper/commons-compress/
 [Jackson Databind]: http://wiki.fasterxml.com/JacksonHome
+[JAXB]: https://javaee.github.io/jaxb-v2/
 [Monoid]: https://en.wikipedia.org/wiki/Monoid
 [ROT13]: https://en.wikipedia.org/wiki/ROT13
 [XZ for Java]: https://tukaani.org/xz/

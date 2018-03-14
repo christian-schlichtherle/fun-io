@@ -21,6 +21,7 @@ import javax.xml.bind.JAXBContext
 import global.namespace.fun.io.bios.BIOS._
 import global.namespace.fun.io.it.PBE.pbe
 import global.namespace.fun.io.jackson.Jackson._
+import global.namespace.fun.io.jaxb.JAXB.{xmlCodec => jaxbCodec}
 import global.namespace.fun.io.scala.api._
 import global.namespace.fun.io.xz.XZ._
 import org.scalatest.Matchers._
