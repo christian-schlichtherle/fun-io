@@ -307,7 +307,7 @@ public final class BIOS {
      * <p>
      * The implementation in this class is suitable for only small amounts of data, say a few kilobytes.
      */
-    public static void copy(Store source, Store sink) throws Exception { copy(source.input(), sink.output()); }
+    public static void copy(Source source, Sink sink) throws Exception { copy(source.input(), sink.output()); }
 
     /**
      * Copies the data from the given input to the given output.
@@ -319,8 +319,7 @@ public final class BIOS {
         input.accept(in -> {
             output.accept(out -> {
                 final byte[] buffer = new byte[Store.BUFSIZE];
-                int read;
-                while (0 <= (read = in.read(buffer))) {
+                for (int read; 0 <= (read = in.read(buffer)); ) {
                     out.write(buffer, 0, read);
                 }
             });

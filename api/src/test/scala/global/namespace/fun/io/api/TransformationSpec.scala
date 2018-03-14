@@ -15,7 +15,7 @@
  */
 package global.namespace.fun.io.api
 
-import java.io._
+import java.io.{InputStream, OutputStream}
 
 import global.namespace.fun.io.api.Transformation._
 import org.scalatest.Matchers.{inOrder => _, _}
@@ -31,13 +31,13 @@ class TransformationSpec extends WordSpec {
     }
 
     "return the given output stream socket" in {
-      val l = mock[Sink]
-      IDENTITY apply l should be theSameInstanceAs l
+      val output = mock[Socket[OutputStream]]
+      IDENTITY apply output should be theSameInstanceAs output
     }
 
     "return the given input stream socket" in {
-      val l = mock[Source]
-      IDENTITY unapply l should be theSameInstanceAs l
+      val input = mock[Socket[InputStream]]
+      IDENTITY unapply input should be theSameInstanceAs input
     }
 
     "return itself as its inverse" in {

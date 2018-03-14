@@ -28,27 +28,27 @@ class CodecSpec extends WordSpec {
   "A codec" when {
     val c = mock[Codec]
 
-    "mapping a transformation" should {
+    "being transformed" should {
       when(c map any[Transformation]).thenCallRealMethod
 
       val t = mock[Transformation]
       val tc = c map t
 
       "apply the transformation" in {
-        val l = mock[Sink]
-        tc encoder l shouldBe null
+        val output = mock[Socket[OutputStream]]
+        tc encoder output shouldBe null
         val io = inOrder(t, c)
-        io verify t apply l
-        io verify c encoder any[Sink]
+        io verify t apply output
+        io verify c encoder any[Socket[OutputStream]]
         io verifyNoMoreInteractions ()
       }
 
       "unapply the transformation" in {
-        val l = mock[Source]
-        tc decoder l shouldBe null
+        val input = mock[Socket[InputStream]]
+        tc decoder input shouldBe null
         val io = inOrder(t, c)
-        io verify t unapply l
-        io verify c decoder any[Source]
+        io verify t unapply input
+        io verify c decoder any[Socket[InputStream]]
         io verifyNoMoreInteractions ()
       }
     }

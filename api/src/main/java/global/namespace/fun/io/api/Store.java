@@ -28,16 +28,10 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Christian Schlichtherle
  */
-public interface Store {
+public interface Store extends Source, Sink {
 
     /** The default buffer size, which is {@value}. */
     int BUFSIZE = 8 * 1024;
-
-    /** Returns an output stream socket for (over)writing the content of this store. */
-    Socket<OutputStream> output();
-
-    /** Returns an input stream socket for reading the content of this store. */
-    Socket<InputStream> input();
 
     /** Deletes the content of this store. */
     void delete() throws IOException;

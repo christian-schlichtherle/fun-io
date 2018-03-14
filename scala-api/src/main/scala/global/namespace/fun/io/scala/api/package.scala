@@ -15,8 +15,6 @@
  */
 package global.namespace.fun.io.scala
 
-import java.io.{InputStream, OutputStream}
-
 import global.namespace.fun.io.api.Transformation.IDENTITY
 import global.namespace.fun.io.api.function.{XConsumer, XFunction, XSupplier}
 import global.namespace.fun.io.{api => j}
@@ -30,9 +28,9 @@ package object api {
   type ConnectedCodec = j.ConnectedCodec
   type Decoder = j.Decoder
   type Encoder = j.Encoder
-  type Sink = Socket[OutputStream]
+  type Sink = j.Sink
   type Socket[T <: AutoCloseable] = j.Socket[T]
-  type Source = Socket[InputStream]
+  type Source = j.Source
   type Store = j.Store
   type Transformation = j.Transformation
 
