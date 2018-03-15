@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Type;
 
 final class SerializationCodec implements Codec {
 
@@ -38,7 +37,7 @@ final class SerializationCodec implements Codec {
         return new Decoder() {
             @Override
             @SuppressWarnings("unchecked")
-            public <T> T decode(Type expected) throws Exception {
+            public <T> T decode(Class<T> expected) throws Exception {
                 return input.map(ObjectInputStream::new).apply(ois -> (T) ois.readObject());
             }
         };

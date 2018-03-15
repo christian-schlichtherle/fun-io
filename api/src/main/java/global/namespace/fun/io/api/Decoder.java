@@ -15,8 +15,6 @@
  */
 package global.namespace.fun.io.api;
 
-import java.lang.reflect.Type;
-
 /**
  * Decodes an object graph.
  *
@@ -34,5 +32,5 @@ public interface Decoder {
      * @return A duplicate of the original object graph.
      *         Its actual type may differ from the expected type.
      */
-    <T> T decode(Type expected) throws Exception;
+    <T> T decode(Class<T> expected) throws Exception;
 }

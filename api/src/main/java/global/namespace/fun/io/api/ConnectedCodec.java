@@ -15,8 +15,6 @@
  */
 package global.namespace.fun.io.api;
 
-import java.lang.reflect.Type;
-
 /**
  * Encapsulated a {@link #codec() codec} and a {@link #store() store}.
  *
@@ -32,11 +30,12 @@ public interface ConnectedCodec extends Encoder, Decoder {
 
     default void encode(Object o) throws Exception { codec().encoder(store()).encode(o); }
 
-    default <T> T decode(Type expected) throws Exception { return codec().decoder(store()).decode(expected); }
+    default <T> T decode(Class<T> expected) throws Exception { return codec().decoder(store()).decode(expected); }
 
     /** Returns a deep clone of the given object by encoding it to the underlying store and decoding it again. */
+    @SuppressWarnings("unchecked")
     default <T> T clone(T t) throws Exception {
         encode(t);
-        return decode(t.getClass());
+        return decode((Class<? extends T>) t.getClass());
     }
 }
