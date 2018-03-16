@@ -23,13 +23,12 @@ import global.namespace.fun.io.api.Socket;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Objects;
 
 final class JSONCodec implements Codec {
 
     private final ObjectMapper mapper;
 
-    JSONCodec(final ObjectMapper m) { this.mapper = Objects.requireNonNull(m); }
+    JSONCodec(final ObjectMapper m) { this.mapper = m; }
 
     @Override
     public Encoder encoder(Socket<OutputStream> output) { return obj -> output.accept(out -> mapper.writeValue(out, obj)); }

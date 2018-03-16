@@ -18,6 +18,8 @@ package global.namespace.fun.io.jackson;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import global.namespace.fun.io.api.Codec;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Provides static factory methods for a JSON codec.
  *
@@ -31,5 +33,5 @@ public final class Jackson {
     public static Codec jsonCodec() { return jsonCodec(new ObjectMapper()); }
 
     /** Returns a JSON codec using the given object mapper. */
-    public static Codec jsonCodec(ObjectMapper mapper) { return new JSONCodec(mapper); }
+    public static Codec jsonCodec(ObjectMapper mapper) { return new JSONCodec(requireNonNull(mapper)); }
 }
