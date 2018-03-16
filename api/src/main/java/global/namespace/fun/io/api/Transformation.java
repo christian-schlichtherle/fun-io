@@ -74,8 +74,14 @@ public interface Transformation {
     /** Returns an output stream socket which decorates the given output stream socket. */
     Socket<OutputStream> apply(Socket<OutputStream> output);
 
+    /** Returns a sink which decorates the given sink. */
+    default Sink apply(Sink sink) { return () -> apply(sink.output()); }
+
     /** Returns an input stream socket which decorates the given input stream socket. */
     Socket<InputStream> unapply(Socket<InputStream> input);
+
+    /** Returns a source which decorates the given source. */
+    default Source unapply(Source source) { return () -> unapply(source.input()); };
 
     /**
      * Returns the inverse of this transformation (optional operation).
