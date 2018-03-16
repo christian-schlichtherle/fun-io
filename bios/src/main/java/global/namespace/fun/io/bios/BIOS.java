@@ -44,76 +44,78 @@ public final class BIOS {
     private BIOS() { }
 
     /////////////////////////////
-    ////////// SOCKETS //////////
+    ////////// SOURCES //////////
     /////////////////////////////
 
     /**
-     * Returns an input stream socket which loads the resource with the given {@code name} using
+     * Returns a source which loads the resource with the given {@code name} using
      * {@link ClassLoader#getSystemResourceAsStream(String)}.
      *
      * @param  name the name of the resource to load.
      */
-    public static Socket<InputStream> resource(String name) {
-        return () -> Optional
+    public static Source resource(String name) {
+        return () -> () -> Optional
                 .ofNullable(ClassLoader.getSystemResourceAsStream(name))
                 .orElseThrow(() -> new FileNotFoundException(name));
     }
 
     /**
-     * Returns an input stream socket which loads the resource with the given {@code name} using
+     * Returns a source which loads the resource with the given {@code name} using
      * {@link ClassLoader#getResourceAsStream(String)}.
      *
      * @param  name the name of the resource to load.
      * @param  classLoader
      *         The class loader to use for loading the resource.
      */
-    public static Socket<InputStream> resource(String name, ClassLoader classLoader) {
-        return () -> Optional
+    public static Source resource(String name, ClassLoader classLoader) {
+        return () -> () -> Optional
                 .ofNullable(classLoader.getResourceAsStream(name))
                 .orElseThrow(() -> new FileNotFoundException(name));
     }
 
     /**
-     * Returns an input stream socket which reads from standard input without ever closing it.
+     * Returns a source which reads from standard input without ever closing it.
      *
      * @see #stream(InputStream)
      */
-    public static Socket<InputStream> stdin() { return stream(System.in); }
+    public static Source stdin() { return stream(System.in); }
 
     /**
-     * Returns a socket which will never close the given input stream.
-     * This is intended to be used for data streaming or for interoperability with other libraries and frameworks where
-     * you dont want the given input stream to get closed by the returned socket.
+     * Returns a source which will never {@linkplain InputStream#close() close} the given input stream.
+     * This is intended to be used for data streaming or for interoperability with other libraries and frameworks.
      */
-    public static Socket<InputStream> stream(InputStream in) {
+    public static Source stream(InputStream in) {
         requireNonNull(in);
-        return () -> new UncloseableInputStream(in);
+        return () -> () -> new UncloseableInputStream(in);
     }
 
+    ///////////////////////////
+    ////////// SINKS //////////
+    ///////////////////////////
+
     /**
-     * Returns an output stream socket which writes to standard output without ever closing it.
+     * Returns a sink which writes to standard output without ever closing it.
      *
      * @see #stream(OutputStream)
      */
-    public static Socket<OutputStream> stdout() { return stream(System.out); }
+    public static Sink stdout() { return stream(System.out); }
 
     /**
-     * Returns an output stream socket which writes to standard error without ever closing it.
+     * Returns a sink which writes to standard error without ever closing it.
      *
      * @see #stream(OutputStream)
      */
-    public static Socket<OutputStream> stderr() { return stream(System.err); }
+    public static Sink stderr() { return stream(System.err); }
 
     /**
-     * Returns a socket which will never close the given output stream.
-     * This is intended to be used for data streaming or for interoperability with other libraries and frameworks where
-     * you dont want the given output stream to get closed by the returned socket.
+     * Returns a sink which will never {@linkplain OutputStream#close() close} the given output stream.
+     * This is intended to be used for data streaming or for interoperability with other libraries and frameworks.
      * Upon a call to the {@code close()} method on the loaned output stream, the {@code flush()} method gets called on
      * the given output stream.
      */
-    public static Socket<OutputStream> stream(OutputStream out) {
+    public static Sink stream(OutputStream out) {
         requireNonNull(out);
-        return () -> new UncloseableOutputStream(out);
+        return () -> () -> new UncloseableOutputStream(out);
     }
 
     ////////////////////////////
@@ -289,9 +291,9 @@ public final class BIOS {
         return new XMLCodec(requireNonNull(xmlEncoders), requireNonNull(xmlDecoders));
     }
 
-    ////////////////////////////
-    //////// UTILITIES /////////
-    ////////////////////////////
+    ///////////////////////////////
+    ////////// UTILITIES //////////
+    ///////////////////////////////
 
     /**
      * Copies the data from the given source to the given sink.
