@@ -32,13 +32,13 @@ public interface Codec {
     /** Returns an encoder which writes object graphs to the given output stream socket. */
     Encoder encoder(Socket<OutputStream> output);
 
-    /** Returns an encoder which writes object graphs to the given store. */
+    /** Returns an encoder which writes object graphs to the given sink. */
     default Encoder encoder(Sink sink) { return encoder(sink.output()); }
 
     /** Returns a decoder which reads object graphs from the given input stream socket. */
     Decoder decoder(Socket<InputStream> input);
 
-    /** Returns a decoder which reads object graphs from the given store. */
+    /** Returns a decoder which reads object graphs from the given source. */
     default Decoder decoder(Source source) { return decoder(source.input()); }
 
     /**
