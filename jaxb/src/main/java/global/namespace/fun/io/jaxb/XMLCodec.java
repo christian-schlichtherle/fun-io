@@ -23,6 +23,7 @@ import global.namespace.fun.io.api.Socket;
 import javax.xml.bind.JAXBContext;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 
 final class XMLCodec implements Codec {
 
@@ -38,9 +39,9 @@ final class XMLCodec implements Codec {
     @Override
     public Decoder decoder(Socket<InputStream> input) {
         return new Decoder() {
-            @Override
             @SuppressWarnings("unchecked")
-            public <T> T decode(Class<T> expected) throws Exception {
+            @Override
+            public <T> T decode(Type expected) throws Exception {
                 return input.apply(in -> (T) context.createUnmarshaller().unmarshal(in));
             }
         };

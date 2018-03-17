@@ -23,6 +23,7 @@ import global.namespace.fun.io.api.Socket;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 
 final class JSONCodec implements Codec {
 
@@ -37,8 +38,8 @@ final class JSONCodec implements Codec {
     public Decoder decoder(final Socket<InputStream> input) {
         return new Decoder() {
             @Override
-            public <T> T decode(Class<T> expected) throws Exception {
-                return input.apply(in -> mapper.readValue(in, expected));
+            public <T> T decode(Type expected) throws Exception {
+                return input.apply(in -> mapper.readValue(in, mapper.constructType(expected)));
             }
         };
     }

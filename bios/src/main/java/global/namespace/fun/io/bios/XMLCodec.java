@@ -26,6 +26,7 @@ import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 
 final class XMLCodec implements Codec {
 
@@ -53,9 +54,9 @@ final class XMLCodec implements Codec {
     @Override
     public Decoder decoder(final Socket<InputStream> input) {
         return new Decoder() {
-            @Override
             @SuppressWarnings("unchecked")
-            public <T> T decode(final Class<T> expected) throws Exception {
+            @Override
+            public <T> T decode(final Type expected) throws Exception {
                 final ZeroToleranceListener ztl = new ZeroToleranceListener();
                 try {
                     return input.map(xmlDecoders).apply(dec -> {

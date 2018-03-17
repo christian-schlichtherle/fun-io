@@ -16,6 +16,7 @@
 package global.namespace.fun.io.it
 
 import java.io._
+import java.lang.reflect.Type
 
 import global.namespace.fun.io.bios.BIOS._
 import global.namespace.fun.io.bios.{BIOS, BufferedInvertibleTransformation}
@@ -121,7 +122,7 @@ private object TransformationCompositionSpec {
     }
 
     def decoder(l: Socket[InputStream]): Decoder = new Decoder {
-      def decode[T](expected: Class[T]): T = l(Source.fromInputStream(_: InputStream).mkString.asInstanceOf[T])
+      def decode[T](expected: Type): T = l(Source.fromInputStream(_: InputStream).mkString.asInstanceOf[T])
     }
   }
 
