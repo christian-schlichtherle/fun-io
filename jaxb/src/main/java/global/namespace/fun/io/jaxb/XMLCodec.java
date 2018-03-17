@@ -39,8 +39,8 @@ final class XMLCodec implements Codec {
     @Override
     public Decoder decoder(Socket<InputStream> input) {
         return new Decoder() {
-            @SuppressWarnings("unchecked")
             @Override
+            @SuppressWarnings("unchecked")
             public <T> T decode(Type expected) throws Exception {
                 return input.apply(in -> (T) context.createUnmarshaller().unmarshal(in));
             }

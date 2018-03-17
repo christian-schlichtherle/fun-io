@@ -54,8 +54,8 @@ final class XMLCodec implements Codec {
     @Override
     public Decoder decoder(final Socket<InputStream> input) {
         return new Decoder() {
-            @SuppressWarnings("unchecked")
             @Override
+            @SuppressWarnings("unchecked")
             public <T> T decode(final Type expected) throws Exception {
                 final ZeroToleranceListener ztl = new ZeroToleranceListener();
                 try {
