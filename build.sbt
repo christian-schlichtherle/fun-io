@@ -55,7 +55,7 @@ lazy val commonsCompress: Project = project
   .settings(
     libraryDependencies ++= Seq(
       CommonsCompress,
-      XZ % Optional
+      Xz % Optional
     ),
     name := "Fun I/O Commons Compress",
     normalizedName := "fun-io-commons-compress"
@@ -94,9 +94,9 @@ lazy val jaxb: Project = project
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
-      Activation_API,
-      JAXB_API,
-      JAXB_Runtime
+      ActivationApi,
+      JaxbApi,
+      JaxbRuntime
     ),
     name := "Fun I/O JAXB",
     normalizedName := "fun-io-jaxb"
@@ -117,7 +117,7 @@ lazy val xz: Project = project
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
-      XZ
+      Xz
     ),
     name := "Fun I/O XZ",
     normalizedName := "fun-io-xz"
