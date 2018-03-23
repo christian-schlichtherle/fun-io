@@ -15,6 +15,9 @@
  */
 package global.namespace.fun.io.api;
 
+import global.namespace.fun.io.api.function.XConsumer;
+import global.namespace.fun.io.api.function.XFunction;
+
 import java.io.InputStream;
 
 /**
@@ -24,13 +27,33 @@ import java.io.InputStream;
  */
 public interface Source {
 
-    /** Returns an input stream socket for reading the content of this source. */
+    /** Returns the underlying input stream socket for reading the content of this source. */
     Socket<InputStream> input();
 
     /**
-     * Returns a source which applies the given transformation to the I/O streams loaned by this source.
+     * Loans an input stream from the underlying {@linkplain #input() input stream socket} to the given consumer.
+     * The input stream will be closed upon return from this method.
+     */
+    default void acceptReader(XConsumer<? super InputStream> reader) throws Exception { input().accept(reader); }
+
+    /**
+     * Loans an input stream from the underlying {@linkplain #input() input stream socket} to the given function and
+     * returns its value.
+     * The input stream will be closed upon return from this method.
+     * <p>
+     * It is an error to return the loaned input stream from the given function or any other object which holds on to
+     * it.
+     * Use the {@link #map(Transformation)} method instead if you need to transform the underlying input stream socket.
+     */
+    default <U> U applyReader(XFunction<? super InputStream, ? extends U> reader) throws Exception {
+        return input().apply(reader);
+    }
+
+    /**
+     * Returns a source which applies the given transformation to the I/O streams loaned by the underlying
+     * {@linkplain #input() input stream socket}.
      *
-     * @param t the transformation to apply to the I/O streams loaned by this source.
+     * @param t the transformation to apply to the I/O streams loaned by the underlying input stream socket.
      */
     default Source map(Transformation t) { return () -> t.unapply(input()); }
 }
