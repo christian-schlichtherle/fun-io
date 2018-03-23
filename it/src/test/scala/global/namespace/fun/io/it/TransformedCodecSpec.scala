@@ -16,7 +16,6 @@
 package global.namespace.fun.io.it
 
 import java.io.InputStream
-import javax.xml.bind.JAXBContext
 
 import global.namespace.fun.io.bios.BIOS._
 import global.namespace.fun.io.it.PBE.pbe
@@ -24,6 +23,7 @@ import global.namespace.fun.io.jackson.Jackson._
 import global.namespace.fun.io.jaxb.JAXB.{xmlCodec => jaxbCodec}
 import global.namespace.fun.io.scala.api._
 import global.namespace.fun.io.xz.XZ._
+import javax.xml.bind.JAXBContext
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
 import org.scalatest.prop.PropertyChecks._
@@ -91,13 +91,13 @@ class TransformedCodecSpec extends WordSpec {
   private def assertThatStoreIsEmpty(store: Store): Unit = {
     store.size should not be 'present
     store.exists shouldBe false
-    intercept[Exception](store.input.accept((_: InputStream) => ()))
+    intercept[Exception](store.acceptReader((_: InputStream) => ()))
   }
 
   private def assertThatStoreIsNotEmpty(store: Store): Unit = {
     store.size shouldBe 'present
     store.exists shouldBe true
-    store.input.accept((_: InputStream) => ())
+    store.acceptReader((_: InputStream) => ())
   }
 
   "All transformed codecs" should {

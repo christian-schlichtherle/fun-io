@@ -29,7 +29,7 @@ class BIOSSpec extends WordSpec {
       "given an input stream" in {
         val in = mock[InputStream]
         val source = BIOS stream in
-        source.input accept new XConsumer[InputStream] {
+        source acceptReader new XConsumer[InputStream] {
           def accept(in: InputStream): Unit = in read ()
         }
         verify(in) read ()
@@ -39,7 +39,7 @@ class BIOSSpec extends WordSpec {
       "given an output stream" in {
         val out = mock[OutputStream]
         val sink = BIOS stream out
-        sink.output accept new XConsumer[OutputStream] {
+        sink acceptWriter new XConsumer[OutputStream] {
           def accept(out: OutputStream): Unit = out write 0
         }
         verify(out) write 0

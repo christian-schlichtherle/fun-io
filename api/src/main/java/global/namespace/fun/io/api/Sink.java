@@ -15,6 +15,9 @@
  */
 package global.namespace.fun.io.api;
 
+import global.namespace.fun.io.api.function.XConsumer;
+import global.namespace.fun.io.api.function.XFunction;
+
 import java.io.OutputStream;
 
 /**
@@ -24,13 +27,33 @@ import java.io.OutputStream;
  */
 public interface Sink {
 
-    /** Returns an output stream socket for (over)writing the content of this sink. */
+    /** Returns the underlying output stream socket for (over)writing the content of this sink. */
     Socket<OutputStream> output();
 
     /**
-     * Returns a sink which applies the given transformation to the I/O streams loaned by this sink.
+     * Loans an output stream from the underlying {@linkplain #output() output stream socket} to the given consumer.
+     * The output stream will be closed upon return from this method.
+     */
+    default void acceptWriter(XConsumer<? super OutputStream> writer) throws Exception { output().accept(writer); }
+
+    /**
+     * Loans an output stream from the underlying {@linkplain #output() output stream socket} to the given function and
+     * returns its value.
+     * The output stream will be closed upon return from this method.
+     * <p>
+     * It is an error to return the loaned output stream from the given function or any other object which holds on to
+     * it.
+     * Use the {@link #map(Transformation)} method instead if you need to transform the underlying output stream socket.
+     */
+    default <U> U applyWriter(XFunction<? super OutputStream, ? extends U> writer) throws Exception {
+        return output().apply(writer);
+    }
+
+    /**
+     * Returns a sink which applies the given transformation to the I/O streams loaned by the underlying
+     * {@linkplain #output() output stream socket}.
      *
-     * @param t the transformation to apply to the I/O streams loaned by this sink.
+     * @param t the transformation to apply to the I/O streams loaned by the underlying output stream socket.
      */
     default Sink map(Transformation t) { return () -> t.apply(output()); }
 }

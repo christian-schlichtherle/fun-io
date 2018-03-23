@@ -95,7 +95,7 @@ public interface Store extends Source, Sink {
     /** Sets the content of this store. */
     default void content(final byte[] content) throws IOException {
         try {
-            output().accept(out -> out.write(content));
+            acceptWriter(out -> out.write(content));
         } catch (IOException e) {
             throw e;
         } catch (Exception e) {
