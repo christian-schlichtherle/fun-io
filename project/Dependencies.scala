@@ -24,12 +24,12 @@ object Dependencies {
   val JacksonDatabind: ModuleID = "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.4"
   val JAXB_API: ModuleID = "javax.xml.bind" % "jaxb-api" % JAXB_Version
   val JAXB_Runtime: ModuleID = "org.glassfish.jaxb" % "jaxb-runtime" % JAXB_Version
-  val MockitoCore: ModuleID = "org.mockito" % "mockito-core" % "2.15.0"
+  val MockitoCore: ModuleID = "org.mockito" % "mockito-core" % "2.16.0"
   val Scalacheck: ModuleID = "org.scalacheck" %% "scalacheck" % "1.13.5"
   val Scalatest: ModuleID = "org.scalatest" %% "scalatest" % "3.0.5"
   val XZ: ModuleID = "org.tukaani" % "xz" % "1.8"
 
   val ScalaVersion_2_10: String = sys.props.getOrElse("SCALA_VERSION_2_10", "2.10.7")
   val ScalaVersion_2_11: String = sys.props.getOrElse("SCALA_VERSION_2_11", "2.11.12")
-  val ScalaVersion_2_12: String = sys.props.getOrElse("SCALA_VERSION_2_12", "2.12.4")
+  val ScalaVersion_2_12: String = sys.props.getOrElse("SCALA_VERSION_2_12", "2.12.5")
 }
