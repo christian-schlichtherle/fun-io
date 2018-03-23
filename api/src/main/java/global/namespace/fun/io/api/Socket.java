@@ -130,7 +130,7 @@ public interface Socket<T extends AutoCloseable> extends XSupplier<T> {
      * If the given function fails then the resource gets closed before this method terminates, which makes the
      * transformation fail-safe.
      */
-    default <U extends AutoCloseable> Socket<U> map(XFunction<? super T, ? extends U> function) {
+    default <U extends AutoCloseable> Socket<U> map(final XFunction<? super T, ? extends U> function) {
         Objects.requireNonNull(function);
         return () -> {
             final T resource = get();
