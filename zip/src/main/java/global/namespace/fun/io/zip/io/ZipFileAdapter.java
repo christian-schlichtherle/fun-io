@@ -23,12 +23,12 @@ import static java.util.Objects.requireNonNull;
  * @see ZipOutputStreamAdapter
  * @author Christian Schlichtherle
  */
-public class ZipFileAdapter implements ZipInput {
+final class ZipFileAdapter implements ZipInput {
 
     private final ZipFile zip;
 
     /** Constructs a new ZIP file adapter for the given ZIP file. */
-    public ZipFileAdapter(final @WillCloseWhenClosed ZipFile input) { this.zip = requireNonNull(input); }
+    ZipFileAdapter(final @WillCloseWhenClosed ZipFile input) { this.zip = requireNonNull(input); }
 
     @Override
     public Iterator<ZipEntry> iterator() {

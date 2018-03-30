@@ -21,11 +21,11 @@ import static java.util.Objects.requireNonNull;
  * @see ZipFileAdapter
  * @author Christian Schlichtherle
  */
-public class ZipOutputStreamAdapter implements ZipOutput {
+class ZipOutputStreamAdapter implements ZipOutput {
 
     private final ZipOutputStream zip;
 
-    public ZipOutputStreamAdapter(final @WillCloseWhenClosed ZipOutputStream zip) { this.zip = requireNonNull(zip); }
+    ZipOutputStreamAdapter(final @WillCloseWhenClosed ZipOutputStream zip) { this.zip = requireNonNull(zip); }
 
     @Override
     public ZipEntry entry(String name) { return new ZipEntry(name); }

@@ -14,9 +14,9 @@ import java.util.zip.ZipEntry;
  *
  * @author Christian Schlichtherle
  */
-public class JarOutputStreamAdapter extends ZipOutputStreamAdapter {
+class JarOutputStreamAdapter extends ZipOutputStreamAdapter {
 
-    public JarOutputStreamAdapter(@WillCloseWhenClosed JarOutputStream jar) { super(jar); }
+    JarOutputStreamAdapter(@WillCloseWhenClosed JarOutputStream jar) { super(jar); }
 
     @Override
     public ZipEntry entry(String name) { return new JarEntry(name); }
