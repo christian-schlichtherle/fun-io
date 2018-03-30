@@ -21,10 +21,10 @@ object Dependencies {
 
   val ActivationApi: ModuleID = "javax.activation" % "javax.activation-api" % "1.2.0"
   val CommonsCompress: ModuleID = "org.apache.commons" % "commons-compress" % "1.16.1"
-  val JacksonDatabind: ModuleID = "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.4"
+  val JacksonDatabind: ModuleID = "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.5"
   val JaxbApi: ModuleID = "javax.xml.bind" % "jaxb-api" % JAXB_Version
   val JaxbRuntime: ModuleID = "org.glassfish.jaxb" % "jaxb-runtime" % JAXB_Version
-  val MockitoCore: ModuleID = "org.mockito" % "mockito-core" % "2.16.0"
+  val MockitoCore: ModuleID = "org.mockito" % "mockito-core" % "2.17.0"
   val Scalacheck: ModuleID = "org.scalacheck" %% "scalacheck" % "1.13.5"
   val Scalatest: ModuleID = "org.scalatest" %% "scalatest" % "3.0.5"
   val Xz: ModuleID = "org.tukaani" % "xz" % "1.8"
