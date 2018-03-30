@@ -12,10 +12,9 @@ import global.namespace.fun.io.zip.io.MessageDigests
 import global.namespace.fun.io.zip.zip.diff.RawZipDiff
 import global.namespace.fun.io.zip.zip.io.{ZipInput, ZipInputTask, ZipSources}
 import global.namespace.fun.io.zip.zip.model.DeltaModel
+import javax.xml.bind.JAXBContext
 
-/**
- * @author Christian Schlichtherle
- */
+/** @author Christian Schlichtherle */
 trait ZipITContext extends TestContext {
 
   def loanRawZipDiff[A](fun: RawZipDiff => A) =
@@ -51,5 +50,5 @@ trait ZipITContext extends TestContext {
 
   def digest = MessageDigests.sha1
 
-  override lazy val jaxbContext = DeltaModel.jaxbContext
+  lazy val jaxbContext: JAXBContext = DeltaModel.jaxbContext
 }

@@ -19,8 +19,11 @@ import global.namespace.fun.io.api.Codec;
 import global.namespace.fun.io.api.Decoder;
 import global.namespace.fun.io.api.Encoder;
 import global.namespace.fun.io.api.Socket;
+import global.namespace.fun.io.api.function.XConsumer;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
@@ -28,12 +31,25 @@ import java.lang.reflect.Type;
 final class XMLCodec implements Codec {
 
     private final JAXBContext context;
+    private final XConsumer<Marshaller> marshallerModifier;
+    private final XConsumer<Unmarshaller> unmarshallerModifier;
 
-    XMLCodec(final JAXBContext c) { this.context = c; }
+    XMLCodec(
+            final JAXBContext c,
+            final XConsumer<Marshaller> marshallerModifier,
+            final XConsumer<Unmarshaller> unmarshallerModifier) {
+        this.context = c;
+        this.marshallerModifier = marshallerModifier;
+        this.unmarshallerModifier = unmarshallerModifier;
+    }
 
     @Override
     public Encoder encoder(Socket<OutputStream> output) {
-        return obj -> output.accept(out -> context.createMarshaller().marshal(obj, out));
+        return obj -> output.accept(out -> {
+            final Marshaller marshaller = context.createMarshaller();
+            marshallerModifier.accept(marshaller);
+            marshaller.marshal(obj, out);
+        });
     }
 
     @Override
@@ -42,7 +58,11 @@ final class XMLCodec implements Codec {
             @Override
             @SuppressWarnings("unchecked")
             public <T> T decode(Type expected) throws Exception {
-                return input.apply(in -> (T) context.createUnmarshaller().unmarshal(in));
+                return input.apply(in -> {
+                    final Unmarshaller unmarshaller = context.createUnmarshaller();
+                    unmarshallerModifier.accept(unmarshaller);
+                    return (T) unmarshaller.unmarshal(in);
+                });
             }
         };
     }
