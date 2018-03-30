@@ -4,11 +4,13 @@
  */
 package global.namespace.fun.io.zip.zip.patch;
 
-import global.namespace.fun.io.zip.zip.io.*;
+import global.namespace.fun.io.zip.zip.io.ZipFileStore;
+import global.namespace.fun.io.zip.zip.io.ZipInput;
+import global.namespace.fun.io.zip.zip.io.ZipSink;
+import global.namespace.fun.io.zip.zip.io.ZipSource;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
-import javax.annotation.WillNotClose;
 import javax.annotation.concurrent.Immutable;
 import java.io.File;
 
@@ -56,11 +58,9 @@ public abstract class ZipPatch {
 
         public ZipPatch build() { return create(input, delta); }
 
-        private static ZipPatch create(
-                final ZipSource input,
-                final ZipSource delta) {
-            requireNonNull(input);
-            requireNonNull(delta);
+        private static ZipPatch create(final ZipSource baseSource, final ZipSource deltaSource) {
+            requireNonNull(baseSource);
+            requireNonNull(deltaSource);
 
             return new ZipPatch() {
 
@@ -71,28 +71,18 @@ public abstract class ZipPatch {
 
                 @Override
                 public void output(final ZipSink sink) throws Exception {
-                    class InputTask implements ZipInputTask<Void> {
-                        public Void execute(final @WillNotClose ZipInput input) throws Exception {
-                            class DeltaTask implements ZipInputTask<Void> {
-                                public Void execute(final @WillNotClose ZipInput delta) throws Exception {
-                                    class OutputTask implements ZipOutputTask<Void> {
-                                        public Void execute(final @WillNotClose ZipOutput output) throws Exception {
-                                            new RawZipPatch() {
+                    baseSource.acceptReader(input -> {
+                        deltaSource.acceptReader(delta -> {
+                            sink.acceptWriter(output -> {
+                                new RawZipPatch() {
 
-                                                protected ZipInput input() { return input; }
+                                    protected ZipInput input() { return input; }
 
-                                                protected ZipInput delta() { return delta; }
-                                            }.output(output);
-                                            return null;
-                                        }
-                                    }
-                                    return ZipSinks.execute(new OutputTask()).on(sink);
-                                }
-                            }
-                            return ZipSources.execute(new DeltaTask()).on(delta);
-                        }
-                    }
-                    ZipSources.execute(new InputTask()).on(input);
+                                    protected ZipInput delta() { return delta; }
+                                }.output(output);
+                            });
+                        });
+                    });
                 }
             };
         }

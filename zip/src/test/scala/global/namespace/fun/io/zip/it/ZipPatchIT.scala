@@ -5,10 +5,12 @@
 package global.namespace.fun.io.zip.it
 
 import java.io._
+import java.security.MessageDigest
 
+import global.namespace.fun.io.scala.api._
 import global.namespace.fun.io.zip.io.MessageDigests
 import global.namespace.fun.io.zip.zip.diff.{RawZipDiff, ZipDiff}
-import global.namespace.fun.io.zip.zip.io.{ZipInput, ZipInputTask, ZipSources}
+import global.namespace.fun.io.zip.zip.io._
 import global.namespace.fun.io.zip.zip.patch.ZipPatch
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
@@ -18,53 +20,47 @@ import scala.collection.JavaConverters._
 /** @author Christian Schlichtherle */
 class ZipPatchIT extends WordSpec with ZipITContext {
 
-  def tempFile() = File.createTempFile("tmp", null)
+  def tempFile(): File = File.createTempFile("tmp", null)
 
-  def fileEntryNames(zip: ZipInput) = List.empty[String] ++
-    zip.iterator.asScala.filter(!_.isDirectory).map(_.getName)
+  def fileEntryNames(zip: ZipInput): List[String] = {
+    List.empty[String] ++ zip.iterator.asScala.filter(!_.isDirectory).map(_.getName)
+  }
 
   "A ZIP patch" when {
     "generating and applying the ZIP patch file to the first test JAR file" should {
       "reconstitute the second test JAR file" in {
 
-        val deltaZip = tempFile()
+        val deltaJar = tempFile()
         try {
-          val patched = tempFile()
+          val patchedJar = tempFile()
           try {
-            ZipDiff.builder.input1(testJar1).input2(testJar2).build.output(deltaZip)
-            ZipPatch.builder.input(testJar1).delta(deltaZip).build.output(patched)
+            ZipDiff.builder.input1(testJar1).input2(testJar2).build.output(deltaJar)
+            ZipPatch.builder.input(testJar1).delta(deltaJar).build.output(patchedJar)
 
-            class ComputeReferenceAndDiffTask extends ZipInputTask[Unit] {
-              override def execute(archive1: ZipInput) {
-                val unchangedReference = fileEntryNames(archive1)
+            new JarFileStore(testJar2) acceptReader { jar2: ZipInput =>
+              val unchangedReference = fileEntryNames(jar2)
 
-                class DiffTask extends ZipInputTask[Unit] {
-                  override def execute(archive2: ZipInput) {
-                    val model = new RawZipDiff {
-                      val _digest = MessageDigests.sha1
+              new JarFileStore(patchedJar) acceptReader { patched: ZipInput =>
+                val model = new RawZipDiff {
 
-                      override def digest = _digest
-                      override def input1 = archive1
-                      override def input2 = archive2
-                    } model ()
-                    model.addedEntries.isEmpty should be (true)
-                    model.removedEntries.isEmpty should be (true)
-                    model.unchangedEntries.asScala map (_.name) should
-                      equal (unchangedReference)
-                    model.changedEntries.isEmpty should be (true)
-                  }
-                }
+                  lazy val digest: MessageDigest = MessageDigests.sha1
 
-                ZipSources execute new DiffTask on patched
+                  def input1: ZipInput = jar2
+
+                  def input2: ZipInput = patched
+                } model ()
+                model.addedEntries.isEmpty shouldBe true
+                model.removedEntries.isEmpty shouldBe true
+                model.unchangedEntries.asScala map (_.name) shouldBe unchangedReference
+                model.changedEntries.isEmpty shouldBe true
+                ()
               }
             }
-
-            ZipSources execute new ComputeReferenceAndDiffTask on testJar2
           } finally {
-            patched delete ()
+            patchedJar delete ()
           }
         } finally {
-          deltaZip delete ()
+          deltaJar delete ()
         }
       }
     }

@@ -17,14 +17,10 @@ class ZipDiffIT extends WordSpec with ZipITContext {
         import model._
 
         import collection.JavaConverters._
-        removedEntries.asScala map (_.name) should
-          equal (List("entryOnlyInFile1"))
-        addedEntries.asScala map (_.name) should
-          equal (List("entryOnlyInFile2"))
-        unchangedEntries.asScala map (_.name) should
-          equal (List("META-INF/MANIFEST.MF", "differentEntryTime", "equalEntry"))
-        changedEntries.asScala map (_.name) should
-          equal (List("differentEntrySize"))
+        removedEntries.asScala map (_.name) should equal (List("entryOnlyInFile1"))
+        addedEntries.asScala map (_.name) should equal (List("entryOnlyInFile2"))
+        unchangedEntries.asScala map (_.name) should equal (List("META-INF/MANIFEST.MF", "differentEntryTime", "equalEntry"))
+        changedEntries.asScala map (_.name) should equal (List("differentEntrySize"))
       }
     }
   }

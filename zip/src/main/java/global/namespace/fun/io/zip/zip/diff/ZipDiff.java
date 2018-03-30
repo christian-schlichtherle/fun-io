@@ -6,13 +6,15 @@ package global.namespace.fun.io.zip.zip.diff;
 
 import edu.umd.cs.findbugs.annotations.CreatesObligation;
 import global.namespace.fun.io.zip.io.MessageDigests;
-import global.namespace.fun.io.zip.zip.io.*;
+import global.namespace.fun.io.zip.zip.io.ZipFileStore;
+import global.namespace.fun.io.zip.zip.io.ZipInput;
+import global.namespace.fun.io.zip.zip.io.ZipSink;
+import global.namespace.fun.io.zip.zip.io.ZipSource;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.io.File;
-import java.io.IOException;
 import java.security.MessageDigest;
 
 import static java.util.Objects.requireNonNull;
@@ -66,57 +68,36 @@ public abstract class ZipDiff {
             return this;
         }
 
-        public ZipDiff build() {
-            return create(input1, input2, digest);
-        }
+        public ZipDiff build() { return create(input1, input2, digest); }
 
         private static @CreatesObligation
-        ZipDiff create(
-                final ZipSource input1,
-                final ZipSource input2,
-                final @Nullable String digestName) {
-            requireNonNull(input1);
-            requireNonNull(input2);
+        ZipDiff create(final ZipSource source1, final ZipSource source2, final @Nullable String digestName) {
+            requireNonNull(source1);
+            requireNonNull(source2);
 
             return new ZipDiff() {
 
                 @Override
-                public void output(File file) throws Exception {
-                    output(new ZipFileStore(file));
-                }
+                public void output(File file) throws Exception { output(new ZipFileStore(file)); }
 
                 @Override
                 public void output(final ZipSink sink) throws Exception {
+                    source1.acceptReader(input1 -> {
+                        source2.acceptReader(input2 -> {
+                            sink.acceptWriter(delta -> {
+                                new RawZipDiff() {
+                                    final MessageDigest digest = MessageDigests.create(
+                                            null != digestName ? digestName : "SHA-1");
 
-                    class Input1Task implements ZipInputTask<Void> {
-                        public Void execute(final ZipInput input1) throws Exception {
+                                    protected MessageDigest digest() { return digest; }
 
-                            class Input2Task implements ZipInputTask<Void> {
-                                public Void execute(final ZipInput input2) throws Exception {
+                                    protected ZipInput input1() { return input1; }
 
-                                    class DiffTask implements ZipOutputTask<Void> {
-                                        public Void execute(final ZipOutput delta) throws Exception {
-                                            new RawZipDiff() {
-                                                final MessageDigest digest = MessageDigests.create(
-                                                        null != digestName ? digestName : "SHA-1");
-
-                                                protected MessageDigest digest() { return digest; }
-                                                protected ZipInput input1() { return input1; }
-                                                protected ZipInput input2() { return input2; }
-                                            }.output(delta);
-                                            return null;
-                                        }
-                                    }
-
-                                    return ZipSinks.execute(new DiffTask()).on(sink);
-                                }
-                            }
-
-                            return ZipSources.execute(new Input2Task()).on(input2);
-                        }
-                    }
-
-                    ZipSources.execute(new Input1Task()).on(input1);
+                                    protected ZipInput input2() { return input2; }
+                                }.output(delta);
+                            });
+                        });
+                    });
                 }
             };
         }

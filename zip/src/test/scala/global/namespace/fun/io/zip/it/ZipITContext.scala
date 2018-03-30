@@ -5,50 +5,44 @@
 package global.namespace.fun.io.zip.it
 
 import java.io.File
+import java.security.MessageDigest
 
 import edu.umd.cs.findbugs.annotations.CreatesObligation
+import global.namespace.fun.io.scala.api._
 import global.namespace.fun.io.zip.TestContext
 import global.namespace.fun.io.zip.io.MessageDigests
 import global.namespace.fun.io.zip.zip.diff.RawZipDiff
-import global.namespace.fun.io.zip.zip.io.{ZipInput, ZipInputTask, ZipSources}
+import global.namespace.fun.io.zip.zip.io._
 import global.namespace.fun.io.zip.zip.model.DeltaModel
 import javax.xml.bind.JAXBContext
 
 /** @author Christian Schlichtherle */
 trait ZipITContext extends TestContext {
 
-  def loanRawZipDiff[A](fun: RawZipDiff => A) =
+  def loanRawZipDiff[A](fun: RawZipDiff => A): A =
     loanTestJars { (archive1, archive2) =>
       fun(new RawZipDiff {
-        override def input1 = archive1
-        override def input2 = archive2
-        override def digest = ZipITContext.this.digest
+
+        def input1: ZipInput = archive1
+
+        def input2: ZipInput = archive2
+
+        lazy val digest: MessageDigest = MessageDigests.sha1
       })
     }
 
-  def loanTestJars[A](fun: (ZipInput, ZipInput) => A) = {
-    class Fun1Task extends ZipInputTask[A]() {
-      override def execute(jar1: ZipInput) = {
-        class Fun2Task extends ZipInputTask[A] {
-          override def execute(jar2: ZipInput) = {
-            fun(jar1, jar2)
-          }
-        }
-
-        ZipSources execute new Fun2Task on testJar2()
+  def loanTestJars[A](fun: (ZipInput, ZipInput) => A): A = {
+    new JarFileStore(testJar1).applyReader[A] { jar1: ZipInput =>
+      new JarFileStore(testJar2).applyReader[A] { jar2: ZipInput =>
+        fun(jar1, jar2)
       }
     }
-
-    ZipSources execute new Fun1Task on testJar1()
   }
 
-  @CreatesObligation final def testJar1() = file("test1.jar")
-  @CreatesObligation final def testJar2() = file("test2.jar")
+  @CreatesObligation final def testJar1: File = file("test1.jar")
+  @CreatesObligation final def testJar2: File = file("test2.jar")
 
-  private def file(resourceName: String) =
-    new File((classOf[ZipITContext] getResource resourceName).toURI)
-
-  def digest = MessageDigests.sha1
+  private def file(resourceName: String) = new File((classOf[ZipITContext] getResource resourceName).toURI)
 
   lazy val jaxbContext: JAXBContext = DeltaModel.jaxbContext
 }

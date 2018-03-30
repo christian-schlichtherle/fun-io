@@ -106,23 +106,28 @@ public abstract class RawZipDiff {
          */
         <V extends Visitor> V walkAndReturn(final V visitor) throws Exception {
             for (final ZipEntry entry1 : input1()) {
-                if (entry1.isDirectory()) continue;
+                if (entry1.isDirectory()) {
+                    continue;
+                }
                 final ZipEntry entry2 = input2().entry(entry1.getName());
-                final ZipEntrySource source1 =
-                        new ZipEntrySource(entry1, input1());
-                if (null == entry2)
+                final ZipEntrySource source1 = new ZipEntrySource(entry1, input1());
+                if (null == entry2) {
                     visitor.visitEntryInFirstFile(source1);
-                else
+                } else {
                     visitor.visitEntriesInBothFiles(source1,
                             new ZipEntrySource(entry2, input2()));
+                }
             }
 
             for (final ZipEntry entry2 : input2()) {
-                if (entry2.isDirectory()) continue;
+                if (entry2.isDirectory()) {
+                    continue;
+                }
                 final ZipEntry entry1 = input1().entry(entry2.getName());
-                if (null == entry1)
+                if (null == entry1) {
                     visitor.visitEntryInSecondFile(
                             new ZipEntrySource(entry2, input2()));
+                }
             }
 
             return visitor;
@@ -156,12 +161,13 @@ public abstract class RawZipDiff {
             assert name1.equals(source2.name());
             final String digest1 = digestValueOf(source1);
             final String digest2 = digestValueOf(source2);
-            if (digest1.equals(digest2))
+            if (digest1.equals(digest2)) {
                 unchanged.put(name1,
                         new EntryNameAndDigest(name1, digest1));
-            else
+            } else {
                 changed.put(name1,
                         new EntryNameAndTwoDigests(name1, digest1, digest2));
+            }
         }
 
         @Override
