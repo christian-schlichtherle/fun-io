@@ -18,7 +18,7 @@ import Dependencies._
 
 lazy val root: Project = project
   .in(file("."))
-  .aggregate(api, bios, commonsCompress, it, jackson, jaxb, scalaApi, xz, zip)
+  .aggregate(api, bios, commonsCompress, it, jackson, jaxb, scalaApi, xz, zip, zipIt)
   .settings(releaseSettings)
   .settings(aggregateSettings)
   .settings(name := "Fun I/O")
@@ -125,15 +125,27 @@ lazy val xz: Project = project
 
 lazy val zip: Project = project
   .in(file("zip"))
-  .dependsOn(bios, jaxb, scalaApi % Test)
+  .dependsOn(bios, jaxb)
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
-      "com.google.code.findbugs" % "annotations" % "3.0.0",
+      "com.google.code.findbugs" % "annotations" % "3.0.0"
+    ),
+    name := "Fun I/O ZIP",
+    normalizedName := "fun-io-zip"
+  )
+
+lazy val zipIt: Project = project
+  .in(file("zip-it"))
+  .dependsOn(zip, scalaApi % Test)
+  .settings(scalaLibrarySettings)
+  .settings(
+    libraryDependencies ++= Seq(
       MockitoCore % Test,
       Scalacheck % Test,
       Scalatest % Test
     ),
-    name := "Fun I/O ZIP",
-    normalizedName := "fun-io-zip"
+    name := "Fun I/O ZIP IT",
+    normalizedName := "fun-io-zip-it",
+    publishArtifact := false
   )
