@@ -5,6 +5,8 @@
  */
 package global.namespace.fun.io.zip.io;
 
+import global.namespace.fun.io.api.Sink;
+
 import javax.annotation.concurrent.Immutable;
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +19,7 @@ import java.io.IOException;
 @Immutable
 public class Sinks {
 
+    @Deprecated
     public static <V> ExecuteStatement<V> execute(OutputTask<V> task) { return new WithOutputTask<V>(task); }
 
     public interface ExecuteStatement<V> {

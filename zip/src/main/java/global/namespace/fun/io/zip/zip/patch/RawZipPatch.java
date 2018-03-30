@@ -4,9 +4,10 @@
  */
 package global.namespace.fun.io.zip.zip.patch;
 
+import global.namespace.fun.io.api.Sink;
+import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.zip.io.Copy;
 import global.namespace.fun.io.zip.io.MessageDigests;
-import global.namespace.fun.io.zip.io.Sink;
 import global.namespace.fun.io.zip.zip.io.ZipEntrySource;
 import global.namespace.fun.io.zip.zip.io.ZipInput;
 import global.namespace.fun.io.zip.zip.io.ZipOutput;
@@ -93,29 +94,32 @@ public abstract class RawZipPatch {
             }
 
             @Override
-            public OutputStream output() throws Exception {
-                final ZipEntry entry = entry(entryNameAndDigest.name());
-                if (entry.isDirectory()) {
-                    entry.setMethod(ZipOutputStream.STORED);
-                    entry.setSize(0);
-                    entry.setCompressedSize(0);
-                    entry.setCrc(0);
-                }
-                final MessageDigest digest = digest();
-                digest.reset();
-                return new DigestOutputStream(stream(entry), digest) {
-
-                    @Override public void close() throws IOException {
-                        super.close();
-                        if (!valueOfDigest().equals(
-                                entryNameAndDigest.digest()))
-                            throw new WrongMessageDigestException(
-                                    entryNameAndDigest.name());
+            public Socket<OutputStream> output() {
+                return () -> {
+                    final ZipEntry entry = entry(entryNameAndDigest.name());
+                    if (entry.isDirectory()) {
+                        entry.setMethod(ZipOutputStream.STORED);
+                        entry.setSize(0);
+                        entry.setCompressedSize(0);
+                        entry.setCrc(0);
                     }
+                    final MessageDigest digest = digest();
+                    digest.reset();
+                    return new DigestOutputStream(stream(entry), digest) {
 
-                    String valueOfDigest() {
-                        return MessageDigests.valueOf(digest);
-                    }
+                        @Override
+                        public void close() throws IOException {
+                            super.close();
+                            if (!valueOfDigest().equals(
+                                    entryNameAndDigest.digest()))
+                                throw new WrongMessageDigestException(
+                                        entryNameAndDigest.name());
+                        }
+
+                        String valueOfDigest() {
+                            return MessageDigests.valueOf(digest);
+                        }
+                    };
                 };
             }
 

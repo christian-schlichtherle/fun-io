@@ -4,7 +4,8 @@
  */
 package global.namespace.fun.io.zip.zip.io;
 
-import global.namespace.fun.io.zip.io.Sink;
+import global.namespace.fun.io.api.Sink;
+import global.namespace.fun.io.api.Socket;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -35,14 +36,16 @@ public final class ZipEntrySink implements Sink {
     /** Returns {@code true} if the entry is a directory entry. */
     public boolean directory() { return entry.isDirectory(); }
 
-    /** Returns an output stream for writing the ZIP entry contents. */
-    @Override public OutputStream output() throws IOException {
-        if (directory()) {
-            entry.setMethod(ZipOutputStream.STORED);
-            entry.setSize(0);
-            entry.setCompressedSize(0);
-            entry.setCrc(0);
-        }
-        return output.stream(entry);
+    @Override
+    public Socket<OutputStream> output() {
+        return () -> {
+            if (directory()) {
+                entry.setMethod(ZipOutputStream.STORED);
+                entry.setSize(0);
+                entry.setCompressedSize(0);
+                entry.setCrc(0);
+            }
+            return output.stream(entry);
+        };
     }
 }

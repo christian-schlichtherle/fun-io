@@ -4,8 +4,10 @@
  */
 package global.namespace.fun.io.zip.io;
 
+import global.namespace.fun.io.api.Sink;
+import global.namespace.fun.io.bios.BIOS;
+
 import java.io.File;
-import java.io.IOException;
 
 /**
  * @see Sinks#execute
@@ -17,11 +19,9 @@ final class WithOutputTask<V> implements Sinks.ExecuteStatement<V> {
 
     WithOutputTask(final OutputTask<V> task) { this.task = task; }
 
-    @Override public V on(File file) throws Exception {
-        return on(new FileStore(file));
-    }
+    @Override
+    public V on(File file) throws Exception { return on(BIOS.pathStore(file.toPath())); }
 
-    @Override public V on(Sink sink) throws Exception {
-        return Closeables.execute(task, sink.output());
-    }
+    @Override
+    public V on(Sink sink) throws Exception { return sink.applyWriter(task::execute); }
 }

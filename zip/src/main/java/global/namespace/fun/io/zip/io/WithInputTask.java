@@ -4,8 +4,10 @@
  */
 package global.namespace.fun.io.zip.io;
 
+import global.namespace.fun.io.api.Source;
+import global.namespace.fun.io.bios.BIOS;
+
 import java.io.File;
-import java.io.IOException;
 
 /**
  * @see Sources#execute
@@ -17,11 +19,9 @@ final class WithInputTask<V> implements Sources.ExecuteStatement<V> {
 
     WithInputTask(final InputTask<V> task) { this.task = task; }
 
-    @Override public V on(File file) throws Exception {
-        return on(new FileStore(file));
-    }
+    @Override
+    public V on(File file) throws Exception { return on(BIOS.pathStore(file.toPath())); }
 
-    @Override public V on(Source source) throws Exception {
-        return Closeables.execute(task, source.input());
-    }
+    @Override
+    public V on(Source source) throws Exception { return source.applyReader(task::execute); }
 }

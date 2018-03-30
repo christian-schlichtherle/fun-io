@@ -5,6 +5,10 @@
  */
 package global.namespace.fun.io.zip.io;
 
+import global.namespace.fun.io.api.Sink;
+import global.namespace.fun.io.api.Source;
+import global.namespace.fun.io.api.Store;
+
 import javax.annotation.WillNotClose;
 import javax.annotation.concurrent.Immutable;
 import java.io.IOException;

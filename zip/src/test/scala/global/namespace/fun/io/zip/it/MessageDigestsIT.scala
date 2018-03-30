@@ -4,7 +4,9 @@
  */
 package global.namespace.fun.io.zip.it
 
-import global.namespace.fun.io.zip.io.Source
+import java.io.InputStream
+
+import global.namespace.fun.io.api.{Socket, Source}
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
 import org.scalatest.prop.PropertyChecks._
@@ -23,9 +25,12 @@ class MessageDigestsIT extends WordSpec {
       forAll(table) { (referenceValue, resourceName) =>
         import global.namespace.fun.io.zip.io.MessageDigests._
         val digest = sha1
-        val source = new Source {
-          def input() = classOf[MessageDigestsIT]
-            .getResourceAsStream(resourceName)
+        val source: Source = new Source {
+
+          def input(): Socket[InputStream] = new Socket[InputStream] {
+
+            def get(): InputStream = classOf[MessageDigestsIT].getResourceAsStream(resourceName)
+          }
         }
         updateDigestFrom(digest, source)
         valueOf(digest) should equal (referenceValue)

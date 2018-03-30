@@ -125,7 +125,7 @@ lazy val xz: Project = project
 
 lazy val zip: Project = project
   .in(file("zip"))
-  .dependsOn(bios % Test, jaxb)
+  .dependsOn(bios, jaxb)
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(

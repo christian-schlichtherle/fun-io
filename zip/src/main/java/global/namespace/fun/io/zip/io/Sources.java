@@ -5,6 +5,8 @@
  */
 package global.namespace.fun.io.zip.io;
 
+import global.namespace.fun.io.api.Source;
+
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.io.File;
@@ -22,41 +24,7 @@ import static java.util.Objects.requireNonNull;
 @Immutable
 public class Sources {
 
-    /**
-     * Returns a source which loads the resource with the given {@code name}.
-     * If the given class loader is not {@code null}, then the resource will
-     * get loaded as described in
-     * {@link ClassLoader#getResourceAsStream(String)}.
-     * Otherwise, the resource will get loaded as described in
-     * {@link ClassLoader#getSystemResourceAsStream(String)}.
-     *
-     * @param  name the name of the resource to load.
-     * @param  loader the nullable class loader to use for loading the resource.
-     *         If this is {@code null}, then the system class loader will get
-     *         used.
-     * @return A source which loads the resource with the given {@code name}.
-     */
-    public static Source forResource(
-            final String name,
-            final @Nullable ClassLoader loader) {
-        requireNonNull(name);
-        return new Source() {
-            @Override public InputStream input() throws IOException {
-                return check(null != loader
-                        ? loader.getResourceAsStream(name)
-                        : ClassLoader.getSystemResourceAsStream(name), name);
-            }
-
-            InputStream check(final @Nullable InputStream in,
-                              final String name)
-            throws FileNotFoundException {
-                if (null == in) throw new FileNotFoundException(String.format(
-                        "Could not locate resource %s on the class path.", name));
-                return in;
-            }
-        };
-    }
-
+    @Deprecated
     public static <V> ExecuteStatement<V> execute(InputTask<V> task) { return new WithInputTask<>(task); }
 
     public interface ExecuteStatement<V> {

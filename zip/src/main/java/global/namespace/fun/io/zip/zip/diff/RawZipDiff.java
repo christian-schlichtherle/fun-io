@@ -4,10 +4,10 @@
  */
 package global.namespace.fun.io.zip.zip.diff;
 
+import global.namespace.fun.io.api.Sink;
+import global.namespace.fun.io.api.Source;
 import global.namespace.fun.io.zip.io.Copy;
 import global.namespace.fun.io.zip.io.MessageDigests;
-import global.namespace.fun.io.zip.io.Sink;
-import global.namespace.fun.io.zip.io.Source;
 import global.namespace.fun.io.zip.zip.io.ZipEntrySink;
 import global.namespace.fun.io.zip.zip.io.ZipEntrySource;
 import global.namespace.fun.io.zip.zip.io.ZipInput;
@@ -18,7 +18,6 @@ import global.namespace.fun.io.zip.zip.model.EntryNameAndTwoDigests;
 
 import javax.annotation.WillNotClose;
 import javax.annotation.concurrent.Immutable;
-import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.Map;
 import java.util.TreeMap;

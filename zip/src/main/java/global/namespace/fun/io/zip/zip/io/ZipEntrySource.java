@@ -4,7 +4,8 @@
  */
 package global.namespace.fun.io.zip.zip.io;
 
-import global.namespace.fun.io.zip.io.Source;
+import global.namespace.fun.io.api.Socket;
+import global.namespace.fun.io.api.Source;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,8 +35,6 @@ public final class ZipEntrySource implements Source {
     /** Returns {@code true} if the entry is a directory entry. */
     public boolean directory() { return entry.isDirectory(); }
 
-    /** Returns an input stream for reading the ZIP entry contents. */
-    @Override public InputStream input() throws IOException {
-        return input.stream(entry);
-    }
+    @Override
+    public Socket<InputStream> input() { return () -> input.stream(entry); }
 }

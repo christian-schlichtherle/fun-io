@@ -4,6 +4,8 @@
  */
 package global.namespace.fun.io.zip.zip.model;
 
+import global.namespace.fun.io.api.Sink;
+import global.namespace.fun.io.api.Source;
 import global.namespace.fun.io.zip.io.*;
 
 import javax.annotation.CheckForNull;

@@ -4,6 +4,9 @@
  */
 package global.namespace.fun.io.zip.io;
 
+import global.namespace.fun.io.api.Source;
+import global.namespace.fun.io.api.Store;
+
 import javax.annotation.concurrent.Immutable;
 import java.io.IOException;
 import java.io.InputStream;
