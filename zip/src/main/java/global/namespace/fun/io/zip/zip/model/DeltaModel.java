@@ -6,7 +6,7 @@ package global.namespace.fun.io.zip.zip.model;
 
 import global.namespace.fun.io.api.Sink;
 import global.namespace.fun.io.api.Source;
-import global.namespace.fun.io.zip.io.*;
+import global.namespace.fun.io.zip.io.MessageDigests;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
@@ -18,8 +18,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.security.MessageDigest;
 import java.util.Collection;
@@ -27,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static global.namespace.fun.io.jaxb.JAXB.xmlCodec;
 import static java.util.Collections.*;
 
 /**
@@ -212,17 +211,7 @@ public final class DeltaModel implements Serializable {
      * @throws Exception at the discretion of the JAXB codec, e.g. if the
      *         sink isn't writable.
      */
-    public void encodeToXml(final Sink sink) throws Exception {
-
-        class EncodeTask implements OutputTask<Void> {
-            @Override
-            public Void execute(OutputStream out) throws JAXBException {
-                jaxbContext().createMarshaller().marshal(DeltaModel.this, out);
-                return null;
-            }
-        }
-        Sinks.execute(new EncodeTask()).on(sink);
-    }
+    public void encodeToXml(Sink sink) throws Exception { xmlCodec(jaxbContext()).encoder(sink).encode(this); }
 
     /**
      * Decodes a delta model from XML.
@@ -233,15 +222,7 @@ public final class DeltaModel implements Serializable {
      *         source isn't readable.
      */
     public static DeltaModel decodeFromXml(Source source) throws Exception {
-
-        class DecodeTask implements InputTask<DeltaModel> {
-            @Override
-            public DeltaModel execute(InputStream in) throws JAXBException {
-                return (DeltaModel) jaxbContext().createUnmarshaller().unmarshal(in);
-            }
-        } // DecodeTask
-
-        return Sources.execute(new DecodeTask()).on(source);
+        return xmlCodec(jaxbContext()).decoder(source).decode(DeltaModel.class);
     }
 
     /** Returns a JAXB context which binds only this class. */

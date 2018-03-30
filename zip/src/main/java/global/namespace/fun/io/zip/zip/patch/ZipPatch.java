@@ -11,7 +11,6 @@ import javax.annotation.Nullable;
 import javax.annotation.WillNotClose;
 import javax.annotation.concurrent.Immutable;
 import java.io.File;
-import java.io.IOException;
 
 import static java.util.Objects.requireNonNull;
 
@@ -79,21 +78,23 @@ public abstract class ZipPatch {
                                     class OutputTask implements ZipOutputTask<Void> {
                                         public Void execute(final @WillNotClose ZipOutput output) throws Exception {
                                             new RawZipPatch() {
+
                                                 protected ZipInput input() { return input; }
+
                                                 protected ZipInput delta() { return delta; }
                                             }.output(output);
                                             return null;
                                         }
-                                    } // OutputTask
+                                    }
                                     return ZipSinks.execute(new OutputTask()).on(sink);
                                 }
-                            } // DeltaTask
+                            }
                             return ZipSources.execute(new DeltaTask()).on(delta);
                         }
-                    } // InputTask
+                    }
                     ZipSources.execute(new InputTask()).on(input);
                 }
-            }; // ZipPatch
+            };
         }
-    } // Builder
+    }
 }

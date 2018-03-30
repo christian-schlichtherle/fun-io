@@ -54,25 +54,8 @@ public final class Copy {
      * @param source the source for reading the data from.
      * @param sink the sink for writing the data to.
      */
-    public static void copy(final Source source, final Sink sink) throws Exception {
-
-        class SourceTask implements InputTask<Void> {
-            @Override
-            public Void execute(final InputStream in) throws Exception {
-
-                class SinkTask implements OutputTask<Void> {
-                    @Override
-                    public Void execute(final OutputStream out) throws IOException {
-                        cat(in, out);
-                        return null;
-                    }
-                }
-
-                return Sinks.execute(new SinkTask()).on(sink);
-            }
-        }
-
-        Sources.execute(new SourceTask()).on(source);
+    public static void copy(Source source, Sink sink) throws Exception {
+        source.acceptReader(in -> sink.acceptWriter(out -> cat(in, out)));
     }
 
     /**
@@ -95,8 +78,7 @@ public final class Copy {
      * @param in the input stream.
      * @param out the output stream.
      */
-    private static void cat(final @WillNotClose InputStream in,
-                            final @WillNotClose OutputStream out)
+    private static void cat(final @WillNotClose InputStream in, final @WillNotClose OutputStream out)
     throws IOException {
         requireNonNull(in);
         requireNonNull(out);
@@ -319,7 +301,9 @@ public final class Copy {
 
     /** A factory for reader threads. */
     private static final class ReaderThreadFactory implements ThreadFactory {
-        @Override public Thread newThread(Runnable r) {
+
+        @Override
+        public Thread newThread(Runnable r) {
             return new ReaderThread(r);
         }
     }

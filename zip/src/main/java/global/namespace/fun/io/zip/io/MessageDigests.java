@@ -8,8 +8,6 @@ import global.namespace.fun.io.api.Source;
 import global.namespace.fun.io.api.Store;
 
 import javax.annotation.concurrent.Immutable;
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -63,18 +61,11 @@ public class MessageDigests {
      * @param source the source for reading the binary data.
      */
     public static void updateDigestFrom(final MessageDigest digest, final Source source) throws Exception {
-
-        class DigestTask implements InputTask<Void> {
-
-            @Override
-            public Void execute(final InputStream in) throws IOException {
-                final byte[] buffer = new byte[Store.BUFSIZE];
-                for (int read; 0 <= (read = in.read(buffer)); ) {
-                    digest.update(buffer, 0, read);
-                }
-                return null;
+        source.acceptReader(in -> {
+            final byte[] buffer = new byte[Store.BUFSIZE];
+            for (int read; 0 <= (read = in.read(buffer)); ) {
+                digest.update(buffer, 0, read);
             }
-        }
-        Sources.execute(new DigestTask()).on(source);
+        });
     }
 }
