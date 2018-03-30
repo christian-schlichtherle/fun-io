@@ -8,7 +8,7 @@ import java.io.File
 import java.security.MessageDigest
 
 import global.namespace.fun.io.scala.api._
-import global.namespace.fun.io.zip.diff.RawZipDiff
+import global.namespace.fun.io.zip.diff.ZipDiffEngine
 import global.namespace.fun.io.zip.io.{JarFileStore, MessageDigests, ZipInput}
 import global.namespace.fun.io.zip.model.DeltaModel
 import javax.xml.bind.JAXBContext
@@ -16,9 +16,9 @@ import javax.xml.bind.JAXBContext
 /** @author Christian Schlichtherle */
 trait ZipITContext extends ITContext {
 
-  def loanRawZipDiff[A](fun: RawZipDiff => A): A =
+  def loanZipDiffEngine[A](fun: ZipDiffEngine => A): A =
     loanTestJars { (archive1, archive2) =>
-      fun(new RawZipDiff {
+      fun(new ZipDiffEngine {
 
         def input1: ZipInput = archive1
 

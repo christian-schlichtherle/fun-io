@@ -7,7 +7,6 @@ package global.namespace.fun.io.zip.io;
 import global.namespace.fun.io.api.Socket;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;

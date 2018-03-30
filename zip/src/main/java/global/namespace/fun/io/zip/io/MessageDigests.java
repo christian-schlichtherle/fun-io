@@ -7,7 +7,6 @@ package global.namespace.fun.io.zip.io;
 import global.namespace.fun.io.api.Source;
 import global.namespace.fun.io.api.Store;
 
-import javax.annotation.concurrent.Immutable;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -17,7 +16,6 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author Christian Schlichtherle
  */
-@Immutable
 public class MessageDigests {
 
     private MessageDigests() { }

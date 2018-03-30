@@ -8,7 +8,6 @@ import global.namespace.fun.io.zip.io.*;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
 import java.io.File;
 import java.security.MessageDigest;
 
@@ -20,7 +19,6 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Christian Schlichtherle
  */
-@Immutable
 public abstract class ZipDiff {
 
     /** Returns a new builder for a ZIP diff. */
@@ -79,22 +77,23 @@ public abstract class ZipDiff {
 
                 @Override
                 public void output(final ZipSink sink) throws Exception {
-                    source1.acceptReader(input1 -> {
-                        source2.acceptReader(input2 -> {
-                            sink.acceptWriter(delta -> {
-                                new RawZipDiff() {
-                                    final MessageDigest digest = MessageDigests.create(
-                                            null != digestName ? digestName : "SHA-1");
+                    source1.acceptReader(input1 ->
+                            source2.acceptReader(input2 ->
+                                    sink.acceptWriter(delta ->
+                                            new ZipDiffEngine() {
 
-                                    protected MessageDigest digest() { return digest; }
+                                                final MessageDigest digest = MessageDigests
+                                                        .create(null != digestName ? digestName : "SHA-1");
 
-                                    protected ZipInput input1() { return input1; }
+                                                protected MessageDigest digest() { return digest; }
 
-                                    protected ZipInput input2() { return input2; }
-                                }.output(delta);
-                            });
-                        });
-                    });
+                                                protected ZipInput input1() { return input1; }
+
+                                                protected ZipInput input2() { return input2; }
+                                            }.output(delta)
+                                    )
+                            )
+                    );
                 }
             };
         }

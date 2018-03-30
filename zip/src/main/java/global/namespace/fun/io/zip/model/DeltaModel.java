@@ -10,7 +10,6 @@ import global.namespace.fun.io.zip.io.MessageDigests;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -36,7 +35,6 @@ import static java.util.Collections.*;
  *
  * @author Christian Schlichtherle
  */
-@Immutable
 @XmlRootElement(name = "delta")
 @XmlAccessorType(XmlAccessType.FIELD)
 public final class DeltaModel implements Serializable {

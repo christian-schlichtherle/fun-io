@@ -12,7 +12,6 @@ import global.namespace.fun.io.zip.model.EntryNameAndDigest;
 import global.namespace.fun.io.zip.model.EntryNameAndTwoDigests;
 
 import javax.annotation.WillNotClose;
-import javax.annotation.concurrent.Immutable;
 import java.security.MessageDigest;
 import java.util.Map;
 import java.util.Optional;
@@ -25,25 +24,21 @@ import java.util.zip.ZipOutputStream;
 /**
  * Compares two archives entry by entry.
  * Archives may be ZIP, JAR, EAR or WAR files.
- * This class requires you to implement its {@link ZipFile} and
- * {@link MessageDigest} properties, but enables you to obtain the delta
- * {@linkplain #model model} besides {@linkplain #output diffing} the input
- * archives.
+ * This class requires you to implement its {@link ZipFile} and {@link MessageDigest} properties, but enables you to
+ * obtain the delta {@linkplain #model model} besides {@linkplain #output diffing} the input archives.
  *
  * @author Christian Schlichtherle
  */
-@Immutable
-public abstract class RawZipDiff {
+public abstract class ZipDiffEngine {
 
-    private static final Pattern COMPRESSED_FILE_EXTENSIONS = Pattern.compile(
-            ".*\\.(ear|jar|war|zip|gz|xz)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern COMPRESSED_FILE_EXTENSIONS =
+            Pattern.compile(".*\\.(ear|jar|war|zip|gz|xz)", Pattern.CASE_INSENSITIVE);
 
     /** Returns the message digest. */
     protected abstract MessageDigest digest();
 
     /** Returns the first input archive. */
-    protected abstract @WillNotClose
-    ZipInput input1();
+    protected abstract @WillNotClose ZipInput input1();
 
     /** Returns the second input archive. */
     protected abstract @WillNotClose ZipInput input2();
@@ -90,7 +85,6 @@ public abstract class RawZipDiff {
     /** Computes a delta model from the two input archives. */
     public DeltaModel model() throws Exception { return new Assembler().walkAndReturn(new Assembly()).deltaModel(); }
 
-    @Immutable
     private class Assembler {
 
         /**
@@ -128,12 +122,12 @@ public abstract class RawZipDiff {
 
     private class Assembly implements Visitor {
 
-        private final Map<String, EntryNameAndTwoDigests> changed = new TreeMap<String, EntryNameAndTwoDigests>();
+        private final Map<String, EntryNameAndTwoDigests> changed = new TreeMap<>();
 
         private final Map<String, EntryNameAndDigest>
-                unchanged = new TreeMap<String, EntryNameAndDigest>(),
-                added = new TreeMap<String, EntryNameAndDigest>(),
-                removed = new TreeMap<String, EntryNameAndDigest>();
+                unchanged = new TreeMap<>(),
+                added = new TreeMap<>(),
+                removed = new TreeMap<>();
 
         DeltaModel deltaModel() {
             return DeltaModel
@@ -154,26 +148,22 @@ public abstract class RawZipDiff {
             final String digest1 = digestValueOf(source1);
             final String digest2 = digestValueOf(source2);
             if (digest1.equals(digest2)) {
-                unchanged.put(name1,
-                        new EntryNameAndDigest(name1, digest1));
+                unchanged.put(name1, new EntryNameAndDigest(name1, digest1));
             } else {
-                changed.put(name1,
-                        new EntryNameAndTwoDigests(name1, digest1, digest2));
+                changed.put(name1, new EntryNameAndTwoDigests(name1, digest1, digest2));
             }
         }
 
         @Override
         public void visitEntryInFirstFile(final ZipEntrySource source1) throws Exception {
             final String name = source1.name();
-            removed.put(name, new EntryNameAndDigest(name,
-                    digestValueOf(source1)));
+            removed.put(name, new EntryNameAndDigest(name, digestValueOf(source1)));
         }
 
         @Override
         public void visitEntryInSecondFile(final ZipEntrySource source2) throws Exception {
             final String name = source2.name();
-            added.put(name, new EntryNameAndDigest(name,
-                    digestValueOf(source2)));
+            added.put(name, new EntryNameAndDigest(name, digestValueOf(source2)));
         }
 
         String digestValueOf(Source source) throws Exception {

@@ -8,8 +8,6 @@ import global.namespace.fun.io.api.Sink;
 import global.namespace.fun.io.api.Source;
 import global.namespace.fun.io.api.Store;
 
-import javax.annotation.WillNotClose;
-import javax.annotation.concurrent.Immutable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -28,7 +26,6 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Christian Schlichtherle (copied and edited from the {@code Streams} class in TrueCommons I/O 2.3.2)
  */
-@Immutable
 public final class Copy {
 
     /**
@@ -77,7 +74,7 @@ public final class Copy {
      * @param in the input stream.
      * @param out the output stream.
      */
-    private static void cat(final @WillNotClose InputStream in, final @WillNotClose OutputStream out)
+    private static void cat(final InputStream in, final OutputStream out)
     throws IOException {
         requireNonNull(in);
         requireNonNull(out);
@@ -302,18 +299,16 @@ public final class Copy {
     private static final class ReaderThreadFactory implements ThreadFactory {
 
         @Override
-        public Thread newThread(Runnable r) {
-            return new ReaderThread(r);
-        }
+        public Thread newThread(Runnable r) { return new ReaderThread(r); }
     }
 
     /**
      * A pooled and cached daemon thread which runs tasks to read input streams.
      * You cannot instantiate this class.
      */
-    @SuppressWarnings("PublicInnerClass")
-    public static final class ReaderThread extends Thread {
-        private ReaderThread(Runnable r) {
+    private static final class ReaderThread extends Thread {
+
+        ReaderThread(Runnable r) {
             super(ThreadGroups.getServerThreadGroup(), r, ReaderThread.class.getName());
             setDaemon(true);
         }

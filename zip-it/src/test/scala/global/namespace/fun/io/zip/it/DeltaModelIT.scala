@@ -20,7 +20,7 @@ class DeltaModelIT extends WordSpec with ZipITContext {
 
     "computed from a ZIP diff" should {
       "be round-trip XML-serializable" in {
-        assertRoundTripXmlSerializable(loanRawZipDiff(_ model ()))
+        assertRoundTripXmlSerializable(loanZipDiffEngine(_ model ()))
       }
     }
   }

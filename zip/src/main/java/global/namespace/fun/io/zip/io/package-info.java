@@ -7,5 +7,4 @@
  *
  * @author Christian Schlichtherle (copied and edited from TrueLicense Core 2.3.1)
  */
-@javax.annotation.ParametersAreNonnullByDefault @javax.annotation.Nonnull
 package global.namespace.fun.io.zip.io;

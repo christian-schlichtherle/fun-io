@@ -6,9 +6,7 @@ package global.namespace.fun.io.zip.io;
 
 import global.namespace.fun.io.api.Socket;
 
-import javax.annotation.Nullable;
 import java.io.Closeable;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 import java.util.zip.ZipEntry;

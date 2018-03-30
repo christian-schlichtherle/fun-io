@@ -11,7 +11,6 @@ import global.namespace.fun.io.zip.model.DeltaModel;
 import global.namespace.fun.io.zip.model.EntryNameAndDigest;
 
 import javax.annotation.WillNotClose;
-import javax.annotation.concurrent.ThreadSafe;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.security.DigestOutputStream;
@@ -28,14 +27,12 @@ import java.util.zip.ZipFile;
  *
  * @author Christian Schlichtherle
  */
-@ThreadSafe
-public abstract class RawZipPatch {
+public abstract class ZipPatchEngine {
 
     private volatile DeltaModel model;
 
     /** Returns the input archive. */
-    protected abstract @WillNotClose
-    ZipInput input();
+    protected abstract @WillNotClose ZipInput input();
 
     /** Returns the delta ZIP archive. */
     protected abstract @WillNotClose ZipInput delta();
@@ -121,8 +118,7 @@ public abstract class RawZipPatch {
 
             abstract IOException ioException(Throwable cause);
 
-            final <T> PatchSet apply(final Transformation<T> transformation, final Iterable<T> iterable)
-            throws Exception {
+            final <T> void apply(final Transformation<T> transformation, final Iterable<T> iterable) throws Exception {
                 for (final T item : iterable) {
                     final EntryNameAndDigest
                             entryNameAndDigest = transformation.apply(item);
@@ -138,7 +134,6 @@ public abstract class RawZipPatch {
                         throw ioException(ex);
                     }
                 }
-                return this;
             }
         }
 
@@ -161,15 +156,9 @@ public abstract class RawZipPatch {
         }
 
         // Order is important here!
-        new InputArchivePatchSet().apply(
-                new IdentityTransformation(),
-                model().unchangedEntries());
-        new PatchArchivePatchSet().apply(
-                new EntryNameAndDigest2Transformation(),
-                model().changedEntries());
-        new PatchArchivePatchSet().apply(
-                new IdentityTransformation(),
-                model().addedEntries());
+        new InputArchivePatchSet().apply(new IdentityTransformation(), model().unchangedEntries());
+        new PatchArchivePatchSet().apply(new EntryNameAndDigest2Transformation(), model().changedEntries());
+        new PatchArchivePatchSet().apply(new IdentityTransformation(), model().addedEntries());
     }
 
     private MessageDigest digest() throws Exception {

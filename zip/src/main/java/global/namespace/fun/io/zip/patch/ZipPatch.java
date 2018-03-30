@@ -29,6 +29,7 @@ public abstract class ZipPatch {
     public static Builder builder() { return new Builder(); }
 
     public abstract void output(File file) throws Exception;
+
     public abstract void output(ZipSink sink) throws Exception;
 
     /** A builder for a ZIP patch. */
@@ -71,18 +72,18 @@ public abstract class ZipPatch {
 
                 @Override
                 public void output(final ZipSink sink) throws Exception {
-                    baseSource.acceptReader(input -> {
-                        deltaSource.acceptReader(delta -> {
-                            sink.acceptWriter(output -> {
-                                new RawZipPatch() {
+                    baseSource.acceptReader(input ->
+                            deltaSource.acceptReader(delta ->
+                                    sink.acceptWriter(output ->
+                                            new ZipPatchEngine() {
 
-                                    protected ZipInput input() { return input; }
+                                                protected ZipInput input() { return input; }
 
-                                    protected ZipInput delta() { return delta; }
-                                }.output(output);
-                            });
-                        });
-                    });
+                                                protected ZipInput delta() { return delta; }
+                                            }.output(output)
+                                    )
+                            )
+                    );
                 }
             };
         }

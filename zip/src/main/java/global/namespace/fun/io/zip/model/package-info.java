@@ -8,5 +8,4 @@
  * @see global.namespace.fun.io.zip.model.DeltaModel
  * @author Christian Schlichtherle
  */
-@javax.annotation.ParametersAreNonnullByDefault @javax.annotation.Nonnull
 package global.namespace.fun.io.zip.model;

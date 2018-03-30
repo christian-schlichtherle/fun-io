@@ -25,6 +25,7 @@ public class JarFileStore extends ZipFileStore {
 
     @Override
     public Socket<ZipOutput> output() {
-        return () -> new JarOutputStreamAdapter(new JarOutputStream(new FileOutputStream(file)));
+        return ((Socket<FileOutputStream>) (() -> new FileOutputStream(file)))
+                .map(out -> new JarOutputStreamAdapter(new JarOutputStream(out)));
     }
 }

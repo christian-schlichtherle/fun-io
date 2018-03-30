@@ -4,14 +4,11 @@
  */
 package global.namespace.fun.io.zip.model;
 
-import javax.annotation.concurrent.Immutable;
-
 /**
  * Provides functions for hash maps.
  *
  * @author Christian Schlichtherle (copied from TrueCommons Shed 2.3.2)
  */
-@Immutable
 final class HashMaps {
 
     /**

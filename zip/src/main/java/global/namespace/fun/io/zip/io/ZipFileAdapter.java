@@ -6,7 +6,6 @@ package global.namespace.fun.io.zip.io;
 
 import global.namespace.fun.io.api.Socket;
 
-import javax.annotation.Nullable;
 import javax.annotation.WillCloseWhenClosed;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,13 +36,14 @@ public class ZipFileAdapter implements ZipInput {
 
             final Enumeration<? extends ZipEntry> en = zip.entries();
 
-            @Override public boolean hasNext() { return en.hasMoreElements(); }
+            @Override
+            public boolean hasNext() { return en.hasMoreElements(); }
 
-            @Override public ZipEntry next() { return en.nextElement(); }
+            @Override
+            public ZipEntry next() { return en.nextElement(); }
 
-            @Override public void remove() {
-                throw new UnsupportedOperationException();
-            }
+            @Override
+            public void remove() { throw new UnsupportedOperationException(); }
         };
     }
 
