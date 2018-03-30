@@ -5,7 +5,6 @@
 package net.java.trueupdate.core.zip.model;
 
 import net.java.trueupdate.core.io.*;
-import net.java.trueupdate.util.HashMaps;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;

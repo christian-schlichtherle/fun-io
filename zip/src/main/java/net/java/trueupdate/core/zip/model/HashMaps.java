@@ -3,7 +3,7 @@
  * Copyright (C) 2013 Stimulus Software.
  * All rights reserved. Use is subject to license terms.
  */
-package net.java.trueupdate.util;
+package net.java.trueupdate.core.zip.model;
 
 import javax.annotation.concurrent.Immutable;
 
@@ -13,17 +13,17 @@ import javax.annotation.concurrent.Immutable;
  * @author Christian Schlichtherle (copied from TrueCommons Shed 2.3.2)
  */
 @Immutable
-public final class HashMaps {
+final class HashMaps {
 
     /**
-     * The number of entries which should be additionally accomodatable by a
-     * hash map with a load factor of 75% before resizing it, which is {@value}.
-     * When a new hash map gets created, this constant should get used in order
-     * to compute the initial capacity or overhead for additional entries.
+     * The number of entries which should be additionally accomodated by a hash map with a load factor of 75% before
+     * resizing it, which is {@value}.
+     * When a new hash map gets created, this constant should get used in order to compute the initial capacity or
+     * overhead for additional entries.
      *
      * @see   #initialCapacity(int)
      */
-    public static final int OVERHEAD_SIZE = (64 - 1) * 3 / 4; // consider 75% load factor
+    private static final int OVERHEAD_SIZE = (64 - 1) * 3 / 4; // consider 75% load factor
 
     private HashMaps() { }
 
