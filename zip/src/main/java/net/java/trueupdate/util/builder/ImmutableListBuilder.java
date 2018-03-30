@@ -4,9 +4,10 @@
  */
 package net.java.trueupdate.util.builder;
 
-import java.util.*;
-import static java.util.Collections.*;
 import javax.annotation.Nullable;
+import java.util.*;
+
+import static java.util.Collections.*;
 
 /**
  * A builder for immutable lists.
@@ -32,9 +33,9 @@ public class ImmutableListBuilder<I, P> extends AbstractBuilder<P> {
         return this;
     }
 
-    @SuppressWarnings("ManualArrayToCollectionCopy")
+    @SafeVarargs
     public final ImmutableListBuilder<I, P> add(final I... items) {
-        for (I item : items) this.items.add(item);
+        this.items.addAll(Arrays.asList(items));
         return this;
     }
 
@@ -42,6 +43,7 @@ public class ImmutableListBuilder<I, P> extends AbstractBuilder<P> {
         return clear().add(item);
     }
 
+    @SafeVarargs
     public final ImmutableListBuilder<I, P> set(I... items) {
         return clear().add(items);
     }

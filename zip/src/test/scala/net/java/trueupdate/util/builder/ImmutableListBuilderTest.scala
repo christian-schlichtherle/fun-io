@@ -4,13 +4,11 @@
  */
 package net.java.trueupdate.util.builder
 
-import org.junit.runner.RunWith
+import org.scalatest.Matchers._
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.matchers.ShouldMatchers._
-import collection.JavaConverters._
 
-@RunWith(classOf[JUnitRunner])
+import scala.collection.JavaConverters._
+
 class ImmutableListBuilderTest extends WordSpec {
 
   def builder[A] = ImmutableListBuilder.create[A]

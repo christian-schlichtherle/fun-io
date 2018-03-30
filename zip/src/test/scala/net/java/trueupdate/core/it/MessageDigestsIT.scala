@@ -5,16 +5,11 @@
 package net.java.trueupdate.core.it
 
 import net.java.trueupdate.core.io._
-import org.junit.runner.RunWith
+import org.scalatest.Matchers._
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.matchers.ShouldMatchers._
 import org.scalatest.prop.PropertyChecks._
 
-/**
- * @author Christian Schlichtherle
- */
-@RunWith(classOf[JUnitRunner])
+/** @author Christian Schlichtherle */
 class MessageDigestsIT extends WordSpec {
 
   "Computation of digests" should {

@@ -5,13 +5,13 @@
 package net.java.trueupdate.core
 
 import java.nio.charset.Charset
-import java.lang.String
 import java.util.logging._
+
 import javax.xml.bind.JAXBContext
-import net.java.trueupdate.core.io.MemoryStore
+import net.java.trueupdate.core.TestContext._
 import net.java.trueupdate.core.codec._
-import org.scalatest.matchers.ShouldMatchers._
-import TestContext._
+import net.java.trueupdate.core.io.MemoryStore
+import org.scalatest.Matchers._
 
 /** @author Christian Schlichtherle */
 object TestContext {

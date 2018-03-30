@@ -4,14 +4,11 @@
  */
 package net.java.trueupdate.util
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
+import org.scalatest.Matchers._
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers._
 import org.scalatest.prop.PropertyChecks._
 
 /** @author Christian Schlichtherle */
-@RunWith(classOf[JUnitRunner])
 class SystemPropertiesTest extends WordSpec {
 
   "Replacing system properties " should {

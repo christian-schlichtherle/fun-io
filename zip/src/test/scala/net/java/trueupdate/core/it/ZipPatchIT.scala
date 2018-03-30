@@ -4,22 +4,18 @@
  */
 package net.java.trueupdate.core.it
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers._
 import java.io._
-import scala.collection.JavaConverters._
-import net.java.trueupdate.core.io._
-import net.java.trueupdate.core.zip._
-import net.java.trueupdate.core.zip.diff._
-import net.java.trueupdate.core.zip.patch._
-import net.java.trueupdate.core.zip.io.{ZipSources, ZipInputTask, ZipInput}
 
-/**
- * @author Christian Schlichtherle
- */
-@RunWith(classOf[JUnitRunner])
+import net.java.trueupdate.core.io._
+import net.java.trueupdate.core.zip.diff._
+import net.java.trueupdate.core.zip.io.{ZipInput, ZipInputTask, ZipSources}
+import net.java.trueupdate.core.zip.patch._
+import org.scalatest.Matchers._
+import org.scalatest.WordSpec
+
+import scala.collection.JavaConverters._
+
+/** @author Christian Schlichtherle */
 class ZipPatchIT extends WordSpec with ZipITContext {
 
   def tempFile() = File.createTempFile("tmp", null)

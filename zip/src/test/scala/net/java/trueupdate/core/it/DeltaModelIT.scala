@@ -4,14 +4,11 @@
  */
 package net.java.trueupdate.core.it
 
-import org.junit.runner.RunWith
-import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
 import net.java.trueupdate.core.io.MessageDigests.sha1
 import net.java.trueupdate.core.zip.model.DeltaModel
+import org.scalatest.WordSpec
 
 /** @author Christian Schlichtherle */
-@RunWith(classOf[JUnitRunner])
 class DeltaModelIT extends WordSpec with ZipITContext {
 
   "A delta model" when {
