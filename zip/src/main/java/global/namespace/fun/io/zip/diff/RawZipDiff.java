@@ -15,6 +15,7 @@ import javax.annotation.WillNotClose;
 import javax.annotation.concurrent.Immutable;
 import java.security.MessageDigest;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -102,12 +103,12 @@ public abstract class RawZipDiff {
                 if (entry1.isDirectory()) {
                     continue;
                 }
-                final ZipEntry entry2 = input2().entry(entry1.getName());
+                final Optional<ZipEntry> entry2 = input2().entry(entry1.getName());
                 final ZipEntrySource source1 = new ZipEntrySource(entry1, input1());
-                if (null == entry2) {
-                    visitor.visitEntryInFirstFile(source1);
+                if (entry2.isPresent()) {
+                    visitor.visitEntriesInBothFiles(source1, new ZipEntrySource(entry2.get(), input2()));
                 } else {
-                    visitor.visitEntriesInBothFiles(source1, new ZipEntrySource(entry2, input2()));
+                    visitor.visitEntryInFirstFile(source1);
                 }
             }
 
@@ -115,8 +116,8 @@ public abstract class RawZipDiff {
                 if (entry2.isDirectory()) {
                     continue;
                 }
-                final ZipEntry entry1 = input1().entry(entry2.getName());
-                if (null == entry1) {
+                final Optional<ZipEntry> entry1 = input1().entry(entry2.getName());
+                if (!entry1.isPresent()) {
                     visitor.visitEntryInSecondFile(new ZipEntrySource(entry2, input2()));
                 }
             }

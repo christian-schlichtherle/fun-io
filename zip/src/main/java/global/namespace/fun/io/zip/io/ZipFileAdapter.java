@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -47,7 +48,7 @@ public class ZipFileAdapter implements ZipInput {
     }
 
     @Override
-    public @Nullable ZipEntry entry(String name) { return zip.getEntry(name); }
+    public Optional<ZipEntry> entry(String name) { return Optional.ofNullable(zip.getEntry(name)); }
 
     @Override
     public Socket<InputStream> input(ZipEntry entry) { return () -> zip.getInputStream(entry); }

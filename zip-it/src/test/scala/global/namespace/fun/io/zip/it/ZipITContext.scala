@@ -7,6 +7,7 @@ package global.namespace.fun.io.zip.it
 import java.io.File
 import java.security.MessageDigest
 
+import global.namespace.fun.io.scala.api._
 import global.namespace.fun.io.zip.diff.RawZipDiff
 import global.namespace.fun.io.zip.io.{JarFileStore, MessageDigests, ZipInput}
 import global.namespace.fun.io.zip.model.DeltaModel

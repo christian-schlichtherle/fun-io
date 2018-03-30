@@ -16,6 +16,7 @@ import global.namespace.fun.io.zip.model.EntryNameAndTwoDigests;
  * @author Christian Schlichtherle
  */
 interface Transformation<T> {
+
     EntryNameAndDigest apply(T item);
 }
 
@@ -24,11 +25,10 @@ interface Transformation<T> {
  *
  * @author Christian Schlichtherle
  */
-final class IdentityTransformation
-implements Transformation<EntryNameAndDigest> {
+final class IdentityTransformation implements Transformation<EntryNameAndDigest> {
 
-    @Override public EntryNameAndDigest apply(
-            EntryNameAndDigest entryNameAndDigest) {
+    @Override
+    public EntryNameAndDigest apply(EntryNameAndDigest entryNameAndDigest) {
         return entryNameAndDigest;
     }
 }
@@ -39,11 +39,10 @@ implements Transformation<EntryNameAndDigest> {
  *
  * @author Christian Schlichtherle
  */
-final class EntryNameAndDigest2Transformation
-implements Transformation<EntryNameAndTwoDigests> {
+final class EntryNameAndDigest2Transformation implements Transformation<EntryNameAndTwoDigests> {
 
-    @Override public EntryNameAndDigest apply(
-            EntryNameAndTwoDigests entryNameAndTwoDigests) {
+    @Override
+    public EntryNameAndDigest apply(EntryNameAndTwoDigests entryNameAndTwoDigests) {
         return entryNameAndTwoDigests.entryNameAndDigest2();
     }
 }

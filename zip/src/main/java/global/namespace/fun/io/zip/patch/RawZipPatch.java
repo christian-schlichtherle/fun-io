@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
+import java.util.Optional;
 import java.util.jar.JarEntry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -127,12 +128,12 @@ public abstract class RawZipPatch {
                             entryNameAndDigest = transformation.apply(item);
                     final String name = entryNameAndDigest.name();
                     if (!filter.accept(name)) continue;
-                    final ZipEntry entry = archive().entry(name);
-                    if (null == entry) {
-                        throw ioException(new MissingZipEntryException(name));
-                    }
+                    final Optional<ZipEntry> entry = archive().entry(name);
                     try {
-                        Copy.copy(new ZipEntrySource(entry, archive()), new ZipEntrySink(entryNameAndDigest));
+                        Copy.copy(
+                                new ZipEntrySource(entry.orElseThrow(() -> ioException(new MissingZipEntryException(name))), archive()),
+                                new ZipEntrySink(entryNameAndDigest)
+                        );
                     } catch (WrongMessageDigestException ex) {
                         throw ioException(ex);
                     }
@@ -143,20 +144,20 @@ public abstract class RawZipPatch {
 
         class InputArchivePatchSet extends PatchSet {
 
-            @Override ZipInput archive() { return input(); }
+            @Override
+            ZipInput archive() { return input(); }
 
-            @Override IOException ioException(Throwable cause) {
-                return new WrongInputZipFile(cause);
-            }
+            @Override
+            IOException ioException(Throwable cause) { return new WrongInputZipFile(cause); }
         }
 
         class PatchArchivePatchSet extends PatchSet {
 
-            @Override ZipInput archive() { return delta(); }
+            @Override
+            ZipInput archive() { return delta(); }
 
-            @Override IOException ioException(Throwable cause) {
-                return new InvalidDiffZipFileException(cause);
-            }
+            @Override
+            IOException ioException(Throwable cause) { return new InvalidDiffZipFileException(cause); }
         }
 
         // Order is important here!
@@ -186,10 +187,6 @@ public abstract class RawZipPatch {
 
     private ZipEntry modelZipEntry() throws Exception {
         final String name = DeltaModel.ENTRY_NAME;
-        final ZipEntry entry = delta().entry(name);
-        if (null == entry) {
-            throw new InvalidDiffZipFileException(new MissingZipEntryException(name));
-        }
-        return entry;
+        return delta().entry(name).orElseThrow(() -> new InvalidDiffZipFileException(new MissingZipEntryException(name)));
     }
 }

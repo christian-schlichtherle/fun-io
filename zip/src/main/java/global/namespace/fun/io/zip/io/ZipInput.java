@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -22,7 +23,7 @@ import java.util.zip.ZipFile;
 public interface ZipInput extends Iterable<ZipEntry>, Closeable {
 
     /** Looks up the nullable ZIP entry with the given name. */
-    @Nullable ZipEntry entry(String name);
+    Optional<ZipEntry> entry(String name);
 
     /** Returns an input stream for reading the ZIP entry contents. */
     Socket<InputStream> input(ZipEntry entry);
