@@ -7,14 +7,13 @@ package global.namespace.fun.io.zip.patch;
 import java.io.IOException;
 
 /**
- * Indicates that the input ZIP file provided for patching doesn't match the
- * first ZIP file when generating the ZIP patch file.
+ * Indicates that the integrity of the patch ZIP file has been violated.
  *
  * @author Christian Schlichtherle
  */
-public final class WrongInputZipFile extends IOException {
+public final class InvalidPatchZipFileException extends IOException {
 
     private static final long serialVersionUID = 0L;
 
-    WrongInputZipFile(Throwable cause) { super(cause); }
+    InvalidPatchZipFileException(Throwable cause) { super(cause); }
 }

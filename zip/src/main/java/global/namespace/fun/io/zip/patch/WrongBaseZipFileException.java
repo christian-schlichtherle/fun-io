@@ -7,15 +7,14 @@ package global.namespace.fun.io.zip.patch;
 import java.io.IOException;
 
 /**
- * Indicates that the integrity of the ZIP patch file has been violated.
+ * Indicates that the base ZIP file provided for patching doesn't match the base ZIP file when generating the patch ZIP
+ * file.
  *
  * @author Christian Schlichtherle
  */
-public final class InvalidDiffZipFileException extends IOException {
+public final class WrongBaseZipFileException extends IOException {
 
     private static final long serialVersionUID = 0L;
 
-    InvalidDiffZipFileException(Throwable cause) {
-        super(cause);
-    }
+    WrongBaseZipFileException(Throwable cause) { super(cause); }
 }

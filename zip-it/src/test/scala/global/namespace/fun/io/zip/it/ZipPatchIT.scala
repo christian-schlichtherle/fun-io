@@ -26,43 +26,43 @@ class ZipPatchIT extends WordSpec with ZipITContext {
   }
 
   "A ZIP patch" when {
-    "generating and applying the ZIP patch file to the first test JAR file" should {
-      "reconstitute the second test JAR file" in {
+    "generating and applying the ZIP patch file to the base JAR file" should {
+      "reconstitute the update JAR file" in {
 
-        val deltaJarFile = tempFile()
+        val patchJarFile = tempFile()
         try {
-          val deltaJarStore = new JarStore(deltaJarFile)
-          val patchedJarFile = tempFile()
+          val patchJarStore = new JarStore(patchJarFile)
+          val updateJarFile = tempFile()
           try {
-            val patchedJarStore = new JarStore(patchedJarFile)
+            val updateJarStore = new JarStore(updateJarFile)
 
-            ZipDiff.builder.source1(testJarStore1).source2(testJarStore2).build.outputTo(deltaJarStore)
-            ZipPatch.builder.source(testJarStore1).delta(deltaJarStore).build.outputTo(patchedJarStore)
+            ZipDiff.builder.base(testJarStore1).update(testJarStore2).build.outputTo(patchJarStore)
+            ZipPatch.builder.base(testJarStore1).patch(patchJarStore).build.outputTo(updateJarStore)
 
             testJarStore2 acceptReader { jar2: ZipInput =>
               val unchangedReference = fileEntryNames(jar2)
 
-              patchedJarStore acceptReader { patched: ZipInput =>
+              updateJarStore acceptReader { updated: ZipInput =>
                 val model = new ZipDiffEngine {
 
                   val digest: MessageDigest = MessageDigests.sha1
 
-                  def input1: ZipInput = jar2
+                  def base: ZipInput = jar2
 
-                  def input2: ZipInput = patched
+                  def update: ZipInput = updated
                 } model ()
-                model.addedEntries.isEmpty shouldBe true
-                model.removedEntries.isEmpty shouldBe true
+                model.addedEntries shouldBe empty
+                model.removedEntries shouldBe empty
                 model.unchangedEntries.asScala map (_.name) shouldBe unchangedReference
-                model.changedEntries.isEmpty shouldBe true
+                model.changedEntries shouldBe empty
                 ()
               }
             }
           } finally {
-            patchedJarFile delete ()
+            updateJarFile delete ()
           }
         } finally {
-          deltaJarFile delete ()
+          patchJarFile delete ()
         }
       }
     }

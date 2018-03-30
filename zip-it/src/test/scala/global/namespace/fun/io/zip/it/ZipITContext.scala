@@ -30,9 +30,9 @@ trait ZipITContext {
 
           lazy val digest: MessageDigest = MessageDigests.sha1
 
-          def input1: ZipInput = jar1
+          def base: ZipInput = jar1
 
-          def input2: ZipInput = jar2
+          def update: ZipInput = jar2
         })
       }
     }

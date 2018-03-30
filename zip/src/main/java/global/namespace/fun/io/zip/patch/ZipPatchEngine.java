@@ -31,18 +31,16 @@ public abstract class ZipPatchEngine {
 
     private volatile DeltaModel model;
 
-    /** Returns the input archive. */
-    protected abstract @WillNotClose ZipInput input();
+    /** Returns the base ZIP file. */
+    protected abstract @WillNotClose ZipInput base();
 
-    /** Returns the delta ZIP archive. */
-    protected abstract @WillNotClose ZipInput delta();
+    /** Returns the patch ZIP file. */
+    protected abstract @WillNotClose ZipInput patch();
 
-    /**
-     * Applies the configured delta ZIP archive.
-     */
-    public void output(final @WillNotClose ZipOutput output) throws Exception {
-        for (EntryNameFilter filter : passFilters(output)) {
-            output(output, new NoDirectoryEntryNameFilter(filter));
+    /** Writes the output to the given update ZIP file. */
+    public void outputTo(final @WillNotClose ZipOutput update) throws Exception {
+        for (EntryNameFilter filter : passFilters(update)) {
+            outputTo(update, new NoDirectoryEntryNameFilter(filter));
         }
     }
 
@@ -66,16 +64,13 @@ public abstract class ZipPatchEngine {
             // entries, the directory entry "META-INF/" will always appear
             // before the file entry "META-INF/MANIFEST.MF".
             final EntryNameFilter manifestFilter = new ManifestEntryNameFilter();
-            return new EntryNameFilter[] {
-                    manifestFilter,
-                    new InverseEntryNameFilter(manifestFilter)
-            };
+            return new EntryNameFilter[] { manifestFilter, new InverseEntryNameFilter(manifestFilter) };
         } else {
             return new EntryNameFilter[] { new AcceptAllEntryNameFilter() };
         }
     }
 
-    private void output(final @WillNotClose ZipOutput output, final EntryNameFilter filter) throws Exception {
+    private void outputTo(final @WillNotClose ZipOutput update, final EntryNameFilter filter) throws Exception {
 
         class ZipEntrySink implements Sink {
 
@@ -89,10 +84,8 @@ public abstract class ZipPatchEngine {
             @Override
             public Socket<OutputStream> output() {
                 final ZipEntry entry = entry(entryNameAndDigest.name());
-                return output(entry).map(out -> {
-                    final MessageDigest digest = digest();
-                    digest.reset();
-                    return new DigestOutputStream(out, digest) {
+                return output(entry).map(out ->
+                    new DigestOutputStream(out, digest()) {
 
                         @Override
                         public void close() throws IOException {
@@ -103,60 +96,61 @@ public abstract class ZipPatchEngine {
                         }
 
                         String valueOfDigest() { return MessageDigests.valueOf(digest); }
-                    };
-                });
+                    }
+                );
             }
 
-            ZipEntry entry(String name) { return output.entry(name); }
+            ZipEntry entry(String name) { return update.entry(name); }
 
-            Socket<OutputStream> output(ZipEntry entry) { return output.output(entry); }
+            Socket<OutputStream> output(ZipEntry entry) { return update.output(entry); }
         }
 
         abstract class PatchSet {
 
-            abstract ZipInput archive();
+            abstract ZipInput input();
 
             abstract IOException ioException(Throwable cause);
 
             final <T> void apply(final Transformation<T> transformation, final Iterable<T> iterable) throws Exception {
                 for (final T item : iterable) {
-                    final EntryNameAndDigest
-                            entryNameAndDigest = transformation.apply(item);
+                    final EntryNameAndDigest entryNameAndDigest = transformation.apply(item);
                     final String name = entryNameAndDigest.name();
-                    if (!filter.accept(name)) continue;
-                    final Optional<ZipEntry> entry = archive().entry(name);
+                    if (!filter.accept(name)) {
+                        continue;
+                    }
+                    final Optional<ZipEntry> entry = input().entry(name);
                     try {
                         Copy.copy(
-                                new ZipEntrySource(entry.orElseThrow(() -> ioException(new MissingZipEntryException(name))), archive()),
+                                new ZipEntrySource(entry.orElseThrow(() -> ioException(new MissingZipEntryException(name))), input()),
                                 new ZipEntrySink(entryNameAndDigest)
                         );
-                    } catch (WrongMessageDigestException ex) {
-                        throw ioException(ex);
+                    } catch (WrongMessageDigestException e) {
+                        throw ioException(e);
                     }
                 }
             }
         }
 
-        class InputArchivePatchSet extends PatchSet {
+        class BaseArchivePatchSet extends PatchSet {
 
             @Override
-            ZipInput archive() { return input(); }
+            ZipInput input() { return base(); }
 
             @Override
-            IOException ioException(Throwable cause) { return new WrongInputZipFile(cause); }
+            IOException ioException(Throwable cause) { return new WrongBaseZipFileException(cause); }
         }
 
         class PatchArchivePatchSet extends PatchSet {
 
             @Override
-            ZipInput archive() { return delta(); }
+            ZipInput input() { return patch(); }
 
             @Override
-            IOException ioException(Throwable cause) { return new InvalidDiffZipFileException(cause); }
+            IOException ioException(Throwable cause) { return new InvalidPatchZipFileException(cause); }
         }
 
         // Order is important here!
-        new InputArchivePatchSet().apply(new IdentityTransformation(), model().unchangedEntries());
+        new BaseArchivePatchSet().apply(new IdentityTransformation(), model().unchangedEntries());
         new PatchArchivePatchSet().apply(new EntryNameAndDigest2Transformation(), model().changedEntries());
         new PatchArchivePatchSet().apply(new IdentityTransformation(), model().addedEntries());
     }
@@ -171,11 +165,11 @@ public abstract class ZipPatchEngine {
     }
 
     private DeltaModel loadModel() throws Exception {
-        return DeltaModel.decodeFromXml(new ZipEntrySource(modelZipEntry(), delta()));
+        return DeltaModel.decodeFromXml(new ZipEntrySource(modelZipEntry(), patch()));
     }
 
     private ZipEntry modelZipEntry() throws Exception {
         final String name = DeltaModel.ENTRY_NAME;
-        return delta().entry(name).orElseThrow(() -> new InvalidDiffZipFileException(new MissingZipEntryException(name)));
+        return patch().entry(name).orElseThrow(() -> new InvalidPatchZipFileException(new MissingZipEntryException(name)));
     }
 }

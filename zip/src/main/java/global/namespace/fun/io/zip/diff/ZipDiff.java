@@ -25,7 +25,7 @@ public abstract class ZipDiff {
     /** Returns a new builder for a ZIP diff. */
     public static Builder builder() { return new Builder(); }
 
-    public abstract void outputTo(ZipSink sink) throws Exception;
+    public abstract void outputTo(ZipSink patch) throws Exception;
 
     /**
      * A builder for a ZIP diff.
@@ -34,36 +34,36 @@ public abstract class ZipDiff {
     @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "ConstantConditions"})
     public static class Builder {
 
-        private Optional<ZipSource> source1 = empty(), source2 = empty();
         private Optional<String> digest = empty();
+        private Optional<ZipSource> base = empty(), update = empty();
 
         Builder() { }
-
-        public Builder source1(final ZipSource source1) {
-            this.source1 = Optional.of(source1);
-            return this;
-        }
-
-        public Builder source2(final ZipSource source2) {
-            this.source2 = Optional.of(source2);
-            return this;
-        }
 
         public Builder digest(final String digest) {
             this.digest = Optional.of(digest);
             return this;
         }
 
-        public ZipDiff build() { return create(source1.get(), source2.get(), digest); }
+        public Builder base(final ZipSource base) {
+            this.base = Optional.of(base);
+            return this;
+        }
 
-        private static ZipDiff create(final ZipSource source1, final ZipSource source2, final Optional<String> digestName) {
+        public Builder update(final ZipSource update) {
+            this.update = Optional.of(update);
+            return this;
+        }
+
+        public ZipDiff build() { return create(digest, base.get(), update.get()); }
+
+        private static ZipDiff create(final Optional<String> digestName, final ZipSource baseSource, final ZipSource updateSource) {
             return new ZipDiff() {
 
                 @Override
-                public void outputTo(final ZipSink sink) throws Exception {
-                    source1.acceptReader(input1 ->
-                            source2.acceptReader(input2 ->
-                                    sink.acceptWriter(delta ->
+                public void outputTo(final ZipSink patchSink) throws Exception {
+                    baseSource.acceptReader(base ->
+                            updateSource.acceptReader(update ->
+                                    patchSink.acceptWriter(patch ->
                                             new ZipDiffEngine() {
 
                                                 final MessageDigest digest =
@@ -71,10 +71,10 @@ public abstract class ZipDiff {
 
                                                 protected MessageDigest digest() { return digest; }
 
-                                                protected ZipInput input1() { return input1; }
+                                                protected ZipInput base() { return base; }
 
-                                                protected ZipInput input2() { return input2; }
-                                            }.output(delta)
+                                                protected ZipInput update() { return update; }
+                                            }.outputTo(patch)
                                     )
                             )
                     );

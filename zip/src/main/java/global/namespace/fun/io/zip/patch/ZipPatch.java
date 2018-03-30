@@ -11,7 +11,6 @@ import global.namespace.fun.io.zip.io.ZipSource;
 import javax.annotation.concurrent.Immutable;
 import java.util.Optional;
 
-import static java.util.Objects.requireNonNull;
 import static java.util.Optional.empty;
 
 /**
@@ -26,42 +25,42 @@ public abstract class ZipPatch {
     /** Returns a new builder for a ZIP patch. */
     public static Builder builder() { return new Builder(); }
 
-    public abstract void outputTo(ZipSink sink) throws Exception;
+    public abstract void outputTo(ZipSink update) throws Exception;
 
     /** A builder for a ZIP patch. */
     @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "ConstantConditions"})
     public static class Builder {
 
-        private Optional<ZipSource> source = empty(), delta = empty();
+        private Optional<ZipSource> base = empty(), patch = empty();
 
         Builder() { }
 
-        public Builder source(final ZipSource source) {
-            this.source = Optional.of(source);
+        public Builder base(final ZipSource base) {
+            this.base = Optional.of(base);
             return this;
         }
 
-        public Builder delta(final ZipSource delta) {
-            this.delta = Optional.of(delta);
+        public Builder patch(final ZipSource patch) {
+            this.patch = Optional.of(patch);
             return this;
         }
 
-        public ZipPatch build() { return create(source.get(), delta.get()); }
+        public ZipPatch build() { return create(base.get(), patch.get()); }
 
-        private static ZipPatch create(final ZipSource baseSource, final ZipSource deltaSource) {
+        private static ZipPatch create(final ZipSource baseSource, final ZipSource patchSource) {
             return new ZipPatch() {
 
                 @Override
-                public void outputTo(final ZipSink sink) throws Exception {
-                    baseSource.acceptReader(input ->
-                            deltaSource.acceptReader(delta ->
-                                    sink.acceptWriter(output ->
+                public void outputTo(final ZipSink updateSink) throws Exception {
+                    baseSource.acceptReader(base ->
+                            patchSource.acceptReader(patch ->
+                                    updateSink.acceptWriter(update ->
                                             new ZipPatchEngine() {
 
-                                                protected ZipInput input() { return input; }
+                                                protected ZipInput base() { return base; }
 
-                                                protected ZipInput delta() { return delta; }
-                                            }.output(output)
+                                                protected ZipInput patch() { return patch; }
+                                            }.outputTo(update)
                                     )
                             )
                     );

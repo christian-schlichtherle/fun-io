@@ -7,8 +7,7 @@ package global.namespace.fun.io.zip.patch;
 import java.io.IOException;
 
 /**
- * Indicates that a computed {@link java.security.MessageDigest} did not match
- * an expected message digest.
+ * Indicates that a computed {@link java.security.MessageDigest} did not match an expected message digest.
  *
  * @author Christian Schlichtherle
  */

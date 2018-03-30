@@ -25,7 +25,7 @@ import java.util.zip.ZipOutputStream;
  * Compares two archives entry by entry.
  * Archives may be ZIP, JAR, EAR or WAR files.
  * This class requires you to implement its {@link ZipFile} and {@link MessageDigest} properties, but enables you to
- * obtain the delta {@linkplain #model model} besides {@linkplain #output diffing} the input archives.
+ * obtain the delta {@linkplain #model model} besides {@linkplain #outputTo diffing} the input archives.
  *
  * @author Christian Schlichtherle
  */
@@ -37,14 +37,14 @@ public abstract class ZipDiffEngine {
     /** Returns the message digest. */
     protected abstract MessageDigest digest();
 
-    /** Returns the first input archive. */
-    protected abstract @WillNotClose ZipInput input1();
+    /** Returns the first ZIP input file. */
+    protected abstract @WillNotClose ZipInput base();
 
-    /** Returns the second input archive. */
-    protected abstract @WillNotClose ZipInput input2();
+    /** Returns the second ZIP input file. */
+    protected abstract @WillNotClose ZipInput update();
 
-    /** Writes the delta ZIP file. */
-    public void output(final @WillNotClose ZipOutput delta) throws Exception {
+    /** Writes the ZIP patch file. */
+    public void outputTo(final @WillNotClose ZipOutput patch) throws Exception {
 
         final class Streamer {
 
@@ -53,7 +53,7 @@ public abstract class ZipDiffEngine {
             Streamer() throws Exception { model.encodeToXml(sink(entry(DeltaModel.ENTRY_NAME))); }
 
             Streamer stream() throws Exception {
-                for (final ZipEntry in : input2()) {
+                for (final ZipEntry in : update()) {
                     final String name = in.getName();
                     if (changedOrAdded(name)) {
                         final ZipEntry out = entry(name);
@@ -70,11 +70,11 @@ public abstract class ZipDiffEngine {
                 return this;
             }
 
-            Source source2(ZipEntry entry) { return new ZipEntrySource(entry, input2()); }
+            Source source2(ZipEntry entry) { return new ZipEntrySource(entry, update()); }
 
-            Sink sink(ZipEntry entry) { return new ZipEntrySink(entry, delta); }
+            Sink sink(ZipEntry entry) { return new ZipEntrySink(entry, patch); }
 
-            ZipEntry entry(String name) { return delta.entry(name); }
+            ZipEntry entry(String name) { return patch.entry(name); }
 
             boolean changedOrAdded(String name) { return null != model.changed(name) || null != model.added(name); }
         }
@@ -93,26 +93,26 @@ public abstract class ZipDiffEngine {
          * stops the visit and passes it on to the caller.
          */
         <V extends Visitor> V walkAndReturn(final V visitor) throws Exception {
-            for (final ZipEntry entry1 : input1()) {
+            for (final ZipEntry entry1 : base()) {
                 if (entry1.isDirectory()) {
                     continue;
                 }
-                final Optional<ZipEntry> entry2 = input2().entry(entry1.getName());
-                final ZipEntrySource source1 = new ZipEntrySource(entry1, input1());
+                final Optional<ZipEntry> entry2 = update().entry(entry1.getName());
+                final ZipEntrySource source1 = new ZipEntrySource(entry1, base());
                 if (entry2.isPresent()) {
-                    visitor.visitEntriesInBothFiles(source1, new ZipEntrySource(entry2.get(), input2()));
+                    visitor.visitEntriesInBothFiles(source1, new ZipEntrySource(entry2.get(), update()));
                 } else {
                     visitor.visitEntryInFirstFile(source1);
                 }
             }
 
-            for (final ZipEntry entry2 : input2()) {
+            for (final ZipEntry entry2 : update()) {
                 if (entry2.isDirectory()) {
                     continue;
                 }
-                final Optional<ZipEntry> entry1 = input1().entry(entry2.getName());
+                final Optional<ZipEntry> entry1 = base().entry(entry2.getName());
                 if (!entry1.isPresent()) {
-                    visitor.visitEntryInSecondFile(new ZipEntrySource(entry2, input2()));
+                    visitor.visitEntryInSecondFile(new ZipEntrySource(entry2, update()));
                 }
             }
 
@@ -168,7 +168,6 @@ public abstract class ZipDiffEngine {
 
         String digestValueOf(Source source) throws Exception {
             final MessageDigest digest = digest();
-            digest.reset();
             MessageDigests.updateDigestFrom(digest, source);
             return MessageDigests.valueOf(digest);
         }
