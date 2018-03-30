@@ -109,7 +109,7 @@ object BuildSettings {
       javacOptions := DefaultOptions.javac ++ Seq(Opts.compile.deprecation, "-Xlint:unchecked", "-source", "1.8", "-target", "1.8", "-g"),
       javacOptions in doc := DefaultOptions.javac ++ Seq("-source", "1.8"),
       scalacOptions := DefaultOptions.scalac ++ Seq(Opts.compile.deprecation, Opts.compile.explaintypes, "-feature", Opts.compile.unchecked),
-      scalaVersion := ScalaVersion_2_11
+      scalaVersion := ScalaVersion_2_10
     )
   }
 
