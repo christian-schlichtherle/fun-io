@@ -31,9 +31,6 @@ public final class ZipEntrySource implements Source {
     /** Returns the entry name. */
     public String name() { return entry.getName(); }
 
-    /** Returns {@code true} if the entry is a directory entry. */
-    public boolean directory() { return entry.isDirectory(); }
-
     @Override
-    public Socket<InputStream> input() { return () -> input.stream(entry); }
+    public Socket<InputStream> input() { return input.input(entry); }
 }

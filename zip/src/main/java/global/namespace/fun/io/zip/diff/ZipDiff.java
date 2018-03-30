@@ -4,7 +4,6 @@
  */
 package global.namespace.fun.io.zip.diff;
 
-import edu.umd.cs.findbugs.annotations.CreatesObligation;
 import global.namespace.fun.io.zip.io.*;
 
 import javax.annotation.CheckForNull;
@@ -66,8 +65,10 @@ public abstract class ZipDiff {
 
         public ZipDiff build() { return create(input1, input2, digest); }
 
-        private static @CreatesObligation
-        ZipDiff create(final ZipSource source1, final ZipSource source2, final @Nullable String digestName) {
+        private static ZipDiff create(
+                final ZipSource source1,
+                final ZipSource source2,
+                final @Nullable String digestName) {
             requireNonNull(source1);
             requireNonNull(source2);
 

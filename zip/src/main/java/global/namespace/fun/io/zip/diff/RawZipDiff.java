@@ -87,9 +87,7 @@ public abstract class RawZipDiff {
     }
 
     /** Computes a delta model from the two input archives. */
-    public DeltaModel model() throws Exception {
-        return new Assembler().walkAndReturn(new Assembly()).buildZipDiffModel();
-    }
+    public DeltaModel model() throws Exception { return new Assembler().walkAndReturn(new Assembly()).deltaModel(); }
 
     @Immutable
     private class Assembler {
@@ -109,8 +107,7 @@ public abstract class RawZipDiff {
                 if (null == entry2) {
                     visitor.visitEntryInFirstFile(source1);
                 } else {
-                    visitor.visitEntriesInBothFiles(source1,
-                            new ZipEntrySource(entry2, input2()));
+                    visitor.visitEntriesInBothFiles(source1, new ZipEntrySource(entry2, input2()));
                 }
             }
 
@@ -120,8 +117,7 @@ public abstract class RawZipDiff {
                 }
                 final ZipEntry entry1 = input1().entry(entry2.getName());
                 if (null == entry1) {
-                    visitor.visitEntryInSecondFile(
-                            new ZipEntrySource(entry2, input2()));
+                    visitor.visitEntryInSecondFile(new ZipEntrySource(entry2, input2()));
                 }
             }
 
@@ -138,7 +134,7 @@ public abstract class RawZipDiff {
                 added = new TreeMap<String, EntryNameAndDigest>(),
                 removed = new TreeMap<String, EntryNameAndDigest>();
 
-        DeltaModel buildZipDiffModel() {
+        DeltaModel deltaModel() {
             return DeltaModel
                     .builder()
                     .messageDigest(digest())

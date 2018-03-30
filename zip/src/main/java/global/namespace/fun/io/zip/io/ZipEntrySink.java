@@ -32,19 +32,6 @@ public final class ZipEntrySink implements Sink {
     /** Returns the entry name. */
     public String name() { return entry.getName(); }
 
-    /** Returns {@code true} if the entry is a directory entry. */
-    public boolean directory() { return entry.isDirectory(); }
-
     @Override
-    public Socket<OutputStream> output() {
-        return () -> {
-            if (directory()) {
-                entry.setMethod(ZipOutputStream.STORED);
-                entry.setSize(0);
-                entry.setCompressedSize(0);
-                entry.setCrc(0);
-            }
-            return output.stream(entry);
-        };
-    }
+    public Socket<OutputStream> output() { return output.output(entry); }
 }

@@ -4,6 +4,8 @@
  */
 package global.namespace.fun.io.zip.io;
 
+import global.namespace.fun.io.api.Socket;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -21,6 +23,6 @@ public interface ZipOutput extends Closeable {
     /** Returns a <em>new</em> ZIP entry. */
     ZipEntry entry(String name);
 
-    /** Returns an output stream for writing the ZIP entry contents. */
-    OutputStream stream(ZipEntry entry) throws IOException;
+    /** Returns an output stream socket for writing the contents of the given ZIP entry. */
+    Socket<OutputStream> output(ZipEntry entry);
 }

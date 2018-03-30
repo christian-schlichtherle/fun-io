@@ -4,6 +4,8 @@
  */
 package global.namespace.fun.io.zip.io;
 
+import global.namespace.fun.io.api.Socket;
+
 import javax.annotation.Nullable;
 import javax.annotation.WillCloseWhenClosed;
 import java.io.IOException;
@@ -23,19 +25,15 @@ import static java.util.Objects.requireNonNull;
  */
 public class ZipFileAdapter implements ZipInput {
 
-    /** The adapted ZIP file. */
-    protected ZipFile zip;
-
-    /** Use of this constructor requires setting the {@code zip} field. */
-    protected ZipFileAdapter() { }
+    private final ZipFile zip;
 
     /** Constructs a new ZIP file adapter for the given ZIP file. */
-    public ZipFileAdapter(final @WillCloseWhenClosed ZipFile input) {
-        this.zip = requireNonNull(input);
-    }
+    public ZipFileAdapter(final @WillCloseWhenClosed ZipFile input) { this.zip = requireNonNull(input); }
 
-    @Override public Iterator<ZipEntry> iterator() {
+    @Override
+    public Iterator<ZipEntry> iterator() {
         return new Iterator<ZipEntry>() {
+
             final Enumeration<? extends ZipEntry> en = zip.entries();
 
             @Override public boolean hasNext() { return en.hasMoreElements(); }
@@ -48,13 +46,12 @@ public class ZipFileAdapter implements ZipInput {
         };
     }
 
-    @Override public @Nullable ZipEntry entry(String name) {
-        return zip.getEntry(name);
-    }
+    @Override
+    public @Nullable ZipEntry entry(String name) { return zip.getEntry(name); }
 
-    @Override public InputStream stream(ZipEntry entry) throws IOException {
-        return zip.getInputStream(entry);
-    }
+    @Override
+    public Socket<InputStream> input(ZipEntry entry) { return () -> zip.getInputStream(entry); }
 
-    @Override public void close() throws IOException { zip.close(); }
+    @Override
+    public void close() throws IOException { zip.close(); }
 }

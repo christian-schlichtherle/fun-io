@@ -7,8 +7,6 @@ package global.namespace.fun.io.zip.it
 import java.io.File
 import java.security.MessageDigest
 
-import edu.umd.cs.findbugs.annotations.CreatesObligation
-import global.namespace.fun.io.scala.api._
 import global.namespace.fun.io.zip.diff.RawZipDiff
 import global.namespace.fun.io.zip.io.{JarFileStore, MessageDigests, ZipInput}
 import global.namespace.fun.io.zip.model.DeltaModel
@@ -37,8 +35,8 @@ trait ZipITContext extends ITContext {
     }
   }
 
-  @CreatesObligation final def testJar1: File = file("test1.jar")
-  @CreatesObligation final def testJar2: File = file("test2.jar")
+  final def testJar1: File = file("test1.jar")
+  final def testJar2: File = file("test2.jar")
 
   private def file(resourceName: String) = new File((classOf[ZipITContext] getResource resourceName).toURI)
 

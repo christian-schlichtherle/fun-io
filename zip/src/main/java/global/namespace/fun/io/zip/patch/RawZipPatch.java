@@ -19,7 +19,6 @@ import java.security.MessageDigest;
 import java.util.jar.JarEntry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipOutputStream;
 
 /**
  * Applies a delta ZIP file to an input archive and generates an output archive.
@@ -91,39 +90,28 @@ public abstract class RawZipPatch {
 
             @Override
             public Socket<OutputStream> output() {
-                return () -> {
-                    final ZipEntry entry = entry(entryNameAndDigest.name());
-                    if (entry.isDirectory()) {
-                        entry.setMethod(ZipOutputStream.STORED);
-                        entry.setSize(0);
-                        entry.setCompressedSize(0);
-                        entry.setCrc(0);
-                    }
+                final ZipEntry entry = entry(entryNameAndDigest.name());
+                return output(entry).map(out -> {
                     final MessageDigest digest = digest();
                     digest.reset();
-                    return new DigestOutputStream(stream(entry), digest) {
+                    return new DigestOutputStream(out, digest) {
 
                         @Override
                         public void close() throws IOException {
                             super.close();
-                            if (!valueOfDigest().equals(
-                                    entryNameAndDigest.digest()))
-                                throw new WrongMessageDigestException(
-                                        entryNameAndDigest.name());
+                            if (!valueOfDigest().equals(entryNameAndDigest.digest())) {
+                                throw new WrongMessageDigestException(entryNameAndDigest.name());
+                            }
                         }
 
-                        String valueOfDigest() {
-                            return MessageDigests.valueOf(digest);
-                        }
+                        String valueOfDigest() { return MessageDigests.valueOf(digest); }
                     };
-                };
-            }
-
-            OutputStream stream(ZipEntry entry) throws IOException {
-                return output.stream(entry);
+                });
             }
 
             ZipEntry entry(String name) { return output.entry(name); }
+
+            Socket<OutputStream> output(ZipEntry entry) { return output.output(entry); }
         }
 
         abstract class PatchSet {
@@ -140,12 +128,11 @@ public abstract class RawZipPatch {
                     final String name = entryNameAndDigest.name();
                     if (!filter.accept(name)) continue;
                     final ZipEntry entry = archive().entry(name);
-                    if (null == entry)
+                    if (null == entry) {
                         throw ioException(new MissingZipEntryException(name));
+                    }
                     try {
-                        Copy.copy(
-                                new ZipEntrySource(entry, archive()),
-                                new ZipEntrySink(entryNameAndDigest));
+                        Copy.copy(new ZipEntrySource(entry, archive()), new ZipEntrySink(entryNameAndDigest));
                     } catch (WrongMessageDigestException ex) {
                         throw ioException(ex);
                     }
@@ -197,7 +184,7 @@ public abstract class RawZipPatch {
         return DeltaModel.decodeFromXml(new ZipEntrySource(modelZipEntry(), delta()));
     }
 
-    private ZipEntry modelZipEntry() throws IOException {
+    private ZipEntry modelZipEntry() throws Exception {
         final String name = DeltaModel.ENTRY_NAME;
         final ZipEntry entry = delta().entry(name);
         if (null == entry) {

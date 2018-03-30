@@ -150,7 +150,8 @@ public final class DeltaModel implements Serializable {
     }
 
     /** Looks up the given entry name in the <i>unchanged</i> entries. */
-    @Deprecated public EntryNameAndDigest unchanged(String name) {
+    @Deprecated
+    public EntryNameAndDigest unchanged(String name) {
         return unchanged.get(name);
     }
 
@@ -176,14 +177,20 @@ public final class DeltaModel implements Serializable {
     }
 
     /** Looks up the given entry name in the <i>removed</i> entries. */
-    @Deprecated public EntryNameAndDigest removed(String name) {
+    @Deprecated
+    public EntryNameAndDigest removed(String name) {
         return removed.get(name);
     }
 
     @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
-    @Override public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof DeltaModel)) return false;
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof DeltaModel)) {
+            return false;
+        }
         final DeltaModel that = (DeltaModel) obj;
         return  this.algorithm.equals(that.algorithm) &&
                 Objects.equals(this.numBytes, that.numBytes) &&
@@ -193,7 +200,8 @@ public final class DeltaModel implements Serializable {
                 this.removed.equals(that.removed);
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         int hash = 17;
         hash = 31 * hash + algorithm.hashCode();
         hash = 31 * hash + Objects.hashCode(numBytes);
@@ -290,5 +298,5 @@ public final class DeltaModel implements Serializable {
         }
 
         public DeltaModel build() { return new DeltaModel(this); }
-    } // Builder
+    }
 }

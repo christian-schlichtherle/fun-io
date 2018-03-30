@@ -4,6 +4,8 @@
  */
 package global.namespace.fun.io.zip.io;
 
+import global.namespace.fun.io.api.Socket;
+
 import javax.annotation.Nullable;
 import java.io.Closeable;
 import java.io.IOException;
@@ -23,5 +25,5 @@ public interface ZipInput extends Iterable<ZipEntry>, Closeable {
     @Nullable ZipEntry entry(String name);
 
     /** Returns an input stream for reading the ZIP entry contents. */
-    InputStream stream(ZipEntry entry) throws IOException;
+    Socket<InputStream> input(ZipEntry entry);
 }

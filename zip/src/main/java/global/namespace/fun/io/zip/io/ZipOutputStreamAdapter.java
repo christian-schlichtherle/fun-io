@@ -4,6 +4,8 @@
  */
 package global.namespace.fun.io.zip.io;
 
+import global.namespace.fun.io.api.Socket;
+
 import javax.annotation.WillCloseWhenClosed;
 import java.io.FilterOutputStream;
 import java.io.IOException;
@@ -21,31 +23,31 @@ import static java.util.Objects.requireNonNull;
  */
 public class ZipOutputStreamAdapter implements ZipOutput {
 
-    /** The adapted ZIP output stream. */
-    protected ZipOutputStream zip;
+    private final ZipOutputStream zip;
 
-    /** Use of this constructor requires setting the {@code zip} field. */
-    protected ZipOutputStreamAdapter() { }
-
-    /**
-     * Constructs a new ZIP output stream adapter for the given ZIP output
-     * stream.
-     */
-    public ZipOutputStreamAdapter(final @WillCloseWhenClosed ZipOutputStream zip) {
-        this.zip = requireNonNull(zip);
-    }
-
-    @Override public ZipEntry entry(String name) { return new ZipEntry(name); }
+    public ZipOutputStreamAdapter(final @WillCloseWhenClosed ZipOutputStream zip) { this.zip = requireNonNull(zip); }
 
     @Override
-    public OutputStream stream(final ZipEntry entry) throws IOException {
-        zip.putNextEntry(entry);
-        return new FilterOutputStream(zip) {
-            @Override public void close() throws IOException {
-                ((ZipOutputStream) out).closeEntry();
+    public ZipEntry entry(String name) { return new ZipEntry(name); }
+
+    @Override
+    public Socket<OutputStream> output(final ZipEntry entry) {
+        return () -> {
+            if (entry.isDirectory()) {
+                entry.setMethod(ZipOutputStream.STORED);
+                entry.setSize(0);
+                entry.setCompressedSize(0);
+                entry.setCrc(0);
             }
+            zip.putNextEntry(entry);
+            return new FilterOutputStream(zip) {
+                @Override public void close() throws IOException {
+                    ((ZipOutputStream) out).closeEntry();
+                }
+            };
         };
     }
 
-    @Override public void close() throws IOException { zip.close(); }
+    @Override
+    public void close() throws IOException { zip.close(); }
 }
