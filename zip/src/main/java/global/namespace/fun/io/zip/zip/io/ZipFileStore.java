@@ -4,6 +4,8 @@
  */
 package global.namespace.fun.io.zip.zip.io;
 
+import global.namespace.fun.io.api.Socket;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,23 +23,23 @@ public class ZipFileStore implements ZipStore {
 
     final File file;
 
-    public ZipFileStore(final File file) {
-        this.file = requireNonNull(file);
+    public ZipFileStore(final File file) { this.file = requireNonNull(file); }
+
+    @Override
+    public Socket<ZipInput> input() { return () -> new ZipFileAdapter(new ZipFile(file)); }
+
+    @Override
+    public Socket<ZipOutput> output() {
+        return () -> new ZipOutputStreamAdapter(new ZipOutputStream(new FileOutputStream(file)));
     }
 
-    @Override public ZipInput input() throws IOException {
-        return new ZipFileAdapter(new ZipFile(file));
-    }
-
-    @Override public ZipOutput output() throws IOException {
-        return new ZipOutputStreamAdapter(new ZipOutputStream(
-                new FileOutputStream(file)));
-    }
-
-    @Override public void delete() throws IOException {
-        if (!file.delete() && file.exists())
+    @Override
+    public void delete() throws IOException {
+        if (!file.delete() && file.exists()) {
             throw new IOException(file + " (could not delete)");
+        }
     }
 
-    @Override public boolean exists() { return file.exists(); }
+    @Override
+    public boolean exists() { return file.exists(); }
 }

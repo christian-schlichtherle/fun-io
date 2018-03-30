@@ -4,6 +4,8 @@
  */
 package global.namespace.fun.io.zip.zip.io;
 
+import global.namespace.fun.io.api.Socket;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,12 +21,11 @@ public class JarFileStore extends ZipFileStore {
 
     public JarFileStore(File file) { super(file); }
 
-    @Override public ZipInput input() throws IOException {
-        return new ZipFileAdapter(new JarFile(file));
-    }
+    @Override
+    public Socket<ZipInput> input() { return () -> new ZipFileAdapter(new JarFile(file)); }
 
-    @Override public ZipOutput output() throws IOException {
-        return new JarOutputStreamAdapter(new JarOutputStream(
-                new FileOutputStream(file)));
+    @Override
+    public Socket<ZipOutput> output() {
+        return () -> new JarOutputStreamAdapter(new JarOutputStream(new FileOutputStream(file)));
     }
 }

@@ -21,7 +21,8 @@ import global.namespace.fun.io.api.function.XFunction;
 import java.io.InputStream;
 
 /**
- * Emits input stream {@linkplain Socket sockets} in order to enable access to its stored content.
+ * An abstraction for safe reading from input streams without leaking resources.
+ * A source provides a {@linkplain #input() socket} for safe access to an {@linkplain InputStream input stream}.
  *
  * @author Christian Schlichtherle
  */
@@ -31,14 +32,14 @@ public interface Source {
     Socket<InputStream> input();
 
     /**
-     * Loans an input stream from the underlying {@linkplain #input() input stream socket} to the given consumer.
+     * Loans an input stream from the underlying {@linkplain #input() socket} to the given consumer.
      * The input stream will be closed upon return from this method.
      */
     default void acceptReader(XConsumer<? super InputStream> reader) throws Exception { input().accept(reader); }
 
     /**
-     * Loans an input stream from the underlying {@linkplain #input() input stream socket} to the given function and
-     * returns its value.
+     * Loans an input stream from the underlying {@linkplain #input() socket} to the given function and returns its
+     * value.
      * The input stream will be closed upon return from this method.
      * <p>
      * It is an error to return the loaned input stream from the given function or any other object which holds on to

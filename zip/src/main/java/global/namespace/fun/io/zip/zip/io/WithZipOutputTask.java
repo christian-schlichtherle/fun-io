@@ -4,13 +4,9 @@
  */
 package global.namespace.fun.io.zip.zip.io;
 
-import global.namespace.fun.io.zip.io.Closeables;
-
 import java.io.File;
-import java.io.IOException;
 
 /**
- * @see ZipSinks#execute
  * @author Christian Schlichtherle
  */
 final class WithZipOutputTask<V> implements ZipSinks.ExecuteStatement<V> {
@@ -22,5 +18,6 @@ final class WithZipOutputTask<V> implements ZipSinks.ExecuteStatement<V> {
     @Override
     public V on(File file) throws Exception { return on(new ZipFileStore(file)); }
 
-    public V on(ZipSink sink) throws Exception { return Closeables.execute(task, sink.output()); }
+    @Override
+    public V on(ZipSink sink) throws Exception { return sink.applyWriter(task::execute);  }
 }
