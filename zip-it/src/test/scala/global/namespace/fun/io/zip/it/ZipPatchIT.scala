@@ -29,20 +29,23 @@ class ZipPatchIT extends WordSpec with ZipITContext {
     "generating and applying the ZIP patch file to the first test JAR file" should {
       "reconstitute the second test JAR file" in {
 
-        val deltaJar = tempFile()
+        val deltaJarFile = tempFile()
         try {
-          val patchedJar = tempFile()
+          val deltaJarStore = new JarStore(deltaJarFile)
+          val patchedJarFile = tempFile()
           try {
-            ZipDiff.builder.input1(testJar1).input2(testJar2).build.output(deltaJar)
-            ZipPatch.builder.input(testJar1).delta(deltaJar).build.output(patchedJar)
+            val patchedJarStore = new JarStore(patchedJarFile)
 
-            new JarStore(testJar2) acceptReader { jar2: ZipInput =>
+            ZipDiff.builder.source1(testJarStore1).source2(testJarStore2).build.outputTo(deltaJarStore)
+            ZipPatch.builder.source(testJarStore1).delta(deltaJarStore).build.outputTo(patchedJarStore)
+
+            testJarStore2 acceptReader { jar2: ZipInput =>
               val unchangedReference = fileEntryNames(jar2)
 
-              new JarStore(patchedJar) acceptReader { patched: ZipInput =>
+              patchedJarStore acceptReader { patched: ZipInput =>
                 val model = new ZipDiffEngine {
 
-                  lazy val digest: MessageDigest = MessageDigests.sha1
+                  val digest: MessageDigest = MessageDigests.sha1
 
                   def input1: ZipInput = jar2
 
@@ -56,10 +59,10 @@ class ZipPatchIT extends WordSpec with ZipITContext {
               }
             }
           } finally {
-            patchedJar delete ()
+            patchedJarFile delete ()
           }
         } finally {
-          deltaJar delete ()
+          deltaJarFile delete ()
         }
       }
     }

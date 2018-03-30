@@ -20,24 +20,29 @@ trait ZipITContext extends ITContext {
     loanTestJars { (archive1, archive2) =>
       fun(new ZipDiffEngine {
 
+        lazy val digest: MessageDigest = MessageDigests.sha1
+
         def input1: ZipInput = archive1
 
         def input2: ZipInput = archive2
-
-        lazy val digest: MessageDigest = MessageDigests.sha1
       })
     }
 
   def loanTestJars[A](fun: (ZipInput, ZipInput) => A): A = {
-    new JarStore(testJar1).applyReader[A] { jar1: ZipInput =>
-      new JarStore(testJar2).applyReader[A] { jar2: ZipInput =>
+    testJarStore1.applyReader[A] { jar1: ZipInput =>
+      testJarStore2.applyReader[A] { jar2: ZipInput =>
         fun(jar1, jar2)
       }
     }
   }
 
-  final def testJar1: File = file("test1.jar")
-  final def testJar2: File = file("test2.jar")
+  final lazy val testJarStore1: JarStore = new JarStore(testJarFile1)
+
+  final def testJarFile1: File = file("test1.jar")
+
+  final lazy val testJarStore2: JarStore = new JarStore(testJarFile2)
+
+  final def testJarFile2: File = file("test2.jar")
 
   private def file(resourceName: String) = new File((classOf[ZipITContext] getResource resourceName).toURI)
 

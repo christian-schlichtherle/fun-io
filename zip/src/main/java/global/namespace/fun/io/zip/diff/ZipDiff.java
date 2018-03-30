@@ -4,14 +4,15 @@
  */
 package global.namespace.fun.io.zip.diff;
 
-import global.namespace.fun.io.zip.io.*;
+import global.namespace.fun.io.zip.io.MessageDigests;
+import global.namespace.fun.io.zip.io.ZipInput;
+import global.namespace.fun.io.zip.io.ZipSink;
+import global.namespace.fun.io.zip.io.ZipSource;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nullable;
-import java.io.File;
 import java.security.MessageDigest;
+import java.util.Optional;
 
-import static java.util.Objects.requireNonNull;
+import static java.util.Optional.empty;
 
 /**
  * Compares two archives entry by entry.
@@ -24,66 +25,49 @@ public abstract class ZipDiff {
     /** Returns a new builder for a ZIP diff. */
     public static Builder builder() { return new Builder(); }
 
-    public abstract void output(File file) throws Exception;
-    public abstract void output(ZipSink sink) throws Exception;
+    public abstract void outputTo(ZipSink sink) throws Exception;
 
     /**
      * A builder for a ZIP diff.
      * The default message digest is SHA-1.
      */
+    @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "ConstantConditions"})
     public static class Builder {
 
-        private @CheckForNull ZipSource input1, input2;
-        private @CheckForNull String digest;
+        private Optional<ZipSource> source1 = empty(), source2 = empty();
+        private Optional<String> digest = empty();
 
         Builder() { }
 
-        public Builder input1(final @Nullable File input1) {
-            return input1(null == input1 ? null : new ZipStore(input1));
-        }
-
-        public Builder input1(final @Nullable ZipSource input1) {
-            this.input1 = input1;
+        public Builder source1(final ZipSource source1) {
+            this.source1 = Optional.of(source1);
             return this;
         }
 
-        public Builder input2(final @Nullable File input2) {
-            return input2(null == input2 ? null : new ZipStore(input2));
-        }
-
-        public Builder input2(final @Nullable ZipSource input2) {
-            this.input2 = input2;
+        public Builder source2(final ZipSource source2) {
+            this.source2 = Optional.of(source2);
             return this;
         }
 
-        public Builder digest(final @Nullable String digest) {
-            this.digest = digest;
+        public Builder digest(final String digest) {
+            this.digest = Optional.of(digest);
             return this;
         }
 
-        public ZipDiff build() { return create(input1, input2, digest); }
+        public ZipDiff build() { return create(source1.get(), source2.get(), digest); }
 
-        private static ZipDiff create(
-                final ZipSource source1,
-                final ZipSource source2,
-                final @Nullable String digestName) {
-            requireNonNull(source1);
-            requireNonNull(source2);
-
+        private static ZipDiff create(final ZipSource source1, final ZipSource source2, final Optional<String> digestName) {
             return new ZipDiff() {
 
                 @Override
-                public void output(File file) throws Exception { output(new ZipStore(file)); }
-
-                @Override
-                public void output(final ZipSink sink) throws Exception {
+                public void outputTo(final ZipSink sink) throws Exception {
                     source1.acceptReader(input1 ->
                             source2.acceptReader(input2 ->
                                     sink.acceptWriter(delta ->
                                             new ZipDiffEngine() {
 
-                                                final MessageDigest digest = MessageDigests
-                                                        .create(null != digestName ? digestName : "SHA-1");
+                                                final MessageDigest digest =
+                                                        MessageDigests.create(digestName.orElse("SHA-1"));
 
                                                 protected MessageDigest digest() { return digest; }
 

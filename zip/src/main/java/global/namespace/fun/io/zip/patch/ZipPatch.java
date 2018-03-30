@@ -4,17 +4,15 @@
  */
 package global.namespace.fun.io.zip.patch;
 
-import global.namespace.fun.io.zip.io.ZipStore;
 import global.namespace.fun.io.zip.io.ZipInput;
 import global.namespace.fun.io.zip.io.ZipSink;
 import global.namespace.fun.io.zip.io.ZipSource;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
-import java.io.File;
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.Optional.empty;
 
 /**
  * Applies a delta ZIP file to an input archive and generates an output archive.
@@ -28,50 +26,33 @@ public abstract class ZipPatch {
     /** Returns a new builder for a ZIP patch. */
     public static Builder builder() { return new Builder(); }
 
-    public abstract void output(File file) throws Exception;
-
-    public abstract void output(ZipSink sink) throws Exception;
+    public abstract void outputTo(ZipSink sink) throws Exception;
 
     /** A builder for a ZIP patch. */
+    @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "ConstantConditions"})
     public static class Builder {
 
-        private @CheckForNull ZipSource input, delta;
+        private Optional<ZipSource> source = empty(), delta = empty();
 
         Builder() { }
 
-        public Builder input(final @Nullable File file) {
-            return input(null == file ? null : new ZipStore(file));
-        }
-
-        public Builder input(final @Nullable ZipSource archive) {
-            this.input = archive;
+        public Builder source(final ZipSource source) {
+            this.source = Optional.of(source);
             return this;
         }
 
-        public Builder delta(final @Nullable File file) {
-            return delta(null == file ? null : new ZipStore(file));
-        }
-
-        public Builder delta(final @Nullable ZipSource archive) {
-            this.delta = archive;
+        public Builder delta(final ZipSource delta) {
+            this.delta = Optional.of(delta);
             return this;
         }
 
-        public ZipPatch build() { return create(input, delta); }
+        public ZipPatch build() { return create(source.get(), delta.get()); }
 
         private static ZipPatch create(final ZipSource baseSource, final ZipSource deltaSource) {
-            requireNonNull(baseSource);
-            requireNonNull(deltaSource);
-
             return new ZipPatch() {
 
                 @Override
-                public void output(File file) throws Exception {
-                    output(new ZipStore(file));
-                }
-
-                @Override
-                public void output(final ZipSink sink) throws Exception {
+                public void outputTo(final ZipSink sink) throws Exception {
                     baseSource.acceptReader(input ->
                             deltaSource.acceptReader(delta ->
                                     sink.acceptWriter(output ->

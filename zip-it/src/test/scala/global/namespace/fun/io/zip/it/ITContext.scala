@@ -9,8 +9,9 @@ import java.util.logging._
 
 import global.namespace.fun.io.api.function.XConsumer
 import global.namespace.fun.io.api.{Codec, Store}
-import global.namespace.fun.io.bios.BIOS
+import global.namespace.fun.io.bios.BIOS.memoryStore
 import global.namespace.fun.io.jaxb.JAXB
+import global.namespace.fun.io.scala.api._
 import global.namespace.fun.io.zip.it.ITContext._
 import javax.xml.bind.{JAXBContext, Marshaller, Unmarshaller}
 import org.scalatest.Matchers._
@@ -19,7 +20,7 @@ import org.scalatest.Matchers._
 trait ITContext {
 
   final def assertRoundTripXmlSerializable(original: AnyRef) {
-    val store = BIOS.memoryStore
+    val store = memoryStore
     val clone = jaxbCodec connect store clone original
     logger.log(Level.FINE, "\n{0}", utf8String(store))
     clone should equal (original)
@@ -41,12 +42,8 @@ private object ITContext {
   private val utf8: Charset = Charset forName "UTF-8"
 
   val marshallerModifier: XConsumer[Marshaller] = {
-    new XConsumer[Marshaller] {
-      def accept(m: Marshaller): Unit = m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true)
-    }
+    (m: Marshaller) => m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true)
   }
 
-  val unmarshallerModifier: XConsumer[Unmarshaller] = {
-    new XConsumer[Unmarshaller] { def accept(u: Unmarshaller): Unit = { } }
-  }
+  val unmarshallerModifier: XConsumer[Unmarshaller] = (_: Unmarshaller) => ()
 }
