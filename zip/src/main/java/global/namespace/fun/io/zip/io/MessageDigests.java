@@ -60,13 +60,15 @@ public class MessageDigests {
      * @param source the source for reading the binary data.
      */
     public static void updateDigestFrom(final MessageDigest digest, final Source source) throws Exception {
+
         class DigestTask implements InputTask<Void> {
 
             @Override
             public Void execute(final InputStream in) throws IOException {
                 final byte[] buffer = new byte[Store.BUFSIZE];
-                for (int read; 0 <= (read = in.read(buffer)); )
+                for (int read; 0 <= (read = in.read(buffer)); ) {
                     digest.update(buffer, 0, read);
+                }
                 return null;
             }
         }

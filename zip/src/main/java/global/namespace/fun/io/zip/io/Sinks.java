@@ -17,9 +17,7 @@ import java.io.IOException;
 @Immutable
 public class Sinks {
 
-    public static <V> ExecuteStatement<V> execute(OutputTask<V> task) {
-        return new WithOutputTask<V>(task);
-    }
+    public static <V> ExecuteStatement<V> execute(OutputTask<V> task) { return new WithOutputTask<V>(task); }
 
     public interface ExecuteStatement<V> {
         V on(File file) throws Exception;

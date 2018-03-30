@@ -57,9 +57,7 @@ public class Sources {
         };
     }
 
-    public static <V> ExecuteStatement<V> execute(InputTask<V> task) {
-        return new WithInputTask<>(task);
-    }
+    public static <V> ExecuteStatement<V> execute(InputTask<V> task) { return new WithInputTask<>(task); }
 
     public interface ExecuteStatement<V> {
         V on(File file) throws Exception;
