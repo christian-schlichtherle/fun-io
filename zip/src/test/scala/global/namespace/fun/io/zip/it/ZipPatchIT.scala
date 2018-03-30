@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Schlichtherle IT Services & Stimulus Software.
+ * Copyright (C) 2013-2018 Schlichtherle IT Services.
  * All rights reserved. Use is subject to license terms.
  */
 package global.namespace.fun.io.zip.it
@@ -8,10 +8,9 @@ import java.io._
 import java.security.MessageDigest
 
 import global.namespace.fun.io.scala.api._
-import global.namespace.fun.io.zip.io.MessageDigests
-import global.namespace.fun.io.zip.zip.diff.{RawZipDiff, ZipDiff}
-import global.namespace.fun.io.zip.zip.io._
-import global.namespace.fun.io.zip.zip.patch.ZipPatch
+import global.namespace.fun.io.zip.diff.{RawZipDiff, ZipDiff}
+import global.namespace.fun.io.zip.io.{JarFileStore, MessageDigests, ZipInput}
+import global.namespace.fun.io.zip.patch.ZipPatch
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
 

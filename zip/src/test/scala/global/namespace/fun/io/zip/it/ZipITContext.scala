@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Schlichtherle IT Services & Stimulus Software.
+ * Copyright (C) 2013-2018 Schlichtherle IT Services.
  * All rights reserved. Use is subject to license terms.
  */
 package global.namespace.fun.io.zip.it
@@ -9,15 +9,13 @@ import java.security.MessageDigest
 
 import edu.umd.cs.findbugs.annotations.CreatesObligation
 import global.namespace.fun.io.scala.api._
-import global.namespace.fun.io.zip.TestContext
-import global.namespace.fun.io.zip.io.MessageDigests
-import global.namespace.fun.io.zip.zip.diff.RawZipDiff
-import global.namespace.fun.io.zip.zip.io._
-import global.namespace.fun.io.zip.zip.model.DeltaModel
+import global.namespace.fun.io.zip.diff.RawZipDiff
+import global.namespace.fun.io.zip.io.{JarFileStore, MessageDigests, ZipInput}
+import global.namespace.fun.io.zip.model.DeltaModel
 import javax.xml.bind.JAXBContext
 
 /** @author Christian Schlichtherle */
-trait ZipITContext extends TestContext {
+trait ZipITContext extends ITContext {
 
   def loanRawZipDiff[A](fun: RawZipDiff => A): A =
     loanTestJars { (archive1, archive2) =>

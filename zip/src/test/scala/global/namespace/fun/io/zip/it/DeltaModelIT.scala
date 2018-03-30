@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2013 Schlichtherle IT Services & Stimulus Software.
+ * Copyright (C) 2013-2018 Schlichtherle IT Services.
  * All rights reserved. Use is subject to license terms.
  */
 package global.namespace.fun.io.zip.it
 
 import global.namespace.fun.io.zip.io.MessageDigests.sha1
-import global.namespace.fun.io.zip.zip.model.DeltaModel
+import global.namespace.fun.io.zip.model.DeltaModel
 import org.scalatest.WordSpec
 
 /** @author Christian Schlichtherle */
