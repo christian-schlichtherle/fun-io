@@ -57,14 +57,13 @@ public class Sources {
         };
     }
 
-    public static <V, X extends Exception>
-            ExecuteStatement<V, X> execute(InputTask<V, X> task) {
+    public static <V> ExecuteStatement<V> execute(InputTask<V> task) {
         return new WithInputTask<>(task);
     }
 
-    public interface ExecuteStatement<V, X extends Exception> {
-        V on(File file) throws X, IOException;
-        V on(Source source) throws X, IOException;
+    public interface ExecuteStatement<V> {
+        V on(File file) throws Exception;
+        V on(Source source) throws Exception;
     }
 
     private Sources() { }

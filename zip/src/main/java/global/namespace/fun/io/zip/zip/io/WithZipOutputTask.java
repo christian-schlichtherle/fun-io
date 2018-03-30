@@ -13,18 +13,14 @@ import java.io.IOException;
  * @see ZipSinks#execute
  * @author Christian Schlichtherle
  */
-final class WithZipOutputTask<V, X extends Exception>
-implements ZipSinks.ExecuteStatement<V, X> {
+final class WithZipOutputTask<V> implements ZipSinks.ExecuteStatement<V> {
 
-    private final ZipOutputTask<V, X> task;
+    private final ZipOutputTask<V> task;
 
-    WithZipOutputTask(final ZipOutputTask<V, X> task) { this.task = task; }
+    WithZipOutputTask(final ZipOutputTask<V> task) { this.task = task; }
 
-    @Override public V on(File file) throws X, IOException {
-        return on(new ZipFileStore(file));
-    }
+    @Override
+    public V on(File file) throws Exception { return on(new ZipFileStore(file)); }
 
-    @Override public V on(ZipSink sink) throws X, IOException {
-        return Closeables.execute(task, sink.output());
-    }
+    public V on(ZipSink sink) throws Exception { return Closeables.execute(task, sink.output()); }
 }

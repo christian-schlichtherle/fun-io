@@ -11,12 +11,11 @@ import java.io.OutputStream;
  * Executes a task on an {@link OutputStream}.
  *
  * @param <V> the type of the result.
- * @param <X> the type of the exception.
  * @see Sinks#execute
  * @author Christian Schlichtherle
  */
-public interface OutputTask<V, X extends Exception>
-extends Task<V, OutputStream, X> {
+public interface OutputTask<V> extends Task<V, OutputStream> {
 
-    @Override V execute(@WillNotClose OutputStream resource) throws X;
+    @Override
+    V execute(@WillNotClose OutputStream resource) throws Exception;
 }

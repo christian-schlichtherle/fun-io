@@ -29,8 +29,8 @@ public abstract class ZipDiff {
     /** Returns a new builder for a ZIP diff. */
     public static Builder builder() { return new Builder(); }
 
-    public abstract void output(File file) throws IOException;
-    public abstract void output(ZipSink sink) throws IOException;
+    public abstract void output(File file) throws Exception;
+    public abstract void output(ZipSink sink) throws Exception;
 
     /**
      * A builder for a ZIP diff.
@@ -81,21 +81,21 @@ public abstract class ZipDiff {
             return new ZipDiff() {
 
                 @Override
-                public void output(File file) throws IOException {
+                public void output(File file) throws Exception {
                     output(new ZipFileStore(file));
                 }
 
                 @Override
-                public void output(final ZipSink sink) throws IOException {
+                public void output(final ZipSink sink) throws Exception {
 
-                    class Input1Task implements ZipInputTask<Void, IOException> {
-                        public Void execute(final ZipInput input1) throws IOException {
+                    class Input1Task implements ZipInputTask<Void> {
+                        public Void execute(final ZipInput input1) throws Exception {
 
-                            class Input2Task implements ZipInputTask<Void, IOException> {
-                                public Void execute(final ZipInput input2) throws IOException {
+                            class Input2Task implements ZipInputTask<Void> {
+                                public Void execute(final ZipInput input2) throws Exception {
 
-                                    class DiffTask implements ZipOutputTask<Void, IOException> {
-                                        public Void execute(final ZipOutput delta) throws IOException {
+                                    class DiffTask implements ZipOutputTask<Void> {
+                                        public Void execute(final ZipOutput delta) throws Exception {
                                             new RawZipDiff() {
                                                 final MessageDigest digest = MessageDigests.create(
                                                         null != digestName ? digestName : "SHA-1");
@@ -106,19 +106,19 @@ public abstract class ZipDiff {
                                             }.output(delta);
                                             return null;
                                         }
-                                    } // DiffTask
+                                    }
 
                                     return ZipSinks.execute(new DiffTask()).on(sink);
                                 }
-                            } // Input2Task
+                            }
 
                             return ZipSources.execute(new Input2Task()).on(input2);
                         }
-                    } // Input1Task
+                    }
 
                     ZipSources.execute(new Input1Task()).on(input1);
                 }
-            }; // ZipDiff
+            };
         }
-    } // Builder
+    }
 }

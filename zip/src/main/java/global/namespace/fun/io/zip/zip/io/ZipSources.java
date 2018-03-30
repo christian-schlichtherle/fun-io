@@ -15,14 +15,11 @@ import java.io.IOException;
  */
 public class ZipSources {
 
-    public static <V, X extends Exception>
-            ExecuteStatement<V, X> execute(ZipInputTask<V, X> task) {
-        return new WithZipInputTask<V, X>(task);
-    }
+    public static <V> ExecuteStatement<V> execute(ZipInputTask<V> task) { return new WithZipInputTask<V>(task); }
 
-    public interface ExecuteStatement<V, X extends Exception> {
-        V on(File file) throws X, IOException;
-        V on(ZipSource source) throws X, IOException;
+    public interface ExecuteStatement<V> {
+        V on(File file) throws Exception;
+        V on(ZipSource source) throws Exception;
     }
 
     private ZipSources() { }

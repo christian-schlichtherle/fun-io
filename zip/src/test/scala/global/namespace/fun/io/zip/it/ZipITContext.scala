@@ -27,9 +27,9 @@ trait ZipITContext extends TestContext {
     }
 
   def loanTestJars[A](fun: (ZipInput, ZipInput) => A) = {
-    class Fun1Task extends ZipInputTask[A, Exception]() {
+    class Fun1Task extends ZipInputTask[A]() {
       override def execute(jar1: ZipInput) = {
-        class Fun2Task extends ZipInputTask[A, Exception] {
+        class Fun2Task extends ZipInputTask[A] {
           override def execute(jar2: ZipInput) = {
             fun(jar1, jar2)
           }

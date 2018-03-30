@@ -15,8 +15,8 @@ import java.util.zip.ZipOutputStream;
  * @see ZipSinks#execute
  * @author Christian Schlichtherle
  */
-public interface ZipOutputTask<V, X extends Exception>
-extends Task<V, ZipOutput, X> {
+public interface ZipOutputTask<V> extends Task<V, ZipOutput> {
 
-    @Override V execute(@WillNotClose ZipOutput resource) throws X;
+    @Override
+    V execute(@WillNotClose ZipOutput resource) throws Exception;
 }

@@ -17,19 +17,20 @@ public final class Closeables {
      * exception, then only the exception thrown by the task prevails.
      */
     @SuppressWarnings("unchecked")
-    public static <V, R extends Closeable, X extends Exception>
-            V execute(final Task<V, R, X> task, final @WillClose R resource)
-    throws X, IOException {
-        X ex = null;
+    public static <V, R extends AutoCloseable> V execute(final Task<V, R> task, final @WillClose R resource)
+    throws Exception {
+        Exception ex = null;
         try {
             return task.execute(resource);
         } catch (Exception ex2) {
-            throw ex = (X) ex2;
+            throw ex = ex2;
         } finally {
             try {
                 resource.close();
-            } catch (IOException ex2) {
-                if (null == ex) throw ex2;
+            } catch (Exception ex2) {
+                if (null == ex) {
+                    throw ex2;
+                }
             }
         }
     }

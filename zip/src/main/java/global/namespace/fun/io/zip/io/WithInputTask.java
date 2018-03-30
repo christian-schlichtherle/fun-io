@@ -11,18 +11,17 @@ import java.io.IOException;
  * @see Sources#execute
  * @author Christian Schlichtherle
  */
-final class WithInputTask<V, X extends Exception>
-implements Sources.ExecuteStatement<V, X> {
+final class WithInputTask<V> implements Sources.ExecuteStatement<V> {
 
-    private final InputTask<V, X> task;
+    private final InputTask<V> task;
 
-    WithInputTask(final InputTask<V, X> task) { this.task = task; }
+    WithInputTask(final InputTask<V> task) { this.task = task; }
 
-    @Override public V on(File file) throws X, IOException {
+    @Override public V on(File file) throws Exception {
         return on(new FileStore(file));
     }
 
-    @Override public V on(Source source) throws X, IOException {
+    @Override public V on(Source source) throws Exception {
         return Closeables.execute(task, source.input());
     }
 }

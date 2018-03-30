@@ -46,10 +46,10 @@ public abstract class RawZipPatch {
     /**
      * Applies the configured delta ZIP archive.
      */
-    public void output(final @WillNotClose ZipOutput output)
-    throws IOException {
-        for (EntryNameFilter filter : passFilters(output))
+    public void output(final @WillNotClose ZipOutput output) throws Exception {
+        for (EntryNameFilter filter : passFilters(output)) {
             output(output, new NoDirectoryEntryNameFilter(filter));
+        }
     }
 
     /**
@@ -59,8 +59,7 @@ public abstract class RawZipPatch {
      * The filters should properly partition the set of entry sources,
      * i.e. each entry source should be accepted by exactly one filter.
      */
-    private EntryNameFilter[] passFilters(
-            final @WillNotClose ZipOutput output) {
+    private EntryNameFilter[] passFilters(final @WillNotClose ZipOutput output) {
         if (output.entry("") instanceof JarEntry) {
             // The JarInputStream class assumes that the file entry
             // "META-INF/MANIFEST.MF" should either be the first or the second
@@ -82,10 +81,7 @@ public abstract class RawZipPatch {
         }
     }
 
-    private void output(
-            final @WillNotClose ZipOutput output,
-            final EntryNameFilter filter)
-    throws IOException {
+    private void output(final @WillNotClose ZipOutput output, final EntryNameFilter filter) throws Exception {
 
         class ZipEntrySink implements Sink {
 
@@ -96,7 +92,8 @@ public abstract class RawZipPatch {
                 this.entryNameAndDigest = entryNameAndDigest;
             }
 
-            @Override public OutputStream output() throws IOException {
+            @Override
+            public OutputStream output() throws Exception {
                 final ZipEntry entry = entry(entryNameAndDigest.name());
                 if (entry.isDirectory()) {
                     entry.setMethod(ZipOutputStream.STORED);
@@ -127,7 +124,7 @@ public abstract class RawZipPatch {
             }
 
             ZipEntry entry(String name) { return output.entry(name); }
-        } // ZipEntrySink
+        }
 
         abstract class PatchSet {
 
@@ -135,10 +132,8 @@ public abstract class RawZipPatch {
 
             abstract IOException ioException(Throwable cause);
 
-            final <T> PatchSet apply(
-                    final Transformation<T> transformation,
-                    final Iterable<T> iterable)
-            throws IOException {
+            final <T> PatchSet apply(final Transformation<T> transformation, final Iterable<T> iterable)
+            throws Exception {
                 for (final T item : iterable) {
                     final EntryNameAndDigest
                             entryNameAndDigest = transformation.apply(item);
@@ -157,7 +152,7 @@ public abstract class RawZipPatch {
                 }
                 return this;
             }
-        } // PatchSet
+        }
 
         class InputArchivePatchSet extends PatchSet {
 
@@ -166,7 +161,7 @@ public abstract class RawZipPatch {
             @Override IOException ioException(Throwable cause) {
                 return new WrongInputZipFile(cause);
             }
-        } // InputArchivePatchSet
+        }
 
         class PatchArchivePatchSet extends PatchSet {
 
@@ -175,7 +170,7 @@ public abstract class RawZipPatch {
             @Override IOException ioException(Throwable cause) {
                 return new InvalidDiffZipFileException(cause);
             }
-        } // PatchArchivePatchSet
+        }
 
         // Order is important here!
         new InputArchivePatchSet().apply(
@@ -189,34 +184,25 @@ public abstract class RawZipPatch {
                 model().addedEntries());
     }
 
-    private MessageDigest digest() throws IOException {
+    private MessageDigest digest() throws Exception {
         return MessageDigests.create(model().digestAlgorithmName());
     }
 
-    private DeltaModel model() throws IOException {
+    private DeltaModel model() throws Exception {
         final DeltaModel model = this.model;
         return null != model ? model : (this.model = loadModel());
     }
 
-    private DeltaModel loadModel() throws IOException {
-        try {
-            return DeltaModel.decodeFromXml(
-                    new ZipEntrySource(modelZipEntry(), delta()));
-        } catch (RuntimeException ex) {
-            throw ex;
-        } catch (IOException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new InvalidDiffZipFileException(ex);
-        }
+    private DeltaModel loadModel() throws Exception {
+        return DeltaModel.decodeFromXml(new ZipEntrySource(modelZipEntry(), delta()));
     }
 
     private ZipEntry modelZipEntry() throws IOException {
         final String name = DeltaModel.ENTRY_NAME;
         final ZipEntry entry = delta().entry(name);
-        if (null == entry)
-            throw new InvalidDiffZipFileException(
-                    new MissingZipEntryException(name));
+        if (null == entry) {
+            throw new InvalidDiffZipFileException(new MissingZipEntryException(name));
+        }
         return entry;
     }
 }

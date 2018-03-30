@@ -15,14 +15,11 @@ import java.io.IOException;
  */
 public class ZipSinks {
 
-    public static <V, X extends Exception>
-            ExecuteStatement<V, X> execute(ZipOutputTask<V, X> task) {
-        return new WithZipOutputTask<V, X>(task);
-    }
+    public static <V> ExecuteStatement<V> execute(ZipOutputTask<V> task) { return new WithZipOutputTask<V>(task); }
 
-    public interface ExecuteStatement<V, X extends Exception> {
-        V on(File file) throws X, IOException;
-        V on(ZipSink sink) throws X, IOException;
+    public interface ExecuteStatement<V> {
+        V on(File file) throws Exception;
+        V on(ZipSink sink) throws Exception;
     }
 
     private ZipSinks() { }

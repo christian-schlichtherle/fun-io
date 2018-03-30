@@ -34,11 +34,11 @@ class ZipPatchIT extends WordSpec with ZipITContext {
             ZipDiff.builder.input1(testJar1).input2(testJar2).build.output(deltaZip)
             ZipPatch.builder.input(testJar1).delta(deltaZip).build.output(patched)
 
-            class ComputeReferenceAndDiffTask extends ZipInputTask[Unit, Exception] {
+            class ComputeReferenceAndDiffTask extends ZipInputTask[Unit] {
               override def execute(archive1: ZipInput) {
                 val unchangedReference = fileEntryNames(archive1)
 
-                class DiffTask extends ZipInputTask[Unit, Exception] {
+                class DiffTask extends ZipInputTask[Unit] {
                   override def execute(archive2: ZipInput) {
                     val model = new RawZipDiff {
                       val _digest = MessageDigests.sha1

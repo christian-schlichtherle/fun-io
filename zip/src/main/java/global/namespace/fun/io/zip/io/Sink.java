@@ -21,5 +21,5 @@ public interface Sink {
     /**
      * Returns a new output stream for writing the binary data to this sink.
      */
-    @CreatesObligation OutputStream output() throws IOException;
+    @CreatesObligation OutputStream output() throws Exception;
 }

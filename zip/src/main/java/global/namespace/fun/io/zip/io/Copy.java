@@ -35,10 +35,9 @@ public final class Copy {
      * The actual number is optimized to compensate for oscillating I/O
      * bandwidths like e.g. with network shares.
      */
-    static final int FIFO_SIZE = 4;
+    private static final int FIFO_SIZE = 4;
 
-    private static final ExecutorService executor
-            = Executors.newCachedThreadPool(new ReaderThreadFactory());
+    private static final ExecutorService executor = Executors.newCachedThreadPool(new ReaderThreadFactory());
 
     /**
      * Copies the data from the given source to the given sink.
@@ -51,24 +50,23 @@ public final class Copy {
      * @param source the source for reading the data from.
      * @param sink the sink for writing the data to.
      */
-    public static void copy(final Source source, final Sink sink)
-    throws IOException {
+    public static void copy(final Source source, final Sink sink) throws Exception {
 
-        class SourceTask implements InputTask<Void, IOException> {
+        class SourceTask implements InputTask<Void> {
             @Override
-            public Void execute(final InputStream in) throws IOException {
+            public Void execute(final InputStream in) throws Exception {
 
-                class SinkTask implements OutputTask<Void, IOException> {
+                class SinkTask implements OutputTask<Void> {
                     @Override
                     public Void execute(final OutputStream out) throws IOException {
                         cat(in, out);
                         return null;
                     }
-                } // SinkTask
+                }
 
                 return Sinks.execute(new SinkTask()).on(sink);
             }
-        } // SourceTask
+        }
 
         Sources.execute(new SourceTask()).on(source);
     }
@@ -116,6 +114,7 @@ public final class Copy {
          * with input.
          */
         final class ReaderTask implements Runnable {
+
             /** The index of the next buffer to be written. */
             int off;
 
@@ -174,7 +173,7 @@ public final class Copy {
                     }
                 } while (0 <= read);
             }
-        } // ReaderTask
+        }
 
         boolean interrupted = false;
         try {
@@ -312,14 +311,14 @@ public final class Copy {
          * -1 represents end-of-file or {@link IOException}.
          */
         int read;
-    } // Buffer
+    }
 
     /** A factory for reader threads. */
     private static final class ReaderThreadFactory implements ThreadFactory {
         @Override public Thread newThread(Runnable r) {
             return new ReaderThread(r);
         }
-    } // ReaderThreadFactory
+    }
 
     /**
      * A pooled and cached daemon thread which runs tasks to read input streams.
@@ -331,7 +330,7 @@ public final class Copy {
             super(ThreadGroups.getServerThreadGroup(), r, ReaderThread.class.getName());
             setDaemon(true);
         }
-    } // ReaderThread
+    }
 
     private Copy() { }
 }

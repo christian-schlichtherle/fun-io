@@ -212,13 +212,13 @@ public final class DeltaModel implements Serializable {
      */
     public void encodeToXml(final Sink sink) throws Exception {
 
-        class EncodeTask implements OutputTask<Void, JAXBException> {
-            @Override public Void execute(OutputStream out) throws JAXBException {
+        class EncodeTask implements OutputTask<Void> {
+            @Override
+            public Void execute(OutputStream out) throws JAXBException {
                 jaxbContext().createMarshaller().marshal(DeltaModel.this, out);
                 return null;
             }
-        } // EncodeTask
-
+        }
         Sinks.execute(new EncodeTask()).on(sink);
     }
 
@@ -232,8 +232,9 @@ public final class DeltaModel implements Serializable {
      */
     public static DeltaModel decodeFromXml(Source source) throws Exception {
 
-        class DecodeTask implements InputTask<DeltaModel, JAXBException> {
-            @Override public DeltaModel execute(InputStream in) throws JAXBException {
+        class DecodeTask implements InputTask<DeltaModel> {
+            @Override
+            public DeltaModel execute(InputStream in) throws JAXBException {
                 return (DeltaModel) jaxbContext().createUnmarshaller().unmarshal(in);
             }
         } // DecodeTask

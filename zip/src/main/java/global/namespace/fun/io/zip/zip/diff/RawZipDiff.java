@@ -54,25 +54,15 @@ public abstract class RawZipDiff {
     protected abstract @WillNotClose ZipInput input2();
 
     /** Writes the delta ZIP file. */
-    public void output(final @WillNotClose ZipOutput delta) throws IOException {
+    public void output(final @WillNotClose ZipOutput delta) throws Exception {
 
         final class Streamer {
 
             final DeltaModel model = model();
 
-            Streamer() throws IOException {
-                try {
-                    model.encodeToXml(sink(entry(DeltaModel.ENTRY_NAME)));
-                } catch (RuntimeException ex) {
-                    throw ex;
-                } catch (IOException ex) {
-                    throw ex;
-                } catch (Exception ex) {
-                    throw new IOException(ex);
-                }
-            }
+            Streamer() throws Exception { model.encodeToXml(sink(entry(DeltaModel.ENTRY_NAME))); }
 
-            Streamer stream() throws IOException {
+            Streamer stream() throws Exception {
                 for (final ZipEntry in : input2()) {
                     final String name = in.getName();
                     if (changedOrAdded(name)) {
@@ -90,26 +80,20 @@ public abstract class RawZipDiff {
                 return this;
             }
 
-            Source source2(ZipEntry entry){
-                return new ZipEntrySource(entry, input2());
-            }
+            Source source2(ZipEntry entry) { return new ZipEntrySource(entry, input2()); }
 
-            Sink sink(ZipEntry entry) {
-                return new ZipEntrySink(entry, delta);
-            }
+            Sink sink(ZipEntry entry) { return new ZipEntrySink(entry, delta); }
 
             ZipEntry entry(String name) { return delta.entry(name); }
 
-            boolean changedOrAdded(String name) {
-                return null != model.changed(name) || null != model.added(name);
-            }
-        } // Streamer
+            boolean changedOrAdded(String name) { return null != model.changed(name) || null != model.added(name); }
+        }
 
         new Streamer().stream();
     }
 
     /** Computes a delta model from the two input archives. */
-    public DeltaModel model() throws IOException {
+    public DeltaModel model() throws Exception {
         return new Assembler().walkAndReturn(new Assembly()).buildZipDiffModel();
     }
 
@@ -121,8 +105,7 @@ public abstract class RawZipDiff {
          * If and only if the visitor throws an I/O exception, the assembler
          * stops the visit and passes it on to the caller.
          */
-        <V extends Visitor> V walkAndReturn(final V visitor)
-        throws IOException {
+        <V extends Visitor> V walkAndReturn(final V visitor) throws Exception {
             for (final ZipEntry entry1 : input1()) {
                 if (entry1.isDirectory()) continue;
                 final ZipEntry entry2 = input2().entry(entry1.getName());
@@ -145,12 +128,11 @@ public abstract class RawZipDiff {
 
             return visitor;
         }
-    } // Assembler
+    }
 
     private class Assembly implements Visitor {
 
-        private final Map<String, EntryNameAndTwoDigests>
-                changed = new TreeMap<String, EntryNameAndTwoDigests>();
+        private final Map<String, EntryNameAndTwoDigests> changed = new TreeMap<String, EntryNameAndTwoDigests>();
 
         private final Map<String, EntryNameAndDigest>
                 unchanged = new TreeMap<String, EntryNameAndDigest>(),
@@ -169,10 +151,8 @@ public abstract class RawZipDiff {
         }
 
         @Override
-        public void visitEntriesInBothFiles(
-                final ZipEntrySource source1,
-                final ZipEntrySource source2)
-        throws IOException {
+        public void visitEntriesInBothFiles(final ZipEntrySource source1, final ZipEntrySource source2)
+        throws Exception {
             final String name1 = source1.name();
             assert name1.equals(source2.name());
             final String digest1 = digestValueOf(source1);
@@ -186,28 +166,26 @@ public abstract class RawZipDiff {
         }
 
         @Override
-        public void visitEntryInFirstFile(final ZipEntrySource source1)
-        throws IOException {
+        public void visitEntryInFirstFile(final ZipEntrySource source1) throws Exception {
             final String name = source1.name();
             removed.put(name, new EntryNameAndDigest(name,
                     digestValueOf(source1)));
         }
 
         @Override
-        public void visitEntryInSecondFile(final ZipEntrySource source2)
-        throws IOException {
+        public void visitEntryInSecondFile(final ZipEntrySource source2) throws Exception {
             final String name = source2.name();
             added.put(name, new EntryNameAndDigest(name,
                     digestValueOf(source2)));
         }
 
-        String digestValueOf(Source source) throws IOException {
+        String digestValueOf(Source source) throws Exception {
             final MessageDigest digest = digest();
             digest.reset();
             MessageDigests.updateDigestFrom(digest, source);
             return MessageDigests.valueOf(digest);
         }
-    } // Assembly
+    }
 
     /**
      * A visitor of two ZIP files.
@@ -223,8 +201,7 @@ public abstract class RawZipDiff {
          *
          * @param source1 the ZIP entry in the first ZIP file.
          */
-        void visitEntryInFirstFile(ZipEntrySource source1)
-        throws IOException;
+        void visitEntryInFirstFile(ZipEntrySource source1) throws Exception;
 
         /**
          * Visits a ZIP entry which is present in the second ZIP file,
@@ -232,8 +209,7 @@ public abstract class RawZipDiff {
          *
          * @param source2 the ZIP entry in the second ZIP file.
          */
-        void visitEntryInSecondFile(ZipEntrySource source2)
-        throws IOException;
+        void visitEntryInSecondFile(ZipEntrySource source2) throws Exception;
 
         /**
          * Visits a pair of ZIP entries with equal names in the first and
@@ -242,8 +218,6 @@ public abstract class RawZipDiff {
          * @param source1 the ZIP entry in the first ZIP file.
          * @param source2 the ZIP entry in the second ZIP file.
          */
-        void visitEntriesInBothFiles(ZipEntrySource source1,
-                                     ZipEntrySource source2)
-        throws IOException;
-    } // Visitor
+        void visitEntriesInBothFiles(ZipEntrySource source1, ZipEntrySource source2) throws Exception;
+    }
 }

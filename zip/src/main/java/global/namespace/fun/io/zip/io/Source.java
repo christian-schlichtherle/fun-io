@@ -21,5 +21,5 @@ public interface Source {
     /**
      * Returns a new input stream for reading the binary data from this source.
      */
-    @CreatesObligation InputStream input() throws IOException;
+    @CreatesObligation InputStream input() throws Exception;
 }

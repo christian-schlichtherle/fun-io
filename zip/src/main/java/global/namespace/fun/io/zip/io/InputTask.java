@@ -11,12 +11,11 @@ import java.io.InputStream;
  * Executes a task on an {@link InputStream}.
  *
  * @param <V> the type of the result.
- * @param <X> the type of the exception.
  * @see Sources#execute
  * @author Christian Schlichtherle
  */
-public interface InputTask<V, X extends Exception>
-extends Task<V, InputStream, X> {
+public interface InputTask<V> extends Task<V, InputStream> {
 
-    @Override V execute(@WillNotClose InputStream resource) throws X;
+    @Override
+    V execute(@WillNotClose InputStream resource) throws Exception;
 }

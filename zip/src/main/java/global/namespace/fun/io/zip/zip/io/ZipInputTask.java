@@ -15,8 +15,8 @@ import java.util.zip.ZipFile;
  * @see ZipSources#execute
  * @author Christian Schlichtherle
  */
-public interface ZipInputTask<V, X extends Exception>
-extends Task<V, ZipInput, X> {
+public interface ZipInputTask<V> extends Task<V, ZipInput> {
 
-    @Override V execute(@WillNotClose ZipInput resource) throws X;
+    @Override
+    V execute(@WillNotClose ZipInput resource) throws Exception;
 }

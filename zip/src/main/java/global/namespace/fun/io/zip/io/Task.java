@@ -10,10 +10,9 @@ package global.namespace.fun.io.zip.io;
  *
  * @param <V> the type of the result.
  * @param <R> the type of the resource.
- * @param <X> the type of the exception.
  * @author Christian Schlichtherle
  */
-public interface Task<V, R, X extends Exception> {
+public interface Task<V, R> {
 
-    V execute(R resource) throws X;
+    V execute(R resource) throws Exception;
 }

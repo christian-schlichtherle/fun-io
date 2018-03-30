@@ -11,18 +11,17 @@ import java.io.IOException;
  * @see Sinks#execute
  * @author Christian Schlichtherle
  */
-final class WithOutputTask<V, X extends Exception>
-implements Sinks.ExecuteStatement<V, X> {
+final class WithOutputTask<V> implements Sinks.ExecuteStatement<V> {
 
-    private final OutputTask<V, X> task;
+    private final OutputTask<V> task;
 
-    WithOutputTask(final OutputTask<V, X> task) { this.task = task; }
+    WithOutputTask(final OutputTask<V> task) { this.task = task; }
 
-    @Override public V on(File file) throws X, IOException {
+    @Override public V on(File file) throws Exception {
         return on(new FileStore(file));
     }
 
-    @Override public V on(Sink sink) throws X, IOException {
+    @Override public V on(Sink sink) throws Exception {
         return Closeables.execute(task, sink.output());
     }
 }

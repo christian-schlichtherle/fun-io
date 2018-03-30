@@ -27,8 +27,8 @@ public abstract class ZipPatch {
     /** Returns a new builder for a ZIP patch. */
     public static Builder builder() { return new Builder(); }
 
-    public abstract void output(File file) throws IOException;
-    public abstract void output(ZipSink sink) throws IOException;
+    public abstract void output(File file) throws Exception;
+    public abstract void output(ZipSink sink) throws Exception;
 
     /** A builder for a ZIP patch. */
     public static class Builder {
@@ -66,18 +66,18 @@ public abstract class ZipPatch {
             return new ZipPatch() {
 
                 @Override
-                public void output(File file) throws IOException {
+                public void output(File file) throws Exception {
                     output(new ZipFileStore(file));
                 }
 
                 @Override
-                public void output(final ZipSink sink) throws IOException {
-                    class InputTask implements ZipInputTask<Void, IOException> {
-                        public Void execute(final @WillNotClose ZipInput input) throws IOException {
-                            class DeltaTask implements ZipInputTask<Void, IOException> {
-                                public Void execute(final @WillNotClose ZipInput delta) throws IOException {
-                                    class OutputTask implements ZipOutputTask<Void, IOException> {
-                                        public Void execute(final @WillNotClose ZipOutput output) throws IOException {
+                public void output(final ZipSink sink) throws Exception {
+                    class InputTask implements ZipInputTask<Void> {
+                        public Void execute(final @WillNotClose ZipInput input) throws Exception {
+                            class DeltaTask implements ZipInputTask<Void> {
+                                public Void execute(final @WillNotClose ZipInput delta) throws Exception {
+                                    class OutputTask implements ZipOutputTask<Void> {
+                                        public Void execute(final @WillNotClose ZipOutput output) throws Exception {
                                             new RawZipPatch() {
                                                 protected ZipInput input() { return input; }
                                                 protected ZipInput delta() { return delta; }

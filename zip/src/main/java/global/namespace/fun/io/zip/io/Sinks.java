@@ -17,14 +17,13 @@ import java.io.IOException;
 @Immutable
 public class Sinks {
 
-    public static <V, X extends Exception>
-            ExecuteStatement<V, X> execute(OutputTask<V, X> task) {
-        return new WithOutputTask<V, X>(task);
+    public static <V> ExecuteStatement<V> execute(OutputTask<V> task) {
+        return new WithOutputTask<V>(task);
     }
 
-    public interface ExecuteStatement<V, X extends Exception> {
-        V on(File file) throws X, IOException;
-        V on(Sink sink) throws X, IOException;
+    public interface ExecuteStatement<V> {
+        V on(File file) throws Exception;
+        V on(Sink sink) throws Exception;
     }
 
     private Sinks() { }
