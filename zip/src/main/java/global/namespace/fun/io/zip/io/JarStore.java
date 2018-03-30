@@ -11,14 +11,18 @@ import java.io.FileOutputStream;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 
+import static java.util.Objects.requireNonNull;
+
 /**
- * A file based JAR store.
+ * A file based source and sink for JAR files.
  *
  * @author Christian Schlichtherle
  */
-public class JarFileStore extends ZipFileStore {
+public final class JarStore implements ZipSource, ZipSink {
 
-    public JarFileStore(File file) { super(file); }
+    private final File file;
+
+    public JarStore(final File file) { this.file = requireNonNull(file); }
 
     @Override
     public Socket<ZipInput> input() { return () -> new ZipFileAdapter(new JarFile(file)); }

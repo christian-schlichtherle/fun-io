@@ -9,7 +9,7 @@ import java.security.MessageDigest
 
 import global.namespace.fun.io.scala.api._
 import global.namespace.fun.io.zip.diff.{ZipDiffEngine, ZipDiff}
-import global.namespace.fun.io.zip.io.{JarFileStore, MessageDigests, ZipInput}
+import global.namespace.fun.io.zip.io.{JarStore, MessageDigests, ZipInput}
 import global.namespace.fun.io.zip.patch.ZipPatch
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
@@ -36,10 +36,10 @@ class ZipPatchIT extends WordSpec with ZipITContext {
             ZipDiff.builder.input1(testJar1).input2(testJar2).build.output(deltaJar)
             ZipPatch.builder.input(testJar1).delta(deltaJar).build.output(patchedJar)
 
-            new JarFileStore(testJar2) acceptReader { jar2: ZipInput =>
+            new JarStore(testJar2) acceptReader { jar2: ZipInput =>
               val unchangedReference = fileEntryNames(jar2)
 
-              new JarFileStore(patchedJar) acceptReader { patched: ZipInput =>
+              new JarStore(patchedJar) acceptReader { patched: ZipInput =>
                 val model = new ZipDiffEngine {
 
                   lazy val digest: MessageDigest = MessageDigests.sha1

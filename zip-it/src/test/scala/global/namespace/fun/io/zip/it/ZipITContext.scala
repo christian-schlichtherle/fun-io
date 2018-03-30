@@ -9,7 +9,7 @@ import java.security.MessageDigest
 
 import global.namespace.fun.io.scala.api._
 import global.namespace.fun.io.zip.diff.ZipDiffEngine
-import global.namespace.fun.io.zip.io.{JarFileStore, MessageDigests, ZipInput}
+import global.namespace.fun.io.zip.io.{JarStore, MessageDigests, ZipInput}
 import global.namespace.fun.io.zip.model.DeltaModel
 import javax.xml.bind.JAXBContext
 
@@ -29,8 +29,8 @@ trait ZipITContext extends ITContext {
     }
 
   def loanTestJars[A](fun: (ZipInput, ZipInput) => A): A = {
-    new JarFileStore(testJar1).applyReader[A] { jar1: ZipInput =>
-      new JarFileStore(testJar2).applyReader[A] { jar2: ZipInput =>
+    new JarStore(testJar1).applyReader[A] { jar1: ZipInput =>
+      new JarStore(testJar2).applyReader[A] { jar2: ZipInput =>
         fun(jar1, jar2)
       }
     }

@@ -4,7 +4,7 @@
  */
 package global.namespace.fun.io.zip.patch;
 
-import global.namespace.fun.io.zip.io.ZipFileStore;
+import global.namespace.fun.io.zip.io.ZipStore;
 import global.namespace.fun.io.zip.io.ZipInput;
 import global.namespace.fun.io.zip.io.ZipSink;
 import global.namespace.fun.io.zip.io.ZipSource;
@@ -40,7 +40,7 @@ public abstract class ZipPatch {
         Builder() { }
 
         public Builder input(final @Nullable File file) {
-            return input(null == file ? null : new ZipFileStore(file));
+            return input(null == file ? null : new ZipStore(file));
         }
 
         public Builder input(final @Nullable ZipSource archive) {
@@ -49,7 +49,7 @@ public abstract class ZipPatch {
         }
 
         public Builder delta(final @Nullable File file) {
-            return delta(null == file ? null : new ZipFileStore(file));
+            return delta(null == file ? null : new ZipStore(file));
         }
 
         public Builder delta(final @Nullable ZipSource archive) {
@@ -67,7 +67,7 @@ public abstract class ZipPatch {
 
                 @Override
                 public void output(File file) throws Exception {
-                    output(new ZipFileStore(file));
+                    output(new ZipStore(file));
                 }
 
                 @Override

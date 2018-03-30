@@ -4,18 +4,31 @@
  */
 package global.namespace.fun.io.zip.io;
 
-import java.io.IOException;
+import global.namespace.fun.io.api.Socket;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
+
+import static java.util.Objects.requireNonNull;
 
 /**
- * An abstraction for reading, writing and deleting ZIP data.
+ * A file based source and sink for ZIP files.
  *
  * @author Christian Schlichtherle
  */
-public interface ZipStore extends ZipSource, ZipSink {
+public final class ZipStore implements ZipSource, ZipSink {
 
-    /** Deletes the ZIP data. */
-    void delete() throws IOException;
+    private final File file;
 
-    /** Returns {@code true} if and only if the ZIP data exists. */
-    boolean exists();
+    public ZipStore(final File file) { this.file = requireNonNull(file); }
+
+    @Override
+    public Socket<ZipInput> input() { return () -> new ZipFileAdapter(new ZipFile(file)); }
+
+    @Override
+    public Socket<ZipOutput> output() {
+        return () -> new ZipOutputStreamAdapter(new ZipOutputStream(new FileOutputStream(file)));
+    }
 }

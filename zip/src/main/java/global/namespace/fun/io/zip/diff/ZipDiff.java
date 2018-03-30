@@ -39,7 +39,7 @@ public abstract class ZipDiff {
         Builder() { }
 
         public Builder input1(final @Nullable File input1) {
-            return input1(null == input1 ? null : new ZipFileStore(input1));
+            return input1(null == input1 ? null : new ZipStore(input1));
         }
 
         public Builder input1(final @Nullable ZipSource input1) {
@@ -48,7 +48,7 @@ public abstract class ZipDiff {
         }
 
         public Builder input2(final @Nullable File input2) {
-            return input2(null == input2 ? null : new ZipFileStore(input2));
+            return input2(null == input2 ? null : new ZipStore(input2));
         }
 
         public Builder input2(final @Nullable ZipSource input2) {
@@ -73,7 +73,7 @@ public abstract class ZipDiff {
             return new ZipDiff() {
 
                 @Override
-                public void output(File file) throws Exception { output(new ZipFileStore(file)); }
+                public void output(File file) throws Exception { output(new ZipStore(file)); }
 
                 @Override
                 public void output(final ZipSink sink) throws Exception {
