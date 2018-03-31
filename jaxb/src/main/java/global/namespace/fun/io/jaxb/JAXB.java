@@ -16,6 +16,7 @@
 package global.namespace.fun.io.jaxb;
 
 import global.namespace.fun.io.api.Codec;
+import global.namespace.fun.io.api.function.XConsumer;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -36,5 +37,9 @@ public final class JAXB {
      * Uses {@link Marshaller}s and {@link Unmarshaller}s derived from the given {@link JAXBContext} to encode and
      * decode object graphs to and from octet streams.
      */
-    public static Codec xmlCodec(JAXBContext c) { return new XMLCodec(requireNonNull(c)); }
+    public static Codec xmlCodec(JAXBContext c) { return new XMLCodec(requireNonNull(c), m -> {}, u -> {}); }
+
+    public static Codec xmlCodec(JAXBContext c, XConsumer<Marshaller> marshallerModifier, XConsumer<Unmarshaller> unmarshallerModifier) {
+        return new XMLCodec(requireNonNull(c), requireNonNull(marshallerModifier), requireNonNull(unmarshallerModifier));
+    }
 }

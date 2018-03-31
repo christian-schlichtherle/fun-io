@@ -21,7 +21,8 @@ import global.namespace.fun.io.api.function.XFunction;
 import java.io.OutputStream;
 
 /**
- * Emits output stream {@linkplain Socket sockets} in order to enable access to its stored content.
+ * An abstraction for safe writing to output streams without leaking resources.
+ * A sink provides a {@linkplain #output()} socket} for safe access to an {@linkplain OutputStream output stream}.
  *
  * @author Christian Schlichtherle
  */
@@ -31,14 +32,14 @@ public interface Sink {
     Socket<OutputStream> output();
 
     /**
-     * Loans an output stream from the underlying {@linkplain #output() output stream socket} to the given consumer.
+     * Loans an output stream from the underlying {@linkplain #output() socket} to the given consumer.
      * The output stream will be closed upon return from this method.
      */
     default void acceptWriter(XConsumer<? super OutputStream> writer) throws Exception { output().accept(writer); }
 
     /**
-     * Loans an output stream from the underlying {@linkplain #output() output stream socket} to the given function and
-     * returns its value.
+     * Loans an output stream from the underlying {@linkplain #output() socket} to the given function and returns its
+     * value.
      * The output stream will be closed upon return from this method.
      * <p>
      * It is an error to return the loaned output stream from the given function or any other object which holds on to
