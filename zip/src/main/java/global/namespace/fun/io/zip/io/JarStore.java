@@ -25,10 +25,10 @@ public final class JarStore implements ZipSource, ZipSink {
     public JarStore(final File file) { this.file = requireNonNull(file); }
 
     @Override
-    public Socket<ZipInput> input() { return () -> new ZipFileAdapter(new JarFile(file)); }
+    public Socket<ZipInput> zipInput() { return () -> new ZipFileAdapter(new JarFile(file)); }
 
     @Override
-    public Socket<ZipOutput> output() {
+    public Socket<ZipOutput> zipOutput() {
         return ((Socket<FileOutputStream>) (() -> new FileOutputStream(file)))
                 .map(out -> new JarOutputStreamAdapter(new JarOutputStream(out)));
     }

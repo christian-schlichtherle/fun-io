@@ -13,7 +13,7 @@ import global.namespace.fun.io.api.{Codec, Store}
 import global.namespace.fun.io.bios.BIOS.memoryStore
 import global.namespace.fun.io.jaxb.JAXB
 import global.namespace.fun.io.scala.api._
-import global.namespace.fun.io.zip.diff.ZipDiffEngine
+import global.namespace.fun.io.zip.diff.ZipDiff
 import global.namespace.fun.io.zip.io.{JarStore, MessageDigests, ZipInput}
 import global.namespace.fun.io.zip.it.ZipITContext._
 import global.namespace.fun.io.zip.model.DeltaModel.jaxbContext
@@ -23,10 +23,10 @@ import org.scalatest.Matchers.{equal, theSameInstanceAs, _}
 /** @author Christian Schlichtherle */
 trait ZipITContext {
 
-  final def loanZipDiffEngine[A](fun: ZipDiffEngine => A): A = {
-    testJarStore1.applyReader[A] { jar1: ZipInput =>
-      testJarStore2.applyReader[A] { jar2: ZipInput =>
-        fun(new ZipDiffEngine {
+  final def loanZipDiffEngine[A](fun: ZipDiff.Engine => A): A = {
+    testJarStore1.applyZipReader[A] { jar1: ZipInput =>
+      testJarStore2.applyZipReader[A] { jar2: ZipInput =>
+        fun(new ZipDiff.Engine {
 
           lazy val digest: MessageDigest = MessageDigests.sha1
 

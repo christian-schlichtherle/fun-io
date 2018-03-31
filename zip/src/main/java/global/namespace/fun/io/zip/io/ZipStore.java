@@ -25,10 +25,10 @@ public final class ZipStore implements ZipSource, ZipSink {
     public ZipStore(final File file) { this.file = requireNonNull(file); }
 
     @Override
-    public Socket<ZipInput> input() { return () -> new ZipFileAdapter(new ZipFile(file)); }
+    public Socket<ZipInput> zipInput() { return () -> new ZipFileAdapter(new ZipFile(file)); }
 
     @Override
-    public Socket<ZipOutput> output() {
+    public Socket<ZipOutput> zipOutput() {
         return () -> new ZipOutputStreamAdapter(new ZipOutputStream(new FileOutputStream(file)));
     }
 }
