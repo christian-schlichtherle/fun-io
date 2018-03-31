@@ -77,11 +77,11 @@ public abstract class ZipDiff {
                                                 final MessageDigest digest =
                                                         MessageDigests.create(digestName.orElse("SHA-1"));
 
-                                                protected MessageDigest digest() { return digest; }
+                                                public MessageDigest digest() { return digest; }
 
-                                                protected ZipInput base() { return base; }
+                                                public ZipInput base() { return base; }
 
-                                                protected ZipInput update() { return update; }
+                                                public ZipInput update() { return update; }
                                             }.outputTo(patch)
                                     )
                             )

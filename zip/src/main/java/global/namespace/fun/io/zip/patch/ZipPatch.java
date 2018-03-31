@@ -66,9 +66,9 @@ public abstract class ZipPatch {
                                     updateSink.acceptZipWriter(update ->
                                             new ZipPatchEngine() {
 
-                                                protected ZipInput base() { return base; }
+                                                public ZipInput base() { return base; }
 
-                                                protected ZipInput patch() { return patch; }
+                                                public ZipInput patch() { return patch; }
                                             }.outputTo(update)
                                     )
                             )
