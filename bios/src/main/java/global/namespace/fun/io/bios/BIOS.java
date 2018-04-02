@@ -298,25 +298,27 @@ public final class BIOS {
     /**
      * Copies the data from the given source to the given sink.
      * <p>
-     * The implementation in this class is suitable for only small amounts of data, say a few kilobytes.
+     * This is a high performance implementation which uses a pooled background thread to fill a FIFO of pooled buffers
+     * which is concurrently flushed by the current thread.
+     * It performs best when used with <em>unbuffered</em> streams.
+     *
+     * @param source the source for reading the data from.
+     * @param sink the sink for writing the data to.
      */
     public static void copy(Source source, Sink sink) throws Exception { copy(source.input(), sink.output()); }
 
     /**
-     * Copies the data from the given input to the given output.
+     * Copies the data from the given source to the given sink.
      * <p>
-     * The implementation in this class is suitable for only small amounts of data, say a few kilobytes.
+     * This is a high performance implementation which uses a pooled background thread to fill a FIFO of pooled buffers
+     * which is concurrently flushed by the current thread.
+     * It performs best when used with <em>unbuffered</em> streams.
+     *
+     * @param input the input stream socket for reading the data from.
+     * @param output the output stream socket for writing the data to.
      */
-    public static void copy(final Socket<? extends InputStream> input, final Socket<? extends OutputStream> output)
-    throws Exception {
-        input.accept(in -> {
-            output.accept(out -> {
-                final byte[] buffer = new byte[Store.BUFSIZE];
-                for (int read; 0 <= (read = in.read(buffer)); ) {
-                    out.write(buffer, 0, read);
-                }
-            });
-        });
+    public static void copy(Socket<? extends InputStream> input, Socket<? extends OutputStream> output) throws Exception {
+        input.accept(in -> output.accept(out -> Copy.cat(in, out)));
     }
 
     /**
