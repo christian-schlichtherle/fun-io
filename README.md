@@ -41,7 +41,7 @@ Note that the `encoder` object is virtually stateless, and hence reusable.
 Here is a more realistic, yet incomplete example in Scala:
 
 ```scala
-def ciphers(forOutput: java.lang.Boolean): javax.crypto.Cipher = ??? // needs to return an initialized cipher
+def ciphers(forOutput: Boolean): javax.crypto.Cipher = ??? // needs to return an initialized cipher
 val store: Store = pathStore(java.nio.file.Paths get "hello-world.gz.cipher")
 val connectedCodec: ConnectedCodec = jsonCodec << gzip << cipher(ciphers _) << store
 connectedCodec encode "Hello world!"
