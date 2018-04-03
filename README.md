@@ -96,7 +96,10 @@ Fun I/O has a modular architecture, providing the following modules:
     + `memoryStore` stores data on the heap. This is primarily used for cloning objects or testing. 
     + `pathStore` stores data in files or any other `java.nio.file.Path`.
     + `preferencesStore` stores data in preferences nodes using a given key.
-  + The `BIOS` class also provides a `stream` function for streaming `InputStream`s and `OutputStream`s.
+  + The `BIOS` class also provides the following utility functions:
+    + `stream` encapsulates a given `InputStream` or `OutputStream` as a `Source` or `Sink` for interoperability with 
+      the rest of this API.
+    + `copy` is a high performance algorithm for copying data from a `Source` to a `Sink`, including `Store`s. 
 + `fun-io-commons-compress`: Depends on [Apache Commons Compress] to provide the following compression `Transformation` 
   functions in the `CommonsCompress` class:
   + `blockLZ4` compresses/decompresses data using the LZ4 block format.
