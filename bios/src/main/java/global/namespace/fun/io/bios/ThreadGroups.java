@@ -21,7 +21,9 @@ package global.namespace.fun.io.bios;
  * @author Christian Schlichtherle (copied and edited from TrueUpdate 0.8.1, where it was copied and edited from
  *                                  TrueCommons I/O 2.3.2)
  */
-final class ThreadGroups {
+class ThreadGroups {
+
+    private ThreadGroups() { }
 
     /**
      * Determines a suitable thread group for <i>server threads</i> which provide shared services for one or more
@@ -63,6 +65,4 @@ final class ThreadGroups {
         final SecurityManager sm = System.getSecurityManager();
         return null != sm ? sm.getThreadGroup() : Thread.currentThread().getThreadGroup();
     }
-
-    private ThreadGroups() { }
 }
