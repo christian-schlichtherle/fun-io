@@ -15,12 +15,15 @@
  */
 package global.namespace.fun.io.scala
 
+import java.io.{InputStream, OutputStream}
+
 import global.namespace.fun.io.api.Transformation.IDENTITY
 import global.namespace.fun.io.api.function.{XConsumer, XFunction, XSupplier}
 import global.namespace.fun.io.{api => j}
 
 import _root_.scala.language.implicitConversions
 
+/** @author Christian Schlichtherle */
 package object api {
 
   type Buffer = j.Buffer
@@ -73,5 +76,32 @@ package object api {
   implicit def xSupplier[A](a: => A): XSupplier[A] = new XSupplier[A] {
 
     def get(): A = a
+  }
+
+  /** Creates a socket from the given by-name parameter.
+    * This method is primarily required for Scala 2.10 and 2.11.
+    * In Scala 2.12, the same effect could be achieved by writing the expression `(() => c): Socket[A]`.
+    */
+  def socket[A <: AutoCloseable](c: => A): Socket[A] = new Socket[A] {
+
+    def get(): A = c
+  }
+
+  /** Creates a source from the given by-name parameter.
+    * This method is primarily required for Scala 2.10 and 2.11.
+    * In Scala 2.12, the same effect could be achieved by writing the expression `(() => () => in): Source`.
+    */
+  def source(in: => InputStream): Source = new Source {
+
+    def input(): Socket[InputStream] = socket(in)
+  }
+
+  /** Creates a sink from the given by-name parameter.
+    * This method is primarily required for Scala 2.10 and 2.11.
+    * In Scala 2.12, the same effect could be achieved by writing the expression `(() => () => out): Sink`.
+    */
+  def sink(out: => OutputStream): Sink = new Sink {
+
+    def output(): Socket[OutputStream] = socket(out)
   }
 }

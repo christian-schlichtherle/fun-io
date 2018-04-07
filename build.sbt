@@ -107,6 +107,9 @@ lazy val scalaApi: Project = project
   .dependsOn(api)
   .settings(scalaLibrarySettings)
   .settings(
+    libraryDependencies ++= Seq(
+      Scalatest % Test
+    ),
     name := "Fun I/O Scala API",
     normalizedName := "fun-io-scala-api"
   )
