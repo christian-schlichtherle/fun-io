@@ -72,7 +72,6 @@ lazy val it: Project = project
       Scalatest % Test
     ),
     name := "Fun I/O IT",
-    normalizedName := "fun-io-it",
     publishArtifact := false
   )
 
