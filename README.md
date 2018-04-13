@@ -128,6 +128,12 @@ The modules are:
   + `lzma2` compresses/decompresses data using the LZMA2 compression format.
   + `xz` compresses/decompresses data using the XZ compression format.
 
+A typical Java application has a single dependency on `fun-io-bios`.
+Additional module dependencies may be added to the mix for their features.
+
+A typical Scala application has the same dependency/dependencies as a Java application plus an additional dependency on
+`fun-io-scala-api` for more convenient access to Fun IO features. 
+
 [Apache Commons Compress]: https://commons.apache.org/proper/commons-compress/
 [Jackson Databind]: http://wiki.fasterxml.com/JacksonHome
 [JAXB]: https://javaee.github.io/jaxb-v2/
