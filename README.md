@@ -103,9 +103,12 @@ The modules are:
     + `inverse` inverses a given transformation by buffering the entire data to a buffer, e.g. on the heap.
     + `rot` provides the (in)famous ROT transformation, e.g. [ROT13].
   + The `BIOS` class also provides the following `Store` functions:
-    + `memory` stores data on the heap. This is primarily used for cloning objects or testing. 
-    + `path` stores data in files or any other `java.nio.file.Path`.
-    + `preferences` stores data in preferences nodes using a given key.
+    + `file` stores data in a file, based on `java.io.File`. 
+    + `memory` stores data on the heap. This is primarily used for cloning objects or testing.
+    + `path` stores data in a files or any other path, based on `java.nio.file.Path`.
+    + `preferences` stores data in a preferences node using a given key.
+    + `systemPreferences` stores data in a system preferences nodes representing a given class.
+    + `userPreferences` stores data in a user preferences nodes representing a given class.
   + The `BIOS` class also provides the following utility functions:
     + `stream` encapsulates a given `InputStream` or `OutputStream` as a `Source` or `Sink` for interoperability with 
       the rest of this API.
