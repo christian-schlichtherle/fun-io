@@ -5,7 +5,7 @@ stores, transformations, codecs et al.
 The resulting compositions are (re)usable, composable and never leak resources.
 Fun I/O supports Java 8 and Scala 2.10, 2.11 and 2.12 and comes with the Apache License, version 2.0.
 
-## Examples
+## Usage
 
 The following Scala code prints `"Hello world!"` - including the quotes:
 
@@ -77,7 +77,8 @@ Again, note that the `store` and `connectedCodec` objects are virtually stateles
 ## Module Structure
 
 Fun I/O has a modular structure.
-Its artifacts are hosted on Maven Central with the common group ID `global.namespace.fun-io`.
+Its artifacts are hosted on Maven Central with the common group ID 
+[`global.namespace.fun-io`](http://search.maven.org/#search%7Cga%7C1%7Cglobal.namespace.fun-io).
 The following diagram shows the module structure:
 
 ![Module Structure](module-structure.svg)
