@@ -30,8 +30,8 @@ public final class Jackson {
     private Jackson() { }
 
     /** Returns a JSON codec using a new object mapper. */
-    public static Codec jsonCodec() { return jsonCodec(new ObjectMapper()); }
+    public static Codec json() { return json(new ObjectMapper()); }
 
     /** Returns a JSON codec using the given object mapper. */
-    public static Codec jsonCodec(ObjectMapper mapper) { return new JSONCodec(requireNonNull(mapper)); }
+    public static Codec json(ObjectMapper mapper) { return new JSONCodec(requireNonNull(mapper)); }
 }

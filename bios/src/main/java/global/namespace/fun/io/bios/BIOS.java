@@ -122,27 +122,30 @@ public final class BIOS {
     ////////// STORES //////////
     ////////////////////////////
 
-    /** Returns a new memory store with the default buffer size. */
-    public static Store memoryStore() { return memoryStore(BUFSIZE); }
+    /** Returns a new in-memory store with the default buffer size. */
+    public static Store memory() { return memory(BUFSIZE); }
 
-    /** Returns a new memory store with the given buffer size. */
-    public static Store memoryStore(int bufferSize) { return new MemoryStore(bufferSize); }
+    /** Returns a new in-memory store with the given buffer size. */
+    public static Store memory(int bufferSize) { return new MemoryStore(bufferSize); }
 
-    /** Returns a path store for the given file. */
-    public static Store pathStore(Path p) { return new PathStore(requireNonNull(p)); }
+    /** Returns a store for the given file. */
+    public static Store file(File f) { return path(f.toPath()); }
+
+    /** Returns a store for the given file. */
+    public static Store path(Path p) { return new PathStore(requireNonNull(p)); }
 
     /** Returns a store for the system preferences node for the package of the given class and the given key. */
-    public static Store systemPreferencesStore(Class<?> classInPackage, String key) {
-        return preferencesStore(Preferences.systemNodeForPackage(classInPackage), key);
+    public static Store systemPreferences(Class<?> classInPackage, String key) {
+        return preferences(Preferences.systemNodeForPackage(classInPackage), key);
     }
 
     /** Returns a store for the user preferences node for the package of the given class and the given key. */
-    public static Store userPreferencesStore(Class<?> classInPackage, String key) {
-        return preferencesStore(Preferences.userNodeForPackage(classInPackage), key);
+    public static Store userPreferences(Class<?> classInPackage, String key) {
+        return preferences(Preferences.userNodeForPackage(classInPackage), key);
     }
 
-    /** Returns a preferences store for the given preferences node and key. */
-    public static Store preferencesStore(Preferences p, String key) {
+    /** Returns a store for the given preferences node and key. */
+    public static Store preferences(Preferences p, String key) {
         return new PreferencesStore(requireNonNull(p), requireNonNull(key));
     }
 
@@ -231,7 +234,7 @@ public final class BIOS {
      * For any given transformation, it's advisable to provide a specialized implementation of the inverse
      * transformation which does not incur this overhead.
      */
-    public static Transformation inverse(Transformation t) { return inverse(t, (XSupplier<Store>) BIOS::memoryStore); }
+    public static Transformation inverse(Transformation t) { return inverse(t, (XSupplier<Store>) BIOS::memory); }
 
     /**
      * Returns a transformation which inverses the given transformation by buffering the entire data in a temporary
@@ -274,20 +277,20 @@ public final class BIOS {
      * Uses {@link ObjectOutputStream}s and {@link ObjectInputStream}s to encode and decode object graphs to and from
      * octet streams.
      */
-    public static Codec serializationCodec() { return new SerializationCodec(); }
+    public static Codec serialization() { return new SerializationCodec(); }
 
     /**
      * Uses new {@link XMLEncoder}s and {@link XMLDecoder}s to encode and decode object graphs to and from octet
      * streams.
      */
-    public static Codec xmlCodec() { return xmlCodec(XMLEncoder::new, XMLDecoder::new); }
+    public static Codec xml() { return xml(XMLEncoder::new, XMLDecoder::new); }
 
     /**
      * Uses new {@link XMLEncoder}s and {@link XMLDecoder}s obtained by the given functions in order to encode and
      * decode object graphs to and from octet streams.
      */
-    public static Codec xmlCodec(XFunction<? super OutputStream, ? extends XMLEncoder> xmlEncoders,
-                                 XFunction<? super InputStream, ? extends XMLDecoder> xmlDecoders) {
+    public static Codec xml(XFunction<? super OutputStream, ? extends XMLEncoder> xmlEncoders,
+                            XFunction<? super InputStream, ? extends XMLDecoder> xmlDecoders) {
         return new XMLCodec(requireNonNull(xmlEncoders), requireNonNull(xmlDecoders));
     }
 
@@ -325,8 +328,8 @@ public final class BIOS {
      * Returns a deep clone of the given object by serializing it to a memory store and de-serializing it again.
      * The memory store uses {@value Store#BUFSIZE} bytes as its initial buffer size.
      *
-     * @see #serializationCodec()
-     * @see #memoryStore()
+     * @see #serialization()
+     * @see #memory()
      */
     public static <T extends Serializable> T clone(T t) throws Exception { return clone(t, Store.BUFSIZE); }
 
@@ -334,10 +337,10 @@ public final class BIOS {
      * Returns a deep clone of the given object by serializing it to a memory store and de-serializing it again.
      * The memory store uses the given number of byes as its initial buffer size.
      *
-     * @see #serializationCodec()
-     * @see #memoryStore(int)
+     * @see #serialization()
+     * @see #memory(int)
      */
     public static <T extends Serializable> T clone(T t, int bufferSize) throws Exception {
-        return serializationCodec().connect(memoryStore(bufferSize)).clone(t);
+        return serialization().connect(memory(bufferSize)).clone(t);
     }
 }

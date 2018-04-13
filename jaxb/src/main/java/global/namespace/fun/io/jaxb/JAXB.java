@@ -37,7 +37,7 @@ public final class JAXB {
      * Uses {@link Marshaller}s and {@link Unmarshaller}s derived from the given {@link JAXBContext} to encode and
      * decode object graphs to and from octet streams.
      */
-    public static Codec xmlCodec(JAXBContext c) { return new XMLCodec(requireNonNull(c), m -> {}, u -> {}); }
+    public static Codec xml(JAXBContext c) { return new XMLCodec(requireNonNull(c), m -> {}, u -> {}); }
 
     /**
      * Uses {@link Marshaller}s and {@link Unmarshaller}s derived from the given {@link JAXBContext} to encode and
@@ -45,7 +45,7 @@ public final class JAXB {
      * This variant allows you to modify the marshaller and unmarshallers obtained from the JAXB context using the given
      * consumer objects.
      */
-    public static Codec xmlCodec(JAXBContext c, XConsumer<Marshaller> marshallerModifier, XConsumer<Unmarshaller> unmarshallerModifier) {
+    public static Codec xml(JAXBContext c, XConsumer<Marshaller> marshallerModifier, XConsumer<Unmarshaller> unmarshallerModifier) {
         return new XMLCodec(requireNonNull(c), requireNonNull(marshallerModifier), requireNonNull(unmarshallerModifier));
     }
 }

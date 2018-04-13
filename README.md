@@ -2,7 +2,7 @@
 
 Fun I/O provides functional, high level abstractions for composing ordinary input and output streams into sockets, 
 stores, transformations, codecs et al.
-The resulting compositions are (re)usable, versatile and dont leak resources.
+The resulting compositions are (re)usable, composable and never leak resources.
 Fun I/O supports Java 8 and Scala 2.10, 2.11 and 2.12 and comes with the Apache License, version 2.0.
 
 ## Examples
@@ -14,7 +14,7 @@ import global.namespace.fun.io.bios.BIOS._       // from module `fun-io-bios`
 import global.namespace.fun.io.jackson.Jackson._ // from module `fun-io-jackson`
 import global.namespace.fun.io.scala.api._       // from module `fun-io-scala-api`
 
-val encoder: Encoder = jsonCodec encoder stdout
+val encoder: Encoder = json encoder stdout
 encoder encode "Hello world!"
 ```
 
@@ -27,7 +27,7 @@ import static global.namespace.fun.io.jackson.Jackson.*;
 
 ...
 
-Encoder encoder = jsonCodec().encoder(stdout());
+Encoder encoder = json().encoder(stdout());
 encoder.encode("Hello world!");
 ```
 
@@ -41,9 +41,11 @@ Note that the `encoder` object is virtually stateless, and hence reusable.
 Here is a more realistic, yet incomplete example in Scala:
 
 ```scala
+import java.nio.file.Paths
+
 def ciphers(forOutput: Boolean): javax.crypto.Cipher = ??? // needs to return an initialized cipher
-val store: Store = pathStore(java.nio.file.Paths get "hello-world.gz.cipher")
-val connectedCodec: ConnectedCodec = jsonCodec << gzip << cipher(ciphers _) << store
+val store: Store = path(Paths get "hello-world.gz.cipher")
+val connectedCodec: ConnectedCodec = json << gzip << cipher(ciphers _) << store
 connectedCodec encode "Hello world!"
 ```
 
@@ -53,12 +55,13 @@ Here's the equivalent in Java:
 
 ```java
 import global.namespace.fun.io.api.function.*;
+import java.nio.file.Paths;
 
 ...
 
 XFunction<Boolean, Cipher> ciphers = forOutput -> { throw new IOException("not implemented"); };
-Store store = pathStore(java.nio.file.Paths.get("hello-world.gz.cipher"));
-ConnectedCodec connectedCodec = jsonCodec().map(gzip()).map(cipher(ciphers)).connect(store);
+Store store = pathStore(Paths get "hello-world.gz.cipher");
+ConnectedCodec connectedCodec = json().map(gzip()).map(cipher(ciphers)).connect(store);
 connectedCodec.encode("Hello world!");
 
 ```
@@ -71,17 +74,23 @@ returned from an internal call to `ciphers.apply(true)` and finally save the res
 
 Again, note that the `store` and `connectedCodec` objects are virtually stateless, and hence reusable.
 
-## Modules
+## Module Structure
 
-Fun I/O has a modular architecture, providing the following modules:
+Fun I/O has a modular structure.
+Its artifacts are hosted on Maven Central with the common group ID `global.namespace.fun-io`.
+The following diagram shows the module structure:
+
+![Module Structure](module-structure.svg)
+
+The modules are:
 
 + `fun-io-api`: The API provides interfaces for sockets, stores, transformations, codecs et al, but no implementations.
 + `fun-io-scala-api`: The Scala API wraps the Java API to enhance the syntax with a domain specific language (DSL).
 + `fun-io-bios`: The Basic Input/Output System (pun intended) provides basic implementations for encoding, transforming, 
   storing or streaming data.
   + The `BIOS` class provides the following `Codec` functions:
-    + `serializationCodec` serializes/deserializes objects using `ObjectOutputStream`/`ObjectInputStream`.
-    + `xmlCodec` encodes/decodes objects using `XMLEncoder`/`XMLDecoder`.
+    + `serialization` serializes/deserializes objects using `ObjectOutputStream`/`ObjectInputStream`.
+    + `xml` encodes/decodes objects using `XMLEncoder`/`XMLDecoder`.
   + The `BIOS` class also provides the following `Transformation` functions:
     + `base64` encodes/decodes data to/from Base64.
     + `buffer` buffers I/O operations.
@@ -93,9 +102,9 @@ Fun I/O has a modular architecture, providing the following modules:
     + `inverse` inverses a given transformation by buffering the entire data to a buffer, e.g. on the heap.
     + `rot` provides the (in)famous ROT transformation, e.g. [ROT13].
   + The `BIOS` class also provides the following `Store` functions:
-    + `memoryStore` stores data on the heap. This is primarily used for cloning objects or testing. 
-    + `pathStore` stores data in files or any other `java.nio.file.Path`.
-    + `preferencesStore` stores data in preferences nodes using a given key.
+    + `memory` stores data on the heap. This is primarily used for cloning objects or testing. 
+    + `path` stores data in files or any other `java.nio.file.Path`.
+    + `preferences` stores data in preferences nodes using a given key.
   + The `BIOS` class also provides the following utility functions:
     + `stream` encapsulates a given `InputStream` or `OutputStream` as a `Source` or `Sink` for interoperability with 
       the rest of this API.
@@ -111,9 +120,9 @@ Fun I/O has a modular architecture, providing the following modules:
   + `lzma` compresses/decompresses data using the LZMA compression format.
   + `lzma2` compresses/decompresses data using the LZMA2 compression format.
 + `fun-io-jackson`: Depends on [Jackson Databind] to provide the following `Codec` functions in the `Jackson` class:
-  + `jsonCodec` marshals/unmarshals objects to/from JSON using Jackson.
+  + `json` marshals/unmarshals objects to/from JSON using Jackson.
 + `fun-io-jaxb`: Depends on [JAXB] to provide the following `Codec` functions in the `JAXB` class:
-  + `xmlCodec` marshals/unmarshals objects to/from XML using JAXB.
+  + `xml` marshals/unmarshals objects to/from XML using JAXB.
 + `fun-io-xz`: Depends on [XZ for Java] to provide the following compression `Transformation` functions in the `XZ` 
   class:
   + `lzma2` compresses/decompresses data using the LZMA2 compression format.

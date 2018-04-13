@@ -87,7 +87,7 @@ class TransformationCompositionSpec extends WordSpec {
         )
         forAll(table) { transformation =>
           transformation should not be identity
-          stringCodec << transformation connect memoryStore clone "Hello world!" shouldBe "Hello world!"
+          string << transformation connect memory clone "Hello world!" shouldBe "Hello world!"
         }
       }
 
@@ -95,15 +95,15 @@ class TransformationCompositionSpec extends WordSpec {
         val table = Table[ConnectedCodec](
           "connectedCodec",
 
-          stringCodec << b << a << memoryStore,
-          ((stringCodec << b) << a) << memoryStore,
-          stringCodec << (b << (a << memoryStore)),
-          stringCodec << (b << a) << memoryStore,
+          string << b << a << memory,
+          ((string << b) << a) << memory,
+          string << (b << (a << memory)),
+          string << (b << a) << memory,
 
-          memoryStore >> a >> b >> stringCodec,
-          ((memoryStore >> a) >> b) >> stringCodec,
-          memoryStore >> (a >> (b >> stringCodec)),
-          memoryStore >> (a >> b) >> stringCodec
+          memory >> a >> b >> string,
+          ((memory >> a) >> b) >> string,
+          memory >> (a >> (b >> string)),
+          memory >> (a >> b) >> string
         )
         forAll(table) { connectedCodec =>
           connectedCodec clone "c" shouldBe "abc"
@@ -115,7 +115,7 @@ class TransformationCompositionSpec extends WordSpec {
 
 private object TransformationCompositionSpec {
 
-  private object stringCodec extends Codec {
+  private object string extends Codec {
 
     def encoder(l: Socket[OutputStream]): Encoder = new Encoder {
       def encode(obj: AnyRef): Unit = l.accept((_: OutputStream).write(obj.toString.getBytes))
