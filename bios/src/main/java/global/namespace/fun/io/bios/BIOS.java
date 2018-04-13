@@ -122,6 +122,9 @@ public final class BIOS {
     ////////// STORES //////////
     ////////////////////////////
 
+    /** Returns a store for the given file. */
+    public static Store file(File f) { return path(f.toPath()); }
+
     /** Returns a new in-memory store with the default buffer size. */
     public static Store memory() { return memory(BUFSIZE); }
 
@@ -129,10 +132,12 @@ public final class BIOS {
     public static Store memory(int bufferSize) { return new MemoryStore(bufferSize); }
 
     /** Returns a store for the given file. */
-    public static Store file(File f) { return path(f.toPath()); }
-
-    /** Returns a store for the given file. */
     public static Store path(Path p) { return new PathStore(requireNonNull(p)); }
+
+    /** Returns a store for the given preferences node and key. */
+    public static Store preferences(Preferences p, String key) {
+        return new PreferencesStore(requireNonNull(p), requireNonNull(key));
+    }
 
     /** Returns a store for the system preferences node for the package of the given class and the given key. */
     public static Store systemPreferences(Class<?> classInPackage, String key) {
@@ -142,11 +147,6 @@ public final class BIOS {
     /** Returns a store for the user preferences node for the package of the given class and the given key. */
     public static Store userPreferences(Class<?> classInPackage, String key) {
         return preferences(Preferences.userNodeForPackage(classInPackage), key);
-    }
-
-    /** Returns a store for the given preferences node and key. */
-    public static Store preferences(Preferences p, String key) {
-        return new PreferencesStore(requireNonNull(p), requireNonNull(key));
     }
 
     /////////////////////////////////////
