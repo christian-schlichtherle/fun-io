@@ -6,7 +6,7 @@ package global.namespace.fun.io.bios
 
 import java.nio.file.{Path, Paths}
 
-import global.namespace.fun.io.api.archive.ArchiveFileInput
+import global.namespace.fun.io.api.ArchiveFileInput
 import global.namespace.fun.io.scala.api._
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec

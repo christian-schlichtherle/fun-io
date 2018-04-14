@@ -4,8 +4,7 @@
  */
 package global.namespace.fun.io.bios;
 
-import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.api.archive.*;
+import global.namespace.fun.io.api.*;
 
 import java.io.IOException;
 import java.io.InputStream;

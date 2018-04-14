@@ -2,9 +2,8 @@
  * Copyright (C) 2013-2018 Schlichtherle IT Services.
  * All rights reserved. Use is subject to license terms.
  */
-package global.namespace.fun.io.api.archive;
+package global.namespace.fun.io.api;
 
-import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.api.function.XConsumer;
 import global.namespace.fun.io.api.function.XFunction;
 

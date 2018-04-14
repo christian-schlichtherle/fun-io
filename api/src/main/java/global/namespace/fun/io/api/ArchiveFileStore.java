@@ -2,7 +2,7 @@
  * Copyright (C) 2013-2018 Schlichtherle IT Services.
  * All rights reserved. Use is subject to license terms.
  */
-package global.namespace.fun.io.api.archive;
+package global.namespace.fun.io.api;
 
 /**
  * An abstraction for safe reading and writing of archive entries from and to an archive file without leaking resources.

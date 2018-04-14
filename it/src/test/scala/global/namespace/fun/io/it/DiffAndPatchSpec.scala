@@ -7,6 +7,7 @@ package global.namespace.fun.io.it
 import java.io._
 import java.security.MessageDigest
 
+import global.namespace.fun.io.api.{ArchiveFileInput, ArchiveFileSource, ArchiveFileStore}
 import global.namespace.fun.io.bios.BIOS
 import global.namespace.fun.io.bios.BIOS._
 import global.namespace.fun.io.commons.compress.CommonsCompress
@@ -14,7 +15,6 @@ import global.namespace.fun.io.delta.Delta._
 import global.namespace.fun.io.delta.dto.DeltaDTO
 import global.namespace.fun.io.delta.model.DeltaModel
 import global.namespace.fun.io.it.DiffAndPatchSpec._
-import global.namespace.fun.io.api.archive.{ArchiveFileInput, ArchiveFileSource, ArchiveFileStore}
 import global.namespace.fun.io.scala.api._
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec

@@ -1,7 +1,7 @@
 package global.namespace.fun.io.delta;
 
-import global.namespace.fun.io.api.archive.ArchiveFileSink;
-import global.namespace.fun.io.api.archive.ArchiveFileSource;
+import global.namespace.fun.io.api.ArchiveFileSink;
+import global.namespace.fun.io.api.ArchiveFileSource;
 import global.namespace.fun.io.delta.model.DeltaModel;
 
 import java.security.MessageDigest;

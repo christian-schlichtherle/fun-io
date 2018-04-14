@@ -4,11 +4,9 @@
  */
 package global.namespace.fun.io.delta;
 
+import global.namespace.fun.io.api.*;
 import global.namespace.fun.io.delta.model.DeltaModel;
 import global.namespace.fun.io.delta.model.EntryNameAndDigestValue;
-import global.namespace.fun.io.api.Sink;
-import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.api.archive.*;
 import global.namespace.fun.io.api.function.XConsumer;
 
 import java.io.IOException;

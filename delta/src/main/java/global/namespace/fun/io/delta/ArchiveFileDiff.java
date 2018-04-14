@@ -4,11 +4,10 @@
  */
 package global.namespace.fun.io.delta;
 
+import global.namespace.fun.io.api.*;
 import global.namespace.fun.io.delta.model.DeltaModel;
 import global.namespace.fun.io.delta.model.EntryNameAndDigestValue;
 import global.namespace.fun.io.delta.model.EntryNameAndTwoDigestValues;
-import global.namespace.fun.io.api.Source;
-import global.namespace.fun.io.api.archive.*;
 import global.namespace.fun.io.api.function.XFunction;
 
 import java.security.MessageDigest;

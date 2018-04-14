@@ -15,11 +15,7 @@
  */
 package global.namespace.fun.io.commons.compress;
 
-import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.api.Transformation;
-import global.namespace.fun.io.api.archive.ArchiveFileInput;
-import global.namespace.fun.io.api.archive.ArchiveFileOutput;
-import global.namespace.fun.io.api.archive.ArchiveFileStore;
+import global.namespace.fun.io.api.*;
 import org.apache.commons.compress.archivers.jar.JarArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;

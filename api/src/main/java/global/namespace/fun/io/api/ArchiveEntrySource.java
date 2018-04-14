@@ -2,9 +2,7 @@
  * Copyright (C) 2013-2018 Schlichtherle IT Services.
  * All rights reserved. Use is subject to license terms.
  */
-package global.namespace.fun.io.api.archive;
-
-import global.namespace.fun.io.api.Source;
+package global.namespace.fun.io.api;
 
 /**
  * An abstraction for reading the content of an underlying archive entry.

@@ -4,8 +4,8 @@
  */
 package global.namespace.fun.io.commons.compress;
 
-import global.namespace.fun.io.api.archive.ArchiveEntrySink;
-import global.namespace.fun.io.api.archive.ArchiveFileOutput;
+import global.namespace.fun.io.api.ArchiveEntrySink;
+import global.namespace.fun.io.api.ArchiveFileOutput;
 import global.namespace.fun.io.api.Socket;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
