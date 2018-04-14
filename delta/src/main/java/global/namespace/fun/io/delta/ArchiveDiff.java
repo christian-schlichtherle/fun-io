@@ -24,17 +24,17 @@ import static global.namespace.fun.io.delta.MessageDigests.valueOf;
  *
  * @author Christian Schlichtherle
  */
-abstract class ArchiveFileDiff<F, S, D> {
+abstract class ArchiveDiff<F, S, D> {
 
     abstract MessageDigest digest();
 
-    abstract ArchiveFileSource<F> baseSource();
+    abstract ArchiveSource<F> baseSource();
 
-    abstract ArchiveFileSource<S> updateSource();
+    abstract ArchiveSource<S> updateSource();
 
     DeltaModel toModel() throws Exception { return apply(Engine::toModel); }
 
-    void to(ArchiveFileSink<D> delta) throws Exception {
+    void to(ArchiveSink<D> delta) throws Exception {
         apply(engine -> {
             delta.acceptWriter(engine::to);
             return null;
@@ -45,20 +45,20 @@ abstract class ArchiveFileDiff<F, S, D> {
         return baseSource().applyReader(baseInput -> updateSource().applyReader(updateInput -> function.apply(
                 new Engine() {
 
-                    ArchiveFileInput<F> baseInput() { return baseInput; }
+                    ArchiveInput<F> baseInput() { return baseInput; }
 
-                    ArchiveFileInput<S> updateInput() { return updateInput; }
+                    ArchiveInput<S> updateInput() { return updateInput; }
                 }
         )));
     }
 
     private abstract class Engine {
 
-        abstract ArchiveFileInput<F> baseInput();
+        abstract ArchiveInput<F> baseInput();
 
-        abstract ArchiveFileInput<S> updateInput();
+        abstract ArchiveInput<S> updateInput();
 
-        void to(final ArchiveFileOutput<D> deltaOutput) throws Exception {
+        void to(final ArchiveOutput<D> deltaOutput) throws Exception {
 
             final class Streamer {
 

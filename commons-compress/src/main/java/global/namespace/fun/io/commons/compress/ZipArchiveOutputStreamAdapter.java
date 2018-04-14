@@ -5,7 +5,7 @@
 package global.namespace.fun.io.commons.compress;
 
 import global.namespace.fun.io.api.ArchiveEntrySink;
-import global.namespace.fun.io.api.ArchiveFileOutput;
+import global.namespace.fun.io.api.ArchiveOutput;
 import global.namespace.fun.io.api.Socket;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
@@ -18,11 +18,11 @@ import static global.namespace.fun.io.bios.BIOS.copy;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Adapts a {@link ZipArchiveOutputStream} to an {@link ArchiveFileOutput}.
+ * Adapts a {@link ZipArchiveOutputStream} to an {@link ArchiveOutput}.
  *
  * @author Christian Schlichtherle
  */
-class ZipArchiveOutputStreamAdapter implements ArchiveFileOutput<ZipArchiveEntry> {
+class ZipArchiveOutputStreamAdapter implements ArchiveOutput<ZipArchiveEntry> {
 
     private final ZipArchiveOutputStream zip;
 

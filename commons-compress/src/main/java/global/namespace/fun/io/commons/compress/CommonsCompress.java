@@ -46,9 +46,9 @@ public final class CommonsCompress {
 
     private CommonsCompress() { }
 
-    /////////////////////////////////////
-    ////////// TRANSFORMATIONS //////////
-    /////////////////////////////////////
+      ///////////////////////////////////
+     ///////// TRANSFORMATIONS /////////
+    ///////////////////////////////////
 
     /** Returns a transformation which produces the LZ4 block format using the default parameters. */
     public static Transformation blockLZ4() {
@@ -105,39 +105,39 @@ public final class CommonsCompress {
     /** Returns a transformation which produces the LZMA2 compression format using the given preset. */
     public static Transformation lzma2(int preset) { return new LZMA2Transformation(preset); }
 
-    /////////////////////////////////////////
-    ////////// ARCHIVE FILE STORES //////////
-    /////////////////////////////////////////
+      ////////////////////////////
+     ///////// ARCHIVES /////////
+    ////////////////////////////
 
-    /** Returns an archive file store for the given JAR file. */
-    public static ArchiveFileStore<ZipArchiveEntry> jar(final File file) {
+    /** Returns an archive file store for access to the given JAR file. */
+    public static ArchiveStore<ZipArchiveEntry> jar(final File file) {
         requireNonNull(file);
-        return new ArchiveFileStore<ZipArchiveEntry>() {
+        return new ArchiveStore<ZipArchiveEntry>() {
 
             @Override
-            public Socket<ArchiveFileInput<ZipArchiveEntry>> input() {
+            public Socket<ArchiveInput<ZipArchiveEntry>> input() {
                 return () -> new ZipFileAdapter(new ZipFile(file));
             }
 
             @Override
-            public Socket<ArchiveFileOutput<ZipArchiveEntry>> output() {
+            public Socket<ArchiveOutput<ZipArchiveEntry>> output() {
                 return () -> new JarArchiveOutputStreamAdapter(new JarArchiveOutputStream(new FileOutputStream(file)));
             }
         };
     }
 
-    /** Returns an archive file store for the given ZIP file. */
-    public static ArchiveFileStore<ZipArchiveEntry> zip(final File file) {
+    /** Returns an archive file store for access to the given ZIP file. */
+    public static ArchiveStore<ZipArchiveEntry> zip(final File file) {
         requireNonNull(file);
-        return new ArchiveFileStore<ZipArchiveEntry>() {
+        return new ArchiveStore<ZipArchiveEntry>() {
 
             @Override
-            public Socket<ArchiveFileInput<ZipArchiveEntry>> input() {
+            public Socket<ArchiveInput<ZipArchiveEntry>> input() {
                 return () -> new ZipFileAdapter(new ZipFile(file));
             }
 
             @Override
-            public Socket<ArchiveFileOutput<ZipArchiveEntry>> output() {
+            public Socket<ArchiveOutput<ZipArchiveEntry>> output() {
                 return () -> new ZipArchiveOutputStreamAdapter(new ZipArchiveOutputStream(file));
             }
         };

@@ -9,20 +9,20 @@ import global.namespace.fun.io.api.function.XFunction;
 
 /**
  * An abstraction for safe reading of archive entries from an archive file without leaking resources.
- * An archive file source provides a {@linkplain #input() socket} for safe access to an {@link ArchiveFileInput}.
+ * An archive file source provides a {@linkplain #input() socket} for safe access to an {@link ArchiveInput}.
  *
  * @author Christian Schlichtherle
  */
-public interface ArchiveFileSource<E> {
+public interface ArchiveSource<E> {
 
     /** Returns the underlying archive file input socket for reading the archive entries. */
-    Socket<ArchiveFileInput<E>> input();
+    Socket<ArchiveInput<E>> input();
 
     /**
      * Loans an archive file input from the underlying {@linkplain #input() socket} to the given consumer.
      * The archive file input will be closed upon return from this method.
      */
-    default void acceptReader(XConsumer<? super ArchiveFileInput<E>> reader) throws Exception {
+    default void acceptReader(XConsumer<? super ArchiveInput<E>> reader) throws Exception {
         input().accept(reader);
     }
 
@@ -34,7 +34,7 @@ public interface ArchiveFileSource<E> {
      * It is an error to return the loaned archive file input from the given function or any other object which holds
      * on to it.
      */
-    default <U> U applyReader(XFunction<? super ArchiveFileInput<E>, ? extends U> reader) throws Exception {
+    default <U> U applyReader(XFunction<? super ArchiveInput<E>, ? extends U> reader) throws Exception {
         return input().apply(reader);
     }
 }

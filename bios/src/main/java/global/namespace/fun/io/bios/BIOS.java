@@ -44,9 +44,9 @@ public final class BIOS {
 
     private BIOS() { }
 
-    ////////////////////////////
-    ////////// CODECS //////////
-    ////////////////////////////
+      //////////////////////////
+     ///////// CODECS /////////
+    //////////////////////////
 
     /**
      * Uses {@link ObjectOutputStream}s and {@link ObjectInputStream}s to encode and decode object graphs to and from
@@ -69,9 +69,9 @@ public final class BIOS {
         return new XMLCodec(requireNonNull(xmlEncoders), requireNonNull(xmlDecoders));
     }
 
-    /////////////////////////////////////
-    ////////// TRANSFORMATIONS //////////
-    /////////////////////////////////////
+      ///////////////////////////////////
+     ///////// TRANSFORMATIONS /////////
+    ///////////////////////////////////
 
     /** Returns a transformation which encodes the data in Base64 using the basic encoder and decoder. */
     public static Transformation base64() { return base64(Base64.getEncoder(), Base64.getDecoder()); }
@@ -189,9 +189,9 @@ public final class BIOS {
     /** Returns a transformation which rotates each ASCII letter by the given number of positions. */
     public static Transformation rot(int positions) { return new ROTTransformation(positions); }
 
-    /////////////////////////////
-    ////////// SOURCES //////////
-    /////////////////////////////
+      ///////////////////////////
+     ///////// SOURCES /////////
+    ///////////////////////////
 
     /**
      * Returns a source which loads the resource with the given {@code name} using
@@ -235,9 +235,9 @@ public final class BIOS {
         return () -> () -> new UncloseableInputStream(in);
     }
 
-    ///////////////////////////
-    ////////// SINKS //////////
-    ///////////////////////////
+      /////////////////////////
+     ///////// SINKS /////////
+    /////////////////////////
 
     /**
      * Returns a sink which writes to standard error without ever closing it.
@@ -264,9 +264,9 @@ public final class BIOS {
         return () -> () -> new UncloseableOutputStream(out);
     }
 
-    ////////////////////////////
-    ////////// STORES //////////
-    ////////////////////////////
+      //////////////////////////
+     ///////// STORES /////////
+    //////////////////////////
 
     /** Returns a store for the given file. */
     public static Store file(File f) { return path(f.toPath()); }
@@ -295,51 +295,51 @@ public final class BIOS {
         return preferences(Preferences.userNodeForPackage(classInPackage), key);
     }
 
-    /////////////////////////////////////////
-    ////////// ARCHIVE FILE STORES //////////
-    /////////////////////////////////////////
+      ////////////////////////////
+     ///////// ARCHIVES /////////
+    ////////////////////////////
 
-    /** Returns an archive file store for the given directory. */
-    public static ArchiveFileStore<Path> directory(File directory) { return directory(directory.toPath()); }
+    /** Returns an archive store for transparent access to the given directory. */
+    public static ArchiveStore<Path> directory(File directory) { return directory(directory.toPath()); }
 
-    /** Returns an archive file store for the given directory. */
-    public static ArchiveFileStore<Path> directory(Path directory) {
+    /** Returns an archive store for transparent access to the given directory. */
+    public static ArchiveStore<Path> directory(Path directory) {
         return new DirectoryStore(requireNonNull(directory));
     }
 
-    /** Returns an archive file store for the given JAR file. */
-    public static ArchiveFileStore<ZipEntry> jar(final File file) {
+    /** Returns an archive store for access to the given JAR file. */
+    public static ArchiveStore<ZipEntry> jar(final File file) {
         requireNonNull(file);
-        return new ArchiveFileStore<ZipEntry>() {
+        return new ArchiveStore<ZipEntry>() {
 
             @Override
-            public Socket<ArchiveFileInput<ZipEntry>> input() { return () -> new ZipFileAdapter(new ZipFile(file)); }
+            public Socket<ArchiveInput<ZipEntry>> input() { return () -> new ZipFileAdapter(new ZipFile(file)); }
 
             @Override
-            public Socket<ArchiveFileOutput<ZipEntry>> output() {
+            public Socket<ArchiveOutput<ZipEntry>> output() {
                 return () -> new JarOutputStreamAdapter(new JarOutputStream(new FileOutputStream(file)));
             }
         };
     }
 
-    /** Returns an archive file store for the given ZIP file. */
-    public static ArchiveFileStore<ZipEntry> zip(final File file) {
+    /** Returns an archive store for access to the given ZIP file. */
+    public static ArchiveStore<ZipEntry> zip(final File file) {
         requireNonNull(file);
-        return new ArchiveFileStore<ZipEntry>() {
+        return new ArchiveStore<ZipEntry>() {
 
             @Override
-            public Socket<ArchiveFileInput<ZipEntry>> input() { return () -> new ZipFileAdapter(new ZipFile(file)); }
+            public Socket<ArchiveInput<ZipEntry>> input() { return () -> new ZipFileAdapter(new ZipFile(file)); }
 
             @Override
-            public Socket<ArchiveFileOutput<ZipEntry>> output() {
+            public Socket<ArchiveOutput<ZipEntry>> output() {
                 return () -> new ZipOutputStreamAdapter(new ZipOutputStream(new FileOutputStream(file)));
             }
         };
     }
 
-    ///////////////////////////////
-    ////////// UTILITIES //////////
-    ///////////////////////////////
+      /////////////////////////////
+     ///////// UTILITIES /////////
+    /////////////////////////////
 
     /**
      * Copies the data from the given source to the given sink.

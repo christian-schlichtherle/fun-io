@@ -26,15 +26,15 @@ import static java.util.Optional.of;
  *
  * @author Christian Schlichtherle
  */
-final class DirectoryStore implements ArchiveFileStore<Path> {
+final class DirectoryStore implements ArchiveStore<Path> {
 
     private final Path directory;
 
     DirectoryStore(final Path directory) { this.directory = directory; }
 
     @Override
-    public Socket<ArchiveFileInput<Path>> input() {
-        return () -> new ArchiveFileInput<Path>() {
+    public Socket<ArchiveInput<Path>> input() {
+        return () -> new ArchiveInput<Path>() {
 
             @Override
             public Iterator<ArchiveEntrySource<Path>> iterator() {
@@ -59,8 +59,8 @@ final class DirectoryStore implements ArchiveFileStore<Path> {
     }
 
     @Override
-    public Socket<ArchiveFileOutput<Path>> output() {
-        return () -> new ArchiveFileOutput<Path>() {
+    public Socket<ArchiveOutput<Path>> output() {
+        return () -> new ArchiveOutput<Path>() {
 
             public boolean isJar() { return false; }
 

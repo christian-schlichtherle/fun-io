@@ -6,7 +6,7 @@ package global.namespace.fun.io.commons.compress;
 
 import global.namespace.fun.io.api.ArchiveEntrySink;
 import global.namespace.fun.io.api.ArchiveEntrySource;
-import global.namespace.fun.io.api.ArchiveFileInput;
+import global.namespace.fun.io.api.ArchiveInput;
 import global.namespace.fun.io.api.Socket;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
@@ -21,11 +21,11 @@ import static global.namespace.fun.io.bios.BIOS.copy;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Adapts a {@link ZipFile} to an {@link ArchiveFileInput}.
+ * Adapts a {@link ZipFile} to an {@link ArchiveInput}.
  *
  * @author Christian Schlichtherle
  */
-final class ZipFileAdapter implements ArchiveFileInput<ZipArchiveEntry> {
+final class ZipFileAdapter implements ArchiveInput<ZipArchiveEntry> {
 
     private final ZipFile zip;
 

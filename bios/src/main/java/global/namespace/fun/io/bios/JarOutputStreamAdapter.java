@@ -5,14 +5,14 @@
 package global.namespace.fun.io.bios;
 
 import global.namespace.fun.io.api.ArchiveEntrySink;
-import global.namespace.fun.io.api.ArchiveFileOutput;
+import global.namespace.fun.io.api.ArchiveOutput;
 
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
 /**
- * Adapts a {@link JarOutputStream} to an {@link ArchiveFileOutput}.
+ * Adapts a {@link JarOutputStream} to an {@link ArchiveOutput}.
  *
  * @author Christian Schlichtherle
  */

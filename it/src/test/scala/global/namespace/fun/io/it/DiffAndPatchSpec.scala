@@ -7,7 +7,7 @@ package global.namespace.fun.io.it
 import java.io._
 import java.security.MessageDigest
 
-import global.namespace.fun.io.api.{ArchiveFileInput, ArchiveFileSource, ArchiveFileStore}
+import global.namespace.fun.io.api.{ArchiveInput, ArchiveSource, ArchiveStore}
 import global.namespace.fun.io.bios.BIOS
 import global.namespace.fun.io.bios.BIOS._
 import global.namespace.fun.io.commons.compress.CommonsCompress
@@ -28,14 +28,14 @@ class DiffAndPatchSpec extends WordSpec {
 
   "Diffing two archive files and patching the first with the delta" should {
     "produce a clone of the second archive file" in {
-      forAllArchiveFiles { (first, second) => { implicit factory =>
-        withTempArchiveFile { delta => withTempArchiveFile { clone =>
+      forAllArchives { (first, second) => { implicit factory =>
+        withTempArchive { delta => withTempArchive { clone =>
 
           diff first first second second digest sha1 to delta
           patch base first delta delta to clone
 
           val secondEntries: Set[String] = second applyReader {
-            (_: ArchiveFileInput[_]).asScala.filterNot(_.isDirectory).map(_.name).toSet
+            (_: ArchiveInput[_]).asScala.filterNot(_.isDirectory).map(_.name).toSet
           }
 
           val model = (diff base second update clone digest md5).toModel
@@ -51,14 +51,14 @@ class DiffAndPatchSpec extends WordSpec {
 
 private object DiffAndPatchSpec {
 
-  type ArchiveFileStoreFactory[E] = File => ArchiveFileStore[E]
+  type ArchiveStoreFactory[E] = File => ArchiveStore[E]
 
-  def forAllArchiveFiles(test: (ArchiveFileSource[_], ArchiveFileSource[_]) => ArchiveFileStoreFactory[_] => Any): Unit = {
+  def forAllArchives(test: (ArchiveSource[_], ArchiveSource[_]) => ArchiveStoreFactory[_] => Any): Unit = {
     test(directory(deltaModelDirectory), directory(deltaDtoDirectory))(directory(_: File))
     forAll(Factories)(factory => test(factory(Test1JarFile), factory(Test2JarFile))(factory))
   }
 
-  private val Factories: TableFor1[ArchiveFileStoreFactory[_]] = Table(
+  private val Factories: TableFor1[ArchiveStoreFactory[_]] = Table(
     "archive file store factory",
     CommonsCompress.jar(_: File),
     CommonsCompress.zip(_: File),
@@ -66,7 +66,7 @@ private object DiffAndPatchSpec {
     BIOS.zip(_: File)
   )
 
-  def withTempArchiveFile(test: ArchiveFileStore[_] => Any)(implicit factory: ArchiveFileStoreFactory[_]): Unit = {
+  def withTempArchive(test: ArchiveStore[_] => Any)(implicit factory: ArchiveStoreFactory[_]): Unit = {
     val file = File.createTempFile("temp", null)
     file delete ()
     try {

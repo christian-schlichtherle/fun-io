@@ -38,16 +38,16 @@ public class Delta {
      * Returns a builder for comparing a base archive file to an update archive file and generating a delta archive
      * file.
      */
-    public static ArchiveFileDiffBuilder diff() { return new ArchiveFileDiffBuilder(); }
+    public static ArchiveDiffBuilder diff() { return new ArchiveDiffBuilder(); }
 
-    /** Returns a builder for patching a base archive file to an update archive file using a delta archive file. */
-    public static ArchiveFilePatchBuilder patch() { return new ArchiveFilePatchBuilder(); }
+    /** Returns a builder for patching a base archive file with a delta archive file to an update archive file. */
+    public static ArchivePatchBuilder patch() { return new ArchivePatchBuilder(); }
 
-    static <E> void encodeModel(ArchiveFileOutput<E> output, DeltaModel model) throws Exception {
+    static <E> void encodeModel(ArchiveOutput<E> output, DeltaModel model) throws Exception {
         encodeModel(output.sink(META_INF_DELTA_JSON), model);
     }
 
-    static <E> DeltaModel decodeModel(ArchiveFileInput<E> input) throws Exception {
+    static <E> DeltaModel decodeModel(ArchiveInput<E> input) throws Exception {
         return decodeModel(input.source(META_INF_DELTA_JSON).orElseThrow(() ->
                 new InvalidDeltaArchiveFileException(new MissingArchiveEntryException(META_INF_DELTA_JSON))));
     }

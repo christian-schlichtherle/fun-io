@@ -1,7 +1,7 @@
 package global.namespace.fun.io.delta;
 
-import global.namespace.fun.io.api.ArchiveFileSink;
-import global.namespace.fun.io.api.ArchiveFileSource;
+import global.namespace.fun.io.api.ArchiveSink;
+import global.namespace.fun.io.api.ArchiveSource;
 import global.namespace.fun.io.delta.model.DeltaModel;
 
 import java.security.MessageDigest;
@@ -16,40 +16,40 @@ import static java.util.Optional.empty;
  * @author Christian Schlichtherle
  */
 @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "ConstantConditions"})
-public class ArchiveFileDiffBuilder {
+public class ArchiveDiffBuilder {
 
     private Optional<MessageDigest> digest = empty();
 
-    private Optional<ArchiveFileSource<?>> base = empty(), update = empty();
+    private Optional<ArchiveSource<?>> base = empty(), update = empty();
 
-    ArchiveFileDiffBuilder() { }
+    ArchiveDiffBuilder() { }
 
     /** Returns this archive file diff builder with the given message digest. */
-    public ArchiveFileDiffBuilder digest(final MessageDigest digest) {
+    public ArchiveDiffBuilder digest(final MessageDigest digest) {
         this.digest = Optional.of(digest);
         return this;
     }
 
     /**
      * Returns this archive file diff builder with the given source for reading the base archive file.
-     * This is an alias for {@link #base(ArchiveFileSource)}.
+     * This is an alias for {@link #base(ArchiveSource)}.
      */
-    public ArchiveFileDiffBuilder first(ArchiveFileSource<?> base) { return base(base); }
+    public ArchiveDiffBuilder first(ArchiveSource<?> base) { return base(base); }
 
     /** Returns this archive file diff builder with the given source for reading the base archive file. */
-    public ArchiveFileDiffBuilder base(final ArchiveFileSource<?> base) {
+    public ArchiveDiffBuilder base(final ArchiveSource<?> base) {
         this.base = Optional.of(base);
         return this;
     }
 
     /**
      * Returns this archive file diff builder with the given source for reading the update archive file.
-     * This is an alias for {@link #update(ArchiveFileSource)}.
+     * This is an alias for {@link #update(ArchiveSource)}.
      */
-    public ArchiveFileDiffBuilder second(ArchiveFileSource<?> update) { return update(update); }
+    public ArchiveDiffBuilder second(ArchiveSource<?> update) { return update(update); }
 
     /** Returns this archive file diff builder with the given source for reading the update archive file. */
-    public ArchiveFileDiffBuilder update(final ArchiveFileSource<?> update) {
+    public ArchiveDiffBuilder update(final ArchiveSource<?> update) {
         this.update = Optional.of(update);
         return this;
     }
@@ -65,22 +65,22 @@ public class ArchiveFileDiffBuilder {
 
     /** Writes the delta archive file computed from the base and update archive files to the given sink. */
     @SuppressWarnings("unchecked")
-    public void to(ArchiveFileSink<?> delta) throws Exception { build().to(delta); }
+    public void to(ArchiveSink<?> delta) throws Exception { build().to(delta); }
 
-    private ArchiveFileDiff build() {
+    private ArchiveDiff build() {
         return create(digest.orElseGet(MessageDigests::sha1), base.get(), update.get());
     }
 
-    private static ArchiveFileDiff create(MessageDigest digest,
-                                          ArchiveFileSource<?> baseSource,
-                                          ArchiveFileSource<?> updateSource) {
-        return new ArchiveFileDiff() {
+    private static ArchiveDiff create(MessageDigest digest,
+                                      ArchiveSource<?> baseSource,
+                                      ArchiveSource<?> updateSource) {
+        return new ArchiveDiff() {
 
             MessageDigest digest() { return digest; }
 
-            ArchiveFileSource<?> baseSource() { return baseSource; }
+            ArchiveSource<?> baseSource() { return baseSource; }
 
-            ArchiveFileSource<?> updateSource() { return updateSource; }
+            ArchiveSource<?> updateSource() { return updateSource; }
         };
     }
 }

@@ -6,7 +6,7 @@ package global.namespace.fun.io.bios;
 
 import global.namespace.fun.io.api.ArchiveEntrySink;
 import global.namespace.fun.io.api.ArchiveEntrySource;
-import global.namespace.fun.io.api.ArchiveFileInput;
+import global.namespace.fun.io.api.ArchiveInput;
 import global.namespace.fun.io.api.Socket;
 
 import java.io.IOException;
@@ -21,11 +21,11 @@ import static global.namespace.fun.io.bios.BIOS.copy;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Adapts a {@link ZipFile} to an {@link ArchiveFileInput}.
+ * Adapts a {@link ZipFile} to an {@link ArchiveInput}.
  *
  * @author Christian Schlichtherle
  */
-final class ZipFileAdapter implements ArchiveFileInput<ZipEntry> {
+final class ZipFileAdapter implements ArchiveInput<ZipEntry> {
 
     private final ZipFile zip;
 

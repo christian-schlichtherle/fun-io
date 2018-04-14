@@ -5,13 +5,13 @@
 package global.namespace.fun.io.commons.compress;
 
 import global.namespace.fun.io.api.ArchiveEntrySink;
-import global.namespace.fun.io.api.ArchiveFileOutput;
+import global.namespace.fun.io.api.ArchiveOutput;
 import org.apache.commons.compress.archivers.jar.JarArchiveEntry;
 import org.apache.commons.compress.archivers.jar.JarArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 
 /**
- * Adapts a {@link JarArchiveOutputStream} to an {@link ArchiveFileOutput}.
+ * Adapts a {@link JarArchiveOutputStream} to an {@link ArchiveOutput}.
  *
  * @author Christian Schlichtherle
  */

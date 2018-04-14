@@ -1,12 +1,12 @@
 # Fun I/O [![Maven Central](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-api.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22) [![Build Status](https://api.travis-ci.org/christian-schlichtherle/fun-io.svg)](https://travis-ci.org/christian-schlichtherle/fun-io)
 
-Fun I/O provides functional, high level abstractions for codecs, transformations, sockets, stores, archive stores et al.
+Fun I/O provides functional, high level abstractions for codecs, transformations, sockets, stores, archives et al.
 Fun I/O supports Java 8 or later and Scala 2.10, 2.11 and 2.12 and is covered by the Apache License, version 2.0.
 
 ## Features
 
-+ Composes low level `InputStream` and `OutputStream` objects into high level codecs, transformations, stores and
-  archive stores.
++ Composes low level `InputStream`s and `OutputStream`s into high level `Codec`s, `Transformation`s, `Store`s, 
+  `ArchiveStore`s et al.
 + These abstractions are easy to implement, highly reusable and provide a high level of interoperability so that they 
   can be easily composed into complete I/O subsystems.
 + Proper resource management: Streams are properly closed, even if there is an exception in a nested constructor.
@@ -113,7 +113,7 @@ File delta = ...;
 diff().base(jar(base)).update(jar(update)).to(jar(delta));
 ```
 
-If you wanted to use the `archive-io-bios` module instead of the `archive-io-commons-compress` module, then, apart from
+If you wanted to use the `fun-io-bios` module instead of the `fun-io-commons-compress` module, then, apart from
 configuring the class path, you would only have to edit the `import` statement as shown in the next example.
 
 #### Patching a JAR file with a delta JAR file to another JAR file
@@ -167,7 +167,7 @@ The following diagram shows the module structure:
 
 The modules are:
 
-+ `fun-io-api`: The API provides interfaces for codes, transformations, sockets, stores, archive file stores et al.
++ `fun-io-api`: The API provides interfaces for `Codec`s, `Transformation`s, `Socket`s, `Store`s, `ArchiveStore`s et al.
 + `fun-io-scala-api`: The Scala API extends the Java API with operators and implicit conversions to improvie the user 
    experience in Scala.
 + `fun-io-bios`: The Basic Input/Output System (pun intended) provides basic implementations of the Fun I/O API.
@@ -199,8 +199,8 @@ The modules are:
     + `preferences` stores data in a preferences node using a given key.
     + `systemPreferences` stores data in a system preferences nodes representing a given class.
     + `userPreferences` stores data in a user preferences nodes representing a given class.
-  + It also provides the following `ArchiveFileStore` functions:
-    + `directory` provides access to a directory as if it were an archive file.
+  + It also provides the following `ArchiveStore` functions:
+    + `directory` provides transparent access to a directory as if it were an archive file.
     + `jar` provides access to JAR files.
     + `zip` provides access to ZIP files.
   + It also provides the following utility functions:
@@ -216,7 +216,7 @@ The modules are:
     + `gzip` compresses/decompresses data using the GZIP compression format.
     + `lzma` compresses/decompresses data using the LZMA compression format.
     + `lzma2` compresses/decompresses data using the LZMA2 compression format.
-  + It also provides the following `ArchiveFileStore` functions:
+  + It also provides the following `ArchiveStore` functions:
     + `jar` provides access to JAR files.
     + `zip` provides access to ZIP files.
 + `fun-io-delta` provides utility functions for diffing and patching archive files or directories.

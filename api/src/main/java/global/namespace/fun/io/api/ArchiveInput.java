@@ -10,10 +10,10 @@ import java.util.Optional;
 /**
  * An abstraction for reading archive entries from an archive file.
  *
- * @see ArchiveFileOutput
+ * @see ArchiveOutput
  * @author Christian Schlichtherle
  */
-public interface ArchiveFileInput<E> extends Iterable<ArchiveEntrySource<E>>, Closeable {
+public interface ArchiveInput<E> extends Iterable<ArchiveEntrySource<E>>, Closeable {
 
     /** Returns a source for reading the archive entry with the given name, if it exists. */
     Optional<ArchiveEntrySource<E>> source(String name);
