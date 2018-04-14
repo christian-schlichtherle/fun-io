@@ -156,7 +156,7 @@ DeltaModel model = diff().base(directory(base)).update(directory(update)).toMode
 
 The delta model has properties describing the changed, unchanged, added and removed entries.
 
-## Module Structure
+## Module Structure and Features
 
 Fun I/O has a modular structure.
 Its artifacts are hosted on Maven Central with the common group ID 
