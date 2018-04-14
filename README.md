@@ -10,9 +10,9 @@ Fun I/O supports Java 8 and Scala 2.10, 2.11 and 2.12 and comes with the Apache 
 The following Scala code prints `"Hello world!"` - including the quotes:
 
 ```scala
+import global.namespace.fun.io.api._             // from module `fun-io-api`
 import global.namespace.fun.io.bios.BIOS._       // from module `fun-io-bios`
 import global.namespace.fun.io.jackson.Jackson._ // from module `fun-io-jackson`
-import global.namespace.fun.io.scala.api._       // from module `fun-io-scala-api`
 
 val encoder: Encoder = json encoder stdout
 encoder encode "Hello world!"
@@ -22,6 +22,7 @@ Here's the equivalent in Java:
 
 ```java
 import global.namespace.fun.io.api.*;
+
 import static global.namespace.fun.io.bios.BIOS.*;
 import static global.namespace.fun.io.jackson.Jackson.*;
 
@@ -41,6 +42,10 @@ Note that the `encoder` object is virtually stateless, and hence reusable.
 Here is a more realistic, yet incomplete example in Scala:
 
 ```scala
+import global.namespace.fun.io.api._             // from module `fun-io-api`
+import global.namespace.fun.io.bios.BIOS._       // from module `fun-io-bios`
+import global.namespace.fun.io.jackson.Jackson._ // from module `fun-io-jackson`
+import global.namespace.fun.io.scala.api._       // from module `fun-io-scala-api`
 import java.nio.file.Paths
 
 def ciphers(forOutput: Boolean): javax.crypto.Cipher = ??? // needs to return an initialized cipher
@@ -54,8 +59,12 @@ Note that the `<<` operator is associative.
 Here's the equivalent in Java: 
 
 ```java
+import global.namespace.fun.io.api.*;
 import global.namespace.fun.io.api.function.*;
 import java.nio.file.Paths;
+
+import static global.namespace.fun.io.bios.BIOS.*;
+import static global.namespace.fun.io.jackson.Jackson.*;
 
 ...
 
