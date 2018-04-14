@@ -17,7 +17,7 @@ package global.namespace.fun.io.bios
 
 import java.io.{InputStream, OutputStream}
 
-import global.namespace.fun.io.api.function.XConsumer
+import global.namespace.fun.io.scala.api._
 import org.mockito.Mockito._
 import org.scalatest.WordSpec
 import org.scalatest.mockito.MockitoSugar.mock
@@ -29,9 +29,7 @@ class BIOSSpec extends WordSpec {
       "given an input stream" in {
         val in = mock[InputStream]
         val source = BIOS stream in
-        source acceptReader new XConsumer[InputStream] {
-          def accept(in: InputStream): Unit = in read ()
-        }
+        source acceptReader ((_: InputStream) read ())
         verify(in) read ()
         verify(in, never) close ()
       }
@@ -39,9 +37,7 @@ class BIOSSpec extends WordSpec {
       "given an output stream" in {
         val out = mock[OutputStream]
         val sink = BIOS stream out
-        sink acceptWriter new XConsumer[OutputStream] {
-          def accept(out: OutputStream): Unit = out write 0
-        }
+        sink acceptWriter ((_: OutputStream) write 0)
         verify(out) write 0
         verify(out) flush ()
         verify(out, never) close ()

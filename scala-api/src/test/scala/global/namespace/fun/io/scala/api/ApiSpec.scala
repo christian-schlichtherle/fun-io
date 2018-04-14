@@ -27,7 +27,7 @@ class ApiSpec extends WordSpec {
   "A socket" should {
     "be creatable from a by-name parameter" in {
       var count = 0
-      val resource = socket {
+      val resource: Socket[InputStream] = () => {
         count += 1
         inputStream
       }
@@ -42,10 +42,10 @@ class ApiSpec extends WordSpec {
   "A source" should {
     "be creatable from a by-name parameter" in {
       var count = 0
-      val resource = source {
+      val resource: Source = () => (() => {
         count += 1
         inputStream
-      }
+      }): Socket[InputStream]
       def content: String = resource applyReader contentAsString _
       1 to Iterations foreach { _ =>
         content shouldBe Text
@@ -57,10 +57,10 @@ class ApiSpec extends WordSpec {
   "A sink" should {
     "be creatable from a by-name parameter" in {
       var count = 0
-      val resource = sink {
+      val resource: Sink = () => (() => {
         count += 1
         outputStream
-      }
+      }): Socket[OutputStream]
       def content: String = resource applyWriter { out: OutputStream =>
         out write Text.getBytes
         out.toString
@@ -81,7 +81,7 @@ private object ApiSpec {
 
   private def contentAsString(in: InputStream) = scala.io.Source.fromInputStream(in).mkString
 
-  private def inputStream = new ByteArrayInputStream(Text.getBytes)
+  private def inputStream: InputStream = new ByteArrayInputStream(Text.getBytes)
 
-  private def outputStream = new ByteArrayOutputStream
+  private def outputStream: OutputStream = new ByteArrayOutputStream
 }

@@ -63,7 +63,7 @@ package object api {
     def <<(s: Store): ConnectedCodec = c connect s
   }
 
-  implicit def xConsumer[A](consumer: A => Unit): XConsumer[A] = new XConsumer[A] {
+  implicit def xConsumer[A](consumer: A => Any): XConsumer[A] = new XConsumer[A] {
 
     def accept(t: A): Unit = consumer(t)
   }
@@ -78,30 +78,18 @@ package object api {
     def get(): A = a
   }
 
-  /** Creates a socket from the given by-name parameter.
-    * This method is primarily required for Scala 2.10 and 2.11.
-    * In Scala 2.12, the same effect could be achieved by writing the expression `(() => c): Socket[A]`.
-    */
-  def socket[A <: AutoCloseable](c: => A): Socket[A] = new Socket[A] {
+  implicit def socket[A <: AutoCloseable](provider: () => A): Socket[A] = new Socket[A] {
 
-    def get(): A = c
+    def get(): A = provider()
   }
 
-  /** Creates a source from the given by-name parameter.
-    * This method is primarily required for Scala 2.10 and 2.11.
-    * In Scala 2.12, the same effect could be achieved by writing the expression `(() => () => in): Source`.
-    */
-  def source(in: => InputStream): Source = new Source {
+  implicit def source(provider: () => Socket[_ <: InputStream]): Source = new Source {
 
-    def input(): Socket[InputStream] = socket(in)
+    def input(): Socket[InputStream] = socket(() => provider().get)
   }
 
-  /** Creates a sink from the given by-name parameter.
-    * This method is primarily required for Scala 2.10 and 2.11.
-    * In Scala 2.12, the same effect could be achieved by writing the expression `(() => () => out): Sink`.
-    */
-  def sink(out: => OutputStream): Sink = new Sink {
+  implicit def sink(provider: () => Socket[_ <: OutputStream]): Sink = new Sink {
 
-    def output(): Socket[OutputStream] = socket(out)
+    def output(): Socket[OutputStream] = socket(() => provider().get)
   }
 }
