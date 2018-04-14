@@ -42,7 +42,7 @@ Encoder encoder = json().encoder(stdout());
 encoder.encode("Hello world!");
 ```
 
-The preceding code would encode the string `"Hello world!` to JSON and write it to `System.out`.
+The preceding code encodes the string `"Hello world!` to JSON and writes it to `System.out`.
 The call to `stdout()` wraps `System.out` in a socket which ignores any call to the `OutputStream.close()` method as it 
 would be inappropriate to do that on `System.out`.
 The `stream` function allows to do the same for any given `InputStream` or `OutputStream`.
@@ -170,8 +170,7 @@ The modules are:
 + `fun-io-api`: The API provides interfaces for codes, transformations, sockets, stores, archive file stores et al.
 + `fun-io-scala-api`: The Scala API extends the Java API with operators and implicit conversions to improvie the user 
    experience in Scala.
-+ `fun-io-bios`: The Basic Input/Output System (pun intended) provides basic implementations for encoding, transforming, 
-  storing or streaming data.
++ `fun-io-bios`: The Basic Input/Output System (pun intended) provides basic implementations of the Fun I/O API.
   + The `BIOS` class is a facade which provides the following `Codec` functions:
     + `serialization` serializes/deserializes objects using `ObjectOutputStream`/`ObjectInputStream`.
     + `xml` encodes/decodes objects using `XMLEncoder`/`XMLDecoder`.
@@ -207,7 +206,7 @@ The modules are:
   + It also provides the following utility functions:
     + `copy` is a high performance algorithm for copying data from a `Source` to a `Sink`, including `Store`s.
     + `clone` duplicates an object by serializing it to memory and decoding it again.  
-+ `fun-io-commons-compress`: Depends on [Apache Commons Compress] to provide transformations and archive file stores.
++ `fun-io-commons-compress`: Depends on [Apache Commons Compress] to provide implementations of the Fun I/O API.
   + The `CommonsCompress` class is a facade which provides the following `Transformation` functions: 
     + `blockLZ4` compresses/decompresses data using the LZ4 block format.
     + `bzip2` compresses decompresses data using the BZIP2 format.
@@ -220,17 +219,17 @@ The modules are:
   + It also provides the following `ArchiveFileStore` functions:
     + `jar` provides access to JAR files.
     + `zip` provides access to ZIP files.
-+ `fun-io-delta` provides utility functions.
++ `fun-io-delta` provides utility functions for diffing and patching archive files or directories.
   + The `Delta` class is a facade which provides the following utility functions:
     + `diff` compares two archive files or directories to compute a delta archive file or directory or model.
     + `patch` patches an archive file or directory with a delta archive file or directory.
-+ `fun-io-jackson`: Depends on [Jackson Databind] to provide codecs. 
++ `fun-io-jackson`: Depends on [Jackson Databind] to provide implementations of the Fun I/O API. 
   + The `Jackson` class is a facade which provides the following `Codec` functions:
     + `json` marshals/unmarshals objects to/from JSON using Jackson Databind.
-+ `fun-io-jaxb`: Depends on [JAXB] to provide codecs.
++ `fun-io-jaxb`: Depends on [JAXB] to provide implementations of the Fun I/O API.
   + The `JAXB` class is a facade which provides the following `Codec` functions:
     + `xml` marshals/unmarshals objects to/from XML using the JAXB reference implementation.
-+ `fun-io-xz`: Depends on [XZ for Java] to provide transformations.
++ `fun-io-xz`: Depends on [XZ for Java] to provide implementations of the Fun I/O API.
   + The `XZ` class is a facade which provides the following `Transformation` functions:
     + `lzma2` compresses/decompresses data using the LZMA2 compression format.
     + `xz` compresses/decompresses data using the XZ compression format.
