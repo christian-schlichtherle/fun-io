@@ -200,7 +200,7 @@ The modules are:
     + `systemPreferences` stores data in a system preferences nodes representing a given class.
     + `userPreferences` stores data in a user preferences nodes representing a given class.
   + It also provides the following `ArchiveStore` functions:
-    + `directory` provides transparent access to a directory as if it were an archive file.
+    + `directory` provides access to a directory as if it were an archive file.
     + `jar` provides access to JAR files.
     + `zip` provides access to ZIP files.
   + It also provides the following utility functions:

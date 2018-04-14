@@ -109,7 +109,7 @@ public final class CommonsCompress {
      ///////// ARCHIVES /////////
     ////////////////////////////
 
-    /** Returns an archive file store for access to the given JAR file. */
+    /** Returns an archive store for access to the given JAR file. */
     public static ArchiveStore<ZipArchiveEntry> jar(final File file) {
         requireNonNull(file);
         return new ArchiveStore<ZipArchiveEntry>() {
@@ -126,7 +126,7 @@ public final class CommonsCompress {
         };
     }
 
-    /** Returns an archive file store for access to the given ZIP file. */
+    /** Returns an archive store for access to the given ZIP file. */
     public static ArchiveStore<ZipArchiveEntry> zip(final File file) {
         requireNonNull(file);
         return new ArchiveStore<ZipArchiveEntry>() {
