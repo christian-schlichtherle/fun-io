@@ -21,7 +21,7 @@ import global.namespace.fun.io.api.Codec;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Provides static factory methods for a JSON codec.
+ * This facade provides static factory methods for a JSON codec.
  *
  * @author Christian Schlichtherle
  */

@@ -25,7 +25,7 @@ import javax.xml.bind.Unmarshaller;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Provides static factory methods for a JAXB codec.
+ * This facade provides static factory methods for a JAXB codec.
  *
  * @author Christian Schlichtherle
  */

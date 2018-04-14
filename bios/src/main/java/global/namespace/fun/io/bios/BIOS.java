@@ -16,6 +16,9 @@
 package global.namespace.fun.io.bios;
 
 import global.namespace.fun.io.api.*;
+import global.namespace.fun.io.api.archive.ArchiveFileInput;
+import global.namespace.fun.io.api.archive.ArchiveFileOutput;
+import global.namespace.fun.io.api.archive.ArchiveFileStore;
 import global.namespace.fun.io.api.function.XFunction;
 import global.namespace.fun.io.api.function.XSupplier;
 
@@ -26,15 +29,17 @@ import java.io.*;
 import java.nio.file.Path;
 import java.util.Base64;
 import java.util.Optional;
+import java.util.jar.JarOutputStream;
 import java.util.prefs.Preferences;
-import java.util.zip.Deflater;
-import java.util.zip.Inflater;
+import java.util.zip.*;
 
 import static global.namespace.fun.io.api.Store.BUFSIZE;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Provides static factory methods for sockets, stores, transformations, codecs and more.
+ * This facade provides static factory methods for sockets, stores, transformations, codecs, archive file stores and
+ * more.
+ * It depends on the Java Runtime Environment (JRE) only.
  * The abbreviation stands for Basic Input/Output System (pun intended).
  *
  * @author Christian Schlichtherle
@@ -342,5 +347,47 @@ public final class BIOS {
      */
     public static <T extends Serializable> T clone(T t, int bufferSize) throws Exception {
         return serialization().connect(memory(bufferSize)).clone(t);
+    }
+
+    /////////////////////////////////////////
+    ////////// ARCHIVE FILE STORES //////////
+    /////////////////////////////////////////
+
+    /** Returns an archive file store for the given directory. */
+    public static ArchiveFileStore<Path> directory(File directory) { return directory(directory.toPath()); }
+
+    /** Returns an archive file store for the given directory. */
+    public static ArchiveFileStore<Path> directory(Path directory) {
+        return new DirectoryStore(requireNonNull(directory));
+    }
+
+    /** Returns an archive file store for the given JAR file. */
+    public static ArchiveFileStore<ZipEntry> jar(final File file) {
+        requireNonNull(file);
+        return new ArchiveFileStore<ZipEntry>() {
+
+            @Override
+            public Socket<ArchiveFileInput<ZipEntry>> input() { return () -> new ZipFileAdapter(new ZipFile(file)); }
+
+            @Override
+            public Socket<ArchiveFileOutput<ZipEntry>> output() {
+                return () -> new JarOutputStreamAdapter(new JarOutputStream(new FileOutputStream(file)));
+            }
+        };
+    }
+
+    /** Returns an archive file store for the given ZIP file. */
+    public static ArchiveFileStore<ZipEntry> zip(final File file) {
+        requireNonNull(file);
+        return new ArchiveFileStore<ZipEntry>() {
+
+            @Override
+            public Socket<ArchiveFileInput<ZipEntry>> input() { return () -> new ZipFileAdapter(new ZipFile(file)); }
+
+            @Override
+            public Socket<ArchiveFileOutput<ZipEntry>> output() {
+                return () -> new ZipOutputStreamAdapter(new ZipOutputStream(new FileOutputStream(file)));
+            }
+        };
     }
 }

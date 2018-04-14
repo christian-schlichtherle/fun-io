@@ -15,27 +15,44 @@
  */
 package global.namespace.fun.io.commons.compress;
 
+import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.api.Transformation;
+import global.namespace.fun.io.api.archive.ArchiveFileInput;
+import global.namespace.fun.io.api.archive.ArchiveFileOutput;
+import global.namespace.fun.io.api.archive.ArchiveFileStore;
+import org.apache.commons.compress.archivers.jar.JarArchiveOutputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.compress.compressors.deflate.DeflateParameters;
 import org.apache.commons.compress.compressors.gzip.GzipParameters;
 import org.apache.commons.compress.compressors.lz4.BlockLZ4CompressorOutputStream;
 import org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorOutputStream;
 import org.apache.commons.compress.compressors.lz77support.Parameters;
-import org.apache.commons.compress.compressors.pack200.Pack200Strategy;
 import org.apache.commons.compress.compressors.snappy.FramedSnappyDialect;
 import org.apache.commons.compress.compressors.snappy.SnappyCompressorInputStream;
 import org.apache.commons.compress.compressors.snappy.SnappyCompressorOutputStream;
 import org.tukaani.xz.LZMA2Options;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
+import java.io.FileOutputStream;
 
 import static java.util.Objects.requireNonNull;
 import static org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream.MAX_BLOCKSIZE;
 
+/**
+ * This facade provides static factory methods for transformations and archive file stores.
+ * It depends on Apache Commons Compress and provides best accuracy and performance for accessing JAR and ZIP files.
+ *
+ * @author Christian Schlichtherle
+ */
 public final class CommonsCompress {
 
     private CommonsCompress() { }
+
+    /////////////////////////////////////
+    ////////// TRANSFORMATIONS //////////
+    /////////////////////////////////////
 
     /** Returns a transformation which produces the LZ4 block format using the default parameters. */
     public static Transformation blockLZ4() {
@@ -91,4 +108,42 @@ public final class CommonsCompress {
 
     /** Returns a transformation which produces the LZMA2 compression format using the given preset. */
     public static Transformation lzma2(int preset) { return new LZMA2Transformation(preset); }
+
+    /////////////////////////////////////////
+    ////////// ARCHIVE FILE STORES //////////
+    /////////////////////////////////////////
+
+    /** Returns an archive file store for the given JAR file. */
+    public static ArchiveFileStore<ZipArchiveEntry> jar(final File file) {
+        requireNonNull(file);
+        return new ArchiveFileStore<ZipArchiveEntry>() {
+
+            @Override
+            public Socket<ArchiveFileInput<ZipArchiveEntry>> input() {
+                return () -> new ZipFileAdapter(new ZipFile(file));
+            }
+
+            @Override
+            public Socket<ArchiveFileOutput<ZipArchiveEntry>> output() {
+                return () -> new JarArchiveOutputStreamAdapter(new JarArchiveOutputStream(new FileOutputStream(file)));
+            }
+        };
+    }
+
+    /** Returns an archive file store for the given ZIP file. */
+    public static ArchiveFileStore<ZipArchiveEntry> zip(final File file) {
+        requireNonNull(file);
+        return new ArchiveFileStore<ZipArchiveEntry>() {
+
+            @Override
+            public Socket<ArchiveFileInput<ZipArchiveEntry>> input() {
+                return () -> new ZipFileAdapter(new ZipFile(file));
+            }
+
+            @Override
+            public Socket<ArchiveFileOutput<ZipArchiveEntry>> output() {
+                return () -> new ZipArchiveOutputStreamAdapter(new ZipArchiveOutputStream(file));
+            }
+        };
+    }
 }

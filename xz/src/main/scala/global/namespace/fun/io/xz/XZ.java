@@ -22,7 +22,7 @@ import org.tukaani.xz.LZMA2Options;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Provides static factory methods for XZ transformations.
+ * This facade provides static factory methods for XZ transformations.
  *
  * @author Christian Schlichtherle
  */
