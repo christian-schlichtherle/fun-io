@@ -37,7 +37,7 @@ public class ArchiveFilePatchBuilder {
         return this;
     }
 
-    /** Writes the update archive file computed from the base and delta archive file to the given sink. */
+    /** Writes the update archive file computed from the base and delta archive files to the given sink. */
     @SuppressWarnings("unchecked")
     public void to(ArchiveFileSink<?> update) throws Exception { build().to(update); }
 

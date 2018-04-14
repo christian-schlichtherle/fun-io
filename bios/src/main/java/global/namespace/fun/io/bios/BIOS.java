@@ -37,8 +37,7 @@ import static global.namespace.fun.io.api.Store.BUFSIZE;
 import static java.util.Objects.requireNonNull;
 
 /**
- * This facade provides static factory methods for sockets, stores, transformations, codecs, archive file stores and
- * more.
+ * This facade provides static factory methods for codecs, transformations, sockets, stores, archive file stores et al.
  * It depends on the Java Runtime Environment (JRE) only.
  * The abbreviation stands for Basic Input/Output System (pun intended).
  *
@@ -48,110 +47,29 @@ public final class BIOS {
 
     private BIOS() { }
 
-    /////////////////////////////
-    ////////// SOURCES //////////
-    /////////////////////////////
-
-    /**
-     * Returns a source which loads the resource with the given {@code name} using
-     * {@link ClassLoader#getSystemResourceAsStream(String)}.
-     *
-     * @param  name the name of the resource to load.
-     */
-    public static Source resource(String name) {
-        return () -> () -> Optional
-                .ofNullable(ClassLoader.getSystemResourceAsStream(name))
-                .orElseThrow(() -> new FileNotFoundException(name));
-    }
-
-    /**
-     * Returns a source which loads the resource with the given {@code name} using
-     * {@link ClassLoader#getResourceAsStream(String)}.
-     *
-     * @param  name the name of the resource to load.
-     * @param  classLoader
-     *         The class loader to use for loading the resource.
-     */
-    public static Source resource(String name, ClassLoader classLoader) {
-        return () -> () -> Optional
-                .ofNullable(classLoader.getResourceAsStream(name))
-                .orElseThrow(() -> new FileNotFoundException(name));
-    }
-
-    /**
-     * Returns a source which reads from standard input without ever closing it.
-     *
-     * @see #stream(InputStream)
-     */
-    public static Source stdin() { return stream(System.in); }
-
-    /**
-     * Returns a source which will never {@linkplain InputStream#close() close} the given input stream.
-     * This is intended to be used for data streaming or for interoperability with other libraries and frameworks.
-     */
-    public static Source stream(InputStream in) {
-        requireNonNull(in);
-        return () -> () -> new UncloseableInputStream(in);
-    }
-
-    ///////////////////////////
-    ////////// SINKS //////////
-    ///////////////////////////
-
-    /**
-     * Returns a sink which writes to standard output without ever closing it.
-     *
-     * @see #stream(OutputStream)
-     */
-    public static Sink stdout() { return stream(System.out); }
-
-    /**
-     * Returns a sink which writes to standard error without ever closing it.
-     *
-     * @see #stream(OutputStream)
-     */
-    public static Sink stderr() { return stream(System.err); }
-
-    /**
-     * Returns a sink which will never {@linkplain OutputStream#close() close} the given output stream.
-     * This is intended to be used for data streaming or for interoperability with other libraries and frameworks.
-     * Upon a call to the {@code close()} method on the loaned output stream, the {@code flush()} method gets called on
-     * the given output stream.
-     */
-    public static Sink stream(OutputStream out) {
-        requireNonNull(out);
-        return () -> () -> new UncloseableOutputStream(out);
-    }
-
     ////////////////////////////
-    ////////// STORES //////////
+    ////////// CODECS //////////
     ////////////////////////////
 
-    /** Returns a store for the given file. */
-    public static Store file(File f) { return path(f.toPath()); }
+    /**
+     * Uses {@link ObjectOutputStream}s and {@link ObjectInputStream}s to encode and decode object graphs to and from
+     * octet streams.
+     */
+    public static Codec serialization() { return new SerializationCodec(); }
 
-    /** Returns a new in-memory store with the default buffer size. */
-    public static Store memory() { return memory(BUFSIZE); }
+    /**
+     * Uses new {@link XMLEncoder}s and {@link XMLDecoder}s to encode and decode object graphs to and from octet
+     * streams.
+     */
+    public static Codec xml() { return xml(XMLEncoder::new, XMLDecoder::new); }
 
-    /** Returns a new in-memory store with the given buffer size. */
-    public static Store memory(int bufferSize) { return new MemoryStore(bufferSize); }
-
-    /** Returns a store for the given file. */
-    public static Store path(Path p) { return new PathStore(requireNonNull(p)); }
-
-    /** Returns a store for the given preferences node and key. */
-    public static Store preferences(Preferences p, String key) {
-        return new PreferencesStore(requireNonNull(p), requireNonNull(key));
-    }
-
-    /** Returns a store for the system preferences node for the package of the given class and the given key. */
-    public static Store systemPreferences(Class<?> classInPackage, String key) {
-        return preferences(Preferences.systemNodeForPackage(classInPackage), key);
-    }
-
-    /** Returns a store for the user preferences node for the package of the given class and the given key. */
-    public static Store userPreferences(Class<?> classInPackage, String key) {
-        return preferences(Preferences.userNodeForPackage(classInPackage), key);
+    /**
+     * Uses new {@link XMLEncoder}s and {@link XMLDecoder}s obtained by the given functions in order to encode and
+     * decode object graphs to and from octet streams.
+     */
+    public static Codec xml(XFunction<? super OutputStream, ? extends XMLEncoder> xmlEncoders,
+                            XFunction<? super InputStream, ? extends XMLDecoder> xmlDecoders) {
+        return new XMLCodec(requireNonNull(xmlEncoders), requireNonNull(xmlDecoders));
     }
 
     /////////////////////////////////////
@@ -274,29 +192,152 @@ public final class BIOS {
     /** Returns a transformation which rotates each ASCII letter by the given number of positions. */
     public static Transformation rot(int positions) { return new ROTTransformation(positions); }
 
+    /////////////////////////////
+    ////////// SOURCES //////////
+    /////////////////////////////
+
+    /**
+     * Returns a source which loads the resource with the given {@code name} using
+     * {@link ClassLoader#getSystemResourceAsStream(String)}.
+     *
+     * @param  name the name of the resource to load.
+     */
+    public static Source resource(String name) {
+        return () -> () -> Optional
+                .ofNullable(ClassLoader.getSystemResourceAsStream(name))
+                .orElseThrow(() -> new FileNotFoundException(name));
+    }
+
+    /**
+     * Returns a source which loads the resource with the given {@code name} using
+     * {@link ClassLoader#getResourceAsStream(String)}.
+     *
+     * @param  name the name of the resource to load.
+     * @param  classLoader
+     *         The class loader to use for loading the resource.
+     */
+    public static Source resource(String name, ClassLoader classLoader) {
+        return () -> () -> Optional
+                .ofNullable(classLoader.getResourceAsStream(name))
+                .orElseThrow(() -> new FileNotFoundException(name));
+    }
+
+    /**
+     * Returns a source which reads from standard input without ever closing it.
+     *
+     * @see #stream(InputStream)
+     */
+    public static Source stdin() { return stream(System.in); }
+
+    /**
+     * Returns a source which will never {@linkplain InputStream#close() close} the given input stream.
+     * This is intended to be used for data streaming or for interoperability with other libraries and frameworks.
+     */
+    public static Source stream(InputStream in) {
+        requireNonNull(in);
+        return () -> () -> new UncloseableInputStream(in);
+    }
+
+    ///////////////////////////
+    ////////// SINKS //////////
+    ///////////////////////////
+
+    /**
+     * Returns a sink which writes to standard error without ever closing it.
+     *
+     * @see #stream(OutputStream)
+     */
+    public static Sink stderr() { return stream(System.err); }
+
+    /**
+     * Returns a sink which writes to standard output without ever closing it.
+     *
+     * @see #stream(OutputStream)
+     */
+    public static Sink stdout() { return stream(System.out); }
+
+    /**
+     * Returns a sink which will never {@linkplain OutputStream#close() close} the given output stream.
+     * This is intended to be used for data streaming or for interoperability with other libraries and frameworks.
+     * Upon a call to the {@code close()} method on the loaned output stream, the {@code flush()} method gets called on
+     * the given output stream.
+     */
+    public static Sink stream(OutputStream out) {
+        requireNonNull(out);
+        return () -> () -> new UncloseableOutputStream(out);
+    }
+
     ////////////////////////////
-    ////////// CODECS //////////
+    ////////// STORES //////////
     ////////////////////////////
 
-    /**
-     * Uses {@link ObjectOutputStream}s and {@link ObjectInputStream}s to encode and decode object graphs to and from
-     * octet streams.
-     */
-    public static Codec serialization() { return new SerializationCodec(); }
+    /** Returns a store for the given file. */
+    public static Store file(File f) { return path(f.toPath()); }
 
-    /**
-     * Uses new {@link XMLEncoder}s and {@link XMLDecoder}s to encode and decode object graphs to and from octet
-     * streams.
-     */
-    public static Codec xml() { return xml(XMLEncoder::new, XMLDecoder::new); }
+    /** Returns a new in-memory store with the default buffer size. */
+    public static Store memory() { return memory(BUFSIZE); }
 
-    /**
-     * Uses new {@link XMLEncoder}s and {@link XMLDecoder}s obtained by the given functions in order to encode and
-     * decode object graphs to and from octet streams.
-     */
-    public static Codec xml(XFunction<? super OutputStream, ? extends XMLEncoder> xmlEncoders,
-                            XFunction<? super InputStream, ? extends XMLDecoder> xmlDecoders) {
-        return new XMLCodec(requireNonNull(xmlEncoders), requireNonNull(xmlDecoders));
+    /** Returns a new in-memory store with the given buffer size. */
+    public static Store memory(int bufferSize) { return new MemoryStore(bufferSize); }
+
+    /** Returns a store for the given file. */
+    public static Store path(Path p) { return new PathStore(requireNonNull(p)); }
+
+    /** Returns a store for the given preferences node and key. */
+    public static Store preferences(Preferences p, String key) {
+        return new PreferencesStore(requireNonNull(p), requireNonNull(key));
+    }
+
+    /** Returns a store for the system preferences node for the package of the given class and the given key. */
+    public static Store systemPreferences(Class<?> classInPackage, String key) {
+        return preferences(Preferences.systemNodeForPackage(classInPackage), key);
+    }
+
+    /** Returns a store for the user preferences node for the package of the given class and the given key. */
+    public static Store userPreferences(Class<?> classInPackage, String key) {
+        return preferences(Preferences.userNodeForPackage(classInPackage), key);
+    }
+
+    /////////////////////////////////////////
+    ////////// ARCHIVE FILE STORES //////////
+    /////////////////////////////////////////
+
+    /** Returns an archive file store for the given directory. */
+    public static ArchiveFileStore<Path> directory(File directory) { return directory(directory.toPath()); }
+
+    /** Returns an archive file store for the given directory. */
+    public static ArchiveFileStore<Path> directory(Path directory) {
+        return new DirectoryStore(requireNonNull(directory));
+    }
+
+    /** Returns an archive file store for the given JAR file. */
+    public static ArchiveFileStore<ZipEntry> jar(final File file) {
+        requireNonNull(file);
+        return new ArchiveFileStore<ZipEntry>() {
+
+            @Override
+            public Socket<ArchiveFileInput<ZipEntry>> input() { return () -> new ZipFileAdapter(new ZipFile(file)); }
+
+            @Override
+            public Socket<ArchiveFileOutput<ZipEntry>> output() {
+                return () -> new JarOutputStreamAdapter(new JarOutputStream(new FileOutputStream(file)));
+            }
+        };
+    }
+
+    /** Returns an archive file store for the given ZIP file. */
+    public static ArchiveFileStore<ZipEntry> zip(final File file) {
+        requireNonNull(file);
+        return new ArchiveFileStore<ZipEntry>() {
+
+            @Override
+            public Socket<ArchiveFileInput<ZipEntry>> input() { return () -> new ZipFileAdapter(new ZipFile(file)); }
+
+            @Override
+            public Socket<ArchiveFileOutput<ZipEntry>> output() {
+                return () -> new ZipOutputStreamAdapter(new ZipOutputStream(new FileOutputStream(file)));
+            }
+        };
     }
 
     ///////////////////////////////
@@ -347,47 +388,5 @@ public final class BIOS {
      */
     public static <T extends Serializable> T clone(T t, int bufferSize) throws Exception {
         return serialization().connect(memory(bufferSize)).clone(t);
-    }
-
-    /////////////////////////////////////////
-    ////////// ARCHIVE FILE STORES //////////
-    /////////////////////////////////////////
-
-    /** Returns an archive file store for the given directory. */
-    public static ArchiveFileStore<Path> directory(File directory) { return directory(directory.toPath()); }
-
-    /** Returns an archive file store for the given directory. */
-    public static ArchiveFileStore<Path> directory(Path directory) {
-        return new DirectoryStore(requireNonNull(directory));
-    }
-
-    /** Returns an archive file store for the given JAR file. */
-    public static ArchiveFileStore<ZipEntry> jar(final File file) {
-        requireNonNull(file);
-        return new ArchiveFileStore<ZipEntry>() {
-
-            @Override
-            public Socket<ArchiveFileInput<ZipEntry>> input() { return () -> new ZipFileAdapter(new ZipFile(file)); }
-
-            @Override
-            public Socket<ArchiveFileOutput<ZipEntry>> output() {
-                return () -> new JarOutputStreamAdapter(new JarOutputStream(new FileOutputStream(file)));
-            }
-        };
-    }
-
-    /** Returns an archive file store for the given ZIP file. */
-    public static ArchiveFileStore<ZipEntry> zip(final File file) {
-        requireNonNull(file);
-        return new ArchiveFileStore<ZipEntry>() {
-
-            @Override
-            public Socket<ArchiveFileInput<ZipEntry>> input() { return () -> new ZipFileAdapter(new ZipFile(file)); }
-
-            @Override
-            public Socket<ArchiveFileOutput<ZipEntry>> output() {
-                return () -> new ZipOutputStreamAdapter(new ZipOutputStream(new FileOutputStream(file)));
-            }
-        };
     }
 }

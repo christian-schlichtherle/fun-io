@@ -55,15 +55,15 @@ public class ArchiveFileDiffBuilder {
     }
 
     /**
-     * Returns the delta model computed from the base and update archive file.
+     * Returns the delta model computed from the base and update archive files.
      * This is an alias for {@link #toModel()}.
      */
     public DeltaModel deltaModel() throws Exception { return toModel(); }
 
-    /** Returns the delta model computed from the base and update archive file. */
+    /** Returns the delta model computed from the base and update archive files. */
     public DeltaModel toModel() throws Exception { return build().toModel(); }
 
-    /** Writes the delta archive file computed from the base and update archive file to the given sink. */
+    /** Writes the delta archive file computed from the base and update archive files to the given sink. */
     @SuppressWarnings("unchecked")
     public void to(ArchiveFileSink<?> delta) throws Exception { build().to(delta); }
 

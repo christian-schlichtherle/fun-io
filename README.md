@@ -1,11 +1,21 @@
 # Fun I/O [![Maven Central](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-api.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22) [![Build Status](https://api.travis-ci.org/christian-schlichtherle/fun-io.svg)](https://travis-ci.org/christian-schlichtherle/fun-io)
 
-Fun I/O provides functional, high level abstractions for composing ordinary input and output streams into sockets, 
-stores, transformations, codecs et al.
-The resulting compositions are (re)usable, composable and never leak resources.
-Fun I/O supports Java 8 and Scala 2.10, 2.11 and 2.12 and comes with the Apache License, version 2.0.
+Fun I/O provides functional, high level abstractions for codecs, transformations, sockets, stores, archive stores et al.
+Fun I/O supports Java 8 or later and Scala 2.10, 2.11 and 2.12 and is covered by the Apache License, version 2.0.
+
+## Features
+
++ Composes low level `InputStream` and `OutputStream` objects into high level codecs, transformations, stores and
+  archive stores.
++ These abstractions are easy to implement, highly reusable and provide a high level of interoperability so that they 
+  can be easily composed into complete I/O subsystems.
++ Proper resource management: Streams are properly closed, even if there is an exception in a nested constructor.
+  Say goodbye to resources leaks and try-with-resources statements.
++ Supports Java and Scala equally well via dedicated APIs.
 
 ## Usage
+
+### Basic I/O
 
 The following Scala code prints `"Hello world!"` - including the quotes:
 
@@ -83,6 +93,69 @@ returned from an internal call to `ciphers.apply(true)` and finally save the res
 
 Again, note that the `store` and `connectedCodec` objects are virtually stateless, and hence reusable.
 
+### Archive Processing
+
+#### Diffing two JAR files and generating a delta JAR file
+
+The following code diffs two JAR files and generates a delta JAR file.
+It uses the `Compress` facade to access the JAR files using Apache Commons Compress.
+It also uses the `Delta` facade for the actual diffing:
+
+```java
+import java.io.File;
+
+import static global.namespace.fun.io.commons.compress.CommonsCompress.*;
+import static global.namespace.fun.io.delta.Delta.*;
+
+File base = ...;
+File update = ...;
+File delta = ...;
+diff().base(jar(base)).update(jar(update)).to(jar(delta));
+```
+
+If you wanted to use the `archive-io-bios` module instead of the `archive-io-commons-compress` module, then, apart from
+configuring the class path, you would only have to edit the `import` statement as shown in the next example.
+
+#### Patching a JAR file with a delta JAR file to another JAR file
+
+The following code patches a JAR file with a delta JAR file to another JAR file.
+It uses the `BIOS` facade to access the JAR files using the JRE.
+It also uses the `Delta` facade for the actual patching:
+
+```java
+import java.io.File;
+
+import static global.namespace.fun.io.bios.BIOS.*;
+import static global.namespace.fun.io.delta.Delta.*;
+
+File base = ...;
+File update = ...;
+File delta = ...;
+patch().base(jar(base)).delta(jar(delta)).to(jar(update));
+```
+
+#### Diffing two directories and computing a delta model
+
+Maybe you just want to examine the delta of two directories, but not generate a delta archive file or directory from 
+that?
+The following code diffs two directories and computes a delta model.
+Again, the `Delta` and the `BIOS` facades can be used to do that:
+
+```java
+import java.io.File;
+
+import global.namespace.fun.io.delta.model.*;
+
+import static global.namespace.fun.io.bios.BIOS.*;
+import static global.namespace.fun.io.delta.Delta.*;
+
+File base = ...;
+File update = ...;
+DeltaModel model = diff().base(directory(base)).update(directory(update)).toModel();
+```
+
+The delta model has properties describing the changed, unchanged, added and removed entries.
+
 ## Module Structure
 
 Fun I/O has a modular structure.
@@ -94,14 +167,15 @@ The following diagram shows the module structure:
 
 The modules are:
 
-+ `fun-io-api`: The API provides interfaces for sockets, stores, transformations, codecs et al, but no implementations.
-+ `fun-io-scala-api`: The Scala API wraps the Java API to enhance the syntax with a domain specific language (DSL).
++ `fun-io-api`: The API provides interfaces for codes, transformations, sockets, stores, archive file stores et al.
++ `fun-io-scala-api`: The Scala API extends the Java API with operators and implicit conversions to improvie the user 
+   experience in Scala.
 + `fun-io-bios`: The Basic Input/Output System (pun intended) provides basic implementations for encoding, transforming, 
   storing or streaming data.
-  + The `BIOS` class provides the following `Codec` functions:
+  + The `BIOS` class is a facade which provides the following `Codec` functions:
     + `serialization` serializes/deserializes objects using `ObjectOutputStream`/`ObjectInputStream`.
     + `xml` encodes/decodes objects using `XMLEncoder`/`XMLDecoder`.
-  + The `BIOS` class also provides the following `Transformation` functions:
+  + It also provides the following `Transformation` functions:
     + `base64` encodes/decodes data to/from Base64.
     + `buffer` buffers I/O operations.
     + `cipher` encrypts/decrypts data using a function which provides initialized `javax.security.Cipher` objects.
@@ -111,41 +185,61 @@ The modules are:
     + `inflate` inflates/deflates data using the ZIP compression.
     + `inverse` inverses a given transformation by buffering the entire data to a buffer, e.g. on the heap.
     + `rot` provides the (in)famous ROT transformation, e.g. [ROT13].
-  + The `BIOS` class also provides the following `Store` functions:
+  + It also provides the following `Source` functions:
+    + `resource` reads a resource from the class path.
+    + `stdin` reads the standard input.
+    + `stream` reads an arbitrary input stream without ever closing it.
+  + It also provides the following `Sink` functions:
+    + `stderr` writes to standard error.
+    + `stdout` writes to standard output.
+    + `stream` write to an arbitrary output stream without ever closing it.
+  + It also provides the following `Store` functions:
     + `file` stores data in a file, based on `java.io.File`. 
     + `memory` stores data on the heap. This is primarily used for cloning objects or testing.
     + `path` stores data in a files or any other path, based on `java.nio.file.Path`.
     + `preferences` stores data in a preferences node using a given key.
     + `systemPreferences` stores data in a system preferences nodes representing a given class.
     + `userPreferences` stores data in a user preferences nodes representing a given class.
-  + The `BIOS` class also provides the following utility functions:
-    + `stream` encapsulates a given `InputStream` or `OutputStream` as a `Source` or `Sink` for interoperability with 
-      the rest of this API.
-    + `copy` is a high performance algorithm for copying data from a `Source` to a `Sink`, including `Store`s. 
-+ `fun-io-commons-compress`: Depends on [Apache Commons Compress] to provide the following compression `Transformation` 
-  functions in the `CommonsCompress` class:
-  + `blockLZ4` compresses/decompresses data using the LZ4 block format.
-  + `bzip2` compresses decompresses data using the BZIP2 format.
-  + `deflate` deflates/inflates data using the ZIP compression.
-  + `framedLZ4` compresses/decompresses data using the LZ4 frame format.
-  + `framedSnappy` compresses/decompresses data using the Snappy frame format.
-  + `gzip` compresses/decompresses data using the GZIP compression format.
-  + `lzma` compresses/decompresses data using the LZMA compression format.
-  + `lzma2` compresses/decompresses data using the LZMA2 compression format.
-+ `fun-io-jackson`: Depends on [Jackson Databind] to provide the following `Codec` functions in the `Jackson` class:
-  + `json` marshals/unmarshals objects to/from JSON using Jackson.
-+ `fun-io-jaxb`: Depends on [JAXB] to provide the following `Codec` functions in the `JAXB` class:
-  + `xml` marshals/unmarshals objects to/from XML using JAXB.
-+ `fun-io-xz`: Depends on [XZ for Java] to provide the following compression `Transformation` functions in the `XZ` 
-  class:
-  + `lzma2` compresses/decompresses data using the LZMA2 compression format.
-  + `xz` compresses/decompresses data using the XZ compression format.
+  + It also provides the following `ArchiveFileStore` functions:
+    + `directory` provides access to a directory as if it were an archive file.
+    + `jar` provides access to JAR files.
+    + `zip` provides access to ZIP files.
+  + It also provides the following utility functions:
+    + `copy` is a high performance algorithm for copying data from a `Source` to a `Sink`, including `Store`s.
+    + `clone` duplicates an object by serializing it to memory and decoding it again.  
++ `fun-io-commons-compress`: Depends on [Apache Commons Compress] to provide transformations and archive file stores.
+  + The `CommonsCompress` class is a facade which provides the following `Transformation` functions: 
+    + `blockLZ4` compresses/decompresses data using the LZ4 block format.
+    + `bzip2` compresses decompresses data using the BZIP2 format.
+    + `deflate` deflates/inflates data using the ZIP compression.
+    + `framedLZ4` compresses/decompresses data using the LZ4 frame format.
+    + `framedSnappy` compresses/decompresses data using the Snappy frame format.
+    + `gzip` compresses/decompresses data using the GZIP compression format.
+    + `lzma` compresses/decompresses data using the LZMA compression format.
+    + `lzma2` compresses/decompresses data using the LZMA2 compression format.
+  + It also provides the following `ArchiveFileStore` functions:
+    + `jar` provides access to JAR files.
+    + `zip` provides access to ZIP files.
++ `fun-io-delta` provides utility functions.
+  + The `Delta` class is a facade which provides the following utility functions:
+    + `diff` compares two archive files or directories to compute a delta archive file or directory or model.
+    + `patch` patches an archive file or directory with a delta archive file or directory.
++ `fun-io-jackson`: Depends on [Jackson Databind] to provide codecs. 
+  + The `Jackson` class is a facade which provides the following `Codec` functions:
+    + `json` marshals/unmarshals objects to/from JSON using Jackson Databind.
++ `fun-io-jaxb`: Depends on [JAXB] to provide codecs.
+  + The `JAXB` class is a facade which provides the following `Codec` functions:
+    + `xml` marshals/unmarshals objects to/from XML using the JAXB reference implementation.
++ `fun-io-xz`: Depends on [XZ for Java] to provide transformations.
+  + The `XZ` class is a facade which provides the following `Transformation` functions:
+    + `lzma2` compresses/decompresses data using the LZMA2 compression format.
+    + `xz` compresses/decompresses data using the XZ compression format.
 
 A typical Java application has a single dependency on `fun-io-bios`.
-Additional module dependencies may be added to the mix for their features.
+Additional module dependencies may be added to the mix to take advantage of their respective features.
 
 A typical Scala application has the same dependency/dependencies as a Java application plus an additional dependency on
-`fun-io-scala-api` to improve the accessibility of Fun I/O in Scala code. 
+`fun-io-scala-api` to improve the users experience in Scala. 
 
 [Apache Commons Compress]: https://commons.apache.org/proper/commons-compress/
 [Jackson Databind]: http://wiki.fasterxml.com/JacksonHome

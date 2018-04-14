@@ -32,7 +32,9 @@ final class JSONCodec implements Codec {
     JSONCodec(final ObjectMapper m) { this.mapper = m; }
 
     @Override
-    public Encoder encoder(Socket<OutputStream> output) { return obj -> output.accept(out -> mapper.writeValue(out, obj)); }
+    public Encoder encoder(Socket<OutputStream> output) {
+        return obj -> output.accept(out -> mapper.writeValue(out, obj));
+    }
 
     @Override
     public Decoder decoder(final Socket<InputStream> input) {
