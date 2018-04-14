@@ -295,9 +295,9 @@ public final class BIOS {
         return preferences(Preferences.userNodeForPackage(classInPackage), key);
     }
 
-      ////////////////////////////
-     ///////// ARCHIVES /////////
-    ////////////////////////////
+      //////////////////////////////////
+     ///////// ARCHIVE STORES /////////
+    //////////////////////////////////
 
     /** Returns an archive store for transparent access to the given directory. */
     public static ArchiveStore<Path> directory(File directory) { return directory(directory.toPath()); }

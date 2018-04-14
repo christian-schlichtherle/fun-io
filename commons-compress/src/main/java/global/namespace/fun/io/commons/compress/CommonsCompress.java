@@ -105,9 +105,9 @@ public final class CommonsCompress {
     /** Returns a transformation which produces the LZMA2 compression format using the given preset. */
     public static Transformation lzma2(int preset) { return new LZMA2Transformation(preset); }
 
-      ////////////////////////////
-     ///////// ARCHIVES /////////
-    ////////////////////////////
+      //////////////////////////////////
+     ///////// ARCHIVE STORES /////////
+    //////////////////////////////////
 
     /** Returns an archive store for access to the given JAR file. */
     public static ArchiveStore<ZipArchiveEntry> jar(final File file) {
