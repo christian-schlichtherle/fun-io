@@ -16,12 +16,13 @@
 package global.namespace.fun.io.it
 
 import java.security.SecureRandom
+
+import global.namespace.fun.io.api.Transformation
+import global.namespace.fun.io.bios.BIOS
+import global.namespace.fun.io.scala.api._
 import javax.crypto.Cipher.{DECRYPT_MODE, ENCRYPT_MODE, getInstance}
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.{PBEKeySpec, PBEParameterSpec}
-
-import global.namespace.fun.io.bios.BIOS
-import global.namespace.fun.io.scala.api._
 
 object PBE {
 

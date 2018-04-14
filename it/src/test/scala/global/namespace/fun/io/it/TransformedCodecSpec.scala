@@ -17,6 +17,7 @@ package global.namespace.fun.io.it
 
 import java.io.InputStream
 
+import global.namespace.fun.io.api.{Codec, Store, Transformation}
 import global.namespace.fun.io.bios.BIOS._
 import global.namespace.fun.io.it.PBE.pbe
 import global.namespace.fun.io.jackson.Jackson._
@@ -115,7 +116,7 @@ class TransformedCodecSpec extends WordSpec {
 
     "clone an object" in {
       forAllTransformedCodecs { transformedCodec =>
-        assertCloneableUsing(transformedCodec.clone(_, memory))
+        assertCloneableUsing(transformedCodec.clone(_, () => memory))
       }
     }
   }

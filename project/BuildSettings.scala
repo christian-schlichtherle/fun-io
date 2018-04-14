@@ -80,8 +80,8 @@ object BuildSettings {
       },
       scmInfo := Some(ScmInfo(
         browseUrl = url("https://github.com/christian-schlichtherle/fun-io"),
-        connection = "scm:git:https://github.com/christian-schlichtherle/fun-io.git",
-        devConnection = Some("scm:git:https://github.com/christian-schlichtherle/fun-io.git")
+        connection = "scm:git:git@github.com:christian-schlichtherle/fun-io.git",
+        devConnection = Some("scm:git:git@github.com:christian-schlichtherle/fun-io.git")
       ))
     )
   }
@@ -106,9 +106,10 @@ object BuildSettings {
     artifactSettings ++ Seq(
       // Support testing Java projects with ScalaTest et al:
       compileOrder := CompileOrder.JavaThenScala,
+      crossScalaVersions := Seq(ScalaVersion_2_10, ScalaVersion_2_11, ScalaVersion_2_12),
       javacOptions := DefaultOptions.javac ++ Seq(Opts.compile.deprecation, "-Xlint:unchecked", "-source", "1.8", "-target", "1.8", "-g"),
       javacOptions in doc := DefaultOptions.javac ++ Seq("-source", "1.8"),
-      scalacOptions := DefaultOptions.scalac ++ Seq(Opts.compile.deprecation, Opts.compile.explaintypes, "-feature", Opts.compile.unchecked),
+      scalacOptions := DefaultOptions.scalac ++ Seq(Opts.compile.deprecation, "-feature", Opts.compile.unchecked),
       scalaVersion := ScalaVersion_2_10
     )
   }
@@ -120,9 +121,5 @@ object BuildSettings {
     )
   }
 
-  def scalaLibrarySettings: Seq[Setting[_]] = {
-    librarySettings ++ Seq(
-      crossScalaVersions := Seq(ScalaVersion_2_10, ScalaVersion_2_11, ScalaVersion_2_12)
-    )
-  }
+  def scalaLibrarySettings: Seq[Setting[_]] = librarySettings
 }

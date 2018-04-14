@@ -17,6 +17,7 @@ package global.namespace.fun.io.scala.api
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, InputStream, OutputStream}
 
+import global.namespace.fun.io.api._
 import global.namespace.fun.io.scala.api.ApiSpec._
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec

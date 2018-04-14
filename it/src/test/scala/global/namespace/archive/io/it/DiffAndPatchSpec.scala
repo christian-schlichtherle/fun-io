@@ -54,16 +54,16 @@ private object DiffAndPatchSpec {
   type ArchiveFileStoreFactory[E] = File => ArchiveFileStore[E]
 
   def forAllArchiveFiles(test: (ArchiveFileSource[_], ArchiveFileSource[_]) => ArchiveFileStoreFactory[_] => Any): Unit = {
-    test(directory(deltaModelDirectory), directory(deltaDtoDirectory))(directory(_))
+    test(directory(deltaModelDirectory), directory(deltaDtoDirectory))(directory(_: File))
     forAll(Factories)(factory => test(factory(Test1JarFile), factory(Test2JarFile))(factory))
   }
 
   private val Factories: TableFor1[ArchiveFileStoreFactory[_]] = Table(
     "archive file store factory",
-    CommonsCompress.jar(_),
-    CommonsCompress.zip(_),
-    BIOS.jar(_),
-    BIOS.zip(_)
+    CommonsCompress.jar(_: File),
+    CommonsCompress.zip(_: File),
+    BIOS.jar(_: File),
+    BIOS.zip(_: File)
   )
 
   def withTempArchiveFile(test: ArchiveFileStore[_] => Any)(implicit factory: ArchiveFileStoreFactory[_]): Unit = {

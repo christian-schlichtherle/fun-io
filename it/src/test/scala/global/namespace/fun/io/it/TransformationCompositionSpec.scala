@@ -18,6 +18,7 @@ package global.namespace.fun.io.it
 import java.io._
 import java.lang.reflect.Type
 
+import global.namespace.fun.io.api._
 import global.namespace.fun.io.bios.BIOS._
 import global.namespace.fun.io.bios.{BIOS, BufferedInvertibleTransformation}
 import global.namespace.fun.io.commons.compress.CommonsCompress

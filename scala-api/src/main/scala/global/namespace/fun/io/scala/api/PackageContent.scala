@@ -13,29 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package global.namespace.fun.io.scala
-
-import java.io.{InputStream, OutputStream}
+package global.namespace.fun.io.scala.api
 
 import global.namespace.fun.io.api.Transformation.IDENTITY
-import global.namespace.fun.io.api.function.{XConsumer, XFunction, XSupplier}
-import global.namespace.fun.io.{api => j}
+import global.namespace.fun.io.api._
 
-import _root_.scala.language.implicitConversions
-
-/** @author Christian Schlichtherle */
-package object api {
-
-  type Buffer = j.Buffer
-  type Codec = j.Codec
-  type ConnectedCodec = j.ConnectedCodec
-  type Decoder = j.Decoder
-  type Encoder = j.Encoder
-  type Sink = j.Sink
-  type Socket[T <: AutoCloseable] = j.Socket[T]
-  type Source = j.Source
-  type Store = j.Store
-  type Transformation = j.Transformation
+/** Provides operators for an enhanced user experience with the Fun I/O API in Scala.
+  *
+  * @author Christian Schlichtherle */
+private[api] trait PackageContent {
 
   implicit class WithTransformation(t1: Transformation) {
 
@@ -61,35 +47,5 @@ package object api {
 
     def <<(t: Transformation): Codec = c map t
     def <<(s: Store): ConnectedCodec = c connect s
-  }
-
-  implicit def xConsumer[A](consumer: A => Any): XConsumer[A] = new XConsumer[A] {
-
-    def accept(t: A): Unit = consumer(t)
-  }
-
-  implicit def xFunction[A, B](function: A => B): XFunction[A, B] = new XFunction[A, B] {
-
-    def apply(a: A): B = function(a)
-  }
-
-  implicit def xSupplier[A](a: => A): XSupplier[A] = new XSupplier[A] {
-
-    def get(): A = a
-  }
-
-  implicit def socket[A <: AutoCloseable](provider: () => A): Socket[A] = new Socket[A] {
-
-    def get(): A = provider()
-  }
-
-  implicit def source(provider: () => Socket[_ <: InputStream]): Source = new Source {
-
-    def input(): Socket[InputStream] = socket(() => provider().get)
-  }
-
-  implicit def sink(provider: () => Socket[_ <: OutputStream]): Sink = new Sink {
-
-    def output(): Socket[OutputStream] = socket(() => provider().get)
   }
 }
