@@ -25,10 +25,8 @@ class MessageDigestsSpec extends WordSpec {
         ("f3172822c7d08f23764aa5baee9d73ef32797b46", "twoTimesHelloWorld")
       )
       forAll(Tests) { (referenceValue, resourceName) =>
-        val digest = sha1
         val socket: Socket[InputStream] = () => classOf[MessageDigestsSpec].getResourceAsStream(resourceName)
-        updateDigestFrom(digest, () => socket)
-        valueOf(digest) shouldBe referenceValue
+        digestValueOf(sha1, () => socket) shouldBe referenceValue
       }
     }
   }

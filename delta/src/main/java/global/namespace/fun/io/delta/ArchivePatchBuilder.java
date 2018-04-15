@@ -20,18 +20,18 @@ public class ArchivePatchBuilder {
     ArchivePatchBuilder() { }
 
     /**
-     * Returns this archive file patch builder with the given source for reading the base archive file.
+     * Returns this archive patch builder with the given source for reading the base archive file.
      * This is an alias for {@link #base(ArchiveSource)}.
      */
     public ArchivePatchBuilder first(ArchiveSource<?> base) { return base(base); }
 
-    /** Returns this archive file patch builder with the given source for reading the base archive file. */
+    /** Returns this archive patch builder with the given source for reading the base archive file. */
     public ArchivePatchBuilder base(final ArchiveSource<?> base) {
         this.base = Optional.of(base);
         return this;
     }
 
-    /** Returns this archive file patch builder with the given source for reading the delta archive file. */
+    /** Returns this archive patch builder with the given source for reading the delta archive file. */
     public ArchivePatchBuilder delta(final ArchiveSource<?> delta) {
         this.delta = Optional.of(delta);
         return this;

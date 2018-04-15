@@ -5,10 +5,10 @@
 package global.namespace.fun.io.delta;
 
 import global.namespace.fun.io.api.*;
+import global.namespace.fun.io.api.function.XFunction;
 import global.namespace.fun.io.delta.model.DeltaModel;
 import global.namespace.fun.io.delta.model.EntryNameAndDigestValue;
 import global.namespace.fun.io.delta.model.EntryNameAndTwoDigestValues;
-import global.namespace.fun.io.api.function.XFunction;
 
 import java.security.MessageDigest;
 import java.util.Map;
@@ -16,8 +16,6 @@ import java.util.Optional;
 import java.util.TreeMap;
 
 import static global.namespace.fun.io.delta.Delta.encodeModel;
-import static global.namespace.fun.io.delta.MessageDigests.updateDigestFrom;
-import static global.namespace.fun.io.delta.MessageDigests.valueOf;
 
 /**
  * Compares a base archive file to an update archive file and generates a delta archive file.
@@ -174,11 +172,8 @@ abstract class ArchiveDiff<F, S, D> {
                 added.put(name, new EntryNameAndDigestValue(name, digestValueOf(updateEntry)));
             }
 
-            String digestValueOf(final Source source) throws Exception {
-                final MessageDigest digest = digest();
-                digest.reset();
-                updateDigestFrom(digest, source);
-                return valueOf(digest);
+            String digestValueOf(Source source) throws Exception {
+                return MessageDigests.digestValueOf(digest(), source);
             }
         }
     }

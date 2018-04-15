@@ -24,31 +24,31 @@ public class ArchiveDiffBuilder {
 
     ArchiveDiffBuilder() { }
 
-    /** Returns this archive file diff builder with the given message digest. */
+    /** Returns this archive diff builder with the given message digest. */
     public ArchiveDiffBuilder digest(final MessageDigest digest) {
         this.digest = Optional.of(digest);
         return this;
     }
 
     /**
-     * Returns this archive file diff builder with the given source for reading the base archive file.
+     * Returns this archive diff builder with the given source for reading the base archive file.
      * This is an alias for {@link #base(ArchiveSource)}.
      */
     public ArchiveDiffBuilder first(ArchiveSource<?> base) { return base(base); }
 
-    /** Returns this archive file diff builder with the given source for reading the base archive file. */
+    /** Returns this archive diff builder with the given source for reading the base archive file. */
     public ArchiveDiffBuilder base(final ArchiveSource<?> base) {
         this.base = Optional.of(base);
         return this;
     }
 
     /**
-     * Returns this archive file diff builder with the given source for reading the update archive file.
+     * Returns this archive diff builder with the given source for reading the update archive file.
      * This is an alias for {@link #update(ArchiveSource)}.
      */
     public ArchiveDiffBuilder second(ArchiveSource<?> update) { return update(update); }
 
-    /** Returns this archive file diff builder with the given source for reading the update archive file. */
+    /** Returns this archive diff builder with the given source for reading the update archive file. */
     public ArchiveDiffBuilder update(final ArchiveSource<?> update) {
         this.update = Optional.of(update);
         return this;
@@ -67,9 +67,7 @@ public class ArchiveDiffBuilder {
     @SuppressWarnings("unchecked")
     public void to(ArchiveSink<?> delta) throws Exception { build().to(delta); }
 
-    private ArchiveDiff build() {
-        return create(digest.orElseGet(MessageDigests::sha1), base.get(), update.get());
-    }
+    private ArchiveDiff build() { return create(digest.orElseGet(MessageDigests::sha1), base.get(), update.get()); }
 
     private static ArchiveDiff create(MessageDigest digest,
                                       ArchiveSource<?> baseSource,

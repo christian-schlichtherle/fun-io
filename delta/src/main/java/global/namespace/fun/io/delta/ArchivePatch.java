@@ -10,9 +10,6 @@ import global.namespace.fun.io.delta.model.DeltaModel;
 import global.namespace.fun.io.delta.model.EntryNameAndDigestValue;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,9 +17,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static global.namespace.fun.io.bios.BIOS.copy;
 import static global.namespace.fun.io.delta.Delta.decodeModel;
-import static global.namespace.fun.io.delta.MessageDigests.valueOf;
 import static java.util.Arrays.asList;
 
 /**
@@ -102,46 +97,15 @@ abstract class ArchivePatch<F, D, S> {
                     for (final EntryNameAndDigestValue entryNameAndDigestValue : collection) {
                         final String name = entryNameAndDigestValue.name();
                         if (filter.test(name)) {
-
-                            // TODO: Maybe this digest check should not be inserted like a transformation in the copying
-                            // of the archive entries because (a) if the check fails then the entry is already copied,
-                            // so the compromised data has already been written and (b) the inserting disables taking
-                            // advantage of the potentially more efficient
-                            // `ArchiveEntrySource.copyTo(ArchiveEntrySink)`, e.g. with `fun-io-commons-compress`.
-                            class CheckDigestTransformation implements Transformation {
-
-                                public Socket<OutputStream> apply(Socket<OutputStream> output) {
-                                    return output.map(out -> {
-                                        final MessageDigest digest = digest();
-                                        digest.reset();
-                                        return new DigestOutputStream(out, digest) {
-
-                                            @Override
-                                            public void close() throws IOException {
-                                                super.close();
-                                                if (!valueOfDigest().equals(entryNameAndDigestValue.digestValue())) {
-                                                    throw new WrongMessageDigestException(name);
-                                                }
-                                            }
-
-                                            String valueOfDigest() { return valueOf(digest); }
-                                        };
-                                    });
+                            final Optional<ArchiveEntrySource<E>> optEntry = input().source(name);
+                            if (optEntry.isPresent()) {
+                                final ArchiveEntrySource<E> entry = optEntry.get();
+                                if (!digestValueOf(entry).equals(entryNameAndDigestValue.digestValue())) {
+                                    throw ioException(new WrongMessageDigestException(name));
                                 }
-
-                                public Socket<InputStream> unapply(Socket<InputStream> input) { throw new UnsupportedOperationException(); }
-
-                                public Transformation inverse() { throw new UnsupportedOperationException(); }
-                            }
-
-                            final Optional<ArchiveEntrySource<E>> entry = input().source(name);
-                            try {
-                                copy(
-                                        entry.orElseThrow(() -> ioException(new MissingArchiveEntryException(name))),
-                                        updateOutput.sink(name).map(new CheckDigestTransformation())
-                                );
-                            } catch (WrongMessageDigestException e) {
-                                throw ioException(e);
+                                entry.copyTo(updateOutput.sink(name));
+                            } else {
+                                throw ioException(new MissingArchiveEntryException(name));
                             }
                         }
                     }
@@ -173,6 +137,10 @@ abstract class ArchivePatch<F, D, S> {
                     .map(change -> new EntryNameAndDigestValue(change.name(), change.updateDigestValue()))
                     .collect(Collectors.toList()));
             new OnDeltaInputPatch().apply(model().addedEntries());
+        }
+
+        String digestValueOf(Source source) throws Exception {
+            return MessageDigests.digestValueOf(digest(), source);
         }
 
         MessageDigest digest() throws Exception { return MessageDigest.getInstance(model().digestAlgorithmName()); }

@@ -30,30 +30,18 @@ class MessageDigests {
     }
 
     /**
-     * Returns a positive, big-endian integer in hexadecimal string notation representing the value of the given message
-     * digest.
-     * This is the canonical representation of message digests.
-     *
-     * @param  digest a message digest.
-     * @return a positive, big-endian integer in hexadecimal string notation representing the value of the message
-     *         digest.
+     * Returns the digest value of the given source in canonical form.
+     * The canonical form is a positive, big-endian integer in hexadecimal string notation representing the digest
+     * value.
      */
-    static String valueOf(MessageDigest digest) {
-        return new BigInteger(1, digest.digest()).toString(16);
-    }
-
-    /**
-     * Updates the given message digest with the binary data from the given source.
-     *
-     * @param digest the message digest to to.
-     * @param source the source for reading the binary data.
-     */
-    static void updateDigestFrom(final MessageDigest digest, final Source source) throws Exception {
-        source.acceptReader(in -> {
+    static String digestValueOf(final MessageDigest digest, final Source source) throws Exception {
+        return source.applyReader(in -> {
+            digest.reset();
             final byte[] buffer = new byte[Store.BUFSIZE];
             for (int read; 0 <= (read = in.read(buffer)); ) {
                 digest.update(buffer, 0, read);
             }
+            return new BigInteger(1, digest.digest()).toString(16);
         });
     }
 }
