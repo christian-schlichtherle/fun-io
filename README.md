@@ -238,7 +238,7 @@ A typical Java application has a single dependency on `fun-io-bios`.
 Additional module dependencies may be added to the mix to take advantage of their respective features.
 
 A typical Scala application has the same dependency/dependencies as a Java application plus an additional dependency on
-`fun-io-scala-api` to improve the users experience in Scala. 
+`fun-io-scala-api` to improve the user experience in Scala. 
 
 [Apache Commons Compress]: https://commons.apache.org/proper/commons-compress/
 [Jackson Databind]: http://wiki.fasterxml.com/JacksonHome
