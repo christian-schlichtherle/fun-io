@@ -25,7 +25,7 @@ public abstract class ArchiveEntry<E> {
         if (this == obj) {
             return true;
         } else if (this.canEqual(obj)) {
-            final ArchiveEntry that = (ArchiveEntry) obj;
+            final ArchiveEntry<?> that = (ArchiveEntry) obj;
             return this.entry().equals(that.entry());
         } else {
             return false;
