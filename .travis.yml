@@ -7,20 +7,11 @@ cache:
   - $HOME/.ivy2/cache
   - $HOME/.sbt
 
-env:
-- SCALA_VERSION_2_10=2.10.2 SCALA_VERSION_2_11=2.11.0 SCALA_VERSION_2_12=2.12.0
-- SCALA_VERSION_2_10=2.10.7 SCALA_VERSION_2_11=2.11.12 SCALA_VERSION_2_12=2.12.4
-
 jdk:
 - openjdk8
 - oraclejdk8
 - oraclejdk9
 
 language: scala
-
-matrix:
-  exclude:
-  - env: SCALA_VERSION_2_10=2.10.2 SCALA_VERSION_2_11=2.11.0 SCALA_VERSION_2_12=2.12.0
-    jdk: oraclejdk9
 
 script: sbt +test
