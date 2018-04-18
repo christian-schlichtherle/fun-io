@@ -10,7 +10,7 @@ Fun I/O supports Java 8 or later and Scala 2.10, 2.11 and 2.12 and is covered by
 + These abstractions are easy to implement, highly reusable and provide a high level of interoperability so that they 
   can be easily composed into complete I/O subsystems.
 + Proper resource management: Streams are properly closed, even if there is an exception in a nested constructor.
-  Say goodbye to resources leaks and try-with-resources statements.
+  Say goodbye to resource leaks and try-with-resources statements.
 + Supports Java and Scala equally well via dedicated APIs.
 
 ## Usage
