@@ -4,10 +4,6 @@
  */
 package global.namespace.fun.io.delta;
 
-import global.namespace.fun.io.api.Source;
-import global.namespace.fun.io.api.Store;
-
-import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -29,19 +25,4 @@ class MessageDigests {
         }
     }
 
-    /**
-     * Returns the digest value of the given source in canonical form.
-     * The canonical form is a positive, big-endian integer in hexadecimal string notation representing the digest
-     * value.
-     */
-    static String digestValueOf(final MessageDigest digest, final Source source) throws Exception {
-        return source.applyReader(in -> {
-            digest.reset();
-            final byte[] buffer = new byte[Store.BUFSIZE];
-            for (int read; 0 <= (read = in.read(buffer)); ) {
-                digest.update(buffer, 0, read);
-            }
-            return new BigInteger(1, digest.digest()).toString(16);
-        });
-    }
 }

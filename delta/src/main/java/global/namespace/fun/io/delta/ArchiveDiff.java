@@ -22,9 +22,9 @@ import static global.namespace.fun.io.delta.Delta.encodeModel;
  *
  * @author Christian Schlichtherle
  */
-abstract class ArchiveDiff<F, S, D> {
+abstract class ArchiveDiff<F, S, D> implements WithMessageDigest {
 
-    abstract MessageDigest digest();
+    public abstract MessageDigest digest();
 
     abstract ArchiveSource<F> baseSource();
 
@@ -170,10 +170,6 @@ abstract class ArchiveDiff<F, S, D> {
             void visitEntryInUpdateFile(final ArchiveEntrySource<S> updateEntry) throws Exception {
                 final String name = updateEntry.name();
                 added.put(name, new EntryNameAndDigestValue(name, digestValueOf(updateEntry)));
-            }
-
-            String digestValueOf(Source source) throws Exception {
-                return MessageDigests.digestValueOf(digest(), source);
             }
         }
     }

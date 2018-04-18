@@ -74,7 +74,7 @@ public class ArchiveDiffBuilder {
                                       ArchiveSource<?> updateSource) {
         return new ArchiveDiff() {
 
-            MessageDigest digest() { return digest; }
+            public MessageDigest digest() { return digest; }
 
             ArchiveSource<?> baseSource() { return baseSource; }
 

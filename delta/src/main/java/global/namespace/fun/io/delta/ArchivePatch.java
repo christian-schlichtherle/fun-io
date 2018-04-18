@@ -50,6 +50,8 @@ abstract class ArchivePatch<F, D, S> {
 
         DeltaModel model;
 
+        WithMessageDigest digest;
+
         abstract ArchiveInput<F> baseInput();
 
         abstract ArchiveInput<D> deltaInput();
@@ -139,11 +141,14 @@ abstract class ArchivePatch<F, D, S> {
             new OnDeltaInputPatch().apply(model().addedEntries());
         }
 
-        String digestValueOf(Source source) throws Exception {
-            return MessageDigests.digestValueOf(digest(), source);
-        }
+        String digestValueOf(Source source) throws Exception { return digest().digestValueOf(source); }
 
-        MessageDigest digest() throws Exception { return MessageDigest.getInstance(model().digestAlgorithmName()); }
+        WithMessageDigest digest() throws Exception {
+            final WithMessageDigest digest = this.digest;
+            return null != digest
+                    ? digest
+                    : (this.digest = WithMessageDigest.of(MessageDigest.getInstance(model().digestAlgorithmName())));
+        }
 
         DeltaModel model() throws Exception {
             final DeltaModel model = this.model;
