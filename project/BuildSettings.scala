@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import Dependencies._
 import sbt.Keys._
 import sbt._
 import sbtrelease.ReleasePlugin.autoImport._
 import sbtrelease.ReleaseStateTransformations._
 
+/** @author Christian Schlichtherle */
 object BuildSettings {
 
   def releaseSettings: Seq[Setting[_]] = {
@@ -97,17 +99,15 @@ object BuildSettings {
     commonSettings ++ inConfig(Test)(Seq(
       fork := true, // triggers `javaOptions`
       javaOptions += "-ea"
-    )) ++ Seq(
-      testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-v")
-    )
+    ))
   }
 
   def librarySettings: Seq[Setting[_]] = {
     artifactSettings ++ Seq(
-      // Support testing Java projects with ScalaTest et al:
+      // Support testing Java projects with Scalatest et al:
       compileOrder := CompileOrder.JavaThenScala,
       crossScalaVersions := Seq(ScalaVersion_2_10, ScalaVersion_2_11, ScalaVersion_2_12),
-      javacOptions := DefaultOptions.javac ++ Seq(Opts.compile.deprecation, "-Xlint:unchecked", "-source", "1.8", "-target", "1.8", "-g"),
+      javacOptions := DefaultOptions.javac ++ Seq(Opts.compile.deprecation, "-Xlint", "-source", "1.8", "-target", "1.8", "-g"),
       javacOptions in doc := DefaultOptions.javac ++ Seq("-source", "1.8"),
       scalacOptions := DefaultOptions.scalac ++ Seq(Opts.compile.deprecation, "-feature", Opts.compile.unchecked),
       scalaVersion := ScalaVersion_2_10
