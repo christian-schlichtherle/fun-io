@@ -23,25 +23,34 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.util.OptionalLong;
 
 final class PathStore implements Store {
 
+    private static final OpenOption[] EMPTY = new OpenOption[0];
+
     private final Path path;
+    private final OpenOption[] inputOptions;
+    private final OpenOption[] outputOptions;
 
-    PathStore(final Path p) { this.path = p; }
+    PathStore(Path p) { this(p, EMPTY, EMPTY); }
 
-    @Override
-    public Socket<OutputStream> output() { return () -> Files.newOutputStream(path); }
-
-    @Override
-    public Socket<InputStream> input() { return () -> Files.newInputStream(path); }
-
-    @Override
-    public void delete() throws IOException {
-        Files.delete(path);
+    PathStore(final Path p, final OpenOption[] inputOptions, final OpenOption[] outputOptions) {
+        this.path = p;
+        this.inputOptions = inputOptions;
+        this.outputOptions = outputOptions;
     }
+
+    @Override
+    public Socket<InputStream> input() { return () -> Files.newInputStream(path, inputOptions); }
+
+    @Override
+    public Socket<OutputStream> output() { return () -> Files.newOutputStream(path, outputOptions); }
+
+    @Override
+    public void delete() throws IOException { Files.delete(path); }
 
     @Override
     public OptionalLong size() throws IOException {

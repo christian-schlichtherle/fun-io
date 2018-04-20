@@ -23,6 +23,7 @@ import javax.crypto.Cipher;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.util.Base64;
 import java.util.Optional;
@@ -31,6 +32,8 @@ import java.util.prefs.Preferences;
 import java.util.zip.*;
 
 import static global.namespace.fun.io.api.Store.BUFSIZE;
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -90,10 +93,14 @@ public final class BIOS {
     /**
      * Returns a transformation which encrypts or decrypts the data using the given cipher suppliers for output and
      * input.
+     *
+     * @param ciphers a function which returns an initialized cipher.
+     *                If its input parameter is {@code false}, then the returned cipher must be initialized for input,
+     *                otherwise it must be initialized for output.
      */
     public static Transformation cipher(XFunction<? super Boolean, ? extends Cipher> ciphers) {
         requireNonNull(ciphers);
-        return new CipherTransformation(() -> ciphers.apply(true), () -> ciphers.apply(false));
+        return new CipherTransformation(() -> ciphers.apply(false), () -> ciphers.apply(true));
     }
 
     /**
@@ -271,6 +278,12 @@ public final class BIOS {
     /** Returns a store for the given file. */
     public static Store file(File f) { return path(f.toPath()); }
 
+    /** Returns a store for the given file, potentially for appending to it if {@code append} is {@code true}. */
+    public static Store file(final File f, final boolean append) {
+        final OpenOption[] empty = new OpenOption[0];
+        return path(f.toPath(), empty, append ? new OpenOption[] { APPEND, CREATE } : empty);
+    }
+
     /** Returns a new in-memory store with the default buffer size. */
     public static Store memory() { return memory(BUFSIZE); }
 
@@ -279,6 +292,11 @@ public final class BIOS {
 
     /** Returns a store for the given file. */
     public static Store path(Path p) { return new PathStore(requireNonNull(p)); }
+
+    /** TODO: Provide a nicer public API. */
+    private static Store path(Path p, OpenOption[] inputOptions, OpenOption[] outputOptions) {
+        return new PathStore(requireNonNull(p), inputOptions, outputOptions);
+    }
 
     /** Returns a store for the given preferences node and key. */
     public static Store preferences(Preferences p, String key) {
@@ -303,9 +321,7 @@ public final class BIOS {
     public static ArchiveStore<Path> directory(File directory) { return directory(directory.toPath()); }
 
     /** Returns an archive store for transparent access to the given directory. */
-    public static ArchiveStore<Path> directory(Path directory) {
-        return new DirectoryStore(requireNonNull(directory));
-    }
+    public static ArchiveStore<Path> directory(Path directory) { return new DirectoryStore(requireNonNull(directory)); }
 
     /** Returns an archive store for access to the given JAR file. */
     public static ArchiveStore<ZipEntry> jar(final File file) {

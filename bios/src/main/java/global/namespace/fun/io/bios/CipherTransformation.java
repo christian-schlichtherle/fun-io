@@ -25,11 +25,11 @@ import java.io.OutputStream;
 
 final class CipherTransformation implements Transformation {
 
-    private final XSupplier<Cipher> outputCipherSupplier, inputCipherSupplier;
+    private final XSupplier<Cipher> inputCipherSupplier, outputCipherSupplier;
 
-    CipherTransformation(final XSupplier<Cipher> outputCipherSupplier, final XSupplier<Cipher> inputCipherSupplier) {
-        this.outputCipherSupplier = outputCipherSupplier;
+    CipherTransformation(final XSupplier<Cipher> inputCipherSupplier, final XSupplier<Cipher> outputCipherSupplier) {
         this.inputCipherSupplier = inputCipherSupplier;
+        this.outputCipherSupplier = outputCipherSupplier;
     }
 
     @Override
@@ -43,5 +43,5 @@ final class CipherTransformation implements Transformation {
     }
 
     @Override
-    public Transformation inverse() { return new CipherTransformation(inputCipherSupplier, outputCipherSupplier); }
+    public Transformation inverse() { return new CipherTransformation(outputCipherSupplier, inputCipherSupplier); }
 }

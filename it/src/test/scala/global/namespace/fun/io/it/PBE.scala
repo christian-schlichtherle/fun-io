@@ -40,10 +40,10 @@ object PBE {
 
   // MUST be `def` or `pbe - pbe` may get optimized to `identity`!
   def pbe: Transformation = {
-    BIOS cipher { forOutput: java.lang.Boolean =>
+    BIOS cipher { outputMode: java.lang.Boolean =>
       val secretKey = secretKeyFactory generateSecret pbeKeySpec
       val cipher = getInstance(algorithm)
-      cipher.init(if (forOutput) ENCRYPT_MODE else DECRYPT_MODE, secretKey, pbeParameterSpec)
+      cipher.init(if (outputMode) ENCRYPT_MODE else DECRYPT_MODE, secretKey, pbeParameterSpec)
       cipher
     }
   }

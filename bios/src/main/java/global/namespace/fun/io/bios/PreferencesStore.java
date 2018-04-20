@@ -35,15 +35,15 @@ final class PreferencesStore implements Store {
     }
 
     @Override
+    public Socket<InputStream> input() { return () -> new ByteArrayInputStream(content()); }
+
+    @Override
     public Socket<OutputStream> output() {
         return () -> new ByteArrayOutputStream(BUFSIZE) {
             @Override
             public void close() throws IOException { content(toByteArray()); }
         };
     }
-
-    @Override
-    public Socket<InputStream> input() { return () -> new ByteArrayInputStream(content()); }
 
     @Override
     public void delete() throws IOException {

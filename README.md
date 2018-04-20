@@ -63,7 +63,7 @@ import global.namespace.fun.io.jackson.Jackson._ // from module `fun-io-jackson`
 import global.namespace.fun.io.scala.api._       // from module `fun-io-scala-api`
 import java.nio.file.Paths
 
-def ciphers(forOutput: Boolean): javax.crypto.Cipher = ??? // needs to return an initialized cipher
+def ciphers(outputMode: Boolean): javax.crypto.Cipher = ??? // needs to return an initialized cipher
 val store: Store = path(Paths get "hello-world.gz.cipher")
 val connectedCodec: ConnectedCodec = json << gzip << cipher(ciphers _) << store
 connectedCodec encode "Hello world!"
@@ -83,11 +83,10 @@ import static global.namespace.fun.io.jackson.Jackson.*;
 
 ...
 
-XFunction<Boolean, Cipher> ciphers = forOutput -> { throw new IOException("not implemented"); };
+XFunction<Boolean, Cipher> ciphers = outputMode -> { throw new UnsupportedOperationException("TODO"); };
 Store store = pathStore(Paths get "hello-world.gz.cipher");
 ConnectedCodec connectedCodec = json().map(gzip()).map(cipher(ciphers)).connect(store);
 connectedCodec.encode("Hello world!");
-
 ```
 
 Note that an `XFunction` is like a `java.util.function.Function`, except that it may throw an `Exception`. 
