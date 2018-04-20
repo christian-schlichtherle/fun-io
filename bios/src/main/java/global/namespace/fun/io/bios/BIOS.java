@@ -276,12 +276,12 @@ public final class BIOS {
     //////////////////////////
 
     /** Returns a store for the given file. */
-    public static Store file(File f) { return path(f.toPath()); }
+    public static Store file(File f) { return file(f, false); }
 
     /** Returns a store for the given file, potentially for appending to it if {@code append} is {@code true}. */
     public static Store file(final File f, final boolean append) {
-        final OpenOption[] empty = new OpenOption[0];
-        return path(f.toPath(), empty, append ? new OpenOption[] { APPEND, CREATE } : empty);
+        final PathStore store = path(f.toPath());
+        return append ? store.onOutput(APPEND, CREATE) : store;
     }
 
     /** Returns a new in-memory store with the default buffer size. */
@@ -290,13 +290,8 @@ public final class BIOS {
     /** Returns a new in-memory store with the given buffer size. */
     public static Store memory(int bufferSize) { return new MemoryStore(bufferSize); }
 
-    /** Returns a store for the given file. */
-    public static Store path(Path p) { return new PathStore(requireNonNull(p)); }
-
-    /** TODO: Provide a nicer public API. */
-    private static Store path(Path p, OpenOption[] inputOptions, OpenOption[] outputOptions) {
-        return new PathStore(requireNonNull(p), inputOptions, outputOptions);
-    }
+    /** Returns a store for the given path. */
+    public static PathStore path(Path p) { return new RealPathStore(requireNonNull(p)); }
 
     /** Returns a store for the given preferences node and key. */
     public static Store preferences(Preferences p, String key) {
@@ -311,6 +306,16 @@ public final class BIOS {
     /** Returns a store for the user preferences node for the package of the given class and the given key. */
     public static Store userPreferences(Class<?> classInPackage, String key) {
         return preferences(Preferences.userNodeForPackage(classInPackage), key);
+    }
+
+    /** A store which allows to switch open options for input and output. */
+    interface PathStore extends Store {
+
+        /** Returns a new path store which uses the given open options on input. */
+        PathStore onInput(OpenOption... options);
+
+        /** Returns a new path store which uses the given open options on output. */
+        PathStore onOutput(OpenOption... options);
     }
 
       //////////////////////////////////

@@ -16,7 +16,6 @@
 package global.namespace.fun.io.bios;
 
 import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.api.Store;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,7 +29,7 @@ import java.util.OptionalLong;
 import static java.nio.file.Files.newInputStream;
 import static java.nio.file.Files.newOutputStream;
 
-final class PathStore implements Store {
+final class RealPathStore implements BIOS.PathStore {
 
     private static final OpenOption[] EMPTY = new OpenOption[0];
 
@@ -38,12 +37,22 @@ final class PathStore implements Store {
     private final OpenOption[] inputOptions;
     private final OpenOption[] outputOptions;
 
-    PathStore(Path p) { this(p, EMPTY, EMPTY); }
+    RealPathStore(Path p) { this(p, EMPTY, EMPTY); }
 
-    PathStore(final Path p, final OpenOption[] inputOptions, final OpenOption[] outputOptions) {
+    private RealPathStore(final Path p, final OpenOption[] inputOptions, final OpenOption[] outputOptions) {
         this.path = p;
         this.inputOptions = inputOptions;
         this.outputOptions = outputOptions;
+    }
+
+    @Override
+    public RealPathStore onInput(OpenOption... inputOptions) {
+        return new RealPathStore(path, inputOptions, outputOptions);
+    }
+
+    @Override
+    public RealPathStore onOutput(OpenOption... outputOptions) {
+        return new RealPathStore(path, inputOptions, outputOptions);
     }
 
     @Override
