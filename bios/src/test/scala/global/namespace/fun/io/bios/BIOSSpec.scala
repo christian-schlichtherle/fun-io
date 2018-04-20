@@ -17,7 +17,6 @@ package global.namespace.fun.io.bios
 
 import java.io.{InputStream, OutputStream}
 
-import global.namespace.fun.io.scala.api._
 import org.mockito.Mockito._
 import org.scalatest.WordSpec
 import org.scalatest.mockito.MockitoSugar.mock
@@ -29,7 +28,7 @@ class BIOSSpec extends WordSpec {
       "given an input stream" in {
         val in = mock[InputStream]
         val source = BIOS stream in
-        source acceptReader ((_: InputStream) read ())
+        source acceptReader (_.read)
         verify(in) read ()
         verify(in, never) close ()
       }

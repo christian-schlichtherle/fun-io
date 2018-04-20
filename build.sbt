@@ -37,7 +37,7 @@ lazy val api: Project = project
 
 lazy val bios: Project = project
   .in(file("bios"))
-  .dependsOn(api, scalaApi % Test)
+  .dependsOn(api)
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -63,7 +63,7 @@ lazy val commonsCompress: Project = project
 
 lazy val delta: Project = project
   .in(file("delta"))
-  .dependsOn(bios, jackson, scalaApi % Test)
+  .dependsOn(bios, jackson)
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(

@@ -106,11 +106,10 @@ object BuildSettings {
     artifactSettings ++ Seq(
       // Support testing Java projects with Scalatest et al:
       compileOrder := CompileOrder.JavaThenScala,
-      crossScalaVersions := Seq(ScalaVersion_2_10, ScalaVersion_2_11, ScalaVersion_2_12),
       javacOptions := DefaultOptions.javac ++ Seq(Opts.compile.deprecation, "-Xlint", "-source", "1.8", "-target", "1.8", "-g"),
       javacOptions in doc := DefaultOptions.javac ++ Seq("-source", "1.8"),
       scalacOptions := DefaultOptions.scalac ++ Seq(Opts.compile.deprecation, "-feature", Opts.compile.unchecked, "-target:jvm-1.8"),
-      scalaVersion := ScalaVersion_2_10
+      scalaVersion := ScalaVersion_2_12
     )
   }
 
@@ -121,5 +120,9 @@ object BuildSettings {
     )
   }
 
-  def scalaLibrarySettings: Seq[Setting[_]] = librarySettings
+  def scalaLibrarySettings: Seq[Setting[_]] = {
+    librarySettings ++ Seq(
+      crossScalaVersions := Seq(ScalaVersion_2_10, ScalaVersion_2_11, ScalaVersion_2_12)
+    )
+  }
 }

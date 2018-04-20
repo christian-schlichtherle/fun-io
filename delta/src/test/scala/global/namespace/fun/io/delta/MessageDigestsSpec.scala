@@ -4,11 +4,7 @@
  */
 package global.namespace.fun.io.delta
 
-import java.io.InputStream
-
 import global.namespace.fun.io.delta.MessageDigests._
-import global.namespace.fun.io.api.Socket
-import global.namespace.fun.io.scala.api._
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
 import org.scalatest.prop.PropertyChecks._
@@ -25,8 +21,9 @@ class MessageDigestsSpec extends WordSpec {
         ("f3172822c7d08f23764aa5baee9d73ef32797b46", "twoTimesHelloWorld")
       )
       forAll(Tests) { (referenceValue, resourceName) =>
-        val socket: Socket[InputStream] = () => classOf[MessageDigestsSpec].getResourceAsStream(resourceName)
-        WithMessageDigest.of(sha1).digestValueOf(() => socket) shouldBe referenceValue
+        WithMessageDigest
+          .of(sha1)
+          .digestValueOf(() => () => classOf[MessageDigestsSpec].getResourceAsStream(resourceName)) shouldBe referenceValue
       }
     }
   }

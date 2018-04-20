@@ -4,10 +4,8 @@
  */
 package global.namespace.fun.io.bios
 
-import java.nio.file.{Path, Paths}
+import java.nio.file.Paths
 
-import global.namespace.fun.io.api.ArchiveInput
-import global.namespace.fun.io.scala.api._
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
 
@@ -22,8 +20,8 @@ class DirectoryStoreSpec extends WordSpec {
         val clazz = classOf[DirectoryStoreSpec]
         val dir: String = (clazz.getPackage.getName split "\\.").last
         val store = new DirectoryStore(Paths get (clazz getResource "..").toURI)
-        store acceptReader { input: ArchiveInput[Path] =>
-          input.asScala.map(_.name) should (contain(dir) and contain(s"$dir/${clazz.getSimpleName}.class"))
+        store acceptReader {
+          _.asScala.map(_.name) should (contain(dir) and contain(s"$dir/${clazz.getSimpleName}.class"))
         }
       }
     }
