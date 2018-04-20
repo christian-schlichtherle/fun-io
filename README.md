@@ -1,17 +1,22 @@
 # Fun I/O [![Maven Central](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-api.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22) [![Build Status](https://api.travis-ci.org/christian-schlichtherle/fun-io.svg)](https://travis-ci.org/christian-schlichtherle/fun-io)
 
-Fun I/O provides functional, high level abstractions for codecs, transformations, sockets, stores, archives et al.
+Fun I/O provides functional, high level abstractions for codecs, transformations, sockets, sources, sinks, stores, 
+archives et al.
 Fun I/O supports Java 8 or later and Scala 2.10, 2.11 and 2.12 and is covered by the Apache License, version 2.0.
 
 ## Features
 
-+ Composes low level `InputStream`s and `OutputStream`s into high level `Codec`s, `Transformation`s, `Store`s, 
-  `ArchiveStore`s et al.
-+ These abstractions are easy to implement, highly reusable and provide a high level of interoperability so that they 
-  can be easily composed into complete I/O subsystems.
++ Composes low level `InputStream`s and `OutputStream`s into high level `Codec`s, `Transformation`s, `Source`s, `Sink`s,
+  `Store`s, `ArchiveStore`s et al.
+  These abstractions are:
+  + Easy to implement.
+  + Stateless and hence reusable and thread-safe by design (except for their observable side effects, e.g. writing to a 
+    file).
+  + Composable into stateless I/O subsystems.
+  + Degradeable for interoperability with any code which deals with `InputStream` and `OutputStream` directly.
 + Proper resource management: Streams are properly closed, even if there is an exception in a nested constructor.
-  Say goodbye to resources leaks and try-with-resources statements.
-+ Supports Java and Scala equally well via dedicated APIs.
+  Say goodbye to resources leaks and try-with-resources statements!
++ Supports Java 8 or later and Scala equally well via dedicated APIs.
 
 ## Usage
 
