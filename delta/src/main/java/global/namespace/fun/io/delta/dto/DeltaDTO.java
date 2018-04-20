@@ -4,10 +4,8 @@
  */
 package global.namespace.fun.io.delta.dto;
 
-import java.io.Serializable;
-
 /** @author Christian Schlichtherle */
-public final class DeltaDTO implements Serializable {
+public final class DeltaDTO {
 
     public String algorithm;
 

@@ -4,10 +4,8 @@
  */
 package global.namespace.fun.io.delta.dto;
 
-import java.io.Serializable;
-
 /** @author Christian Schlichtherle */
-public final class EntryNameAndTwoDigestValuesDTO implements Serializable {
+public final class EntryNameAndTwoDigestValuesDTO {
 
     public String name, first, second;
 }

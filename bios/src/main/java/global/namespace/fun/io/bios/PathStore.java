@@ -27,6 +27,9 @@ import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.util.OptionalLong;
 
+import static java.nio.file.Files.newInputStream;
+import static java.nio.file.Files.newOutputStream;
+
 final class PathStore implements Store {
 
     private static final OpenOption[] EMPTY = new OpenOption[0];
@@ -44,10 +47,10 @@ final class PathStore implements Store {
     }
 
     @Override
-    public Socket<InputStream> input() { return () -> Files.newInputStream(path, inputOptions); }
+    public Socket<InputStream> input() { return () -> newInputStream(path, inputOptions); }
 
     @Override
-    public Socket<OutputStream> output() { return () -> Files.newOutputStream(path, outputOptions); }
+    public Socket<OutputStream> output() { return () -> newOutputStream(path, outputOptions); }
 
     @Override
     public void delete() throws IOException { Files.delete(path); }
