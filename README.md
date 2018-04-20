@@ -15,7 +15,7 @@ Fun I/O supports Java 8 or later and Scala 2.10, 2.11 and 2.12 and is covered by
   + Composable into stateless I/O subsystems.
   + Degradeable for interoperability with any code which deals with `InputStream` and `OutputStream` directly.
 + Proper resource management: Streams are properly closed, even if there is an exception in a nested constructor.
-  Say goodbye to resources leaks and try-with-resources statements!
+  Say goodbye to resource leaks and try-with-resources statements!
 + Supports Java 8 or later and Scala equally well via dedicated APIs.
 
 ## Usage
@@ -243,7 +243,7 @@ A typical Java application has a single dependency on `fun-io-bios`.
 Additional module dependencies may be added to the mix to take advantage of their respective features.
 
 A typical Scala application has the same dependency/dependencies as a Java application plus an additional dependency on
-`fun-io-scala-api` to improve the users experience in Scala. 
+`fun-io-scala-api` to improve the user experience in Scala. 
 
 [Apache Commons Compress]: https://commons.apache.org/proper/commons-compress/
 [Jackson Databind]: http://wiki.fasterxml.com/JacksonHome
