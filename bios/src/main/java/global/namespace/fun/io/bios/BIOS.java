@@ -309,7 +309,7 @@ public final class BIOS {
     }
 
     /** A store which allows to switch open options for input and output. */
-    interface PathStore extends Store {
+    public interface PathStore extends Store {
 
         /** Returns a new path store which uses the given open options on input. */
         PathStore onInput(OpenOption... options);
