@@ -25,38 +25,38 @@ import static java.util.Arrays.asList;
  *
  * @author Christian Schlichtherle
  */
-abstract class ArchivePatch<F, D, S> {
+abstract class ArchivePatch<B, D> {
 
-    abstract ArchiveSource<F> baseSource();
+    abstract ArchiveSource<B> baseSource();
 
     abstract ArchiveSource<D> deltaSource();
 
-    void to(ArchiveSink<S> update) throws Exception {
-        accept(engine -> update.acceptWriter(engine::to));
+    <U> void to(ArchiveSink<U> update) throws Exception {
+        this.<U>accept(engine -> update.acceptWriter(engine::to));
     }
 
-    private void accept(final XConsumer<Engine> consumer) throws Exception {
+    private <U> void accept(XConsumer<Engine<U>> consumer) throws Exception {
         baseSource().acceptReader(baseInput -> deltaSource().acceptReader(deltaInput -> consumer.accept(
-                new Engine() {
+                new Engine<U>() {
 
-                    ArchiveInput<F> baseInput() { return baseInput; }
+                    ArchiveInput<B> baseInput() { return baseInput; }
 
                     ArchiveInput<D> deltaInput() { return deltaInput; }
                 }
         )));
     }
 
-    private abstract class Engine {
+    private abstract class Engine<U> {
 
         DeltaModel model;
 
         WithMessageDigest digest;
 
-        abstract ArchiveInput<F> baseInput();
+        abstract ArchiveInput<B> baseInput();
 
         abstract ArchiveInput<D> deltaInput();
 
-        void to(final ArchiveOutput<S> updateOutput) throws Exception {
+        void to(final ArchiveOutput<U> updateOutput) throws Exception {
             for (Predicate<String> filter : passFilters(updateOutput)) {
                 to(updateOutput, filter);
             }
@@ -68,7 +68,7 @@ abstract class ArchivePatch<F, D, S> {
          * The filters should properly partition the set of entry sources, i.e. each entry source should be accepted by
          * exactly one filter.
          */
-        Iterable<Predicate<String>> passFilters(final ArchiveOutput<S> updateOutput) {
+        Iterable<Predicate<String>> passFilters(final ArchiveOutput<U> updateOutput) {
             if (updateOutput.isJar()) {
                 // java.util.JarInputStream assumes that the file entry
                 // "META-INF/MANIFEST.MF" should either be the first or the second
@@ -87,7 +87,7 @@ abstract class ArchivePatch<F, D, S> {
             }
         }
 
-        void to(final ArchiveOutput<S> updateOutput, final Predicate<String> filter) throws Exception {
+        void to(final ArchiveOutput<U> updateOutput, final Predicate<String> filter) throws Exception {
 
             abstract class Patch<E> {
 
@@ -114,10 +114,10 @@ abstract class ArchivePatch<F, D, S> {
                 }
             }
 
-            class OnBaseInputPatch extends Patch<F> {
+            class OnBaseInputPatch extends Patch<B> {
 
                 @Override
-                ArchiveInput<F> input() { return baseInput(); }
+                ArchiveInput<B> input() { return baseInput(); }
 
                 @Override
                 IOException ioException(Throwable cause) { return new WrongBaseArchiveFileException(cause); }

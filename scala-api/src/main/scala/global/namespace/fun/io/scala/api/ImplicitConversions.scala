@@ -50,11 +50,13 @@ private[api] trait ImplicitConversions {
 
   implicit def convertToSource(in: () => Socket[_ <: InputStream]): Source = new Source {
 
+    @deprecated("This is a false positive.", "")
     def input(): Socket[InputStream] = () => in().get()
   }
 
   implicit def convertToSink(out: () => Socket[OutputStream]): Sink = new Sink {
 
+    @deprecated("This is a false positive.", "")
     def output(): Socket[OutputStream] = () => out().get()
   }
 }

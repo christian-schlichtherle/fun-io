@@ -22,39 +22,39 @@ import static global.namespace.fun.io.delta.Delta.encodeModel;
  *
  * @author Christian Schlichtherle
  */
-abstract class ArchiveDiff<F, S, D> implements WithMessageDigest {
+abstract class ArchiveDiff<B, U> implements WithMessageDigest {
 
     public abstract MessageDigest digest();
 
-    abstract ArchiveSource<F> baseSource();
+    abstract ArchiveSource<B> baseSource();
 
-    abstract ArchiveSource<S> updateSource();
+    abstract ArchiveSource<U> updateSource();
 
     DeltaModel toModel() throws Exception { return apply(Engine::toModel); }
 
-    void to(ArchiveSink<D> delta) throws Exception {
-        apply(engine -> {
+    <D> void to(ArchiveSink<D> delta) throws Exception {
+        this.<D, Void>apply(engine -> {
             delta.acceptWriter(engine::to);
             return null;
         });
     }
 
-    private <T> T apply(XFunction<Engine, T> function) throws Exception {
+    private <D, T> T apply(XFunction<Engine<D>, T> function) throws Exception {
         return baseSource().applyReader(baseInput -> updateSource().applyReader(updateInput -> function.apply(
-                new Engine() {
+                new Engine<D>() {
 
-                    ArchiveInput<F> baseInput() { return baseInput; }
+                    ArchiveInput<B> baseInput() { return baseInput; }
 
-                    ArchiveInput<S> updateInput() { return updateInput; }
+                    ArchiveInput<U> updateInput() { return updateInput; }
                 }
         )));
     }
 
-    private abstract class Engine {
+    private abstract class Engine<D> {
 
-        abstract ArchiveInput<F> baseInput();
+        abstract ArchiveInput<B> baseInput();
 
-        abstract ArchiveInput<S> updateInput();
+        abstract ArchiveInput<U> updateInput();
 
         void to(final ArchiveOutput<D> deltaOutput) throws Exception {
 
@@ -65,7 +65,7 @@ abstract class ArchiveDiff<F, S, D> implements WithMessageDigest {
                 private Streamer() throws Exception { encodeModel(deltaOutput, model); }
 
                 private void stream() throws Exception {
-                    for (final ArchiveEntrySource<S> updateEntry : updateInput()) {
+                    for (final ArchiveEntrySource<U> updateEntry : updateInput()) {
                         final String name = updateEntry.name();
                         if (changedOrAdded(name)) {
                             updateEntry.copyTo(deltaOutput.sink(name));
@@ -84,9 +84,9 @@ abstract class ArchiveDiff<F, S, D> implements WithMessageDigest {
         DeltaModel toModel() throws Exception {
             final Assembly assembly = new Assembly();
 
-            for (final ArchiveEntrySource<F> baseEntry : baseInput()) {
+            for (final ArchiveEntrySource<B> baseEntry : baseInput()) {
                 if (!baseEntry.isDirectory()) {
-                    final Optional<ArchiveEntrySource<S>> updateEntry = updateInput().source(baseEntry.name());
+                    final Optional<ArchiveEntrySource<U>> updateEntry = updateInput().source(baseEntry.name());
                     if (updateEntry.isPresent()) {
                         assembly.visitEntriesInBothFiles(baseEntry, updateEntry.get());
                     } else {
@@ -95,9 +95,9 @@ abstract class ArchiveDiff<F, S, D> implements WithMessageDigest {
                 }
             }
 
-            for (final ArchiveEntrySource<S> updateEntry : updateInput()) {
+            for (final ArchiveEntrySource<U> updateEntry : updateInput()) {
                 if (!updateEntry.isDirectory()) {
-                    final Optional<ArchiveEntrySource<F>> baseEntry = baseInput().source(updateEntry.name());
+                    final Optional<ArchiveEntrySource<B>> baseEntry = baseInput().source(updateEntry.name());
                     if (!baseEntry.isPresent()) {
                         assembly.visitEntryInUpdateFile(updateEntry);
                     }
@@ -138,8 +138,8 @@ abstract class ArchiveDiff<F, S, D> implements WithMessageDigest {
              * @param baseEntry the source for reading the archive entry in the base archive file.
              * @param updateEntry the source for reading the archive entry in the update archive file.
              */
-            void visitEntriesInBothFiles(final ArchiveEntrySource<F> baseEntry,
-                                         final ArchiveEntrySource<S> updateEntry)
+            void visitEntriesInBothFiles(final ArchiveEntrySource<B> baseEntry,
+                                         final ArchiveEntrySource<U> updateEntry)
                     throws Exception {
                 final String name = baseEntry.name();
                 assert name.equals(updateEntry.name());
@@ -157,7 +157,7 @@ abstract class ArchiveDiff<F, S, D> implements WithMessageDigest {
              *
              * @param baseEntry the source for reading the archive entry in the base archive file.
              */
-            void visitEntryInBaseFile(final ArchiveEntrySource<F> baseEntry) throws Exception {
+            void visitEntryInBaseFile(final ArchiveEntrySource<B> baseEntry) throws Exception {
                 final String name = baseEntry.name();
                 removed.put(name, new EntryNameAndDigestValue(name, digestValueOf(baseEntry)));
             }
@@ -167,7 +167,7 @@ abstract class ArchiveDiff<F, S, D> implements WithMessageDigest {
              *
              * @param updateEntry the source for reading the archive entry in the update archive file.
              */
-            void visitEntryInUpdateFile(final ArchiveEntrySource<S> updateEntry) throws Exception {
+            void visitEntryInUpdateFile(final ArchiveEntrySource<U> updateEntry) throws Exception {
                 final String name = updateEntry.name();
                 added.put(name, new EntryNameAndDigestValue(name, digestValueOf(updateEntry)));
             }

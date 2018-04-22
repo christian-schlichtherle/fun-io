@@ -67,18 +67,20 @@ public class ArchiveDiffBuilder {
     @SuppressWarnings("unchecked")
     public void to(ArchiveSink<?> delta) throws Exception { build().to(delta); }
 
-    private ArchiveDiff build() { return create(digest.orElseGet(MessageDigests::sha1), base.get(), update.get()); }
+    private ArchiveDiff<?, ?> build() {
+        return create(digest.orElseGet(MessageDigests::sha1), base.get(), update.get());
+    }
 
-    private static ArchiveDiff create(MessageDigest digest,
-                                      ArchiveSource<?> baseSource,
-                                      ArchiveSource<?> updateSource) {
-        return new ArchiveDiff() {
+    private static <B, U> ArchiveDiff<B, U> create(MessageDigest digest,
+                                                   ArchiveSource<B> baseSource,
+                                                   ArchiveSource<U> updateSource) {
+        return new ArchiveDiff<B, U>() {
 
             public MessageDigest digest() { return digest; }
 
-            ArchiveSource<?> baseSource() { return baseSource; }
+            ArchiveSource<B> baseSource() { return baseSource; }
 
-            ArchiveSource<?> updateSource() { return updateSource; }
+            ArchiveSource<U> updateSource() { return updateSource; }
         };
     }
 }

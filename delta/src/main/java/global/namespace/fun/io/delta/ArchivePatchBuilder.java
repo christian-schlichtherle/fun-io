@@ -41,14 +41,14 @@ public class ArchivePatchBuilder {
     @SuppressWarnings("unchecked")
     public void to(ArchiveSink<?> update) throws Exception { build().to(update); }
 
-    private ArchivePatch build() { return create(base.get(), delta.get()); }
+    private ArchivePatch<?, ?> build() { return create(base.get(), delta.get()); }
 
-    private static ArchivePatch create(ArchiveSource<?> baseSource, ArchiveSource<?> deltaSource) {
-        return new ArchivePatch() {
+    private static <B, D> ArchivePatch<B, D> create(ArchiveSource<B> baseSource, ArchiveSource<D> deltaSource) {
+        return new ArchivePatch<B, D>() {
 
-            ArchiveSource<?> baseSource() { return baseSource; }
+            ArchiveSource<B> baseSource() { return baseSource; }
 
-            ArchiveSource<?> deltaSource() { return deltaSource; }
+            ArchiveSource<D> deltaSource() { return deltaSource; }
         };
     }
 }
