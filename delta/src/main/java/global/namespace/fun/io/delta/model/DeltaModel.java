@@ -107,7 +107,6 @@ public final class DeltaModel {
     public Collection<EntryNameAndDigestValue> unchangedEntries() { return unchanged.values(); }
 
     /** Looks up the given entry name in the <i>unchanged</i> entries. */
-    @Deprecated
     public EntryNameAndDigestValue unchanged(String name) { return unchanged.get(name); }
 
     /**
@@ -126,7 +125,6 @@ public final class DeltaModel {
     public Collection<EntryNameAndDigestValue> removedEntries() { return removed.values(); }
 
     /** Looks up the given entry name in the <i>removed</i> entries. */
-    @Deprecated
     public EntryNameAndDigestValue removed(String name) { return removed.get(name); }
 
     @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
