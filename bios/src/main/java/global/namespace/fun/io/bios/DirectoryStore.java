@@ -73,15 +73,26 @@ final class DirectoryStore implements ArchiveStore<Path> {
     private ArchiveEntrySource<Path> pathSource(String relativePath) {
         return new ArchiveEntrySource<Path>() {
 
+            @Override
             public String name() { return relativePath; }
 
+            @Override
+            public long size() {
+                try {
+                    return Files.size(entry());
+                } catch (IOException ignored) {
+                    return -1;
+                }
+            }
+
+            @Override
             public boolean isDirectory() { return Files.isDirectory(resolvedPath()); }
 
+            @Override
             public Path entry() { return get(relativePath); }
 
+            @Override
             public Socket<InputStream> input() { return () -> newInputStream(resolvedPath()); }
-
-            public void copyTo(ArchiveEntrySink<?> sink) throws Exception { copy(this, sink); }
 
             Path resolvedPath() { return resolve(relativePath); }
         };
@@ -90,12 +101,25 @@ final class DirectoryStore implements ArchiveStore<Path> {
     private ArchiveEntrySink<Path> pathSink(String relativePath) {
         return new ArchiveEntrySink<Path>() {
 
+            @Override
             public String name() { return relativePath; }
 
+            @Override
+            public long size() {
+                try {
+                    return Files.size(entry());
+                } catch (IOException ignored) {
+                    return -1;
+                }
+            }
+
+            @Override
             public boolean isDirectory() { return Files.isDirectory(resolvedPath()); }
 
+            @Override
             public Path entry() { return get(name()); }
 
+            @Override
             public Socket<OutputStream> output() {
                 return () -> {
                     final Path path = resolvedPath();
@@ -106,6 +130,9 @@ final class DirectoryStore implements ArchiveStore<Path> {
                     return newOutputStream(path);
                 };
             }
+
+            @Override
+            public void copyFrom(ArchiveEntrySource<?> source) throws Exception { copy(source, this); }
 
             Path resolvedPath() { return resolve(relativePath); }
         };

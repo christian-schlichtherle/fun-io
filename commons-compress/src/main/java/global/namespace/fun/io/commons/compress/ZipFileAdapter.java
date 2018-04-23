@@ -31,17 +31,21 @@ final class ZipFileAdapter implements ArchiveInput<ZipArchiveEntry> {
 
     ZipFileAdapter(final ZipFile input) { this.zip = requireNonNull(input); }
 
+    @Override
     public Iterator<ArchiveEntrySource<ZipArchiveEntry>> iterator() {
         return new Iterator<ArchiveEntrySource<ZipArchiveEntry>>() {
 
             final Enumeration<ZipArchiveEntry> en = zip.getEntries();
 
+            @Override
             public boolean hasNext() { return en.hasMoreElements(); }
 
+            @Override
             public ArchiveEntrySource<ZipArchiveEntry> next() { return source(en.nextElement()); }
         };
     }
 
+    @Override
     public Optional<ArchiveEntrySource<ZipArchiveEntry>> source(String name) {
         return Optional.ofNullable(zip.getEntry(name)).map(this::source);
     }
@@ -49,27 +53,22 @@ final class ZipFileAdapter implements ArchiveInput<ZipArchiveEntry> {
     private ZipArchiveEntrySource source(ZipArchiveEntry entry) {
         return new ZipArchiveEntrySource() {
 
+            @Override
             public String name() { return entry.getName(); }
 
+            @Override
+            public long size() { return entry.getSize(); }
+
+            @Override
             public boolean isDirectory() { return entry.isDirectory(); }
 
+            @Override
             public ZipArchiveEntry entry() { return entry; }
 
+            @Override
             public Socket<InputStream> input() { return () -> zip.getInputStream(entry); }
 
             Socket<InputStream> rawInput() { return () -> zip.getRawInputStream(entry); }
-
-            public void copyTo(final ArchiveEntrySink<?> sink) throws Exception {
-                if (sink instanceof ZipArchiveEntrySink) {
-                    copyTo((ZipArchiveEntrySink) sink);
-                } else {
-                    copy(this, sink);
-                }
-            }
-
-            void copyTo(ZipArchiveEntrySink sink) throws Exception {
-                sink.copyFrom(this);
-            }
         };
     }
 

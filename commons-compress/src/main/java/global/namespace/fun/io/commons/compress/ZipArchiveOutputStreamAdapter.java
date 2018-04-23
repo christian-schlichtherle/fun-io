@@ -5,6 +5,7 @@
 package global.namespace.fun.io.commons.compress;
 
 import global.namespace.fun.io.api.ArchiveEntrySink;
+import global.namespace.fun.io.api.ArchiveEntrySource;
 import global.namespace.fun.io.api.ArchiveOutput;
 import global.namespace.fun.io.api.Socket;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
@@ -30,19 +31,28 @@ class ZipArchiveOutputStreamAdapter implements ArchiveOutput<ZipArchiveEntry> {
     ZipArchiveOutputStreamAdapter(final ZipArchiveOutputStream zip) { this.zip = requireNonNull(zip); }
 
     /** Returns {@code false}. */
+    @Override
     public boolean isJar() { return false; }
 
+    @Override
     public ArchiveEntrySink<ZipArchiveEntry> sink(String name) { return sink(new ZipArchiveEntry(name)); }
 
-    ZipArchiveEntrySink sink(ZipArchiveEntry entry) {
-        return new ZipArchiveEntrySink() {
+    ArchiveEntrySink<ZipArchiveEntry> sink(ZipArchiveEntry entry) {
+        return new ArchiveEntrySink<ZipArchiveEntry>() {
 
+            @Override
             public String name() { return entry.getName(); }
 
+            @Override
+            public long size() { return entry.getSize(); }
+
+            @Override
             public boolean isDirectory() { return entry.isDirectory(); }
 
+            @Override
             public ZipArchiveEntry entry() { return entry; }
 
+            @Override
             public Socket<OutputStream> output() {
                 return () -> {
                     if (entry.isDirectory()) {
@@ -67,14 +77,19 @@ class ZipArchiveOutputStreamAdapter implements ArchiveOutput<ZipArchiveEntry> {
                 };
             }
 
-            void copyFrom(ZipArchiveEntrySource source) throws Exception {
-                final ZipArchiveEntry origin = source.entry();
-                if (origin.getName().equals(entry.getName())) {
-                    source.rawInput().accept(in -> zip.addRawArchiveEntry(origin, in));
-                } else {
-                    copy(source, this);
+            @Override
+            public void copyFrom(final ArchiveEntrySource<?> source) throws Exception {
+                if (source instanceof ZipArchiveEntrySource) {
+                    final ZipArchiveEntrySource zipSource = (ZipArchiveEntrySource) source;
+                    final ZipArchiveEntry origin = zipSource.entry();
+                    if (origin.getName().equals(entry.getName())) {
+                        zipSource.rawInput().accept(in -> zip.addRawArchiveEntry(origin, in));
+                        return;
+                    }
                 }
+                copy(source, this);
             }
+
         };
     }
 

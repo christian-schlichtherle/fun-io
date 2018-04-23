@@ -37,6 +37,7 @@ final class TarArchiveInputStreamAdapter implements ArchiveInput<TarArchiveEntry
 
             Object next;
 
+            @Override
             public boolean hasNext() {
                 if (null == next) {
                     try {
@@ -48,6 +49,7 @@ final class TarArchiveInputStreamAdapter implements ArchiveInput<TarArchiveEntry
                 return null != next;
             }
 
+            @Override
             public ArchiveEntrySource<TarArchiveEntry> next() {
                 if (hasNext()) {
                     if (next instanceof TarArchiveEntry) {
@@ -70,12 +72,19 @@ final class TarArchiveInputStreamAdapter implements ArchiveInput<TarArchiveEntry
     private ArchiveEntrySource<TarArchiveEntry> source(TarArchiveEntry entry) {
         return new ArchiveEntrySource<TarArchiveEntry>() {
 
+            @Override
             public String name() { return entry.getName(); }
 
+            @Override
+            public long size() { return entry.getSize(); }
+
+            @Override
             public boolean isDirectory() { return entry.isDirectory(); }
 
+            @Override
             public TarArchiveEntry entry() { return entry; }
 
+            @Override
             public Socket<InputStream> input() {
                 return stream(tar).input().map(in -> {
                     if (entry != tar.getCurrentEntry()) {
@@ -84,8 +93,6 @@ final class TarArchiveInputStreamAdapter implements ArchiveInput<TarArchiveEntry
                     return in;
                 });
             }
-
-            public void copyTo(ArchiveEntrySink<?> sink) throws Exception { copy(this, sink); }
         };
     }
 

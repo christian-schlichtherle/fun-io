@@ -14,6 +14,9 @@ public abstract class ArchiveEntry<E> {
     /** Returns the name of the underlying archive entry. */
     public abstract String name();
 
+    /** Returns the size of the underlying archive entry. */
+    public abstract long size();
+
     /** Returns {@code true} if and only if the underlying entry is a directory. */
     public abstract boolean isDirectory();
 

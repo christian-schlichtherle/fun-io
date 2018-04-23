@@ -5,6 +5,7 @@
 package global.namespace.fun.io.bios;
 
 import global.namespace.fun.io.api.ArchiveEntrySink;
+import global.namespace.fun.io.api.ArchiveEntrySource;
 import global.namespace.fun.io.api.ArchiveOutput;
 import global.namespace.fun.io.api.Socket;
 
@@ -14,6 +15,7 @@ import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import static global.namespace.fun.io.bios.BIOS.copy;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -28,19 +30,28 @@ class ZipOutputStreamAdapter implements ArchiveOutput<ZipEntry> {
     ZipOutputStreamAdapter(final ZipOutputStream zip) { this.zip = requireNonNull(zip); }
 
     /** Returns {@code false}. */
+    @Override
     public boolean isJar() { return false; }
 
+    @Override
     public ArchiveEntrySink<ZipEntry> sink(String name) { return sink(new ZipEntry(name)); }
 
     ArchiveEntrySink<ZipEntry> sink(ZipEntry entry) {
         return new ArchiveEntrySink<ZipEntry>() {
 
+            @Override
             public String name() { return entry.getName(); }
 
+            @Override
+            public long size() { return entry.getSize(); }
+
+            @Override
             public boolean isDirectory() { return entry.isDirectory(); }
 
+            @Override
             public ZipEntry entry() { return entry; }
 
+            @Override
             public Socket<OutputStream> output() {
                 return () -> {
                     if (entry.isDirectory()) {
@@ -57,6 +68,9 @@ class ZipOutputStreamAdapter implements ArchiveOutput<ZipEntry> {
                     };
                 };
             }
+
+            @Override
+            public void copyFrom(ArchiveEntrySource<?> source) throws Exception { copy(source, this); }
         };
     }
 

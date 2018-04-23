@@ -37,8 +37,10 @@ final class ZipFileAdapter implements ArchiveInput<ZipEntry> {
 
             final Enumeration<? extends ZipEntry> en = zip.entries();
 
+            @Override
             public boolean hasNext() { return en.hasMoreElements(); }
 
+            @Override
             public ArchiveEntrySource<ZipEntry> next() { return source(en.nextElement()); }
         };
     }
@@ -51,15 +53,20 @@ final class ZipFileAdapter implements ArchiveInput<ZipEntry> {
     private ArchiveEntrySource<ZipEntry> source(ZipEntry entry) {
         return new ArchiveEntrySource<ZipEntry>() {
 
+            @Override
             public String name() { return entry.getName(); }
 
+            @Override
+            public long size() { return entry.getSize(); }
+
+            @Override
             public boolean isDirectory() { return entry.isDirectory(); }
 
+            @Override
             public ZipEntry entry() { return entry; }
 
+            @Override
             public Socket<InputStream> input() { return () -> zip.getInputStream(entry); }
-
-            public void copyTo(ArchiveEntrySink<?> sink) throws Exception { copy(this, sink); }
         };
     }
 
