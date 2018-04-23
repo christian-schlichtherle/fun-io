@@ -375,7 +375,7 @@ public final class BIOS {
     public static void copy(Source source, Sink sink) throws Exception { copy(source.input(), sink.output()); }
 
     /**
-     * Copies the data from the given source to the given sink.
+     * Copies the data from the given input stream socket to the given output stream socket.
      * <p>
      * This is a high performance implementation which uses a pooled background thread to fill a FIFO of pooled buffers
      * which is concurrently flushed by the current thread.
@@ -386,6 +386,24 @@ public final class BIOS {
      */
     public static void copy(Socket<? extends InputStream> input, Socket<? extends OutputStream> output) throws Exception {
         input.accept(in -> output.accept(out -> Copy.cat(in, out)));
+    }
+
+    /**
+     * Copies the entries from the given archive source to the given archive sink.
+     * <p>
+     * This is a high performance implementation which uses a pooled background thread to fill a FIFO of pooled buffers
+     * which is concurrently flushed by the current thread.
+     * It performs best when used with <em>unbuffered</em> streams.
+     *
+     * @param source the archive source to read the entries from.
+     * @param sink the archive sink to write the entries to.
+     */
+    public static void copy(final ArchiveSource<?> source, final ArchiveSink<?> sink) throws Exception {
+        source.acceptReader(input -> sink.acceptWriter(output -> {
+            for (ArchiveEntrySource<?> entry : input) {
+                entry.copyTo(output.sink(entry.name()));
+            }
+        }));
     }
 
     /**

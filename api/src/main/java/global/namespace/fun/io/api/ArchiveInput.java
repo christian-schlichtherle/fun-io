@@ -15,6 +15,12 @@ import java.util.Optional;
  */
 public interface ArchiveInput<E> extends Iterable<ArchiveEntrySource<E>>, Closeable {
 
-    /** Returns a source for reading the archive entry with the given name, if it exists. */
+    /**
+     * Returns a source for reading the archive entry with the given name, if it exists (optional operation).
+     *
+     * @throws UnsupportedOperationException if this operation is not supported.
+     *                                       This would typically happen with archive files which lack a directory for
+     *                                       random access, e.g. the TAR file format.
+     */
     Optional<ArchiveEntrySource<E>> source(String name);
 }

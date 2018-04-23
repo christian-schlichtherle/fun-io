@@ -17,6 +17,9 @@ package global.namespace.fun.io.commons.compress;
 
 import global.namespace.fun.io.api.*;
 import org.apache.commons.compress.archivers.jar.JarArchiveOutputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
@@ -31,6 +34,7 @@ import org.apache.commons.compress.compressors.snappy.SnappyCompressorOutputStre
 import org.tukaani.xz.LZMA2Options;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 import static java.util.Objects.requireNonNull;
@@ -115,13 +119,27 @@ public final class CommonsCompress {
         return new ArchiveStore<ZipArchiveEntry>() {
 
             @Override
-            public Socket<ArchiveInput<ZipArchiveEntry>> input() {
-                return () -> new ZipFileAdapter(new ZipFile(file));
-            }
+            public Socket<ArchiveInput<ZipArchiveEntry>> input() { return () -> new ZipFileAdapter(new ZipFile(file)); }
 
             @Override
             public Socket<ArchiveOutput<ZipArchiveEntry>> output() {
                 return () -> new JarArchiveOutputStreamAdapter(new JarArchiveOutputStream(new FileOutputStream(file)));
+            }
+        };
+    }
+
+    public static ArchiveStore<TarArchiveEntry> tar(final File file) {
+        requireNonNull(file);
+        return new ArchiveStore<TarArchiveEntry>() {
+
+            @Override
+            public Socket<ArchiveInput<TarArchiveEntry>> input() {
+                return () -> new TarArchiveInputStreamAdapter(new TarArchiveInputStream(new FileInputStream(file)));
+            }
+
+            @Override
+            public Socket<ArchiveOutput<TarArchiveEntry>> output() {
+                return () -> new TarArchiveOutputStreamAdapter(new TarArchiveOutputStream(new FileOutputStream(file)));
             }
         };
     }
@@ -132,9 +150,7 @@ public final class CommonsCompress {
         return new ArchiveStore<ZipArchiveEntry>() {
 
             @Override
-            public Socket<ArchiveInput<ZipArchiveEntry>> input() {
-                return () -> new ZipFileAdapter(new ZipFile(file));
-            }
+            public Socket<ArchiveInput<ZipArchiveEntry>> input() { return () -> new ZipFileAdapter(new ZipFile(file)); }
 
             @Override
             public Socket<ArchiveOutput<ZipArchiveEntry>> output() {

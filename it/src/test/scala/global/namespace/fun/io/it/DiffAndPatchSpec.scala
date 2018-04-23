@@ -15,7 +15,6 @@ import global.namespace.fun.io.delta.Delta._
 import global.namespace.fun.io.delta.dto.DeltaDTO
 import global.namespace.fun.io.delta.model.DeltaModel
 import global.namespace.fun.io.it.DiffAndPatchSpec._
-import global.namespace.fun.io.scala.api._
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
 import org.scalatest.prop.PropertyChecks._
@@ -29,7 +28,7 @@ class DiffAndPatchSpec extends WordSpec {
   "Diffing two archive files and patching the first with the delta" should {
     "produce a clone of the second archive file" in {
       forAllArchives { (first, second) => { implicit factory =>
-        withTempArchive { delta => withTempArchive { clone =>
+        withTempArchive { delta: ArchiveStore[_] => withTempArchive { clone: ArchiveStore[_] =>
 
           diff first first second second digest sha1 to delta
           patch base first delta delta to clone
@@ -54,19 +53,23 @@ private object DiffAndPatchSpec {
   type ArchiveStoreFactory[E] = File => ArchiveStore[E]
 
   def forAllArchives(test: (ArchiveSource[_], ArchiveSource[_]) => ArchiveStoreFactory[_] => Any): Unit = {
-    test(directory(deltaModelDirectory), directory(deltaDtoDirectory))(directory(_: File))
+    test(directory(deltaModelDirectory), directory(deltaDtoDirectory))(directory _)
     forAll(Factories)(factory => test(factory(Test1JarFile), factory(Test2JarFile))(factory))
   }
 
+  private lazy val deltaModelDirectory = new File((classOf[DeltaModel] getResource "").toURI)
+
+  private lazy val deltaDtoDirectory = new File((classOf[DeltaDTO] getResource "").toURI)
+
   private val Factories: TableFor1[ArchiveStoreFactory[_]] = Table(
-    "archive file store factory",
-    CommonsCompress.jar(_: File),
-    CommonsCompress.zip(_: File),
-    BIOS.jar(_: File),
-    BIOS.zip(_: File)
+    "archive store factory",
+    CommonsCompress.jar _,
+    CommonsCompress.zip _,
+    BIOS.jar _,
+    BIOS.zip _
   )
 
-  def withTempArchive(test: ArchiveStore[_] => Any)(implicit factory: ArchiveStoreFactory[_]): Unit = {
+  def withTempArchive[E](test: ArchiveStore[E] => Any)(implicit factory: ArchiveStoreFactory[E]): Unit = {
     val file = File.createTempFile("temp", null)
     file delete ()
     try {
@@ -82,10 +85,6 @@ private object DiffAndPatchSpec {
     }
     file delete ()
   }
-
-  private lazy val deltaModelDirectory = new File((classOf[DeltaModel] getResource "").toURI)
-
-  private lazy val deltaDtoDirectory = new File((classOf[DeltaDTO] getResource "").toURI)
 
   private lazy val Test1JarFile = resourceFile("test1.jar")
 

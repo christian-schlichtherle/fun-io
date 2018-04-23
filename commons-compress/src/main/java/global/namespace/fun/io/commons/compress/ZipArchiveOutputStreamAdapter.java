@@ -7,6 +7,7 @@ package global.namespace.fun.io.commons.compress;
 import global.namespace.fun.io.api.ArchiveEntrySink;
 import global.namespace.fun.io.api.ArchiveOutput;
 import global.namespace.fun.io.api.Socket;
+import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 
@@ -59,7 +60,7 @@ class ZipArchiveOutputStreamAdapter implements ArchiveOutput<ZipArchiveEntry> {
                         public void close() throws IOException {
                             if (!closed) {
                                 closed = true;
-                                ((ZipArchiveOutputStream) out).closeArchiveEntry(); // not idempotent!
+                                ((ArchiveOutputStream) out).closeArchiveEntry(); // not idempotent!
                             }
                         }
                     };
