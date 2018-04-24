@@ -16,20 +16,20 @@
 package global.namespace.fun.io.bios;
 
 import global.namespace.fun.io.api.Buffer;
+import global.namespace.fun.io.api.Filter;
 import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.api.Transformation;
 
 import java.io.*;
 
 import static global.namespace.fun.io.bios.BIOS.copy;
 
-final class BufferedInverseTransformation implements Transformation {
+final class BufferedInverseFilter implements Filter {
 
-    private final Transformation transformation;
+    private final Filter filter;
     private final Socket<Buffer> bufferSocket;
 
-    BufferedInverseTransformation(final Transformation t, final Socket<Buffer> bufferSocket) {
-        this.transformation = t;
+    BufferedInverseFilter(final Filter t, final Socket<Buffer> bufferSocket) {
+        this.filter = t;
         this.bufferSocket = bufferSocket;
     }
 
@@ -39,7 +39,7 @@ final class BufferedInverseTransformation implements Transformation {
             final AutoCloseable afterWritingBuffer = () -> {
                 if (buffer.exists()) { // for idempotence!
                     try {
-                        copy(transformation.unapply(buffer.input()), output);
+                        copy(filter.unapply(buffer.input()), output);
                     } finally {
                         buffer.close();
                     }
@@ -52,7 +52,7 @@ final class BufferedInverseTransformation implements Transformation {
     @Override
     public Socket<InputStream> unapply(Socket<InputStream> input) {
         return bufferSocket.flatMap(buffer -> {
-            copy(input, transformation.apply(buffer.output()));
+            copy(input, filter.apply(buffer.output()));
             return buffer.input().map(bufferIn -> decorate(bufferIn, buffer));
         });
     }
@@ -70,5 +70,5 @@ final class BufferedInverseTransformation implements Transformation {
     }
 
     @Override
-    public Transformation inverse() { return transformation; }
+    public Filter inverse() { return filter; }
 }

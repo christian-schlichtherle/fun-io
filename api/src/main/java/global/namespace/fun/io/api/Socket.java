@@ -43,7 +43,7 @@ import java.util.Objects;
  * }</pre>
  * A socket can also get <em>transformed</em> in a fail-safe way by calling its {@link #map(XFunction)} or
  * {@link #flatMap(XFunction)} methods.
- * The following example first transforms the preceding file output stream socket into a print stream socket and then
+ * The following example first filters the preceding file output stream socket into a print stream socket and then
  * appends {@code "Hello world!"} to the file {@code test.txt} again:
  * <pre>{@code
  * Socket<PrintStream> pss = foss.map(PrintStream::new);
@@ -53,7 +53,7 @@ import java.util.Objects;
  * <pre>{@code
  * foss.map(PrintStream::new).accept(ps -> ps.println("Hello world!"));
  * }</pre>
- * Because sockets are reusable {@code foss} and {@code pss} can be saved for subsequent use, including transformation:
+ * Because sockets are reusable {@code foss} and {@code pss} can be saved for subsequent use, including filtering:
  * On any use, a new {@code FileOutputStream} and a new {@code PrintStream} gets created.
  * The file output stream gets automatically closed in all examples, preventing the application from leaking file
  * descriptors.
@@ -63,9 +63,9 @@ import java.util.Objects;
  * Because of this, transforming a socket is generally preferable over decorating the given resource in a consumer or
  * function.
  * <p>
- * The following example safely transforms a file output stream socket for writing {@code "Hello world!"} to the
+ * The following example safely filters a file output stream socket for writing {@code "Hello world!"} to the
  * compressed text file {@code "test.txt.gz"}.
- * It then safely transforms a file input stream socket for reading the message back and printing it to standard output:
+ * It then safely filters a file input stream socket for reading the message back and printing it to standard output:
  * <pre>{@code
  * File file = new File("test.txt.gz");
  *
@@ -80,10 +80,10 @@ import java.util.Objects;
  *         .map(BufferedReader::new)
  *         .accept(br -> System.out.println(br.readLine()));
  * }</pre>
- * Should any transformation fail, e.g. because the file system is full or the file's content is not in GZIP format,
+ * Should any filter fail, e.g. because the file system is full or the file's content is not in GZIP format,
  * then the sockets will properly close the previously created output or input stream and no resources will be leaked.
  *
- * @see Transformation
+ * @see Filter
  * @param <T> the type of the auto-closeable resource.
  * @author Christian Schlichtherle
  */
@@ -128,7 +128,7 @@ public interface Socket<T extends AutoCloseable> extends XSupplier<T> {
     /**
      * Returns a socket which applies the given function to the resources loaned by this socket.
      * If the given function fails then the resource gets closed before this method terminates, which makes the
-     * transformation fail-safe.
+     * filter fail-safe.
      */
     default <U extends AutoCloseable> Socket<U> map(final XFunction<? super T, ? extends U> function) {
         Objects.requireNonNull(function);

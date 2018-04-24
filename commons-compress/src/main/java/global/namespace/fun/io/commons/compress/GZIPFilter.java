@@ -16,24 +16,25 @@
 package global.namespace.fun.io.commons.compress;
 
 import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.bios.BufferedInvertibleTransformation;
-import org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorInputStream;
-import org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorOutputStream;
+import global.namespace.fun.io.bios.BufferedInvertibleFilter;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
+import org.apache.commons.compress.compressors.gzip.GzipParameters;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
-final class FramedLZ4Transformation extends BufferedInvertibleTransformation {
+final class GZIPFilter extends BufferedInvertibleFilter {
 
-    private final FramedLZ4CompressorOutputStream.Parameters parameters;
+    private final GzipParameters parameters;
 
-    FramedLZ4Transformation(final FramedLZ4CompressorOutputStream.Parameters p) { this.parameters = p; }
+    GZIPFilter(final GzipParameters p) { this.parameters = p; }
 
     @Override
     public Socket<OutputStream> apply(Socket<OutputStream> output) {
-        return output.map(os -> new FramedLZ4CompressorOutputStream(os, parameters));
+        return output.map(out -> new GzipCompressorOutputStream(out, parameters));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(FramedLZ4CompressorInputStream::new); }
+    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(GzipCompressorInputStream::new); }
 }

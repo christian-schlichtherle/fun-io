@@ -16,24 +16,24 @@
 package global.namespace.fun.io.commons.compress;
 
 import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.bios.BufferedInvertibleTransformation;
-import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
-import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
+import global.namespace.fun.io.bios.BufferedInvertibleFilter;
+import org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorInputStream;
+import org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorOutputStream;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
-final class LZMA2Transformation extends BufferedInvertibleTransformation {
+final class FramedLZ4Filter extends BufferedInvertibleFilter {
 
-    private final int preset;
+    private final FramedLZ4CompressorOutputStream.Parameters parameters;
 
-    LZMA2Transformation(final int preset) { this.preset = preset; }
+    FramedLZ4Filter(final FramedLZ4CompressorOutputStream.Parameters p) { this.parameters = p; }
 
     @Override
     public Socket<OutputStream> apply(Socket<OutputStream> output) {
-        return output.map(os -> new XZCompressorOutputStream(os, preset));
+        return output.map(os -> new FramedLZ4CompressorOutputStream(os, parameters));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(XZCompressorInputStream::new); }
+    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(FramedLZ4CompressorInputStream::new); }
 }

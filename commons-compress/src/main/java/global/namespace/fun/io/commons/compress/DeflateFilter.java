@@ -13,35 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package global.namespace.fun.io.bios;
+package global.namespace.fun.io.commons.compress;
 
 import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.api.Transformation;
-import global.namespace.fun.io.api.function.XSupplier;
+import global.namespace.fun.io.bios.BufferedInvertibleFilter;
+import org.apache.commons.compress.compressors.deflate.DeflateCompressorInputStream;
+import org.apache.commons.compress.compressors.deflate.DeflateCompressorOutputStream;
+import org.apache.commons.compress.compressors.deflate.DeflateParameters;
 
-import javax.crypto.*;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-final class CipherTransformation implements Transformation {
+final class DeflateFilter extends BufferedInvertibleFilter {
 
-    private final XSupplier<Cipher> inputCipherSupplier, outputCipherSupplier;
+    private final DeflateParameters parameters;
 
-    CipherTransformation(final XSupplier<Cipher> inputCipherSupplier, final XSupplier<Cipher> outputCipherSupplier) {
-        this.inputCipherSupplier = inputCipherSupplier;
-        this.outputCipherSupplier = outputCipherSupplier;
-    }
+    DeflateFilter(final DeflateParameters p) { this.parameters = p; }
 
     @Override
     public Socket<OutputStream> apply(Socket<OutputStream> output) {
-        return output.map(out -> new CipherOutputStream(out, outputCipherSupplier.get()));
+        return output.map(out -> new DeflateCompressorOutputStream(out, parameters));
     }
 
     @Override
     public Socket<InputStream> unapply(Socket<InputStream> input) {
-        return input.map(in -> new CipherInputStream(in, inputCipherSupplier.get()));
+        return input.map(in -> new DeflateCompressorInputStream(in, parameters));
     }
-
-    @Override
-    public Transformation inverse() { return new CipherTransformation(outputCipherSupplier, inputCipherSupplier); }
 }

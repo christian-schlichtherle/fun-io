@@ -17,14 +17,14 @@ package global.namespace.fun.io.api
 
 import java.io.{InputStream, OutputStream}
 
-import global.namespace.fun.io.api.Transformation._
+import Filter._
 import org.scalatest.Matchers.{inOrder => _, _}
 import org.scalatest.WordSpec
 import org.scalatest.mockito.MockitoSugar.mock
 
-class TransformationSpec extends WordSpec {
+class FilterSpec extends WordSpec {
 
-  "The identity transformation" should {
+  "The identity filter" should {
 
     "be a singleton" in {
       IDENTITY should be theSameInstanceAs IDENTITY

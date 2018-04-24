@@ -17,9 +17,8 @@ package global.namespace.fun.io.it
 
 import java.security.SecureRandom
 
-import global.namespace.fun.io.api.Transformation
+import global.namespace.fun.io.api.Filter
 import global.namespace.fun.io.bios.BIOS
-import global.namespace.fun.io.scala.api._
 import javax.crypto.Cipher.{DECRYPT_MODE, ENCRYPT_MODE, getInstance}
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.{PBEKeySpec, PBEParameterSpec}
@@ -39,7 +38,7 @@ object PBE {
   }
 
   // MUST be `def` or `pbe - pbe` may get optimized to `identity`!
-  def pbe: Transformation = {
+  def pbe: Filter = {
     BIOS cipher { outputMode: java.lang.Boolean =>
       val secretKey = secretKeyFactory generateSecret pbeKeySpec
       val cipher = getInstance(algorithm)

@@ -44,17 +44,17 @@ public interface Sink {
      * <p>
      * It is an error to return the loaned output stream from the given function or any other object which holds on to
      * it.
-     * Use the {@link #map(Transformation)} method instead if you need to transform the underlying output stream socket.
+     * Use the {@link #map(Filter)} method instead if you need to transform the underlying output stream socket.
      */
     default <U> U applyWriter(XFunction<? super OutputStream, ? extends U> writer) throws Exception {
         return output().apply(writer);
     }
 
     /**
-     * Returns a sink which applies the given transformation to the I/O streams loaned by the underlying
+     * Returns a sink which applies the given filter to the I/O streams loaned by the underlying
      * {@linkplain #output() output stream socket}.
      *
-     * @param t the transformation to apply to the I/O streams loaned by the underlying output stream socket.
+     * @param t the filter to apply to the I/O streams loaned by the underlying output stream socket.
      */
-    default Sink map(Transformation t) { return () -> t.apply(output()); }
+    default Sink map(Filter t) { return () -> t.apply(output()); }
 }

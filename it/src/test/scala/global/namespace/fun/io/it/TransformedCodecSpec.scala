@@ -17,7 +17,7 @@ package global.namespace.fun.io.it
 
 import java.io.InputStream
 
-import global.namespace.fun.io.api.{Codec, Store, Transformation}
+import global.namespace.fun.io.api.{Codec, Store, Filter}
 import global.namespace.fun.io.bios.BIOS._
 import global.namespace.fun.io.it.PBE.pbe
 import global.namespace.fun.io.jackson.Jackson._
@@ -42,8 +42,8 @@ class TransformedCodecSpec extends WordSpec {
     xml
   )
 
-  private val transformations = Table[Transformation](
-    "transformation",
+  private val filters = Table[Filter](
+    "filter",
 
     base64 + buffer,
     base64 + rot13 + buffer,
@@ -76,8 +76,8 @@ class TransformedCodecSpec extends WordSpec {
 
   private def forAllTransformedCodecs(block: Codec => Unit): Unit = {
     forAll(codecs) { codec =>
-      forAll(transformations) { transformation =>
-        block(codec << transformation)
+      forAll(filters) { filter =>
+        block(codec << filter)
       }
     }
   }

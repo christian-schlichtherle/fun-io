@@ -37,7 +37,7 @@ import static java.nio.file.StandardOpenOption.CREATE;
 import static java.util.Objects.requireNonNull;
 
 /**
- * This facade provides static factory methods for codecs, transformations, sockets, stores, archive file stores et al.
+ * This facade provides static factory methods for codecs, filters, sockets, stores, archive file stores et al.
  * It depends on the Java Runtime Environment (JRE) only.
  * The abbreviation stands for Basic Input/Output System (pun intended).
  *
@@ -72,129 +72,129 @@ public final class BIOS {
         return new XMLCodec(requireNonNull(xmlEncoders), requireNonNull(xmlDecoders));
     }
 
-      ///////////////////////////////////
-     ///////// TRANSFORMATIONS /////////
-    ///////////////////////////////////
+      ///////////////////////////
+     ///////// FILTERS /////////
+    ///////////////////////////
 
-    /** Returns a transformation which encodes the data in Base64 using the basic encoder and decoder. */
-    public static Transformation base64() { return base64(Base64.getEncoder(), Base64.getDecoder()); }
+    /** Returns a filter which encodes the data in Base64 using the basic encoder and decoder. */
+    public static Filter base64() { return base64(Base64.getEncoder(), Base64.getDecoder()); }
 
-    /** Returns a transformation which encodes the data in Base64 using the given encoder and decoder. */
-    public static Transformation base64(Base64.Encoder e, Base64.Decoder d) {
-        return new Base64Transformation(requireNonNull(e), requireNonNull(d));
+    /** Returns a filter which encodes the data in Base64 using the given encoder and decoder. */
+    public static Filter base64(Base64.Encoder e, Base64.Decoder d) {
+        return new Base64Filter(requireNonNull(e), requireNonNull(d));
     }
 
-    /** Returns a transformation which buffers I/O using a buffer size of {@value Store#BUFSIZE} bytes. */
-    public static Transformation buffer() { return buffer(Store.BUFSIZE); }
+    /** Returns a filter which buffers I/O using a buffer size of {@value Store#BUFSIZE} bytes. */
+    public static Filter buffer() { return buffer(Store.BUFSIZE); }
 
-    /** Returns a transformation which buffers I/O using the given buffer size in bytes. */
-    public static Transformation buffer(int size) { return new BufferedIOTransformation(size); }
+    /** Returns a filter which buffers I/O using the given buffer size in bytes. */
+    public static Filter buffer(int size) { return new BufferedIOFilter(size); }
 
     /**
-     * Returns a transformation which encrypts or decrypts the data using the given cipher suppliers for output and
+     * Returns a filter which encrypts or decrypts the data using the given cipher suppliers for output and
      * input.
      *
      * @param ciphers a function which returns an initialized cipher.
      *                If its input parameter is {@code false}, then the returned cipher must be initialized for input,
      *                otherwise it must be initialized for output.
      */
-    public static Transformation cipher(XFunction<? super Boolean, ? extends Cipher> ciphers) {
+    public static Filter cipher(XFunction<? super Boolean, ? extends Cipher> ciphers) {
         requireNonNull(ciphers);
-        return new CipherTransformation(() -> ciphers.apply(false), () -> ciphers.apply(true));
+        return new CipherFilter(() -> ciphers.apply(false), () -> ciphers.apply(true));
     }
 
     /**
-     * Returns a transformation which compresses the data using a ZIP deflater with the default compression level.
+     * Returns a filter which compresses the data using a ZIP deflater with the default compression level.
      */
-    public static Transformation deflate() { return deflate(Deflater.DEFAULT_COMPRESSION); }
+    public static Filter deflate() { return deflate(Deflater.DEFAULT_COMPRESSION); }
 
     /**
-     * Returns a transformation which compresses the data using a ZIP deflater with the given compression level.
+     * Returns a filter which compresses the data using a ZIP deflater with the given compression level.
      *
      * @see Deflater
      */
-    public static Transformation deflate(int level) {
+    public static Filter deflate(int level) {
         if (level < Deflater.DEFAULT_COMPRESSION || Deflater.BEST_COMPRESSION < level) {
             throw new IllegalArgumentException(level + " is not in the range from " + Deflater.DEFAULT_COMPRESSION + " to " + Deflater.BEST_COMPRESSION + ".");
         }
         return deflate(() -> new Deflater(level), Inflater::new);
     }
 
-    /** Returns a transformation which compresses the data using a ZIP deflater. */
-    public static Transformation deflate(XSupplier<Deflater> deflaterSupplier, XSupplier<Inflater> inflaterSupplier) {
-        return new DeflateTransformation(requireNonNull(deflaterSupplier), requireNonNull(inflaterSupplier));
+    /** Returns a filter which compresses the data using a ZIP deflater. */
+    public static Filter deflate(XSupplier<Deflater> deflaterSupplier, XSupplier<Inflater> inflaterSupplier) {
+        return new DeflateFilter(requireNonNull(deflaterSupplier), requireNonNull(inflaterSupplier));
     }
 
-    /** Returns a transformation which produces the GZIP compression format. */
-    public static Transformation gzip() { return new GZIPTransformation(); }
+    /** Returns a filter which produces the GZIP compression format. */
+    public static Filter gzip() { return new GZIPFilter(); }
 
-    /** Returns the identity transformation. */
-    public static Transformation identity() { return Transformation.IDENTITY; }
-
-    /**
-     * Returns a transformation which decompresses the data using a ZIP inflater.
-     * For the reverse operation, the transformation uses a ZIP deflater with the default compression level.
-     */
-    public static Transformation inflate() { return inflate(Deflater.DEFAULT_COMPRESSION); }
+    /** Returns the identity filter. */
+    public static Filter identity() { return Filter.IDENTITY; }
 
     /**
-     * Returns a transformation which decompresses the data using a ZIP inflater.
-     * For the reverse operation, the transformation uses a ZIP deflater with the given compression level.
+     * Returns a filter which decompresses the data using a ZIP inflater.
+     * For the reverse operation, the filter uses a ZIP deflater with the default compression level.
      */
-    public static Transformation inflate(int level) {
+    public static Filter inflate() { return inflate(Deflater.DEFAULT_COMPRESSION); }
+
+    /**
+     * Returns a filter which decompresses the data using a ZIP inflater.
+     * For the reverse operation, the filter uses a ZIP deflater with the given compression level.
+     */
+    public static Filter inflate(int level) {
         if (level < Deflater.DEFAULT_COMPRESSION || Deflater.BEST_COMPRESSION < level) {
             throw new IllegalArgumentException(level + " is not in the range from " + Deflater.DEFAULT_COMPRESSION + " to " + Deflater.BEST_COMPRESSION + ".");
         }
         return inflate(Inflater::new, () -> new Deflater(level));
     }
 
-    /** Returns a transformation which decompresses the data using a ZIP inflater. */
-    public static Transformation inflate(XSupplier<Inflater> inflaterSupplier, XSupplier<Deflater> deflaterSupplier) {
-        return new InflateTransformation(requireNonNull(inflaterSupplier), requireNonNull(deflaterSupplier));
+    /** Returns a filter which decompresses the data using a ZIP inflater. */
+    public static Filter inflate(XSupplier<Inflater> inflaterSupplier, XSupplier<Deflater> deflaterSupplier) {
+        return new InflateFilter(requireNonNull(inflaterSupplier), requireNonNull(deflaterSupplier));
     }
 
     /**
-     * Returns a transformation which inverses the given transformation by buffering the entire data on the heap.
+     * Returns a filter which inverses the given filter by buffering the entire data on the heap.
      * <p>
      * This is a general purpose implementation which incurs buffering the entire data produced by the original
-     * transformation, so use with care!
-     * For any given transformation, it's advisable to provide a specialized implementation of the inverse
-     * transformation which does not incur this overhead.
+     * filter, so use with care!
+     * For any given filter, it's advisable to provide a specialized implementation of the inverse
+     * filter which does not incur this overhead.
      */
-    public static Transformation inverse(Transformation t) { return inverse(t, (XSupplier<Store>) BIOS::memory); }
+    public static Filter inverse(Filter t) { return inverse(t, (XSupplier<Store>) BIOS::memory); }
 
     /**
-     * Returns a transformation which inverses the given transformation by buffering the entire data in a temporary
+     * Returns a filter which inverses the given filter by buffering the entire data in a temporary
      * store obtained from the given supplier.
      * <p>
      * This is a general purpose implementation which incurs buffering the entire data produced by the original
-     * transformation, so use with care!
-     * For any given transformation, it's advisable to provide a specialized implementation of the inverse
-     * transformation which does not incur this overhead.
+     * filter, so use with care!
+     * For any given filter, it's advisable to provide a specialized implementation of the inverse
+     * filter which does not incur this overhead.
      */
-    public static Transformation inverse(Transformation t, XSupplier<Store> storeSupplier) {
+    public static Filter inverse(Filter t, XSupplier<Store> storeSupplier) {
         requireNonNull(storeSupplier);
         return inverse(t, (Socket<Buffer>) () -> Buffer.of(storeSupplier.get()));
     }
 
     /**
-     * Returns a transformation which inverses the given transformation by buffering the entire data in a loaned
+     * Returns a filter which inverses the given filter by buffering the entire data in a loaned
      * buffer.
      * <p>
      * This is a general purpose implementation which incurs buffering the entire data produced by the original
-     * transformation, so use with care!
-     * For any given transformation, it's advisable to provide a specialized implementation of the inverse
-     * transformation which does not incur this overhead.
+     * filter, so use with care!
+     * For any given filter, it's advisable to provide a specialized implementation of the inverse
+     * filter which does not incur this overhead.
      */
-    public static Transformation inverse(Transformation t, Socket<Buffer> bufferSocket) {
-        return new BufferedInverseTransformation(requireNonNull(t), requireNonNull(bufferSocket));
+    public static Filter inverse(Filter t, Socket<Buffer> bufferSocket) {
+        return new BufferedInverseFilter(requireNonNull(t), requireNonNull(bufferSocket));
     }
 
-    /** Returns a transformation which rotates each ASCII letter by 13 positions. */
-    public static Transformation rot13() { return rot(13); }
+    /** Returns a filter which rotates each ASCII letter by 13 positions. */
+    public static Filter rot13() { return rot(13); }
 
-    /** Returns a transformation which rotates each ASCII letter by the given number of positions. */
-    public static Transformation rot(int positions) { return new ROTTransformation(positions); }
+    /** Returns a filter which rotates each ASCII letter by the given number of positions. */
+    public static Filter rot(int positions) { return new ROTFilter(positions); }
 
       ///////////////////////////
      ///////// SOURCES /////////

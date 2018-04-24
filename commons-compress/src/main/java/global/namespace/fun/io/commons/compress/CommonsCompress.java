@@ -41,7 +41,7 @@ import static java.util.Objects.requireNonNull;
 import static org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream.MAX_BLOCKSIZE;
 
 /**
- * This facade provides static factory methods for transformations and archive file stores.
+ * This facade provides static factory methods for filters and archive file stores.
  * It depends on Apache Commons Compress and provides best accuracy and performance for accessing JAR and ZIP files.
  *
  * @author Christian Schlichtherle
@@ -50,64 +50,64 @@ public final class CommonsCompress {
 
     private CommonsCompress() { }
 
-      ///////////////////////////////////
-     ///////// TRANSFORMATIONS /////////
-    ///////////////////////////////////
+      ///////////////////////////
+     ///////// FILTERS /////////
+    ///////////////////////////
 
-    /** Returns a transformation which produces the LZ4 block format using the default parameters. */
-    public static Transformation blockLZ4() {
+    /** Returns a filter which produces the LZ4 block format using the default parameters. */
+    public static Filter blockLZ4() {
         return blockLZ4(BlockLZ4CompressorOutputStream.createParameterBuilder().build());
     }
 
-    /** Returns a transformation which produces the LZ4 block format using the given parameters. */
-    public static Transformation blockLZ4(Parameters p) { return new BlockLZ4Transformation(requireNonNull(p)); }
+    /** Returns a filter which produces the LZ4 block format using the given parameters. */
+    public static Filter blockLZ4(Parameters p) { return new BlockLZ4Filter(requireNonNull(p)); }
 
-    /** Returns a transformation which produces the BZIP2 compression format using the maximum block size. */
-    public static Transformation bzip2() { return bzip2(MAX_BLOCKSIZE); }
+    /** Returns a filter which produces the BZIP2 compression format using the maximum block size. */
+    public static Filter bzip2() { return bzip2(MAX_BLOCKSIZE); }
 
-    /** Returns a transformation which produces the BZIP2 compression format using the given block size. */
-    public static Transformation bzip2(int blockSize) { return new BZIP2Transformation(MAX_BLOCKSIZE); }
+    /** Returns a filter which produces the BZIP2 compression format using the given block size. */
+    public static Filter bzip2(int blockSize) { return new BZIP2Filter(MAX_BLOCKSIZE); }
 
-    /** Returns a transformation which compresses the data using a ZIP deflater with the default parameters. */
-    public static Transformation deflate() { return deflate(new DeflateParameters()); }
+    /** Returns a filter which compresses the data using a ZIP deflater with the default parameters. */
+    public static Filter deflate() { return deflate(new DeflateParameters()); }
 
-    /** Returns a transformation which compresses the data using a ZIP deflater with the given parameters. */
-    public static Transformation deflate(DeflateParameters p) { return new DeflateTransformation(requireNonNull(p)); }
+    /** Returns a filter which compresses the data using a ZIP deflater with the given parameters. */
+    public static Filter deflate(DeflateParameters p) { return new DeflateFilter(requireNonNull(p)); }
 
-    /** Returns a transformation which produces the LZ4 frame format using the default parameters. */
-    public static Transformation framedLZ4() { return framedLZ4(FramedLZ4CompressorOutputStream.Parameters.DEFAULT); }
+    /** Returns a filter which produces the LZ4 frame format using the default parameters. */
+    public static Filter framedLZ4() { return framedLZ4(FramedLZ4CompressorOutputStream.Parameters.DEFAULT); }
 
-    /** Returns a transformation which produces the LZ4 frame format using the given parameters. */
-    public static Transformation framedLZ4(FramedLZ4CompressorOutputStream.Parameters p) {
-        return new FramedLZ4Transformation(requireNonNull(p));
+    /** Returns a filter which produces the LZ4 frame format using the given parameters. */
+    public static Filter framedLZ4(FramedLZ4CompressorOutputStream.Parameters p) {
+        return new FramedLZ4Filter(requireNonNull(p));
     }
 
-    /** Returns a transformation which produces the Snappy framing format using the default parameters. */
-    public static Transformation framedSnappy() {
+    /** Returns a filter which produces the Snappy framing format using the default parameters. */
+    public static Filter framedSnappy() {
         return framedSnappy(
                 SnappyCompressorOutputStream.createParameterBuilder(SnappyCompressorInputStream.DEFAULT_BLOCK_SIZE).build(),
                 FramedSnappyDialect.STANDARD);
     }
 
-    /** Returns a transformation which produces the Snappy framing format using the given parameters for output/input. */
-    public static Transformation framedSnappy(Parameters outputParameters, FramedSnappyDialect inputParameters) {
-        return new FramedSnappyTransformation(requireNonNull(outputParameters), requireNonNull(inputParameters));
+    /** Returns a filter which produces the Snappy framing format using the given parameters for output/input. */
+    public static Filter framedSnappy(Parameters outputParameters, FramedSnappyDialect inputParameters) {
+        return new FramedSnappyFilter(requireNonNull(outputParameters), requireNonNull(inputParameters));
     }
 
-    /** Returns a transformation which produces the GZIP compression format using the default parameters. */
-    public static Transformation gzip() { return gzip(new GzipParameters()); }
+    /** Returns a filter which produces the GZIP compression format using the default parameters. */
+    public static Filter gzip() { return gzip(new GzipParameters()); }
 
-    /** Returns a transformation which produces the GZIP compression format using the given parameters. */
-    public static Transformation gzip(GzipParameters p) { return new GZIPTransformation(requireNonNull(p)); }
+    /** Returns a filter which produces the GZIP compression format using the given parameters. */
+    public static Filter gzip(GzipParameters p) { return new GZIPFilter(requireNonNull(p)); }
 
-    /** Returns a transformation which produces the LZMA compression format. */
-    public static Transformation lzma() { return new LZMATransformation(); }
+    /** Returns a filter which produces the LZMA compression format. */
+    public static Filter lzma() { return new LZMAFilter(); }
 
-    /** Returns a transformation which produces the LZMA2 compression format using the default preset. */
-    public static Transformation lzma2() { return lzma2(LZMA2Options.PRESET_DEFAULT); }
+    /** Returns a filter which produces the LZMA2 compression format using the default preset. */
+    public static Filter lzma2() { return lzma2(LZMA2Options.PRESET_DEFAULT); }
 
-    /** Returns a transformation which produces the LZMA2 compression format using the given preset. */
-    public static Transformation lzma2(int preset) { return new LZMA2Transformation(preset); }
+    /** Returns a filter which produces the LZMA2 compression format using the given preset. */
+    public static Filter lzma2(int preset) { return new LZMA2Filter(preset); }
 
       //////////////////////////////////
      ///////// ARCHIVE STORES /////////
@@ -140,7 +140,7 @@ public final class CommonsCompress {
      * This is still very powerful, because it allows you to pack or unpack a TAR file from or to a directory
      * or to transform it from or to another archive file format, e.g. ZIP.
      * <p>
-     * Note that the parameter is a {@link Store}, so you can apply any {@link Transformation} to it, e.g.
+     * Note that the parameter is a {@link Store}, so you can apply any {@link Filter} to it, e.g.
      * {@link #gzip()}.
      */
     public static ArchiveStore<TarArchiveEntry> tar(final Store store) {

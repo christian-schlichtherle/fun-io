@@ -28,13 +28,13 @@ class StoreSpec extends WordSpec {
   "A store" when {
     val s = mock[Store]
 
-    "mapping a transformation" should {
-      when(s map any[Transformation]).thenCallRealMethod
+    "mapping a filter" should {
+      when(s map any[Filter]).thenCallRealMethod
 
-      val t = mock[Transformation]
+      val t = mock[Filter]
       val ts = s map t
 
-      "apply the transformation" in {
+      "apply the filter" in {
         ts output () shouldBe null
         val io = inOrder(t, s)
         io verify s output ()
@@ -42,7 +42,7 @@ class StoreSpec extends WordSpec {
         io verifyNoMoreInteractions ()
       }
 
-      "unapply the transformation" in {
+      "unapply the filter" in {
         ts input () shouldBe null
         val io = inOrder(t, s)
         io verify s input ()

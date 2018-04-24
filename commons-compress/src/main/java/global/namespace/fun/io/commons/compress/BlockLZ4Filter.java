@@ -16,27 +16,25 @@
 package global.namespace.fun.io.commons.compress;
 
 import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.bios.BufferedInvertibleTransformation;
-import org.apache.commons.compress.compressors.deflate.DeflateCompressorInputStream;
-import org.apache.commons.compress.compressors.deflate.DeflateCompressorOutputStream;
-import org.apache.commons.compress.compressors.deflate.DeflateParameters;
+import global.namespace.fun.io.bios.BufferedInvertibleFilter;
+import org.apache.commons.compress.compressors.lz4.BlockLZ4CompressorInputStream;
+import org.apache.commons.compress.compressors.lz4.BlockLZ4CompressorOutputStream;
+import org.apache.commons.compress.compressors.lz77support.Parameters;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
-final class DeflateTransformation extends BufferedInvertibleTransformation {
+final class BlockLZ4Filter extends BufferedInvertibleFilter {
 
-    private final DeflateParameters parameters;
+    private final Parameters parameters;
 
-    DeflateTransformation(final DeflateParameters p) { this.parameters = p; }
+    BlockLZ4Filter(Parameters p) { this.parameters = p; }
 
     @Override
     public Socket<OutputStream> apply(Socket<OutputStream> output) {
-        return output.map(out -> new DeflateCompressorOutputStream(out, parameters));
+        return output.map(os -> new BlockLZ4CompressorOutputStream(os, parameters));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> input) {
-        return input.map(in -> new DeflateCompressorInputStream(in, parameters));
-    }
+    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(BlockLZ4CompressorInputStream::new); }
 }

@@ -13,21 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package global.namespace.fun.io.commons.compress;
+package global.namespace.fun.io.bios;
 
 import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.bios.BufferedInvertibleTransformation;
-import org.apache.commons.compress.compressors.lzma.LZMACompressorInputStream;
-import org.apache.commons.compress.compressors.lzma.LZMACompressorOutputStream;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Base64.Decoder;
+import java.util.Base64.Encoder;
 
-final class LZMATransformation extends BufferedInvertibleTransformation {
+final class Base64Filter extends BufferedInvertibleFilter {
+
+    private final Encoder encoder;
+    private final Decoder decoder;
+
+    Base64Filter(final Encoder e, final Decoder d) {
+        this.encoder = e;
+        this.decoder = d;
+    }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> output) { return output.map(LZMACompressorOutputStream::new); }
+    public Socket<OutputStream> apply(Socket<OutputStream> output) { return output.map(encoder::wrap); }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(LZMACompressorInputStream::new); }
+    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(decoder::wrap); }
 }

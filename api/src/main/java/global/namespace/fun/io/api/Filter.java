@@ -23,14 +23,14 @@ import static java.util.Objects.requireNonNull;
 /**
  * Decorates input and output stream {@linkplain Socket sockets} in order to transform the transmitted content.
  * <p>
- * With an encryption transformation for example, the {@link #apply} method would decorate the loaned output streams
+ * With an encryption filter for example, the {@link #apply} method would decorate the loaned output streams
  * with a new {@link javax.crypto.CipherOutputStream} in order to encrypt the data before writing it to the underlying
  * output stream.
  * Likewise, the {@link #unapply} method would decorate the loaned input streams with a new
  * {@link javax.crypto.CipherInputStream} in order to decrypt the data after reading it from the underlying input
  * stream.
  * <p>
- * As another example, with a compression transformation the {@code apply} method would decorate the loaned output
+ * As another example, with a compression filter the {@code apply} method would decorate the loaned output
  * streams with a new {@link java.util.zip.DeflaterOutputStream} in order to compress the data before writing it to the
  * underlying output stream.
  * Likewise, the {@code unapply} method would decorate the loaned input streams with a new
@@ -38,14 +38,14 @@ import static java.util.Objects.requireNonNull;
  * stream.
  * <p>
  * The benefit of this interface is that you can easily chain the {@code apply} and {@code unapply} methods in order to
- * from rich decorators without needing to know anything about the implementation of the transformations.
+ * from rich decorators without needing to know anything about the implementation of the filters.
  * <p>
  * For example, depending on the previous examples, the following test code would assert the round-trip processing of
- * the string {@code "Hello world!"} using the composition of some compression and encryption transformations on
+ * the string {@code "Hello world!"} using the composition of some compression and encryption filters on
  * some store:
  * <pre>{@code
- * Transformation compression = ...;
- * Transformation encryption = ...;
+ * Filter compression = ...;
+ * Filter encryption = ...;
  * Store store = ...;
  * Socket<OutputStream> compressAndEncryptData = compression.apply(encryption.apply(store.output()));
  * Socket<InputStream> decryptAndDecompressData = compression.unapply(encryption.unapply(store.input()));
@@ -56,10 +56,10 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Christian Schlichtherle
  */
-public interface Transformation {
+public interface Filter {
 
-    /** The identity transformation. */
-    Transformation IDENTITY = new Transformation() {
+    /** The identity filter. */
+    Filter IDENTITY = new Filter() {
 
         @Override
         public Socket<OutputStream> apply(Socket<OutputStream> output) { return output; }
@@ -68,7 +68,7 @@ public interface Transformation {
         public Socket<InputStream> unapply(Socket<InputStream> input) { return input; }
 
         @Override
-        public Transformation inverse() { return this; }
+        public Filter inverse() { return this; }
     };
 
     /** Returns an output stream socket which decorates the given output stream socket. */
@@ -84,19 +84,19 @@ public interface Transformation {
     default Source unapply(Source source) { return () -> unapply(source.input()); };
 
     /**
-     * Returns the inverse of this transformation (optional operation).
-     * An implementation may choose to throw an {@link UnsupportedOperationException} if inverting this transformation
+     * Returns the inverse of this filter (optional operation).
+     * An implementation may choose to throw an {@link UnsupportedOperationException} if inverting this filter
      * is not supported.
      * However, it's strongly encouraged to provide a proper implementation of this operation because it's trivially
-     * possible to invert any transformation by buffering its entire content.
+     * possible to invert any filter by buffering its entire content.
      *
-     * @throws UnsupportedOperationException if inverting this transformation is not supported.
+     * @throws UnsupportedOperationException if inverting this filter is not supported.
      */
-    Transformation inverse();
+    Filter inverse();
 
-    /** Returns a transformation which applies the given transformation <em>before</em> this transformation. */
-    default Transformation compose(Transformation before) { return Internal.compose(requireNonNull(before), this); }
+    /** Returns a filter which applies the given filter <em>before</em> this filter. */
+    default Filter compose(Filter before) { return Internal.compose(requireNonNull(before), this); }
 
-    /** Returns a transformation which applies the given transformation <em>after</em> this transformation. */
-    default Transformation andThen(Transformation after) { return Internal.compose(this, requireNonNull(after)); }
+    /** Returns a filter which applies the given filter <em>after</em> this filter. */
+    default Filter andThen(Filter after) { return Internal.compose(this, requireNonNull(after)); }
 }

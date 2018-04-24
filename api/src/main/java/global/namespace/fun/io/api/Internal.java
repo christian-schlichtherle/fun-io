@@ -22,8 +22,8 @@ final class Internal {
 
     private Internal() { }
 
-    static Transformation compose(Transformation first, Transformation second) {
-        return new Transformation() {
+    static Filter compose(Filter first, Filter second) {
+        return new Filter() {
 
             @Override
             public Socket<OutputStream> apply(Socket<OutputStream> output) { return second.apply(first.apply(output)); }
@@ -32,9 +32,9 @@ final class Internal {
             public Socket<InputStream> unapply(Socket<InputStream> input) { return second.unapply(first.unapply(input)); }
 
             @Override
-            public Transformation inverse() {
-                final Transformation composite = this;
-                return new Transformation() {
+            public Filter inverse() {
+                final Filter composite = this;
+                return new Filter() {
 
                     @Override
                     public Socket<OutputStream> apply(Socket<OutputStream> output) {
@@ -47,7 +47,7 @@ final class Internal {
                     }
 
                     @Override
-                    public Transformation inverse() { return composite; }
+                    public Filter inverse() { return composite; }
                 };
             }
         };

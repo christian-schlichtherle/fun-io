@@ -16,7 +16,7 @@
 package global.namespace.fun.io.commons.compress;
 
 import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.bios.BufferedInvertibleTransformation;
+import global.namespace.fun.io.bios.BufferedInvertibleFilter;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
 
@@ -26,11 +26,11 @@ import java.io.OutputStream;
 import static org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream.MAX_BLOCKSIZE;
 import static org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream.MIN_BLOCKSIZE;
 
-final class BZIP2Transformation extends BufferedInvertibleTransformation {
+final class BZIP2Filter extends BufferedInvertibleFilter {
 
     private final int blockSize;
 
-    BZIP2Transformation(final int blockSize) {
+    BZIP2Filter(final int blockSize) {
         if (blockSize < MIN_BLOCKSIZE || MAX_BLOCKSIZE < blockSize) {
             throw new IllegalArgumentException("Block size " + blockSize + " is out of range from " + MIN_BLOCKSIZE + " to " + MAX_BLOCKSIZE + ".");
         }

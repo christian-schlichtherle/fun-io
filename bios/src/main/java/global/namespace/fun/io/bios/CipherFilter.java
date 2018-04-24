@@ -15,23 +15,33 @@
  */
 package global.namespace.fun.io.bios;
 
+import global.namespace.fun.io.api.Filter;
 import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.api.Store;
+import global.namespace.fun.io.api.function.XSupplier;
 
+import javax.crypto.*;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
-final class GZIPTransformation extends BufferedInvertibleTransformation {
+final class CipherFilter implements Filter {
+
+    private final XSupplier<Cipher> inputCipherSupplier, outputCipherSupplier;
+
+    CipherFilter(final XSupplier<Cipher> inputCipherSupplier, final XSupplier<Cipher> outputCipherSupplier) {
+        this.inputCipherSupplier = inputCipherSupplier;
+        this.outputCipherSupplier = outputCipherSupplier;
+    }
 
     @Override
     public Socket<OutputStream> apply(Socket<OutputStream> output) {
-        return output.map(out -> new GZIPOutputStream(out, Store.BUFSIZE));
+        return output.map(out -> new CipherOutputStream(out, outputCipherSupplier.get()));
     }
 
     @Override
     public Socket<InputStream> unapply(Socket<InputStream> input) {
-        return input.map(in -> new GZIPInputStream(in, Store.BUFSIZE));
+        return input.map(in -> new CipherInputStream(in, inputCipherSupplier.get()));
     }
+
+    @Override
+    public Filter inverse() { return new CipherFilter(outputCipherSupplier, inputCipherSupplier); }
 }

@@ -46,11 +46,11 @@ public interface Store extends Source, Sink {
     default ConnectedCodec connect(Codec c) { return Internal.connect(requireNonNull(c), this); }
 
     /**
-     * Returns a store which applies the given transformation to the I/O streams loaned by this store.
+     * Returns a store which applies the given filter to the I/O streams loaned by this store.
      *
-     * @param t the transformation to apply to the I/O streams loaned by this store.
+     * @param t the filter to apply to the I/O streams loaned by this store.
      */
-    default Store map(Transformation t) {
+    default Store map(Filter t) {
         return new Store() {
 
             @Override

@@ -58,11 +58,11 @@ public interface Codec {
     default ConnectedCodec connect(Store store) { return Internal.connect(this, requireNonNull(store)); }
 
     /**
-     * Returns a codec which applies the given transformation to the I/O streams loaned to this codec.
+     * Returns a codec which applies the given filter to the I/O streams loaned to this codec.
      *
-     * @param t the transformation to apply to the I/O streams loaned to this codec.
+     * @param t the filter to apply to the I/O streams loaned to this codec.
      */
-    default Codec map(Transformation t) {
+    default Codec map(Filter t) {
         return new Codec() {
 
             @Override

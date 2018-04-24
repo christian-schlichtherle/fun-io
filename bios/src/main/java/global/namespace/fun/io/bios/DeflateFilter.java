@@ -15,54 +15,38 @@
  */
 package global.namespace.fun.io.bios;
 
+import global.namespace.fun.io.api.Filter;
 import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.api.Store;
-import global.namespace.fun.io.api.Transformation;
 import global.namespace.fun.io.api.function.XSupplier;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.zip.Deflater;
-import java.util.zip.DeflaterInputStream;
+import java.util.zip.DeflaterOutputStream;
 import java.util.zip.Inflater;
-import java.util.zip.InflaterOutputStream;
+import java.util.zip.InflaterInputStream;
 
-public class InflateTransformation implements Transformation {
+final class DeflateFilter implements Filter {
 
-    private final XSupplier<Inflater> inflaterSupplier;
     private final XSupplier<Deflater> deflaterSupplier;
+    private final XSupplier<Inflater> inflaterSupplier;
 
-    InflateTransformation(final XSupplier<Inflater> inflaterSupplier, final XSupplier<Deflater> deflaterSupplier) {
-        this.inflaterSupplier = inflaterSupplier;
+    DeflateFilter(final XSupplier<Deflater> deflaterSupplier, final XSupplier<Inflater> inflaterSupplier) {
         this.deflaterSupplier = deflaterSupplier;
+        this.inflaterSupplier = inflaterSupplier;
     }
 
     @Override
     public Socket<OutputStream> apply(final Socket<OutputStream> output) {
-        return output.map(out -> new InflaterOutputStream(out, inflaterSupplier.get(), Store.BUFSIZE) {
+        return output.map(out -> new DeflaterOutputStream(out, deflaterSupplier.get(), Store.BUFSIZE) {
 
             boolean closed;
 
             @Override
             public void close() throws IOException {
                 finish();
-                if (!closed) {
-                    closed = true;
-                    Close.bothIO(inf::end, super::close);
-                }
-            }
-        });
-    }
-
-    @Override
-    public Socket<InputStream> unapply(final Socket<InputStream> input) {
-        return input.map(in -> new DeflaterInputStream(in, deflaterSupplier.get(), Store.BUFSIZE) {
-
-            boolean closed;
-
-            @Override
-            public void close() throws IOException {
                 if (!closed) {
                     closed = true;
                     Close.bothIO(def::end, super::close);
@@ -72,5 +56,21 @@ public class InflateTransformation implements Transformation {
     }
 
     @Override
-    public Transformation inverse() { return new DeflateTransformation(deflaterSupplier, inflaterSupplier); }
+    public Socket<InputStream> unapply(final Socket<InputStream> input) {
+        return input.map(in -> new InflaterInputStream(in, inflaterSupplier.get(), Store.BUFSIZE) {
+
+            boolean closed;
+
+            @Override
+            public void close() throws IOException {
+                if (!closed) {
+                    closed = true;
+                    Close.bothIO(inf::end, super::close);
+                }
+            }
+        });
+    }
+
+    @Override
+    public Filter inverse() { return new InflateFilter(inflaterSupplier, deflaterSupplier); }
 }

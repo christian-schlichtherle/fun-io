@@ -44,17 +44,17 @@ public interface Source {
      * <p>
      * It is an error to return the loaned input stream from the given function or any other object which holds on to
      * it.
-     * Use the {@link #map(Transformation)} method instead if you need to transform the underlying input stream socket.
+     * Use the {@link #map(Filter)} method instead if you need to transform the underlying input stream socket.
      */
     default <U> U applyReader(XFunction<? super InputStream, ? extends U> reader) throws Exception {
         return input().apply(reader);
     }
 
     /**
-     * Returns a source which applies the given transformation to the I/O streams loaned by the underlying
+     * Returns a source which applies the given filter to the I/O streams loaned by the underlying
      * {@linkplain #input() input stream socket}.
      *
-     * @param t the transformation to apply to the I/O streams loaned by the underlying input stream socket.
+     * @param t the filter to apply to the I/O streams loaned by the underlying input stream socket.
      */
-    default Source map(Transformation t) { return () -> t.unapply(input()); }
+    default Source map(Filter t) { return () -> t.unapply(input()); }
 }

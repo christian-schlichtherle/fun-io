@@ -16,17 +16,17 @@
 package global.namespace.fun.io.bios;
 
 import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.api.Transformation;
+import global.namespace.fun.io.api.Filter;
 
 import java.io.*;
 
-final class ROTTransformation implements Transformation {
+final class ROTFilter implements Filter {
 
     private static final int ALPHABET_LENGTH = 'Z' - 'A' + 1;
 
     private int apply[] = new int[ALPHABET_LENGTH], unapply[] = new int[ALPHABET_LENGTH];
 
-    ROTTransformation(final int positions) {
+    ROTFilter(final int positions) {
         if (positions < 1 || ALPHABET_LENGTH - 1 < positions) {
             throw new IllegalArgumentException(positions + " is not in the range from 1 to " + (ALPHABET_LENGTH - 1) + ".");
         }
@@ -90,9 +90,9 @@ final class ROTTransformation implements Transformation {
     }
 
     @Override
-    public Transformation inverse() {
+    public Filter inverse() {
         final int oldPositions = apply[0];
         final int newPositions = ALPHABET_LENGTH - oldPositions;
-        return newPositions == oldPositions ? this : new ROTTransformation(newPositions);
+        return newPositions == oldPositions ? this : new ROTFilter(newPositions);
     }
 }

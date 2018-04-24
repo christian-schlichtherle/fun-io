@@ -25,12 +25,12 @@ import org.scalatest.mockito.MockitoSugar.mock
 
 class InternalSpec extends WordSpec {
 
-  "The transformation returned by the `compose` method" should {
-    val a = mock[Transformation]
-    val b = mock[Transformation]
+  "The filter returned by the `compose` method" should {
+    val a = mock[Filter]
+    val b = mock[Filter]
     val c = Internal.compose(a, b)
 
-    "apply its parameter transformations in order" when {
+    "apply its parameter filters in order" when {
       "being applied" in {
         c(mock[Socket[OutputStream]]) shouldBe null
         val io = inOrder(a, b)

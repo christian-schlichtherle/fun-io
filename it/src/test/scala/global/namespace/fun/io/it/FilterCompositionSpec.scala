@@ -20,11 +20,11 @@ import java.lang.reflect.Type
 
 import global.namespace.fun.io.api._
 import global.namespace.fun.io.bios.BIOS._
-import global.namespace.fun.io.bios.{BIOS, BufferedInvertibleTransformation}
+import global.namespace.fun.io.bios.{BIOS, BufferedInvertibleFilter}
 import global.namespace.fun.io.commons.compress.CommonsCompress
 import global.namespace.fun.io.commons.compress.CommonsCompress._
 import global.namespace.fun.io.it.PBE.pbe
-import global.namespace.fun.io.it.TransformationCompositionSpec._
+import global.namespace.fun.io.it.FilterCompositionSpec._
 import global.namespace.fun.io.scala.api._
 import global.namespace.fun.io.xz.XZ
 import org.scalatest.Matchers.{a => _, _}
@@ -33,14 +33,14 @@ import org.scalatest.prop.PropertyChecks._
 
 import scala.io.Source
 
-class TransformationCompositionSpec extends WordSpec {
+class FilterCompositionSpec extends WordSpec {
 
-  "A sequence of transformations" when {
+  "A sequence of filters" when {
     "composed in different, yet equivalent ways" should {
 
       "produce identical output" in {
-        val table = Table[Transformation](
-          "transformation",
+        val table = Table[Filter](
+          "filter",
 
           base64 - base64,
 
@@ -86,9 +86,9 @@ class TransformationCompositionSpec extends WordSpec {
           -rot13 + rot13,
           -rot13 - rot13
         )
-        forAll(table) { transformation =>
-          transformation should not be identity
-          string << transformation connect memory clone "Hello world!" shouldBe "Hello world!"
+        forAll(table) { filter =>
+          filter should not be identity
+          string << filter connect memory clone "Hello world!" shouldBe "Hello world!"
         }
       }
 
@@ -114,7 +114,7 @@ class TransformationCompositionSpec extends WordSpec {
   }
 }
 
-private object TransformationCompositionSpec {
+private object FilterCompositionSpec {
 
   private object string extends Codec {
 
@@ -130,11 +130,11 @@ private object TransformationCompositionSpec {
   // MUST be `def` or `rot1 - rot1` may get optimized to `identity`!
   private def rot1 = rot(1)
 
-  private val a: Transformation = new MessageTransformation("a")
+  private val a: Filter = new MessageFilter("a")
 
-  private val b: Transformation = new MessageTransformation("b")
+  private val b: Filter = new MessageFilter("b")
 
-  private[this] class MessageTransformation(message: String) extends BufferedInvertibleTransformation {
+  private[this] class MessageFilter(message: String) extends BufferedInvertibleFilter {
 
     def apply(oss: Socket[OutputStream]): Socket[OutputStream] = {
       oss.map((out: OutputStream) => { out write message.getBytes; out })

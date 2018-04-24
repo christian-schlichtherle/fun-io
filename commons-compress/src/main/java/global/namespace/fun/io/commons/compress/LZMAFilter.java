@@ -16,25 +16,18 @@
 package global.namespace.fun.io.commons.compress;
 
 import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.bios.BufferedInvertibleTransformation;
-import org.apache.commons.compress.compressors.lz4.BlockLZ4CompressorInputStream;
-import org.apache.commons.compress.compressors.lz4.BlockLZ4CompressorOutputStream;
-import org.apache.commons.compress.compressors.lz77support.Parameters;
+import global.namespace.fun.io.bios.BufferedInvertibleFilter;
+import org.apache.commons.compress.compressors.lzma.LZMACompressorInputStream;
+import org.apache.commons.compress.compressors.lzma.LZMACompressorOutputStream;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
-final class BlockLZ4Transformation extends BufferedInvertibleTransformation {
-
-    private final Parameters parameters;
-
-    BlockLZ4Transformation(Parameters p) { this.parameters = p; }
+final class LZMAFilter extends BufferedInvertibleFilter {
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> output) {
-        return output.map(os -> new BlockLZ4CompressorOutputStream(os, parameters));
-    }
+    public Socket<OutputStream> apply(Socket<OutputStream> output) { return output.map(LZMACompressorOutputStream::new); }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(BlockLZ4CompressorInputStream::new); }
+    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(LZMACompressorInputStream::new); }
 }

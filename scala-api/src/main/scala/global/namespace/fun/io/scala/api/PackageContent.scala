@@ -15,7 +15,7 @@
  */
 package global.namespace.fun.io.scala.api
 
-import global.namespace.fun.io.api.Transformation.IDENTITY
+import global.namespace.fun.io.api.Filter.IDENTITY
 import global.namespace.fun.io.api._
 
 /** Provides operators for an enhanced user experience with the Fun I/O API in Scala.
@@ -23,29 +23,29 @@ import global.namespace.fun.io.api._
   * @author Christian Schlichtherle */
 private[api] trait PackageContent {
 
-  implicit class WithTransformation(t1: Transformation) {
+  implicit class WithFilter(t1: Filter) {
 
-    def unary_- : Transformation = t1.inverse
+    def unary_- : Filter = t1.inverse
 
-    def +(t2: Transformation): Transformation = t1 compose t2
-    def -(t2: Transformation): Transformation = if (t1 == t2) IDENTITY else t1 + -t2
+    def +(t2: Filter): Filter = t1 compose t2
+    def -(t2: Filter): Filter = if (t1 == t2) IDENTITY else t1 + -t2
 
-    def <<(t2: Transformation): Transformation = t1 compose t2
+    def <<(t2: Filter): Filter = t1 compose t2
     def <<(s: Store): Store = s map t1
 
-    def >>(t2: Transformation): Transformation = t1 andThen t2
+    def >>(t2: Filter): Filter = t1 andThen t2
     def >>(c: Codec): Codec = c map t1
   }
 
   implicit class WithStore(s: Store) {
 
-    def >>(t: Transformation): Store = s map t
+    def >>(t: Filter): Store = s map t
     def >>(c: Codec): ConnectedCodec = s connect c
   }
 
   implicit class WithCodec(c: Codec) {
 
-    def <<(t: Transformation): Codec = c map t
+    def <<(t: Filter): Codec = c map t
     def <<(s: Store): ConnectedCodec = c connect s
   }
 }

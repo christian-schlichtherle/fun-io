@@ -16,25 +16,22 @@
 package global.namespace.fun.io.bios;
 
 import global.namespace.fun.io.api.Socket;
+import global.namespace.fun.io.api.Store;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Base64.Decoder;
-import java.util.Base64.Encoder;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
-final class Base64Transformation extends BufferedInvertibleTransformation {
+final class GZIPFilter extends BufferedInvertibleFilter {
 
-    private final Encoder encoder;
-    private final Decoder decoder;
-
-    Base64Transformation(final Encoder e, final Decoder d) {
-        this.encoder = e;
-        this.decoder = d;
+    @Override
+    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+        return output.map(out -> new GZIPOutputStream(out, Store.BUFSIZE));
     }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> output) { return output.map(encoder::wrap); }
-
-    @Override
-    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(decoder::wrap); }
+    public Socket<InputStream> unapply(Socket<InputStream> input) {
+        return input.map(in -> new GZIPInputStream(in, Store.BUFSIZE));
+    }
 }

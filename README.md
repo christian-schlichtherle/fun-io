@@ -1,13 +1,13 @@
 # Fun I/O [![Release Notes](https://img.shields.io/github/release/christian-schlichtherle/fun-io.svg?maxAge=3600)](https://github.com/christian-schlichtherle/fun-io/releases/latest) [![Maven Central](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-api.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22) [![Apache License 2.0](https://img.shields.io/github/license/christian-schlichtherle/neuron-di.svg?maxAge=3600)](https://www.apache.org/licenses/LICENSE-2.0) [![Build Status](https://api.travis-ci.org/christian-schlichtherle/fun-io.svg)](https://travis-ci.org/christian-schlichtherle/fun-io)
 
-Fun I/O provides functional, high level abstractions for codecs, transformations, sockets, sources, sinks, stores, 
-archives et al.
+Fun I/O provides functional, high level abstractions for codecs, sources, sinks, stores, archives, filters, sockets et 
+al.
 Fun I/O supports Java 8 or later and Scala 2.10, 2.11 and 2.12 and is covered by the Apache License, version 2.0.
 
 ## Features
 
-+ Composes low level `InputStream`s and `OutputStream`s into high level `Codec`s, `Transformation`s, `Source`s, `Sink`s,
-  `Store`s, `ArchiveStore`s et al.
++ Composes low level `InputStream`s and `OutputStream`s into high level `Codec`s, `Source`s, `Sink`s, `Store`s, 
+  `ArchiveStore`s, `Socket`s, `Filter`s et al.
   These abstractions are:
   + Easy to implement.
   + Stateless and hence reusable and thread-safe by design (except for their observable side effects, e.g. writing to a 
@@ -202,7 +202,7 @@ The following diagram shows the module structure:
 The modules are:
 
 + [![Fun I/O API](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-api.svg?label=Fun%20I/O%20API&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-api%22)
-  The API provides interfaces for `Codec`s, `Transformation`s, `Socket`s, `Store`s, `ArchiveStore`s et al.
+  The API provides interfaces for `Codec`s, `Source`s, `Sink`s, `Store`s, `ArchiveStore`s, `Filter`s, `Socket`s et al.
 + [![Fun I/O Scala API](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-scala-api_2.12.svg?label=Fun%20I/O%20Scala%20API&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-scala-api_2.12%22)
   The Scala API extends the Java API with operators and implicit conversions to improvie the user experience in Scala.
 + [![Fun I/O BIOS](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-bios.svg?label=Fun%20I/O%20BIOS&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-bios%22)
@@ -210,15 +210,15 @@ The modules are:
   + The `BIOS` class is a facade which provides the following `Codec` functions:
     + `serialization` serializes/deserializes objects using `ObjectOutputStream`/`ObjectInputStream`.
     + `xml` encodes/decodes objects using `XMLEncoder`/`XMLDecoder`.
-  + It also provides the following `Transformation` functions:
+  + It also provides the following `Filter` functions:
     + `base64` encodes/decodes data to/from Base64.
     + `buffer` buffers I/O operations.
     + `cipher` encrypts/decrypts data using a function which provides initialized `javax.security.Cipher` objects.
     + `deflate` deflates/inflates data using the ZIP compression.
     + `gzip` compresses/decompresses data using the GZIP compression format.
-    + `identity` is a no-op, forming transformations into a [Monoid].
+    + `identity` is a no-op, forming filters into a [Monoid].
     + `inflate` inflates/deflates data using the ZIP compression.
-    + `inverse` inverses a given transformation by buffering the entire data to a buffer, e.g. on the heap.
+    + `inverse` inverses a given filter by buffering the entire data to a buffer, e.g. on the heap.
     + `rot` provides the (in)famous ROT transformation, e.g. [ROT13].
   + It also provides the following `Source` functions:
     + `resource` reads a resource from the class path.
@@ -245,7 +245,7 @@ The modules are:
     + `clone` duplicates an object by serializing it to memory and decoding it again.  
 + [![Fun I/O Commons Compress](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-commons-compress.svg?label=Fun%20I/O%20Commons%20Compress&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-commons-compress%22)
   Depends on [Apache Commons Compress] to provide implementations of the Fun I/O API.
-  + The `CommonsCompress` class is a facade which provides the following `Transformation` functions: 
+  + The `CommonsCompress` class is a facade which provides the following `Filter` functions: 
     + `blockLZ4` compresses/decompresses data using the LZ4 block format.
     + `bzip2` compresses decompresses data using the BZIP2 format.
     + `deflate` deflates/inflates data using the ZIP compression.
@@ -273,7 +273,7 @@ The modules are:
     + `xml` marshals/unmarshals objects to/from XML using the JAXB reference implementation.
 + [![Fun I/O XZ](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-xz.svg?label=Fun%20I/O%20XZ&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-xz%22)
   Depends on [XZ for Java] to provide implementations of the Fun I/O API.
-  + The `XZ` class is a facade which provides the following `Transformation` functions:
+  + The `XZ` class is a facade which provides the following `Filter` functions:
     + `lzma2` compresses/decompresses data using the LZMA2 compression format.
     + `xz` compresses/decompresses data using the XZ compression format.
 

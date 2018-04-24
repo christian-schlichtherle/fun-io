@@ -15,8 +15,8 @@
  */
 package global.namespace.fun.io.xz;
 
+import global.namespace.fun.io.api.Filter;
 import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.api.Transformation;
 import global.namespace.fun.io.bios.BIOS;
 import org.tukaani.xz.FilterOptions;
 import org.tukaani.xz.XZInputStream;
@@ -25,13 +25,13 @@ import org.tukaani.xz.XZOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-final class XZTransformation implements Transformation {
+final class XZFilter implements Filter {
 
     private final FilterOptions[] filterOptions;
 
     private final int checkType;
 
-    XZTransformation(final FilterOptions[] filterOptions, final int checkType) {
+    XZFilter(final FilterOptions[] filterOptions, final int checkType) {
         this.filterOptions = filterOptions.clone();
         this.checkType = checkType;
     }
@@ -45,5 +45,5 @@ final class XZTransformation implements Transformation {
     public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(XZInputStream::new); }
 
     @Override
-    public Transformation inverse() { return BIOS.inverse(this); }
+    public Filter inverse() { return BIOS.inverse(this); }
 }
