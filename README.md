@@ -202,10 +202,11 @@ The following diagram shows the module structure:
 The modules are:
 
 + [![Fun I/O API](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-api.svg?label=Fun%20I/O%20API&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-api%22)
-  : The API provides interfaces for `Codec`s, `Transformation`s, `Socket`s, `Store`s, `ArchiveStore`s et al.
-+ `fun-io-scala-api`: The Scala API extends the Java API with operators and implicit conversions to improvie the user 
-   experience in Scala.
-+ `fun-io-bios`: The Basic Input/Output System (pun intended) provides basic implementations of the Fun I/O API.
+  The API provides interfaces for `Codec`s, `Transformation`s, `Socket`s, `Store`s, `ArchiveStore`s et al.
++ [![Fun I/O Scala API](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-scala-api.svg?label=Fun%20I/O%20Scala%20API&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-scala-api%22)
+  The Scala API extends the Java API with operators and implicit conversions to improvie the user experience in Scala.
++ [![Fun I/O BIOS](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-bios.svg?label=Fun%20I/O%20BIOS&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-bios%22)
+  The Basic Input/Output System (pun intended) provides basic implementations of the Fun I/O API.
   + The `BIOS` class is a facade which provides the following `Codec` functions:
     + `serialization` serializes/deserializes objects using `ObjectOutputStream`/`ObjectInputStream`.
     + `xml` encodes/decodes objects using `XMLEncoder`/`XMLDecoder`.
@@ -242,7 +243,8 @@ The modules are:
     + `copy` is a high performance algorithm for copying data from a `Source` to a `Sink`, including `Store`s, or from 
       an `ArchiveSource` to an `ArchiveSink`, including `ArchiveStore`s
     + `clone` duplicates an object by serializing it to memory and decoding it again.  
-+ `fun-io-commons-compress`: Depends on [Apache Commons Compress] to provide implementations of the Fun I/O API.
++ [![Fun I/O Commons Compress](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-commons-compress.svg?label=Fun%20I/O%20Commons%20Compress&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-commons-compress%22)
+  Depends on [Apache Commons Compress] to provide implementations of the Fun I/O API.
   + The `CommonsCompress` class is a facade which provides the following `Transformation` functions: 
     + `blockLZ4` compresses/decompresses data using the LZ4 block format.
     + `bzip2` compresses decompresses data using the BZIP2 format.
@@ -256,17 +258,21 @@ The modules are:
     + `jar` provides read/write access to JAR files.
     + `tar` provides copy-only access to TAR files.
     + `zip` provides read/write access to ZIP files.
-+ `fun-io-delta` provides utility functions for diffing and patching archive files or directories.
++ [![Fun I/O Delta](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-delta.svg?label=Fun%20I/O%20Delta&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-delta%22)
+  Provides utility functions for diffing and patching archive files or directories.
   + The `Delta` class is a facade which provides the following utility functions:
     + `diff` compares two archive files or directories to compute a delta archive file or directory or model.
     + `patch` patches an archive file or directory with a delta archive file or directory.
-+ `fun-io-jackson`: Depends on [Jackson Databind] to provide implementations of the Fun I/O API. 
++ [![Fun I/O Jackson](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-jackson.svg?label=Fun%20I/O%20Jackson&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-jackson%22)
+  Depends on [Jackson Databind] to provide implementations of the Fun I/O API. 
   + The `Jackson` class is a facade which provides the following `Codec` functions:
     + `json` marshals/unmarshals objects to/from JSON using Jackson Databind.
-+ `fun-io-jaxb`: Depends on [JAXB] to provide implementations of the Fun I/O API.
++ [![Fun I/O JAXB](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-jaxb.svg?label=Fun%20I/O%20JAXB&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-jaxb%22)
+  Depends on [JAXB] to provide implementations of the Fun I/O API.
   + The `JAXB` class is a facade which provides the following `Codec` functions:
     + `xml` marshals/unmarshals objects to/from XML using the JAXB reference implementation.
-+ `fun-io-xz`: Depends on [XZ for Java] to provide implementations of the Fun I/O API.
++ [![Fun I/O XZ](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-xz.svg?label=Fun%20I/O%20XZ&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-xz%22)
+  Depends on [XZ for Java] to provide implementations of the Fun I/O API.
   + The `XZ` class is a facade which provides the following `Transformation` functions:
     + `lzma2` compresses/decompresses data using the LZMA2 compression format.
     + `xz` compresses/decompresses data using the XZ compression format.
