@@ -322,13 +322,13 @@ public final class BIOS {
      ///////// ARCHIVE STORES /////////
     //////////////////////////////////
 
-    /** Returns an archive store for transparent access to the given directory. */
+    /** Returns an archive store for transparent read/write access to the given directory. */
     public static ArchiveStore<Path> directory(File directory) { return directory(directory.toPath()); }
 
-    /** Returns an archive store for transparent access to the given directory. */
+    /** Returns an archive store for transparent read/write access to the given directory. */
     public static ArchiveStore<Path> directory(Path directory) { return new DirectoryStore(requireNonNull(directory)); }
 
-    /** Returns an archive store for access to the given JAR file. */
+    /** Returns an archive store for read/write access to the given JAR file. */
     public static ArchiveStore<ZipEntry> jar(final File file) {
         requireNonNull(file);
         return new ArchiveStore<ZipEntry>() {
@@ -343,7 +343,7 @@ public final class BIOS {
         };
     }
 
-    /** Returns an archive store for access to the given ZIP file. */
+    /** Returns an archive store for read/write access to the given ZIP file. */
     public static ArchiveStore<ZipEntry> zip(final File file) {
         requireNonNull(file);
         return new ArchiveStore<ZipEntry>() {
@@ -361,6 +361,24 @@ public final class BIOS {
       /////////////////////////////
      ///////// UTILITIES /////////
     /////////////////////////////
+
+    /**
+     * Copies the entries from the given archive source to the given archive sink.
+     * <p>
+     * This is a high performance implementation which uses a pooled background thread to fill a FIFO of pooled buffers
+     * which is concurrently flushed by the current thread.
+     * It performs best when used with <em>unbuffered</em> streams.
+     *
+     * @param source the archive source to read the entries from.
+     * @param sink the archive sink to write the entries to.
+     */
+    public static void copy(final ArchiveSource<?> source, final ArchiveSink<?> sink) throws Exception {
+        source.acceptReader(input -> sink.acceptWriter(output -> {
+            for (ArchiveEntrySource<?> entry : input) {
+                entry.copyTo(output.sink(entry.name()));
+            }
+        }));
+    }
 
     /**
      * Copies the data from the given source to the given sink.
@@ -386,24 +404,6 @@ public final class BIOS {
      */
     public static void copy(Socket<? extends InputStream> input, Socket<? extends OutputStream> output) throws Exception {
         input.accept(in -> output.accept(out -> Copy.cat(in, out)));
-    }
-
-    /**
-     * Copies the entries from the given archive source to the given archive sink.
-     * <p>
-     * This is a high performance implementation which uses a pooled background thread to fill a FIFO of pooled buffers
-     * which is concurrently flushed by the current thread.
-     * It performs best when used with <em>unbuffered</em> streams.
-     *
-     * @param source the archive source to read the entries from.
-     * @param sink the archive sink to write the entries to.
-     */
-    public static void copy(final ArchiveSource<?> source, final ArchiveSink<?> sink) throws Exception {
-        source.acceptReader(input -> sink.acceptWriter(output -> {
-            for (ArchiveEntrySource<?> entry : input) {
-                entry.copyTo(output.sink(entry.name()));
-            }
-        }));
     }
 
     /**

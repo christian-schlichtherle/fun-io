@@ -33,15 +33,13 @@ val encoder: Encoder = json encoder stdout
 encoder encode "Hello world!"
 ```
 
-Here's the equivalent in Java:
+Here's the equivalent in Java (JShell, actually):
 
-```java
+```jshelllanguage
 import global.namespace.fun.io.api.*;
 
 import static global.namespace.fun.io.bios.BIOS.*;
 import static global.namespace.fun.io.jackson.Jackson.*;
-
-...
 
 Encoder encoder = json().encoder(stdout());
 encoder.encode("Hello world!");
@@ -71,17 +69,15 @@ connectedCodec encode "Hello world!"
 
 Note that the `<<` operator is associative.
 
-Here's the equivalent in Java: 
+Here's the equivalent in Java (JShell again): 
 
-```java
+```jshelllanguage
 import global.namespace.fun.io.api.*;
 import global.namespace.fun.io.api.function.*;
 import java.nio.file.Paths;
 
 import static global.namespace.fun.io.bios.BIOS.*;
 import static global.namespace.fun.io.jackson.Jackson.*;
-
-...
 
 XFunction<Boolean, Cipher> ciphers = outputMode -> { throw new UnsupportedOperationException("TODO"); };
 Store store = pathStore(Paths get "hello-world.gz.cipher");
@@ -99,17 +95,52 @@ Again, note that the `store` and `connectedCodec` objects are virtually stateles
 
 ### Archive Processing
 
-#### Diffing two JAR files and generating a delta JAR file
+#### Creating An Archive File
 
-The following code diffs two JAR files and generates a delta JAR file.
-It uses the `Compress` facade to access the JAR files using Apache Commons Compress.
-It also uses the `Delta` facade for the actual diffing:
+The following code creates a TAR.GZ file from a directory.
+It uses the `CommonsCompress` facade for accessing the TAR file format and transforming it to TAR.GZ using Apache 
+Commons Compress.
+It also uses the `BIOS` facade for accessing directories like archive files and copying them.   
 
-```java
+```jshelllanguage
 import java.io.File;
 
-import static global.namespace.fun.io.commons.compress.CommonsCompress.*;
-import static global.namespace.fun.io.delta.Delta.*;
+import static global.namespace.fun.io.commons.compress.CommonsCompress.*; // from module `fun-io-commons-compress`
+import static global.namespace.fun.io.bios.BIOS.copy;                     // from module `fun-io-bios`
+import static global.namespace.fun.io.bios.BIOS.directory;
+
+File dir = ...;
+File tarGz = ...;
+copy(directory(dir), tar(tarGz).map(gzip()));
+``` 
+
+#### Transforming An Archive File
+
+The following code transforms a TAR.GZ file to a ZIP file.
+It uses the `CommonsCompress` and `BIOS` facades again.
+
+```jshelllanguage
+import java.io.File;
+
+import static global.namespace.fun.io.commons.compress.CommonsCompress.*; // from module `fun-io-commons-compress`
+import static global.namespace.fun.io.bios.BIOS.copy;                     // from module `fun-io-bios`
+
+File tarGz = ...;
+File zip = ...;
+copy(tar(tarGz).map(gzip()), zip(zip));
+``` 
+
+#### Diffing Two JAR Files And Generating A Delta JAR File
+
+The following code diffs two JAR files and generates a delta JAR file.
+It uses the `CommonsCompress` facade for accessing the JAR file format using Apache Commons Compress.
+It also uses the `Delta` facade for diffing two archive files:
+
+```jshelllanguage
+import java.io.File;
+
+import static global.namespace.fun.io.commons.compress.CommonsCompress.*; // from module `fun-io-commons-compress`
+import static global.namespace.fun.io.delta.Delta.*;                      // from module `fun-io-delta`
 
 File base = ...;
 File update = ...;
@@ -120,17 +151,17 @@ diff().base(jar(base)).update(jar(update)).to(jar(delta));
 If you wanted to use the `fun-io-bios` module instead of the `fun-io-commons-compress` module, then, apart from
 configuring the class path, you would only have to edit the `import` statement as shown in the next example.
 
-#### Patching a JAR file with a delta JAR file to another JAR file
+#### Patching A JAR File With A Delta JAR File To Another JAR File
 
 The following code patches a JAR file with a delta JAR file to another JAR file.
-It uses the `BIOS` facade to access the JAR files using the JRE.
-It also uses the `Delta` facade for the actual patching:
+It uses the `BIOS` facade for accessing the JAR file format using the JRE.
+It also uses the `Delta` facade for patching a base archive file with a delta archive file:
 
-```java
+```jshelllanguage
 import java.io.File;
 
-import static global.namespace.fun.io.bios.BIOS.*;
-import static global.namespace.fun.io.delta.Delta.*;
+import static global.namespace.fun.io.bios.BIOS.*;   // from module `fun-io-bios`
+import static global.namespace.fun.io.delta.Delta.*; // from module `fun-io-delta`
 
 File base = ...;
 File update = ...;
@@ -138,20 +169,20 @@ File delta = ...;
 patch().base(jar(base)).delta(jar(delta)).to(jar(update));
 ```
 
-#### Diffing two directories and computing a delta model
+#### Diffing Two Directories And Computing A Delta Model
 
 Maybe you just want to examine the delta of two directories, but not generate a delta archive file or directory from 
 that?
 The following code diffs two directories and computes a delta model.
-Again, the `Delta` and the `BIOS` facades can be used to do that:
+Again, the `Delta` and the `BIOS` facades are used to do that:
 
-```java
+```jshelllanguage
 import java.io.File;
 
-import global.namespace.fun.io.delta.model.*;
+import global.namespace.fun.io.delta.model.*;        // from module `fun-io-delta`
 
-import static global.namespace.fun.io.bios.BIOS.*;
-import static global.namespace.fun.io.delta.Delta.*;
+import static global.namespace.fun.io.bios.BIOS.*;   // from module `fun-io-bios`
+import static global.namespace.fun.io.delta.Delta.*; // from module `fun-io-delta`
 
 File base = ...;
 File update = ...;
@@ -160,7 +191,7 @@ DeltaModel model = diff().base(directory(base)).update(directory(update)).toMode
 
 The delta model has properties describing the changed, unchanged, added and removed entries.
 
-## Module Structure and Features
+## Module Structure And Features
 
 Fun I/O has a modular structure.
 Its artifacts are hosted on Maven Central with the common group ID 
@@ -204,11 +235,12 @@ The modules are:
     + `systemPreferences` stores data in a system preferences nodes representing a given class.
     + `userPreferences` stores data in a user preferences nodes representing a given class.
   + It also provides the following `ArchiveStore` functions:
-    + `directory` provides access to a directory as if it were an archive file.
-    + `jar` provides access to JAR files.
-    + `zip` provides access to ZIP files.
+    + `directory` provides read/write access to a directory as if it were an archive file.
+    + `jar` provides read/write access to JAR files.
+    + `zip` provides read/write access to ZIP files.
   + It also provides the following utility functions:
-    + `copy` is a high performance algorithm for copying data from a `Source` to a `Sink`, including `Store`s.
+    + `copy` is a high performance algorithm for copying data from a `Source` to a `Sink`, including `Store`s, or from 
+      an `ArchiveSource` to an `ArchiveSink`, including `ArchiveStore`s
     + `clone` duplicates an object by serializing it to memory and decoding it again.  
 + `fun-io-commons-compress`: Depends on [Apache Commons Compress] to provide implementations of the Fun I/O API.
   + The `CommonsCompress` class is a facade which provides the following `Transformation` functions: 
@@ -221,8 +253,9 @@ The modules are:
     + `lzma` compresses/decompresses data using the LZMA compression format.
     + `lzma2` compresses/decompresses data using the LZMA2 compression format.
   + It also provides the following `ArchiveStore` functions:
-    + `jar` provides access to JAR files.
-    + `zip` provides access to ZIP files.
+    + `jar` provides read/write access to JAR files.
+    + `tar` provides copy-only access to TAR files.
+    + `zip` provides read/write access to ZIP files.
 + `fun-io-delta` provides utility functions for diffing and patching archive files or directories.
   + The `Delta` class is a facade which provides the following utility functions:
     + `diff` compares two archive files or directories to compute a delta archive file or directory or model.

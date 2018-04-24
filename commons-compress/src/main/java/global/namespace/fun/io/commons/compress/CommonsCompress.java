@@ -34,9 +34,9 @@ import org.apache.commons.compress.compressors.snappy.SnappyCompressorOutputStre
 import org.tukaani.xz.LZMA2Options;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
+import static global.namespace.fun.io.bios.BIOS.file;
 import static java.util.Objects.requireNonNull;
 import static org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream.MAX_BLOCKSIZE;
 
@@ -113,7 +113,7 @@ public final class CommonsCompress {
      ///////// ARCHIVE STORES /////////
     //////////////////////////////////
 
-    /** Returns an archive store for access to the given JAR file. */
+    /** Returns an archive store for read/write access to the given JAR file. */
     public static ArchiveStore<ZipArchiveEntry> jar(final File file) {
         requireNonNull(file);
         return new ArchiveStore<ZipArchiveEntry>() {
@@ -128,23 +128,38 @@ public final class CommonsCompress {
         };
     }
 
-    public static ArchiveStore<TarArchiveEntry> tar(final File file) {
-        requireNonNull(file);
+    /**
+     * Returns an archive store for copy-only access tp a TAR file in the given store.
+     * The resulting archive store has very limited capabilities due to the constraints of the TAR file format.
+     * For example, you can't just use an output stream socket to write a TAR entry because the size of a TAR entry must
+     * be known in advance.
+     * Similarly, you can't randomly access entries in a TAR file because there is no central directory.
+     * <p>
+     * In fact, the only supported use case is to use the resulting archive store as a source or a sink for
+     * {@link global.namespace.fun.io.bios.BIOS#copy(ArchiveSource, ArchiveSink)}.
+     * This is still very powerful, because it allows you to pack or unpack a TAR file from or to a directory
+     * or to transform it from or to another archive file format, e.g. ZIP.
+     * <p>
+     * Note that the parameter is a {@link Store}, so you can apply any {@link Transformation} to it, e.g.
+     * {@link #gzip()}.
+     */
+    public static ArchiveStore<TarArchiveEntry> tar(final Store store) {
+        requireNonNull(store);
         return new ArchiveStore<TarArchiveEntry>() {
 
             @Override
             public Socket<ArchiveInput<TarArchiveEntry>> input() {
-                return () -> new TarArchiveInputStreamAdapter(new TarArchiveInputStream(new FileInputStream(file)));
+                return store.input().map(in -> new TarArchiveInputStreamAdapter(new TarArchiveInputStream(in)));
             }
 
             @Override
             public Socket<ArchiveOutput<TarArchiveEntry>> output() {
-                return () -> new TarArchiveOutputStreamAdapter(new TarArchiveOutputStream(new FileOutputStream(file)));
+                return store.output().map(out -> new TarArchiveOutputStreamAdapter(new TarArchiveOutputStream(out)));
             }
         };
     }
 
-    /** Returns an archive store for access to the given ZIP file. */
+    /** Returns an archive store for read/write access to the given ZIP file. */
     public static ArchiveStore<ZipArchiveEntry> zip(final File file) {
         requireNonNull(file);
         return new ArchiveStore<ZipArchiveEntry>() {
