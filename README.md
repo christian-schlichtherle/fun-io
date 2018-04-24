@@ -13,7 +13,7 @@ Fun I/O supports Java 8 or later and Scala 2.10, 2.11 and 2.12 and is covered by
   + Stateless and hence reusable and thread-safe by design (except for their observable side effects, e.g. writing to a 
     file).
   + Composable into stateless I/O subsystems.
-  + Degradeable for interoperability with any code which deals with `InputStream` and `OutputStream` directly.
+  + Interoperable with any code which deals with `InputStream` and `OutputStream` directly.
 + Proper resource management: Streams are properly closed, even if there is an exception in a nested constructor.
   Say goodbye to resource leaks and try-with-resources statements!
 + Supports Java 8 or later and Scala equally well via dedicated APIs.
