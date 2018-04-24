@@ -201,7 +201,8 @@ The following diagram shows the module structure:
 
 The modules are:
 
-+ `fun-io-api`: The API provides interfaces for `Codec`s, `Transformation`s, `Socket`s, `Store`s, `ArchiveStore`s et al.
++ [![Fun I/O API](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-api.svg?label=Fun%20I/O%20API&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-api%22)
+  : The API provides interfaces for `Codec`s, `Transformation`s, `Socket`s, `Store`s, `ArchiveStore`s et al.
 + `fun-io-scala-api`: The Scala API extends the Java API with operators and implicit conversions to improvie the user 
    experience in Scala.
 + `fun-io-bios`: The Basic Input/Output System (pun intended) provides basic implementations of the Fun I/O API.
