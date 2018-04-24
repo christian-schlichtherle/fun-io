@@ -77,7 +77,7 @@ lazy val delta: Project = project
 lazy val it: Project = project
   .in(file("it"))
   .dependsOn(bios, commonsCompress, delta, jackson, jaxb, scalaApi, xz)
-  .settings(scalaLibrarySettings)
+  .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
       MockitoCore % Test,
