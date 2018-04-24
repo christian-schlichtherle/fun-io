@@ -133,8 +133,7 @@ copy(tar(tarGz).map(gzip()), zip(zip));
 #### Diffing Two JAR Files And Generating A Delta JAR File
 
 The following code diffs two JAR files and generates a delta JAR file.
-It uses the `CommonsCompress` facade for accessing the JAR file format using Apache Commons Compress.
-It also uses the `Delta` facade for diffing two archive files:
+In addition to the `CommonsCompress` facade, it uses the `Delta` facade for diffing two archive files:
 
 ```jshelllanguage
 import java.io.File;
@@ -155,7 +154,7 @@ configuring the class path, you would only have to edit the `import` statement a
 
 The following code patches a JAR file with a delta JAR file to another JAR file.
 It uses the `BIOS` facade for accessing the JAR file format using the JRE.
-It also uses the `Delta` facade for patching a base archive file with a delta archive file:
+It also uses the `Delta` facade again for patching a base archive file with a delta archive file:
 
 ```jshelllanguage
 import java.io.File;
@@ -174,7 +173,7 @@ patch().base(jar(base)).delta(jar(delta)).to(jar(update));
 Maybe you just want to examine the delta of two directories, but not generate a delta archive file or directory from 
 that?
 The following code diffs two directories and computes a delta model.
-Again, the `Delta` and the `BIOS` facades are used to do that:
+Again, the `BIOS` and the `Delta` facades are used to do that:
 
 ```jshelllanguage
 import java.io.File;
