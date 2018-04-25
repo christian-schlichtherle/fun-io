@@ -18,6 +18,6 @@ Fun I/O supports Java 8 or later and Scala 2.10, 2.11 and 2.12 and is covered by
   Say goodbye to resource leaks and try-with-resources statements!
 + Supports Java 8 or later and Scala equally well via dedicated APIs.
 
-## User Documentation
+## Documentation
 
 User documentation is available at https://christian-schlichtherle.github.io/fun-io/ .
