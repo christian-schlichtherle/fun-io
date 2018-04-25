@@ -101,6 +101,8 @@ class TransformedCodecSpec extends WordSpec {
     store.acceptReader((_: InputStream) => ())
   }
 
+  private def rot13: Filter = new ROTFilter
+
   "All transformed codecs" should {
 
     "pass the lifecycle " in {

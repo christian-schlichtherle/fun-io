@@ -219,7 +219,6 @@ The modules are:
     + `identity` is a no-op, forming filters into a [Monoid].
     + `inflate` inflates/deflates data using the ZIP compression.
     + `inverse` inverses a given filter by buffering the entire data to a buffer, e.g. on the heap.
-    + `rot` provides the (in)famous ROT transformation, e.g. [ROT13].
   + It also provides the following `Source` functions:
     + `resource` reads a resource from the class path.
     + `stdin` reads the standard input.
@@ -287,5 +286,4 @@ A typical Scala application has the same dependency/dependencies as a Java appli
 [Jackson Databind]: http://wiki.fasterxml.com/JacksonHome
 [JAXB]: https://javaee.github.io/jaxb-v2/
 [Monoid]: https://en.wikipedia.org/wiki/Monoid
-[ROT13]: https://en.wikipedia.org/wiki/ROT13
-[XZ for Java]: https://tukaani.org/xz/
+s[XZ for Java]: https://tukaani.org/xz/

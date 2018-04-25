@@ -13,20 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package global.namespace.fun.io.bios;
+package global.namespace.fun.io.it;
 
 import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.api.Filter;
 
 import java.io.*;
 
-final class ROTFilter implements Filter {
+public class ROTFilter implements Filter {
 
     private static final int ALPHABET_LENGTH = 'Z' - 'A' + 1;
 
     private int apply[] = new int[ALPHABET_LENGTH], unapply[] = new int[ALPHABET_LENGTH];
 
-    ROTFilter(final int positions) {
+    public ROTFilter() { this(13); }
+
+    public ROTFilter(final int positions) {
         if (positions < 1 || ALPHABET_LENGTH - 1 < positions) {
             throw new IllegalArgumentException(positions + " is not in the range from 1 to " + (ALPHABET_LENGTH - 1) + ".");
         }

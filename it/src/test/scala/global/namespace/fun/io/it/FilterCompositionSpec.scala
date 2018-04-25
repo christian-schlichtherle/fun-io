@@ -130,6 +130,10 @@ private object FilterCompositionSpec {
   // MUST be `def` or `rot1 - rot1` may get optimized to `identity`!
   private def rot1 = rot(1)
 
+  private def rot13 = rot(13)
+
+  private def rot(positions: Int): Filter = new ROTFilter(positions)
+
   private val a: Filter = new MessageFilter("a")
 
   private val b: Filter = new MessageFilter("b")

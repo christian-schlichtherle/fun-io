@@ -190,12 +190,6 @@ public final class BIOS {
         return new BufferedInverseFilter(requireNonNull(t), requireNonNull(bufferSocket));
     }
 
-    /** Returns a filter which rotates each ASCII letter by 13 positions. */
-    public static Filter rot13() { return rot(13); }
-
-    /** Returns a filter which rotates each ASCII letter by the given number of positions. */
-    public static Filter rot(int positions) { return new ROTFilter(positions); }
-
       ///////////////////////////
      ///////// SOURCES /////////
     ///////////////////////////
