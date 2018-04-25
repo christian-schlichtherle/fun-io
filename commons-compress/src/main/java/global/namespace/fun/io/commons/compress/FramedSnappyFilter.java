@@ -15,8 +15,8 @@
  */
 package global.namespace.fun.io.commons.compress;
 
+import global.namespace.fun.io.api.Filter;
 import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.bios.BufferedInvertibleFilter;
 import org.apache.commons.compress.compressors.lz77support.Parameters;
 import org.apache.commons.compress.compressors.snappy.FramedSnappyCompressorInputStream;
 import org.apache.commons.compress.compressors.snappy.FramedSnappyCompressorOutputStream;
@@ -25,7 +25,7 @@ import org.apache.commons.compress.compressors.snappy.FramedSnappyDialect;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-final class FramedSnappyFilter extends BufferedInvertibleFilter {
+final class FramedSnappyFilter implements Filter {
 
     private final Parameters outputParameters;
     private final FramedSnappyDialect inputParameters;

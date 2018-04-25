@@ -15,8 +15,8 @@
  */
 package global.namespace.fun.io.commons.compress;
 
+import global.namespace.fun.io.api.Filter;
 import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.bios.BufferedInvertibleFilter;
 import org.apache.commons.compress.compressors.lz4.BlockLZ4CompressorInputStream;
 import org.apache.commons.compress.compressors.lz4.BlockLZ4CompressorOutputStream;
 import org.apache.commons.compress.compressors.lz77support.Parameters;
@@ -24,7 +24,7 @@ import org.apache.commons.compress.compressors.lz77support.Parameters;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-final class BlockLZ4Filter extends BufferedInvertibleFilter {
+final class BlockLZ4Filter implements Filter {
 
     private final Parameters parameters;
 

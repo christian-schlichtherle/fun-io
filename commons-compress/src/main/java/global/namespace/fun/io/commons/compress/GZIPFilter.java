@@ -15,8 +15,8 @@
  */
 package global.namespace.fun.io.commons.compress;
 
+import global.namespace.fun.io.api.Filter;
 import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.bios.BufferedInvertibleFilter;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipParameters;
@@ -24,7 +24,7 @@ import org.apache.commons.compress.compressors.gzip.GzipParameters;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-final class GZIPFilter extends BufferedInvertibleFilter {
+final class GZIPFilter implements Filter {
 
     private final GzipParameters parameters;
 

@@ -25,10 +25,7 @@ private[api] trait PackageContent {
 
   implicit class WithFilter(t1: Filter) {
 
-    def unary_- : Filter = t1.inverse
-
     def +(t2: Filter): Filter = t1 compose t2
-    def -(t2: Filter): Filter = if (t1 == t2) IDENTITY else t1 + -t2
 
     def <<(t2: Filter): Filter = t1 compose t2
     def <<(s: Store): Store = s map t1

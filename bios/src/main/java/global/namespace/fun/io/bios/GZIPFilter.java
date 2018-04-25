@@ -15,6 +15,7 @@
  */
 package global.namespace.fun.io.bios;
 
+import global.namespace.fun.io.api.Filter;
 import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.api.Store;
 
@@ -23,7 +24,7 @@ import java.io.OutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-final class GZIPFilter extends BufferedInvertibleFilter {
+final class GZIPFilter implements Filter {
 
     @Override
     public Socket<OutputStream> apply(Socket<OutputStream> output) {

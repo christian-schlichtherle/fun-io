@@ -26,7 +26,4 @@ final class BufferedIOFilter implements Filter {
 
     @Override
     public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(in -> new BufferedInputStream(in, size)); }
-
-    @Override
-    public Filter inverse() { return this; }
 }

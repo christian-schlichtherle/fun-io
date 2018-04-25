@@ -216,9 +216,8 @@ The modules are:
     + `cipher` encrypts/decrypts data using a function which provides initialized `javax.security.Cipher` objects.
     + `deflate` deflates/inflates data using the ZIP compression.
     + `gzip` compresses/decompresses data using the GZIP compression format.
-    + `identity` is a no-op, forming filters into a [Monoid].
+    + `identity` is a no-op, forming filters into a [Monoid] under the operations `Filter.andThen` and `Filter.compose`.
     + `inflate` inflates/deflates data using the ZIP compression.
-    + `inverse` inverses a given filter by buffering the entire data to a buffer, e.g. on the heap.
   + It also provides the following `Source` functions:
     + `resource` reads a resource from the class path.
     + `stdin` reads the standard input.

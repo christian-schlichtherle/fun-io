@@ -90,11 +90,4 @@ public class ROTFilter implements Filter {
             return b;
         }
     }
-
-    @Override
-    public Filter inverse() {
-        final int oldPositions = apply[0];
-        final int newPositions = ALPHABET_LENGTH - oldPositions;
-        return newPositions == oldPositions ? this : new ROTFilter(newPositions);
-    }
 }

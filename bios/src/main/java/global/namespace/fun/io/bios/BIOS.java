@@ -153,43 +153,6 @@ public final class BIOS {
         return new InflateFilter(requireNonNull(inflaterSupplier), requireNonNull(deflaterSupplier));
     }
 
-    /**
-     * Returns a filter which inverses the given filter by buffering the entire data on the heap.
-     * <p>
-     * This is a general purpose implementation which incurs buffering the entire data produced by the original
-     * filter, so use with care!
-     * For any given filter, it's advisable to provide a specialized implementation of the inverse
-     * filter which does not incur this overhead.
-     */
-    public static Filter inverse(Filter t) { return inverse(t, (XSupplier<Store>) BIOS::memory); }
-
-    /**
-     * Returns a filter which inverses the given filter by buffering the entire data in a temporary
-     * store obtained from the given supplier.
-     * <p>
-     * This is a general purpose implementation which incurs buffering the entire data produced by the original
-     * filter, so use with care!
-     * For any given filter, it's advisable to provide a specialized implementation of the inverse
-     * filter which does not incur this overhead.
-     */
-    public static Filter inverse(Filter t, XSupplier<Store> storeSupplier) {
-        requireNonNull(storeSupplier);
-        return inverse(t, (Socket<Buffer>) () -> Buffer.of(storeSupplier.get()));
-    }
-
-    /**
-     * Returns a filter which inverses the given filter by buffering the entire data in a loaned
-     * buffer.
-     * <p>
-     * This is a general purpose implementation which incurs buffering the entire data produced by the original
-     * filter, so use with care!
-     * For any given filter, it's advisable to provide a specialized implementation of the inverse
-     * filter which does not incur this overhead.
-     */
-    public static Filter inverse(Filter t, Socket<Buffer> bufferSocket) {
-        return new BufferedInverseFilter(requireNonNull(t), requireNonNull(bufferSocket));
-    }
-
       ///////////////////////////
      ///////// SOURCES /////////
     ///////////////////////////

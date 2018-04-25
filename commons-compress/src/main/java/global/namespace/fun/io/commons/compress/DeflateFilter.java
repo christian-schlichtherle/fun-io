@@ -15,8 +15,8 @@
  */
 package global.namespace.fun.io.commons.compress;
 
+import global.namespace.fun.io.api.Filter;
 import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.bios.BufferedInvertibleFilter;
 import org.apache.commons.compress.compressors.deflate.DeflateCompressorInputStream;
 import org.apache.commons.compress.compressors.deflate.DeflateCompressorOutputStream;
 import org.apache.commons.compress.compressors.deflate.DeflateParameters;
@@ -24,7 +24,7 @@ import org.apache.commons.compress.compressors.deflate.DeflateParameters;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-final class DeflateFilter extends BufferedInvertibleFilter {
+final class DeflateFilter implements Filter {
 
     private final DeflateParameters parameters;
 

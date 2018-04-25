@@ -47,11 +47,5 @@ class InternalSpec extends WordSpec {
         io verifyNoMoreInteractions ()
       }
     }
-
-    "return itself again" when {
-      "inverting it twice" in {
-        c.inverse.inverse should be theSameInstanceAs c
-      }
-    }
   }
 }

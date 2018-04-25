@@ -15,15 +15,15 @@
  */
 package global.namespace.fun.io.commons.compress;
 
+import global.namespace.fun.io.api.Filter;
 import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.bios.BufferedInvertibleFilter;
 import org.apache.commons.compress.compressors.lzma.LZMACompressorInputStream;
 import org.apache.commons.compress.compressors.lzma.LZMACompressorOutputStream;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
-final class LZMAFilter extends BufferedInvertibleFilter {
+final class LZMAFilter implements Filter {
 
     @Override
     public Socket<OutputStream> apply(Socket<OutputStream> output) { return output.map(LZMACompressorOutputStream::new); }

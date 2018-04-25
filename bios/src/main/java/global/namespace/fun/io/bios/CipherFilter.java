@@ -41,7 +41,4 @@ final class CipherFilter implements Filter {
     public Socket<InputStream> unapply(Socket<InputStream> input) {
         return input.map(in -> new CipherInputStream(in, inputCipherSupplier.get()));
     }
-
-    @Override
-    public Filter inverse() { return new CipherFilter(outputCipherSupplier, inputCipherSupplier); }
 }

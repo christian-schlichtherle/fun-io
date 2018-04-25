@@ -30,26 +30,6 @@ final class Internal {
 
             @Override
             public Socket<InputStream> unapply(Socket<InputStream> input) { return second.unapply(first.unapply(input)); }
-
-            @Override
-            public Filter inverse() {
-                final Filter composite = this;
-                return new Filter() {
-
-                    @Override
-                    public Socket<OutputStream> apply(Socket<OutputStream> output) {
-                        return first.inverse().apply(second.inverse().apply(output));
-                    }
-
-                    @Override
-                    public Socket<InputStream> unapply(Socket<InputStream> input) {
-                        return first.inverse().unapply(second.inverse().unapply(input));
-                    }
-
-                    @Override
-                    public Filter inverse() { return composite; }
-                };
-            }
         };
     }
 

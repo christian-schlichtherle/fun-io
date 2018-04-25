@@ -15,15 +15,15 @@
  */
 package global.namespace.fun.io.commons.compress;
 
+import global.namespace.fun.io.api.Filter;
 import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.bios.BufferedInvertibleFilter;
 import org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorInputStream;
 import org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorOutputStream;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
-final class FramedLZ4Filter extends BufferedInvertibleFilter {
+final class FramedLZ4Filter implements Filter {
 
     private final FramedLZ4CompressorOutputStream.Parameters parameters;
 

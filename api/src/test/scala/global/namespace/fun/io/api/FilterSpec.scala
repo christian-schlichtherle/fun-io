@@ -39,9 +39,5 @@ class FilterSpec extends WordSpec {
       val input = mock[Socket[InputStream]]
       IDENTITY unapply input should be theSameInstanceAs input
     }
-
-    "return itself as its inverse" in {
-      IDENTITY.inverse should be theSameInstanceAs IDENTITY
-    }
   }
 }

@@ -17,7 +17,6 @@ package global.namespace.fun.io.xz;
 
 import global.namespace.fun.io.api.Filter;
 import global.namespace.fun.io.api.Socket;
-import global.namespace.fun.io.bios.BIOS;
 import org.tukaani.xz.FilterOptions;
 import org.tukaani.xz.XZInputStream;
 import org.tukaani.xz.XZOutputStream;
@@ -43,7 +42,4 @@ final class XZFilter implements Filter {
 
     @Override
     public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(XZInputStream::new); }
-
-    @Override
-    public Filter inverse() { return BIOS.inverse(this); }
 }

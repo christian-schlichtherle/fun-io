@@ -15,6 +15,7 @@
  */
 package global.namespace.fun.io.bios;
 
+import global.namespace.fun.io.api.Filter;
 import global.namespace.fun.io.api.Socket;
 
 import java.io.InputStream;
@@ -22,7 +23,7 @@ import java.io.OutputStream;
 import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
 
-final class Base64Filter extends BufferedInvertibleFilter {
+final class Base64Filter implements Filter {
 
     private final Encoder encoder;
     private final Decoder decoder;

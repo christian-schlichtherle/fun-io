@@ -19,14 +19,11 @@ import java.io._
 import java.lang.reflect.Type
 
 import global.namespace.fun.io.api._
+import global.namespace.fun.io.bios.BIOS
 import global.namespace.fun.io.bios.BIOS._
-import global.namespace.fun.io.bios.{BIOS, BufferedInvertibleFilter}
 import global.namespace.fun.io.commons.compress.CommonsCompress
-import global.namespace.fun.io.commons.compress.CommonsCompress._
-import global.namespace.fun.io.it.PBE.pbe
 import global.namespace.fun.io.it.FilterCompositionSpec._
 import global.namespace.fun.io.scala.api._
-import global.namespace.fun.io.xz.XZ
 import org.scalatest.Matchers.{a => _, _}
 import org.scalatest.WordSpec
 import org.scalatest.prop.PropertyChecks._
@@ -41,50 +38,9 @@ class FilterCompositionSpec extends WordSpec {
       "produce identical output" in {
         val table = Table[Filter](
           "filter",
-
-          base64 - base64,
-
-          blockLZ4 - blockLZ4,
-
-          bzip2 - bzip2,
-
           buffer,
-
-          BIOS.deflate - BIOS.deflate,
-          BIOS.deflate - CommonsCompress.deflate,
-          CommonsCompress.deflate - BIOS.deflate,
-          CommonsCompress.deflate - CommonsCompress.deflate,
-
           BIOS.deflate + inflate,
-          CommonsCompress.deflate + inflate,
-
-          framedLZ4 - framedLZ4,
-
-          framedSnappy - framedSnappy,
-
-          pbe - pbe,
-
-          BIOS.gzip - BIOS.gzip,
-          BIOS.gzip - CommonsCompress.gzip,
-          CommonsCompress.gzip - BIOS.gzip,
-          CommonsCompress.gzip - CommonsCompress.gzip,
-
-          -inflate + inflate,
-
-          lzma - lzma,
-
-          XZ.lzma2 - XZ.lzma2,
-          XZ.lzma2 - CommonsCompress.lzma2,
-          CommonsCompress.lzma2 - XZ.lzma2,
-          CommonsCompress.lzma2 - CommonsCompress.lzma2,
-
-          rot1 - rot1,
-          -rot1 + rot1,
-
-          rot13 + rot13,
-          rot13 - rot13,
-          -rot13 + rot13,
-          -rot13 - rot13
+          CommonsCompress.deflate + inflate
         )
         forAll(table) { filter =>
           filter should not be identity
@@ -127,18 +83,13 @@ private object FilterCompositionSpec {
     }
   }
 
-  // MUST be `def` or `rot1 - rot1` may get optimized to `identity`!
-  private def rot1 = rot(1)
-
-  private def rot13 = rot(13)
-
-  private def rot(positions: Int): Filter = new ROTFilter(positions)
+  private def rot13: Filter = new ROTFilter
 
   private val a: Filter = new MessageFilter("a")
 
   private val b: Filter = new MessageFilter("b")
 
-  private[this] class MessageFilter(message: String) extends BufferedInvertibleFilter {
+  private[this] class MessageFilter(message: String) extends Filter {
 
     def apply(oss: Socket[OutputStream]): Socket[OutputStream] = {
       oss.map((out: OutputStream) => { out write message.getBytes; out })

@@ -70,7 +70,4 @@ final class DeflateFilter implements Filter {
             }
         });
     }
-
-    @Override
-    public Filter inverse() { return new InflateFilter(inflaterSupplier, deflaterSupplier); }
 }

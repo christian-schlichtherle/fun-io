@@ -66,9 +66,6 @@ public interface Filter {
 
         @Override
         public Socket<InputStream> unapply(Socket<InputStream> input) { return input; }
-
-        @Override
-        public Filter inverse() { return this; }
     };
 
     /** Returns an output stream socket which decorates the given output stream socket. */
@@ -82,17 +79,6 @@ public interface Filter {
 
     /** Returns a source which decorates the given source. */
     default Source unapply(Source source) { return () -> unapply(source.input()); };
-
-    /**
-     * Returns the inverse of this filter (optional operation).
-     * An implementation may choose to throw an {@link UnsupportedOperationException} if inverting this filter
-     * is not supported.
-     * However, it's strongly encouraged to provide a proper implementation of this operation because it's trivially
-     * possible to invert any filter by buffering its entire content.
-     *
-     * @throws UnsupportedOperationException if inverting this filter is not supported.
-     */
-    Filter inverse();
 
     /** Returns a filter which applies the given filter <em>before</em> this filter. */
     default Filter compose(Filter before) { return Internal.compose(requireNonNull(before), this); }
