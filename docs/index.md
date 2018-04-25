@@ -35,7 +35,7 @@ encoder encode "Hello world!"
 
 Here's the equivalent in Java (JShell, actually):
 
-```jshelllanguage
+```java
 import global.namespace.fun.io.api.*;
 
 import static global.namespace.fun.io.bios.BIOS.*;
@@ -71,7 +71,7 @@ Note that the `<<` operator is associative.
 
 Here's the equivalent in Java (JShell again): 
 
-```jshelllanguage
+```java
 import global.namespace.fun.io.api.*;
 import global.namespace.fun.io.api.function.*;
 import java.nio.file.Paths;
@@ -102,7 +102,7 @@ It uses the `CommonsCompress` facade for accessing the TAR file format and trans
 Commons Compress.
 It also uses the `BIOS` facade for accessing directories like archive files and copying them.   
 
-```jshelllanguage
+```java
 import java.io.File;
 
 import static global.namespace.fun.io.commons.compress.CommonsCompress.*; // from module `fun-io-commons-compress`
@@ -119,7 +119,7 @@ copy(directory(dir), tar(tarGz).map(gzip()));
 The following code transforms a TAR.GZ file to a ZIP file.
 It uses the `CommonsCompress` and `BIOS` facades again.
 
-```jshelllanguage
+```java
 import java.io.File;
 
 import static global.namespace.fun.io.commons.compress.CommonsCompress.*; // from module `fun-io-commons-compress`
@@ -135,7 +135,7 @@ copy(tar(tarGz).map(gzip()), zip(zip));
 The following code diffs two JAR files and generates a delta JAR file.
 In addition to the `CommonsCompress` facade, it uses the `Delta` facade for diffing two archive files:
 
-```jshelllanguage
+```java
 import java.io.File;
 
 import static global.namespace.fun.io.commons.compress.CommonsCompress.*; // from module `fun-io-commons-compress`
@@ -156,7 +156,7 @@ The following code patches a JAR file with a delta JAR file to another JAR file.
 It uses the `BIOS` facade for accessing the JAR file format using the JRE.
 It also uses the `Delta` facade again for patching a base archive file with a delta archive file:
 
-```jshelllanguage
+```java
 import java.io.File;
 
 import static global.namespace.fun.io.bios.BIOS.*;   // from module `fun-io-bios`
@@ -175,7 +175,7 @@ that?
 The following code diffs two directories and computes a delta model.
 Again, the `BIOS` and the `Delta` facades are used to do that:
 
-```jshelllanguage
+```java
 import java.io.File;
 
 import global.namespace.fun.io.delta.model.*;        // from module `fun-io-delta`
