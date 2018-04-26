@@ -6,19 +6,17 @@ package global.namespace.fun.io.bios;
 
 import global.namespace.fun.io.api.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Optional;
 
 import static global.namespace.fun.io.bios.BIOS.copy;
-import static java.nio.file.Files.*;
-import static java.nio.file.Paths.get;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 
 /**
  * Provides access to directories as if they were archive files.
@@ -42,18 +40,25 @@ final class DirectoryStore implements ArchiveStore<Path> {
                     return Files
                             .walk(directory)
                             .filter(p -> !p.equals(directory))
-                            .map(path -> pathSource(directory.relativize(path).toString()))
+                            .map(path -> {
+                                String name = directory.relativize(path).toString();
+                                if (Files.isDirectory(path)) {
+                                    name += '/';
+                                }
+                                return pathSource(name);
+                            })
                             .iterator();
                 } catch (IOException e) {
                     throw new IllegalArgumentException(e);
                 }
             }
 
-            public Optional<ArchiveEntrySource<Path>> source(final String name) {
-                final Path path = resolve(name);
-                return exists(path) ? of(pathSource(name)) : empty();
+            @Override
+            public Optional<ArchiveEntrySource<Path>> source(String name) {
+                return Optional.ofNullable(Files.exists(resolve(name)) ? pathSource(name) : null);
             }
 
+            @Override
             public void close() { }
         };
     }
@@ -62,81 +67,98 @@ final class DirectoryStore implements ArchiveStore<Path> {
     public Socket<ArchiveOutput<Path>> output() {
         return () -> new ArchiveOutput<Path>() {
 
+            @Override
             public boolean isJar() { return false; }
 
+            @Override
             public ArchiveEntrySink<Path> sink(String name) { return pathSink(name); }
 
+            @Override
             public void close()  { }
         };
     }
 
-    private ArchiveEntrySource<Path> pathSource(String relativePath) {
+    private ArchiveEntrySource<Path> pathSource(String name) {
         return new ArchiveEntrySource<Path>() {
 
             @Override
-            public String name() { return relativePath; }
+            public String name() { return name; }
 
             @Override
             public long size() {
                 try {
-                    return Files.size(entry());
+                    return Files.size(path());
                 } catch (IOException ignored) {
-                    return -1;
+                    return 0;
                 }
             }
 
             @Override
-            public boolean isDirectory() { return Files.isDirectory(resolvedPath()); }
+            public boolean isDirectory() { return name().endsWith("/"); }
 
             @Override
-            public Path entry() { return get(relativePath); }
+            public Path entry() { return Paths.get(name()); }
 
             @Override
-            public Socket<InputStream> input() { return () -> newInputStream(resolvedPath()); }
+            public Socket<InputStream> input() {
+                return () -> {
+                    if (isDirectory()) {
+                        return new ByteArrayInputStream(new byte[0]);
+                    } else {
+                        return Files.newInputStream(path());
+                    }
+                };
+            }
 
-            Path resolvedPath() { return resolve(relativePath); }
+            Path path() { return resolve(name()); }
         };
     }
 
-    private ArchiveEntrySink<Path> pathSink(String relativePath) {
+    private ArchiveEntrySink<Path> pathSink(String name) {
         return new ArchiveEntrySink<Path>() {
 
             @Override
-            public String name() { return relativePath; }
+            public String name() { return name; }
 
             @Override
             public long size() {
                 try {
-                    return Files.size(entry());
+                    return Files.size(path());
                 } catch (IOException ignored) {
-                    return -1;
+                    return 0;
                 }
             }
 
             @Override
-            public boolean isDirectory() { return Files.isDirectory(resolvedPath()); }
+            public boolean isDirectory() { return name().endsWith("/"); }
 
             @Override
-            public Path entry() { return get(name()); }
+            public Path entry() { return Paths.get(name()); }
 
             @Override
             public Socket<OutputStream> output() {
                 return () -> {
-                    final Path path = resolvedPath();
+                    final Path path = path();
                     final Path parent = path.getParent();
                     if (null != parent) {
-                        createDirectories(parent);
+                        Files.createDirectories(parent);
                     }
-                    return newOutputStream(path);
+                    return Files.newOutputStream(path);
                 };
             }
 
             @Override
-            public void copyFrom(ArchiveEntrySource<?> source) throws Exception { copy(source, this); }
+            public void copyFrom(final ArchiveEntrySource<?> source) throws Exception {
+                if (source.isDirectory()) {
+                    Files.createDirectories(path());
+                } else {
+                    copy(source, this);
+                }
+            }
 
-            Path resolvedPath() { return resolve(relativePath); }
+            Path path() { return resolve(name()); }
         };
     }
 
-    private Path resolve(String relativePath) { return directory.resolve(relativePath); }
+    private Path resolve(String name) { return directory.resolve(name); }
 }
