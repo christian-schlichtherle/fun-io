@@ -2,21 +2,8 @@
 
 Fun I/O provides functional, high level abstractions for codecs, sources, sinks, stores, archives, filters, sockets et 
 al.
-Fun I/O supports Java 8 or later and Scala 2.10, 2.11 and 2.12 and is covered by the Apache License, version 2.0.
-
-## Features
-
-+ Composes low level `InputStream`s and `OutputStream`s into high level `Codec`s, `Source`s, `Sink`s, `Store`s, 
-  `ArchiveStore`s, `Socket`s, `Filter`s et al.
-  These abstractions are:
-  + Easy to implement.
-  + Stateless and hence reusable and thread-safe by design (except for their observable side effects, e.g. writing to a 
-    file).
-  + Composable into stateless I/O subsystems.
-  + Interoperable with any code which deals with `InputStream`s and `OutputStream`s directly.
-+ Proper resource management: Streams are properly closed, even if there is an exception in a nested constructor.
-  Say goodbye to resource leaks and try-with-resources statements!
-+ Supports Java 8 or later and Scala equally well via dedicated APIs.
+Fun I/O supports Java 8 or later and Scala 2.10, 2.11 and 2.12 equally well via dedicated APIs and is covered by the 
+Apache License, version 2.0.
 
 ## Documentation
 
