@@ -21,7 +21,7 @@ class DirectoryStoreSpec extends WordSpec {
         val dir: String = (clazz.getPackage.getName split "\\.").last
         val store = new DirectoryStore(Paths get (clazz getResource "..").toURI)
         store acceptReader {
-          _.asScala.map(_.name) should (contain(dir) and contain(s"$dir/${clazz.getSimpleName}.class"))
+          _.asScala.map(_.name) should (contain(dir + '/') and contain(s"$dir/${clazz.getSimpleName}.class"))
         }
       }
     }
