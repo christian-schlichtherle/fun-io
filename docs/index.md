@@ -11,8 +11,8 @@ Apache License, version 2.0.
 ## Table Of Contents
 
 + [Overview]({{ site.baseurl }}{% link overview.md %})
++ [Module Structure And Features]({{ site.baseurl }}{% link module-structure-and-features.md %})
 + [Basic usage in Java]({{ site.baseurl }}{% link basic-usage-in-java.md %})
 + [Basic usage in Scala]({{ site.baseurl }}{% link basic-usage-in-scala.md %})
 + [Basic Archive Processing]({{ site.baseurl }}{% link basic-archive-processing.md %})
 + [Advanced Archive Processing]({{ site.baseurl }}{% link advanced-archive-processing.md %})
-+ [Module Structure And Features]({{ site.baseurl }}{% link module-structure-and-features.md %})

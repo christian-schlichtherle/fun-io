@@ -3,7 +3,26 @@
 
 # Basic Usage in Java
 
-The following JShell code prints `"Hello world!"` - including the quotes:
+First of all, you need to add the modules providing the respective feature to your class path.
+The examples on this page depend on `fun-io-bios`, `fun-io-jackson` and, transitively, `fun-io-api`.
+Assuming Maven, you need to add the following to the `pom.xml`:
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>global.namespace.fun-io</groupId>
+        <artifactId>fun-io-bios</artifactId>
+        <version>0.13.0</version>
+    </dependency>
+    <dependency>
+        <groupId>global.namespace.fun-io</groupId>
+        <artifactId>fun-io-jackson</artifactId>
+        <version>0.13.0</version>
+    </dependency>
+</dependencies>
+```
+
+Then, the following JShell code prints `"Hello world!"` - including the quotes:
 
 ```java
 import global.namespace.fun.io.api.*;                    // from `fun-io-api`

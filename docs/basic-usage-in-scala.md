@@ -3,7 +3,19 @@
 
 # Basic Usage in Scala
 
-The following Scala code prints `"Hello world!"` - including the quotes:
+First of all, you need to add the modules providing the respective feature to your class path.
+The examples on this page depend on `fun-io-bios`, `fun-io-jackson`, `fun-io-scala-api` and, transitively, `fun-io-api`.
+Assuming SBT, you need to add the following to the `build.sbt`:
+
+```scala
+libraryDependencies ++= Seq(
+  "global.namespace.fun-io" % "fun-io-bios" % "0.13.0",
+  "global.namespace.fun-io" % "fun-io-jackson" % "0.13.0",
+  "global.namespace.fun-io" %% "fun-io-scala-api" % "0.13.0"
+)
+```
+
+Then, the following Scala code prints `"Hello world!"` - including the quotes:
 
 ```scala
 import global.namespace.fun.io.api._             // from `fun-io-api`
