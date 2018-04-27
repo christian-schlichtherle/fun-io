@@ -1,6 +1,6 @@
 {
   "name": "software-documentation-template",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "This is a template for software documentation projects using Jekyll, PlantUML, webpack, Bootstrap, JQuery et al.",
   "main": "bundle.js",
   "scripts": {
