@@ -5,13 +5,6 @@ layout: post
 title: Welcome to PlantUML!
 ---
 
-Here's some fine UML diagram, freshly squeezed by PlantUML with the help of the
-[Jekyll PlantUML](https://github.com/yegor256/jekyll-plantuml) plugin:
+Here's some fine UML diagram, freshly squeezed by PlantUML with the help of a custom loader for webpack:
 
-{% plantuml %}
-[First] - [Second]
-{% endplantuml %}
-
-Here's another fancy UML diagram, again squeezed by PlantUML, but with the help of a custom loader for webpack:
-
-![](/assets/uml/my-class-diagram.svg)
+![My Class Diagram]({{ site.baseurl }}{% link assets/my-class-diagram.svg %})
