@@ -28,7 +28,7 @@ The following assumes macOS with [Homebrew](https://brew.sh):
 ```bash
 $ brew install node
 $ brew install plantuml
-$ gem install jekyll
+$ gem install bundler
 ```
 
 ## Development
