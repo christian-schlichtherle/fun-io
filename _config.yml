@@ -26,7 +26,6 @@ twitter_username: jekyllrb
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 
 # Build settings
-destination: docs
 exclude:
 - Gemfile
 - Gemfile.lock

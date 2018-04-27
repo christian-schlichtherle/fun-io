@@ -5,7 +5,7 @@
   "main": "bundle.js",
   "scripts": {
     "build": "npm-run-all webpack 'jekyll build'",
-    "clean": "rm -rf assets docs node_modules vendor/bundle",
+    "clean": "rm -rf _site assets node_modules vendor/bundle",
     "prepare": "bundle install",
     "jekyll": "bundle exec jekyll",
     "start": "npm-run-all --parallel 'webpack -- -w' 'jekyll serve'",
