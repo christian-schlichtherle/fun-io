@@ -17,7 +17,6 @@ gem 'jekyll', '~> 3.8.0'
 # If you have any plugins, put them here!
 group :jekyll_plugins do
   gem 'jekyll-feed', '~> 0.9.3'
-  gem 'jekyll-livereload', '~> 0.2.2'
   gem 'jekyll-plantuml', '~> 1.3.3'
 end
 
