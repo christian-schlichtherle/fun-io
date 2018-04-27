@@ -12,7 +12,7 @@ module.exports = {
         }, {
             test: /\.p?uml$/,
             use: [
-                'file-loader?name=[name].svg&outputPath=uml/',
+                'file-loader?name=[name].svg',
                 path.resolve(__dirname, 'plantuml-loader')
             ]
         }, {
