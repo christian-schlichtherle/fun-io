@@ -3,7 +3,15 @@ pre, code {
   @include border-radius($border-radius);
 }
 
+code {
+  padding: .2rem;
+}
+
 pre {
   padding: .66rem 1rem;
   overflow-x: auto;
+}
+
+pre code {
+  padding: 0;
 }
