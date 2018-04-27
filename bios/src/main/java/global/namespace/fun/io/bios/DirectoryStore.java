@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Optional;
 
@@ -40,13 +39,7 @@ final class DirectoryStore implements ArchiveStore<Path> {
                     return Files
                             .walk(directory)
                             .filter(p -> !p.equals(directory))
-                            .map(path -> {
-                                String name = directory.relativize(path).toString();
-                                if (Files.isDirectory(path)) {
-                                    name += '/';
-                                }
-                                return pathSource(name);
-                            })
+                            .map(this::source)
                             .iterator();
                 } catch (IOException e) {
                     throw new IllegalArgumentException(e);
@@ -54,8 +47,45 @@ final class DirectoryStore implements ArchiveStore<Path> {
             }
 
             @Override
-            public Optional<ArchiveEntrySource<Path>> source(String name) {
-                return Optional.ofNullable(Files.exists(resolve(name)) ? pathSource(name) : null);
+            public Optional<ArchiveEntrySource<Path>> source(final String name) {
+                final Path path = resolve(name);
+                return Optional.ofNullable(Files.exists(path) ? source(path) : null);
+            }
+
+            ArchiveEntrySource<Path> source(Path path) {
+                return new ArchiveEntrySource<Path>() {
+
+                    final String name = directory.relativize(path).toString();
+
+                    @Override
+                    public String name() { return isDirectory() ? name + '/' : name; }
+
+                    @Override
+                    public long size() {
+                        try {
+                            return Files.size(entry());
+                        } catch (IOException ignored) {
+                            return 0;
+                        }
+                    }
+
+                    @Override
+                    public boolean isDirectory() { return Files.isDirectory(path); }
+
+                    @Override
+                    public Path entry() { return path; }
+
+                    @Override
+                    public Socket<InputStream> input() {
+                        return () -> {
+                            if (isDirectory()) {
+                                return new ByteArrayInputStream(new byte[0]);
+                            } else {
+                                return Files.newInputStream(entry());
+                            }
+                        };
+                    }
+                };
             }
 
             @Override
@@ -71,92 +101,56 @@ final class DirectoryStore implements ArchiveStore<Path> {
             public boolean isJar() { return false; }
 
             @Override
-            public ArchiveEntrySink<Path> sink(String name) { return pathSink(name); }
+            public ArchiveEntrySink<Path> sink(String name) { return sink(resolve(name)); }
+
+            ArchiveEntrySink<Path> sink(Path path) {
+                return new ArchiveEntrySink<Path>() {
+
+                    final String name = directory.relativize(path).toString();
+
+                    @Override
+                    public String name() { return isDirectory() ? name + '/' : name; }
+
+                    @Override
+                    public long size() {
+                        try {
+                            return Files.size(entry());
+                        } catch (IOException ignored) {
+                            return 0;
+                        }
+                    }
+
+                    @Override
+                    public boolean isDirectory() { return Files.isDirectory(path); }
+
+                    @Override
+                    public Path entry() { return path; }
+
+                    @Override
+                    public Socket<OutputStream> output() {
+                        return () -> {
+                            final Path entry = entry();
+                            final Path parent = entry.getParent();
+                            if (null != parent) {
+                                Files.createDirectories(parent);
+                            }
+                            return Files.newOutputStream(entry);
+                        };
+                    }
+
+                    @Override
+                    public void copyFrom(final ArchiveEntrySource<?> source) throws Exception {
+                        if (source.isDirectory()) {
+                            Files.createDirectories(entry());
+                        } else {
+                            copy(source, this);
+                        }
+                    }
+                };
+            }
 
             @Override
             public void close()  { }
-        };
-    }
-
-    private ArchiveEntrySource<Path> pathSource(String name) {
-        return new ArchiveEntrySource<Path>() {
-
-            @Override
-            public String name() { return name; }
-
-            @Override
-            public long size() {
-                try {
-                    return Files.size(path());
-                } catch (IOException ignored) {
-                    return 0;
-                }
-            }
-
-            @Override
-            public boolean isDirectory() { return name().endsWith("/"); }
-
-            @Override
-            public Path entry() { return Paths.get(name()); }
-
-            @Override
-            public Socket<InputStream> input() {
-                return () -> {
-                    if (isDirectory()) {
-                        return new ByteArrayInputStream(new byte[0]);
-                    } else {
-                        return Files.newInputStream(path());
-                    }
-                };
-            }
-
-            Path path() { return resolve(name()); }
-        };
-    }
-
-    private ArchiveEntrySink<Path> pathSink(String name) {
-        return new ArchiveEntrySink<Path>() {
-
-            @Override
-            public String name() { return name; }
-
-            @Override
-            public long size() {
-                try {
-                    return Files.size(path());
-                } catch (IOException ignored) {
-                    return 0;
-                }
-            }
-
-            @Override
-            public boolean isDirectory() { return name().endsWith("/"); }
-
-            @Override
-            public Path entry() { return Paths.get(name()); }
-
-            @Override
-            public Socket<OutputStream> output() {
-                return () -> {
-                    final Path path = path();
-                    final Path parent = path.getParent();
-                    if (null != parent) {
-                        Files.createDirectories(parent);
-                    }
-                    return Files.newOutputStream(path);
-                };
-            }
-
-            @Override
-            public void copyFrom(final ArchiveEntrySource<?> source) throws Exception {
-                if (source.isDirectory()) {
-                    Files.createDirectories(path());
-                } else {
-                    copy(source, this);
-                }
-            }
-
-            Path path() { return resolve(name()); }
         };
     }
 
