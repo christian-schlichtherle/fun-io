@@ -1,7 +1,6 @@
 ---
 categories: jekyll plantuml
 date: 2017-11-22 17:09:00 +0400
-layout: post
 title: Welcome to PlantUML!
 ---
 
