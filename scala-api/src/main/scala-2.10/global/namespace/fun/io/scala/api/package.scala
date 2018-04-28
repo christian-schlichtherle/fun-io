@@ -16,4 +16,4 @@
 package global.namespace.fun.io.scala
 
 /** @author Christian Schlichtherle */
-package object api extends PackageContent with ImplicitConversions
+package object api extends Operators with ImplicitConversions

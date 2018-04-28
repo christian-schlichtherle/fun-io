@@ -15,13 +15,12 @@
  */
 package global.namespace.fun.io.scala.api
 
-import global.namespace.fun.io.api.Filter.IDENTITY
 import global.namespace.fun.io.api._
 
 /** Provides operators for an enhanced user experience with the Fun I/O API in Scala.
   *
   * @author Christian Schlichtherle */
-private[api] trait PackageContent {
+private[api] trait Operators {
 
   implicit class WithFilter(t1: Filter) {
 

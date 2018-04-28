@@ -16,4 +16,4 @@
 package global.namespace.fun.io.scala
 
 /** @author Christian Schlichtherle */
-package object api extends PackageContent
+package object api extends Operators
