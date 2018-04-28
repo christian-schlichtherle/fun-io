@@ -23,24 +23,7 @@ footer {
 .home {
 
   h1 {
-    @extend .h2;
     @extend .mb-4;
-  }
-
-  h2 {
-    @extend .h3;
-  }
-
-  h3 {
-    @extend .h4;
-  }
-
-  h4 {
-    @extend .h5;
-  }
-
-  h5 {
-    @extend .h6;
   }
 
   ul {
