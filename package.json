@@ -26,6 +26,7 @@
     "popper.js": "^1.14.3"
   },
   "devDependencies": {
+    "ajv": "^6.4.0",
     "autoprefixer": "^7.2.6",
     "css-loader": "^0.28.11",
     "extract-text-webpack-plugin": "^3.0.2",

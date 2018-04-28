@@ -28,11 +28,11 @@ exclude:
 - Gemfile
 - Gemfile.lock
 - LICENSE
+- README.md
 - node_modules
 - package.json
 - package-lock.json
 - plantuml-loader.js
-- README.md
 - vendor
 - webpack
 - webpack.config.js
