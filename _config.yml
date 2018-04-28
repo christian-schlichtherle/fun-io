@@ -48,3 +48,5 @@ exclude:
 - webpack
 - webpack.config.js
 livereload: true
+plugins:
+- jekyll-feed
