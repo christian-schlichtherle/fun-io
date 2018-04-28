@@ -2,21 +2,23 @@
 layout: default
 ---
 
-<div class="container home">
+<article class="home container">
   <div>
     {{ content }}
   </div>
+{% if site.posts.first %}
   <h1>Posts</h1>
   <ul>
-{% for post in site.posts %}
-  {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
+  {% for post in site.posts %}
+    {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
     <li>
       <span>{{ post.date | date: date_format }}</span>
       <h2>
         <a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
       </h2>
     </li>
-{% endfor %}
+  {% endfor %}
   </ul>
   <p>subscribe <a href="{{ '/feed.xml' | relative_url }}">via RSS</a></p>
-</div>
+{% endif %}
+</article>
