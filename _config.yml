@@ -33,7 +33,7 @@ defaults:
       type: "posts"
     values:
       layout: "post"
-destination: ../docs
+destination: docs
 exclude:
 - Gemfile
 - Gemfile.lock
