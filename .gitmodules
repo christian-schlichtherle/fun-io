@@ -1,0 +1,4 @@
+[submodule "docs"]
+	path = docs
+	url = git@github.com:christian-schlichtherle/fun-io.git
+	branch = docs
