@@ -45,7 +45,7 @@ patch().base(jar(base)).delta(jar(delta)).to(jar(update));
 
 ## Diffing Two Directories
 
-The following code diffs a base directory to an update directory and generates a delta ZIP file.
+The following code diffs a base directory to an update directory and generates a delta ZIP file:
 
 {% highlight java %}
 import java.io.File;
@@ -62,7 +62,7 @@ diff().base(directory(base)).update(directory(update)).to(zip(delta));
 
 ## Patching The Base Directory
 
-The following code patches the base directory with the delta ZIP file to an(other) update directory.
+The following code patches the base directory with the delta ZIP file to an(other) update directory:
 
 {% highlight java %}
 import java.io.File;
@@ -80,7 +80,7 @@ patch().base(directory(base)).delta(zip(delta)).to(directory(update));
 ## Computing A Delta Model
 
 Maybe you just want to examine the delta of two archive files or directories, but not generate a delta archive file or directory from that?
-The following code diffs a base directory to an update directory and computes a delta model.
+The following code diffs a base directory to an update directory and computes a delta model:
 
 {% highlight java %}
 import java.io.File;

@@ -7,7 +7,7 @@ title: Basic Archive Processing
 The following code packs a TAR.GZ file from a directory.
 It uses the `CommonsCompress` facade for accessing the TAR file format and transforming it to TAR.GZ using Apache 
 Commons Compress.
-It also uses the `BIOS` facade for accessing directories like archive files and copying them.   
+It also uses the `BIOS` facade for accessing directories like archive files and copying them:
 
 {% highlight java %}
 import java.io.File;
@@ -23,7 +23,7 @@ copy(directory(dir), tar(file(tgz).map(gzip())));
 
 ## Unpacking An Archive File
 
-The following code is the inverse of the previous operation and unpacks a TAR.GZ file to a directory.
+The following code is the inverse of the previous operation and unpacks a TAR.GZ file to a directory:
 
 {% highlight java %}
 import java.io.File;
@@ -39,7 +39,7 @@ copy(tar(file(tgz).map(gzip())), directory(dir));
 
 ## Transforming An Archive File
 
-The following code transforms a TAR.GZ file to a ZIP file.
+The following code transforms a TAR.GZ file to a ZIP file.:
 
 {% highlight java %}
 import java.io.File;
