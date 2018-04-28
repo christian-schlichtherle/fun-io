@@ -233,13 +233,16 @@ public final class BIOS {
     //////////////////////////
 
     /** Returns a store for the given file. */
-    public static Store file(File f) { return file(f, false); }
+    public static FileStore file(File f) { return file(f, false); }
 
     /** Returns a store for the given file, potentially for appending to it if {@code append} is {@code true}. */
-    public static Store file(final File f, final boolean append) {
-        final PathStore store = path(f.toPath());
+    public static FileStore file(final File f, final boolean append) {
+        final FileStore store = file(f.toPath());
         return append ? store.onOutput(APPEND, CREATE) : store;
     }
+
+    /** Returns a store for the given file. */
+    public static FileStore file(Path p) { return new RealFileStore(requireNonNull(p)); }
 
     /** Returns a new in-memory store with the default buffer size. */
     public static Store memory() { return memory(BUFSIZE); }
@@ -247,8 +250,13 @@ public final class BIOS {
     /** Returns a new in-memory store with the given buffer size. */
     public static Store memory(int bufferSize) { return new MemoryStore(bufferSize); }
 
-    /** Returns a store for the given path. */
-    public static PathStore path(Path p) { return new RealPathStore(requireNonNull(p)); }
+    /**
+     * Returns a store for the given path.
+     *
+     * @deprecated since 1.1 - use {@link #file(Path)} instead.
+     */
+    @Deprecated
+    public static PathStore path(Path p) { return file(p); }
 
     /** Returns a store for the given preferences node and key. */
     public static Store preferences(Preferences p, String key) {
@@ -266,6 +274,21 @@ public final class BIOS {
     }
 
     /** A store which allows to switch open options for input and output. */
+    public interface FileStore extends PathStore {
+
+        /** Returns a new file store which uses the given open options on input. */
+        FileStore onInput(OpenOption... options);
+
+        /** Returns a new file store which uses the given open options on output. */
+        FileStore onOutput(OpenOption... options);
+    }
+
+    /**
+     * A store which allows to switch open options for input and output.
+     *
+     * @deprecated since 1.1 - use {@link FileStore} instead.
+     */
+    @Deprecated
     public interface PathStore extends Store {
 
         /** Returns a new path store which uses the given open options on input. */
