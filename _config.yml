@@ -24,6 +24,17 @@ title: Your awesome title
 twitter_username: jekyllrb
 
 # Build settings
+defaults:
+  - scope:
+      path: "" # an empty string here means all files in the project
+      type: "pages"
+    values:
+      layout: "page"
+  - scope:
+      path: "" # an empty string here means all files in the project
+      type: "posts"
+    values:
+      layout: "post"
 exclude:
 - Gemfile
 - Gemfile.lock
@@ -37,5 +48,3 @@ exclude:
 - webpack
 - webpack.config.js
 livereload: true
-plugins:
-- jekyll-feed
