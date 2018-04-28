@@ -45,3 +45,5 @@ exclude:
 - webpack.config.js
 livereload: true
 permalink: pretty
+plugins:
+- jekyll-feed
