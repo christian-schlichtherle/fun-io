@@ -1,7 +1,6 @@
 ---
+title: Module Structure And Features
 ---
-
-# Module Structure And Features
 
 Fun I/O has a modular structure.
 Its artifacts are hosted on Maven Central with the common group ID 
@@ -98,3 +97,6 @@ A typical Scala application has the same dependency/dependencies as a Java appli
 [JAXB]: https://javaee.github.io/jaxb-v2/
 [Monoid]: https://en.wikipedia.org/wiki/Monoid
 [XZ for Java]: https://tukaani.org/xz/
+
+**&laquo;** [Introduction]({{ site.baseurl }}{% link index.md %})
+**&raquo;** [Basic Usage In Java]({{ site.baseurl }}{% link basic-usage-in-java.md %})

@@ -1,7 +1,6 @@
 ---
+title: Advanced Archive Processing
 ---
-
-# Advanced Archive Processing
 
 ## Diffing Two JAR Files
 
@@ -9,7 +8,7 @@ The following code diffs a base JAR file to an update JAR file and generates a d
 In addition to the `CommonsCompress` facade for accessing the archive files, it uses the `Delta` facade for diffing 
 them:
 
-```java
+{% highlight java %}
 import java.io.File;
 
 import static global.namespace.fun.io.commons.compress.CommonsCompress.jar; // from `fun-io-commons-compress`
@@ -19,7 +18,7 @@ File base = ...;
 File update = ...;
 File delta = ...;
 diff().base(jar(base)).update(jar(update)).to(jar(delta));
-```
+{% endhighlight %}
 
 If you wanted to use the module `fun-io-bios` instead of `fun-io-commons-compress`, then, apart from configuring the 
 class path, you would only have to edit the `import` statement as shown in the next example.
@@ -32,7 +31,7 @@ For the purpose of illustration, it uses the `BIOS` facade from the module `fun-
 For production, using the `CommonsCompress` facade is recommend for better accuracy and performance. 
 It also uses the `Delta` facade again for patching the base archive file with the delta archive file:
 
-```java
+{% highlight java %}
 import java.io.File;
 
 import static global.namespace.fun.io.bios.BIOS.jar;     // from `fun-io-bios`
@@ -42,13 +41,13 @@ File base = ...;
 File delta = ...;
 File update = ...;
 patch().base(jar(base)).delta(jar(delta)).to(jar(update));
-```
+{% endhighlight %}
 
 ## Diffing Two Directories
 
 The following code diffs a base directory to an update directory and generates a delta ZIP file.
 
-```java
+{% highlight java %}
 import java.io.File;
 
 import static global.namespace.fun.io.bios.BIOS.directory;                  // from `fun-io-bios`
@@ -59,13 +58,13 @@ File base = ...;
 File update = ...;
 File delta = ...;
 diff().base(directory(base)).update(directory(update)).to(zip(delta));
-```
+{% endhighlight %}
 
 ## Patching The Base Directory
 
 The following code patches the base directory with the delta ZIP file to an(other) update directory.
 
-```java
+{% highlight java %}
 import java.io.File;
 
 import static global.namespace.fun.io.bios.BIOS.directory;                  // from `fun-io-bios`
@@ -76,14 +75,14 @@ File base = ...;
 File delta = ...;
 File update = ...;
 patch().base(directory(base)).delta(zip(delta)).to(directory(update));
-```
+{% endhighlight %}
 
 ## Computing A Delta Model
 
 Maybe you just want to examine the delta of two archive files or directories, but not generate a delta archive file or directory from that?
 The following code diffs a base directory to an update directory and computes a delta model.
 
-```java
+{% highlight java %}
 import java.io.File;
 
 import global.namespace.fun.io.delta.model.DeltaModel;     // from `fun-io-delta`
@@ -95,6 +94,8 @@ File base = ...;
 File update = ...;
 DeltaModel model = diff().base(directory(base)).update(directory(update)).toModel();
 model.changedEntries().forEach(entry -> { /* do something with it */ });
-```
+{% endhighlight %}
 
 The delta model has properties describing the changed, unchanged, added and removed entries.
+
+**&laquo;** [Basic Archive Processing]({{ site.baseurl }}{% link basic-archive-processing.md %})
