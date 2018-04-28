@@ -28,7 +28,4 @@ Fun I/O takes proper care of resource management: All created `InputStream` and 
 closed, even if there is an exception in a nested constructor.
 Say goodbye to resource leaks and try-with-resources statements!
 
-Fun I/O supports Java 8 or later and Scala 2.10, 2.11 and 2.12 equally well via dedicated APIs and is covered by the 
-Apache License, version 2.0.
-
 **&raquo;** [Module Structure And Features]({{ site.baseurl }}{% link module-structure-and-features.md %})
