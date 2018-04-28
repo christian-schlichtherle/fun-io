@@ -1,0 +1,25 @@
+@startuml
+
+folder global.namespace.fun-io {
+    [fun-io-api] <|-- [fun-io-bios]
+    [fun-io-api] <|-- [fun-io-commons-compress]
+    [fun-io-api] <|-- [fun-io-jackson]
+    [fun-io-api] <|-- [fun-io-jaxb]
+    [fun-io-api] <--- [fun-io-scala-api]
+    [fun-io-api] <|-- [fun-io-xz]
+
+    [fun-io-bios] <-- [fun-io-delta]
+    [fun-io-jackson] <-- [fun-io-delta]
+}
+
+[commons-compress] <--- [fun-io-commons-compress]
+
+[jackson-databind] <--- [fun-io-jackson]
+
+[activation-api] <--- [fun-io-jaxb]
+[jaxb-runtime] <--- [fun-io-jaxb]
+[jaxb-api] <-- [fun-io-jaxb]
+
+[xz] <--- [fun-io-xz]
+
+@enduml

@@ -1,3 +1,3 @@
 require('./main.scss');
-require('./my-class-diagram.puml');
+require('./module-structure.puml');
 require('bootstrap');

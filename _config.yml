@@ -13,29 +13,26 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-author: Awesome Name
+author: Christian Schlichtherle
+baseurl: /fun-io
 description: >- # this means to ignore newlines until "email:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
-email: your-email@example.com
-github_username:  jekyll
-title: Your awesome title
-twitter_username: jekyllrb
+  Fun I/O provides functional, high level abstractions for codecs, sources, sinks, stores, archives, filters, sockets et
+  al.
+  Fun I/O supports Java 8 or later and Scala 2.10, 2.11 and 2.12 equally well via dedicated APIs and is covered by the
+  Apache License, version 2.0.
+github_username: christian-schlichtherle
+title: Fun I/O
 
 # Build settings
 exclude:
 - Gemfile
 - Gemfile.lock
-- LICENSE
 - node_modules
 - package.json
 - package-lock.json
 - plantuml-loader.js
-- README.md
 - vendor
 - webpack
 - webpack.config.js
 livereload: true
-plugins:
-- jekyll-feed
+permalink: pretty
