@@ -1,4 +1,0 @@
-[submodule "docs"]
-	path = site
-	url = git@gitlab.com:christian-schlichtherle/software-documentation-template.git
-	branch = master
