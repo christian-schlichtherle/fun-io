@@ -3,8 +3,10 @@ layout: default
 ---
 
 <div class="container home">
+  <div>
+    {{ content }}
+  </div>
   <h1>Posts</h1>
-  {{ content }}
   <ul>
 {% for post in site.posts %}
   {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}

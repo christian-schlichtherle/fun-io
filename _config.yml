@@ -24,6 +24,17 @@ github_username: christian-schlichtherle
 title: Fun I/O
 
 # Build settings
+defaults:
+  - scope:
+      path: "" # an empty string here means all files in the project
+      type: "pages"
+    values:
+      layout: "page"
+  - scope:
+      path: "" # an empty string here means all files in the project
+      type: "posts"
+    values:
+      layout: "post"
 exclude:
 - Gemfile
 - Gemfile.lock
