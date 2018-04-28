@@ -98,4 +98,6 @@ model.changedEntries().forEach(entry -> { /* do something with it */ });
 
 The delta model has properties describing the changed, unchanged, added and removed entries.
 
-**&laquo;** [Basic Archive Processing]({{ site.baseurl }}{% link basic-archive-processing.md %})
+<div class="btn-group d-flex justify-content-center" role="group" aria-label="Pagination">
+  <button type="button" class="btn btn-light"><a href="{{ site.baseurl }}{% link basic-archive-processing.md %}">&laquo; Basic Archive Processing</a></button>
+</div>

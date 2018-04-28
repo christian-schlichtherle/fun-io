@@ -54,5 +54,7 @@ File zip = ...;
 copy(tar(file(tgz).map(gzip())), zip(zip));
 {% endhighlight %}
 
-**&laquo;** [Basic Usage in Scala]({{ site.baseurl }}{% link basic-usage-in-scala.md %})
-**&raquo;** [Advanced Archive Processing]({{ site.baseurl }}{% link advanced-archive-processing.md %})
+<div class="btn-group d-flex justify-content-center" role="group" aria-label="Pagination">
+  <button type="button" class="btn btn-light"><a href="{{ site.baseurl }}{% link basic-usage.md %}">&laquo; Basic Usage</a></button>
+  <button type="button" class="btn btn-light"><a href="{{ site.baseurl }}{% link advanced-archive-processing.md %}">Advanced Archive Processing &raquo;</a></button>
+</div>

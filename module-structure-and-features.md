@@ -98,5 +98,7 @@ A typical Scala application has the same dependency/dependencies as a Java appli
 [Monoid]: https://en.wikipedia.org/wiki/Monoid
 [XZ for Java]: https://tukaani.org/xz/
 
-**&laquo;** [Introduction]({{ site.baseurl }}{% link index.md %})
-**&raquo;** [Basic Usage In Java]({{ site.baseurl }}{% link basic-usage-in-java.md %})
+<div class="btn-group d-flex justify-content-center" role="group" aria-label="Pagination">
+  <button type="button" class="btn btn-light"><a href="{{ site.baseurl }}{% link index.md %}">&laquo; Introduction</a></button>
+  <button type="button" class="btn btn-light"><a href="{{ site.baseurl }}{% link basic-usage.md %}">Basic Usage &raquo;</a></button>
+</div>

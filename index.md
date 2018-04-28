@@ -28,4 +28,6 @@ Fun I/O takes proper care of resource management: All created `InputStream` and 
 closed, even if there is an exception in a nested constructor.
 Say goodbye to resource leaks and try-with-resources statements!
 
-**&raquo;** [Module Structure And Features]({{ site.baseurl }}{% link module-structure-and-features.md %})
+<div class="btn-group d-flex justify-content-center" role="group" aria-label="Pagination">
+  <button type="button" class="btn btn-light"><a href="{{ site.baseurl }}{% link module-structure-and-features.md %}">Module Structure And Features &raquo;</a></button>
+</div>
