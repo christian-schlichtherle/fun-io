@@ -1,17 +1,5 @@
-pre, code {
-  background-color: $pre-bg;
-  @include border-radius($border-radius);
-}
-
-code {
-  padding: .2rem;
-}
-
 pre {
-  padding: .66rem 1rem;
+  background-color: $pre-bg;
+  padding: .5rem;
   overflow-x: auto;
-}
-
-pre code {
-  padding: 0;
 }
