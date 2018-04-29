@@ -1,16 +1,10 @@
 /*
  * main.scss - see https://getbootstrap.com/docs/4.0/getting-started/webpack/#importing-precompiled-sass .
  */
-pre, code {
-  background-color: #eef;
-  border-radius: 0.25rem; }
-code {
-  padding: .2rem; }
 pre {
-  padding: .66rem 1rem;
+  background-color: #eef;
+  padding: .5rem;
   overflow-x: auto; }
-pre code {
-  padding: 0; }
 footer {
   border-top: 1px solid rgba(0, 0, 0, 0.1); }
 .icon > svg {
