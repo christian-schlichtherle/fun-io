@@ -13,6 +13,7 @@ import global.namespace.fun.io.api.function.XFunction;
  *
  * @author Christian Schlichtherle
  */
+@FunctionalInterface
 public interface ArchiveSink<E> {
 
     /** Returns the underlying archive file output socket for writing the archive entries. */

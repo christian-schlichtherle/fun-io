@@ -26,6 +26,7 @@ import java.io.OutputStream;
  *
  * @author Christian Schlichtherle
  */
+@FunctionalInterface
 public interface Sink {
 
     /** Returns the underlying output stream socket for (over)writing the content of this sink. */

@@ -13,6 +13,7 @@ import global.namespace.fun.io.api.function.XFunction;
  *
  * @author Christian Schlichtherle
  */
+@FunctionalInterface
 public interface ArchiveSource<E> {
 
     /** Returns the underlying archive file input socket for reading the archive entries. */

@@ -26,6 +26,7 @@ import java.io.InputStream;
  *
  * @author Christian Schlichtherle
  */
+@FunctionalInterface
 public interface Source {
 
     /** Returns the underlying input stream socket for reading the content of this source. */
