@@ -1,6 +1,10 @@
 @startuml
 
 folder global.namespace.fun-io {
+    [fun-io-api] #Chartreuse
+    [fun-io-scala-api] #Chartreuse
+    [fun-io-delta] #Aqua
+
     [fun-io-api] <|-- [fun-io-bios]
     [fun-io-api] <|-- [fun-io-commons-compress]
     [fun-io-api] <|-- [fun-io-jackson]
@@ -16,10 +20,20 @@ folder global.namespace.fun-io {
 
 [jackson-databind] <--- [fun-io-jackson]
 
+[activation-api] #Chartreuse
 [activation-api] <--- [fun-io-jaxb]
 [jaxb-runtime] <--- [fun-io-jaxb]
+
+[jaxb-api] #Chartreuse
 [jaxb-api] <-- [fun-io-jaxb]
 
 [xz] <--- [fun-io-xz]
 
+legend
+* APIs are in <back:Chartreuse>Chartreuse</back>
+* Implementations are in <back:LemonChiffon>LemonChiffon</back>
+* Applications are in <back:Aqua>Aqua</back>
+end legend
+
+skinparam componentBackgroundColor LemonChiffon
 @enduml
