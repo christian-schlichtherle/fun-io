@@ -2,7 +2,12 @@
 title: Basic Usage
 ---
 
-First of all, you need to add the modules which provide the desired features to your class path.
+First of all you need to decide on the set of features required by your application and add their respective modules to 
+its class path - see [Module Structure And Features]({{ site.baseurl }}{% link module-structure-and-features.md %}).
+A Java application typically has a single dependency on `fun-io-bios`.
+A Scala application typically has the same dependencies as a Java application plus an additional dependency on
+`fun-io-scala-api` to improve the development experience in Scala. 
+
 The examples on this page depend on `fun-io-bios`, `fun-io-jackson`, `fun-io-scala-api` and, transitively, `fun-io-api`.
 Assuming Maven is used for Java and SBT for Scala, you need to add the following to your project configuration:
 

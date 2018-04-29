@@ -9,13 +9,21 @@ The following diagram shows the module structure:
 
 ![Module Structure]({{ site.baseurl }}{% link assets/module-structure.svg %})
 
-The modules are:
+## API Modules
+
+API modules provide powerful abstractions for simple and safe synchronous I/O operations:
 
 + [![Fun I/O API](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-api.svg?label=Fun%20I/O%20API&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-api%22)
-  The API provides interfaces like `Codec`, `Source`, `Sink`, `Store`, `ArchiveSource`, `ArchiveSink`, `ArchiveStore`, 
-  `Filter`, `Socket` et al.
+  Provides interfaces like `Codec`, `Source`, `Sink`, `Store`, `ArchiveSource`, `ArchiveSink`, `ArchiveStore`, `Filter`, 
+  `Socket` et al.
 + [![Fun I/O Scala API](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-scala-api_2.12.svg?label=Fun%20I/O%20Scala%20API&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-scala-api_2.12%22)
-  The Scala API extends the Java API with operators and implicit conversions to improvie the user experience in Scala.
+  Extends the Java API with operators and implicit conversions to improve the development experience in Scala.
+
+## Implementation Modules
+
+Each implementation module provides a single facade class which contains many static factory methods for different 
+implementations of the abstractions provided by the `fun-io-api` module:
+
 + [![Fun I/O BIOS](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-bios.svg?label=Fun%20I/O%20BIOS&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-bios%22)
   The Basic Input/Output System (pun intended) provides basic implementations of the Fun I/O API.
   + The `BIOS` class is a facade which provides the following `Codec` functions:
@@ -67,11 +75,6 @@ The modules are:
     + `jar` provides read/write access to JAR files.
     + `tar` provides copy-only access to TAR files.
     + `zip` provides read/write access to ZIP files.
-+ [![Fun I/O Delta](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-delta.svg?label=Fun%20I/O%20Delta&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-delta%22)
-  Provides utility functions for diffing and patching archive files or directories.
-  + The `Delta` class is a facade which provides the following utility functions:
-    + `diff` compares two archive files or directories to compute a delta archive file or directory or model.
-    + `patch` patches an archive file or directory with a delta archive file or directory.
 + [![Fun I/O Jackson](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-jackson.svg?label=Fun%20I/O%20Jackson&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-jackson%22)
   Depends on [Jackson Databind] to provide implementations of the Fun I/O API. 
   + The `Jackson` class is a facade which provides the following `Codec` functions:
@@ -86,19 +89,24 @@ The modules are:
     + `lzma2` compresses/decompresses data using the LZMA2 compression format.
     + `xz` compresses/decompresses data using the XZ compression format.
 
-A typical Java application has a single dependency on `fun-io-bios`.
-Additional module dependencies may be added to the mix to take advantage of their respective features.
+## Application Modules
 
-A typical Scala application has the same dependency/dependencies as a Java application plus an additional dependency on
-`fun-io-scala-api` to improve the user experience in Scala. 
+Application modules depend on the API and expect some implementation to be injected for a particular task.
+Like implementation modules, the provide a single facade class containing static methods to solve their particular task: 
+
++ [![Fun I/O Delta](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-delta.svg?label=Fun%20I/O%20Delta&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-delta%22)
+  Provides utility functions for diffing and patching archive files or directories.
+  + The `Delta` class is a facade which provides the following utility functions:
+    + `diff` compares two archive files or directories to compute a delta archive file or directory or model.
+    + `patch` patches an archive file or directory with a delta archive file or directory.
+
+<div class="btn-group d-flex justify-content-center" role="group" aria-label="Pagination">
+  <button type="button" class="btn btn-light"><a href="{{ site.baseurl }}{% link index.md %}">&laquo; Introduction</a></button>
+  <button type="button" class="btn btn-light"><a href="{{ site.baseurl }}{% link basic-usage.md %}">Basic Usage &raquo;</a></button>
+</div>
 
 [Apache Commons Compress]: https://commons.apache.org/proper/commons-compress/
 [Jackson Databind]: http://wiki.fasterxml.com/JacksonHome
 [JAXB]: https://javaee.github.io/jaxb-v2/
 [Monoid]: https://en.wikipedia.org/wiki/Monoid
 [XZ for Java]: https://tukaani.org/xz/
-
-<div class="btn-group d-flex justify-content-center" role="group" aria-label="Pagination">
-  <button type="button" class="btn btn-light"><a href="{{ site.baseurl }}{% link index.md %}">&laquo; Introduction</a></button>
-  <button type="button" class="btn btn-light"><a href="{{ site.baseurl }}{% link basic-usage.md %}">Basic Usage &raquo;</a></button>
-</div>
