@@ -97,7 +97,7 @@ Fun I/O employs a few simple design principles:
 + Each implementation module provides a single facade class which consists of one or more static factory methods.
 + Each static factory method returns an instance of a class or interface defined by the API without revealing the actual 
   implementation class.
-+ Each implementation is virtually stateless, and hence reusable and trivially thread-safe.
++ Most implementations are virtually stateless, and hence reusable and trivially thread-safe.
 
 With this design, the canonical way of using Fun I/O is to import all static factory methods from one or more facade 
 classes.
