@@ -2,6 +2,8 @@
 title: Basic Usage
 ---
 
+## Configuring The Classpath
+
 First of all you need to decide on the set of features required by your application and add their respective modules to 
 its class path - see [Module Structure And Features]({{ site.baseurl }}{% link module-structure-and-features.md %}).
 A Java application typically has a single dependency on `fun-io-bios`.
@@ -49,8 +51,9 @@ libraryDependencies ++= Seq(
   </div>
 </div>
 
-Then, the following code encodes the string `"Hello world!"` to JSON and writes it to standard output - including the 
-quotes:
+## Encoding Objects
+
+The following code encodes the string `"Hello world!"` to JSON and writes it to standard output - including the quotes:
 
 <nav>
   <div class="nav nav-tabs" role="tablist">
@@ -107,6 +110,8 @@ The `Jackson` facade class provides the `json()` factory method which returns an
 The codec and the sink are then combined into an instance of the `Encoder` interface, which is subsequently used to 
 encode the string `"Hello world!"`.
 
+## Applying Filters
+
 Here is a slightly more complex example:
 
 <nav>
@@ -147,7 +152,7 @@ import java.nio.file.Paths
 import global.namespace.fun.io.api.{Encoder, Store}
 import global.namespace.fun.io.bios.BIOS.{buffer, file, gzip}
 import global.namespace.fun.io.jackson.Jackson.json
-import global.namespace.fun.io.scala.api._
+import global.namespace.fun.io.scala.api._                    // from `fun-io-scala-api`
 
 val store: Store = file(Paths get "hello-world.gz")
 val encoder: Encoder = json << gzip << buffer << encoder store
@@ -157,13 +162,13 @@ encoder encode "Hello world!"
   </div>
 </div>
 
-The preceding code encodes the string `"Hello world!"` to JSON, compresses it using GZIP, buffers and writes the result 
-to the file `hello-world.gz`.
-Note that the expression `json().map(gzip()).map(buffer())` actually _transforms_ a JSON codec with a GZIP filter 
-and a buffer filter into a new codec.
-In Scala, this expression can be more concisely written as `json << gzip << buffer` (note that the `<<` operator is 
-associative). 
-As you can see, the design concept still holds and the resulting code is only slightly more complex.
+The preceding code encodes the string `"Hello world!"` to JSON, compresses it using GZIP and writes the result to the 
+file `hello-world.gz`.
+Note that `gzip()` and `buffer()` return instances of the `Filter` interface. 
+So the expression `json().map(gzip()).map(buffer())` actually _transforms_ a JSON codec with a GZIP filter and a buffer 
+filter into another codec.
+In Scala, this expression can be more concisely written as `json << gzip << buffer`.
+Note that the `<<` operator is associative. 
 
 Creating an encoder from a transformed codec and a store is nice, but what if you wanted to read back something from the
 store?
@@ -220,6 +225,8 @@ assert(clone == "Hello world!")
 
   </div>
 </div>
+
+## Cloning Objects
 
 A `ConnectedCodec` is an `Encoder` and a `Decoder` in one, so it can be used to create a deep clone of the original 
 object.
@@ -358,6 +365,8 @@ assert(c == "Hello world!")
 
 In contrast to the previous examples, this method uses `BIOS.serialization()` instead of `Jackson.json()` as the 
 `Codec`, so the object to clone must implement `java.io.Serializable`.
+
+## Copying Data
 
 The BIOS facade provides some utility methods for standard use cases based on the abstractions provided by the API.
 One of these standard use cases is implemented by `BIOS.copy` in all its overloaded variants: 
