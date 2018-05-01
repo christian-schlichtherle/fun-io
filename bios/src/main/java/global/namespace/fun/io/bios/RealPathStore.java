@@ -29,7 +29,7 @@ import java.util.OptionalLong;
 import static java.nio.file.Files.newInputStream;
 import static java.nio.file.Files.newOutputStream;
 
-final class RealFileStore implements BIOS.FileStore {
+final class RealPathStore implements BIOS.FileStore, BIOS.PathStore {
 
     private static final OpenOption[] EMPTY = new OpenOption[0];
 
@@ -37,22 +37,22 @@ final class RealFileStore implements BIOS.FileStore {
     private final OpenOption[] inputOptions;
     private final OpenOption[] outputOptions;
 
-    RealFileStore(Path p) { this(p, EMPTY, EMPTY); }
+    RealPathStore(Path p) { this(p, EMPTY, EMPTY); }
 
-    private RealFileStore(final Path p, final OpenOption[] inputOptions, final OpenOption[] outputOptions) {
+    private RealPathStore(final Path p, final OpenOption[] inputOptions, final OpenOption[] outputOptions) {
         this.path = p;
         this.inputOptions = inputOptions;
         this.outputOptions = outputOptions;
     }
 
     @Override
-    public RealFileStore onInput(OpenOption... inputOptions) {
-        return new RealFileStore(path, inputOptions, outputOptions);
+    public RealPathStore onInput(OpenOption... inputOptions) {
+        return new RealPathStore(path, inputOptions, outputOptions);
     }
 
     @Override
-    public RealFileStore onOutput(OpenOption... outputOptions) {
-        return new RealFileStore(path, inputOptions, outputOptions);
+    public RealPathStore onOutput(OpenOption... outputOptions) {
+        return new RealPathStore(path, inputOptions, outputOptions);
     }
 
     @Override
