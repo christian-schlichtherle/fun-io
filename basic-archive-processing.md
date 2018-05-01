@@ -14,7 +14,11 @@ import static global.namespace.fun.io.commons.compress.CommonsCompress.gzip; // 
 import static global.namespace.fun.io.commons.compress.CommonsCompress.tar;
 import static global.namespace.fun.io.bios.BIOS.*;                           // from `fun-io-bios`
 
-copy(directory("directory"), tar(file("archive.tar.gz").map(gzip())));
+class Scratch {
+    public static void main(String[] args) throws Exception {
+        copy(directory("directory"), tar(file("archive.tar.gz").map(gzip())));
+    }
+}
 {% endhighlight %}
 
 ## Unpacking An Archive File
@@ -26,7 +30,11 @@ import static global.namespace.fun.io.commons.compress.CommonsCompress.gzip; // 
 import static global.namespace.fun.io.commons.compress.CommonsCompress.tar;
 import static global.namespace.fun.io.bios.BIOS.*;                           // from `fun-io-bios`
 
-copy(tar(file("archive.tar.gz").map(gzip())), directory("directory"));
+class Scratch {
+    public static void main(String[] args) throws Exception {
+        copy(tar(file("archive.tar.gz").map(gzip())), directory("directory"));
+    }
+}
 {% endhighlight %}
 
 ## Transforming An Archive File
@@ -39,7 +47,11 @@ import static global.namespace.fun.io.commons.compress.CommonsCompress.tar;
 import static global.namespace.fun.io.commons.compress.CommonsCompress.zip;
 import static global.namespace.fun.io.bios.BIOS.*;                           // from `fun-io-bios`
 
-copy(tar(file("archive.tar.gz").map(gzip())), zip("archive.zip"));
+class Scratch {
+    public static void main(String[] args) throws Exception {
+        copy(tar(file("archive.tar.gz").map(gzip())), zip("archive.zip"));
+    }
+}
 {% endhighlight %}
 
 <div class="btn-group d-flex justify-content-center" role="group" aria-label="Pagination">

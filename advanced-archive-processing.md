@@ -13,7 +13,11 @@ them:
 import static global.namespace.fun.io.commons.compress.CommonsCompress.jar; // from `fun-io-commons-compress`
 import static global.namespace.fun.io.delta.Delta.diff;                     // from `fun-io-delta`
 
-diff().base(jar("base.jar")).update(jar("update.jar")).to(jar("delta.jar"));
+class Scratch {
+    public static void main(String[] args) throws Exception {
+        diff().base(jar("base.jar")).update(jar("update.jar")).to(jar("delta.jar"));
+    }
+}
 {% endhighlight %}
 
 If you wanted to use the module `fun-io-bios` instead of `fun-io-commons-compress`, then, apart from configuring the 
@@ -32,7 +36,11 @@ It also uses the `Delta` facade again for patching the base archive file with th
 import static global.namespace.fun.io.bios.BIOS.jar;     // from `fun-io-bios`
 import static global.namespace.fun.io.delta.Delta.patch; // from `fun-io-delta`
 
-patch().base(jar("base.jar")).delta(jar("delta.jar")).to(jar("update.jar"));
+class Scratch {
+    public static void main(String[] args) throws Exception {
+        patch().base(jar("base.jar")).delta(jar("delta.jar")).to(jar("update.jar"));
+    }
+}
 {% endhighlight %}
 
 ## Diffing Two Directories
@@ -45,7 +53,11 @@ import static global.namespace.fun.io.bios.BIOS.directory;                  // f
 import static global.namespace.fun.io.commons.compress.CommonsCompress.zip; // from `fun-io-commons-compress`
 import static global.namespace.fun.io.delta.Delta.diff;                     // from `fun-io-delta`
 
-diff().base(directory("base")).update(directory("update")).to(zip("delta.zip"));
+class Scratch {
+    public static void main(String[] args) throws Exception {
+        diff().base(directory("base")).update(directory("update")).to(zip("delta.zip"));
+    }
+}
 {% endhighlight %}
 
 ## Patching The Base Directory
@@ -58,7 +70,11 @@ import static global.namespace.fun.io.bios.BIOS.directory;                  // f
 import static global.namespace.fun.io.commons.compress.CommonsCompress.zip; // from `fun-io-commons-compress`
 import static global.namespace.fun.io.delta.Delta.patch;                    // from `fun-io-delta`
 
-patch().base(directory("base")).delta(zip("delta.zip")).to(directory("update"));
+class Scratch {
+    public static void main(String[] args) throws Exception {
+        patch().base(directory("base")).delta(zip("delta.zip")).to(directory("update"));
+    }
+}
 {% endhighlight %}
 
 ## Computing A Delta Model
@@ -73,8 +89,12 @@ import global.namespace.fun.io.delta.model.DeltaModel;     // from `fun-io-delta
 import static global.namespace.fun.io.bios.BIOS.directory; // from `fun-io-bios`
 import static global.namespace.fun.io.delta.Delta.diff;    // from `fun-io-delta`
 
-DeltaModel model = diff().base(directory("base")).update(directory("update")).toModel();
-model.changedEntries().forEach(entry -> { /* do something with it */ });
+class Scratch {
+    public static void main(String[] args) throws Exception {
+        DeltaModel model = diff().base(directory("base")).update(directory("update")).toModel();
+        model.changedEntries().forEach(entry -> { /* do something with it */ });
+    }
+}
 {% endhighlight %}
 
 The delta model has properties describing the changed, unchanged, added and removed entries.
