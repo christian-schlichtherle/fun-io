@@ -124,6 +124,7 @@ import global.namespace.fun.io.api.Store;
 
 import java.nio.file.Paths;
 
+import static global.namespace.fun.io.bios.BIOS.buffer;
 import static global.namespace.fun.io.bios.BIOS.file;
 import static global.namespace.fun.io.bios.BIOS.gzip;
 import static global.namespace.fun.io.jackson.Jackson.json;
@@ -131,7 +132,7 @@ import static global.namespace.fun.io.jackson.Jackson.json;
 class Scratch {
     public static void main(String[] args) throws Exception {
         Store store = file(Paths.get("hello-world.gz"));
-        Encoder encode = json().map(gzip()).encoder(store);
+        Encoder encode = json().map(gzip()).map(buffer()).encoder(store);
         encode.encode("Hello world!");
     }
 }
@@ -144,26 +145,27 @@ class Scratch {
 import java.nio.file.Paths
 
 import global.namespace.fun.io.api.{Encoder, Store}
-import global.namespace.fun.io.bios.BIOS.{file, gzip}
+import global.namespace.fun.io.bios.BIOS.{buffer, file, gzip}
 import global.namespace.fun.io.jackson.Jackson.json
 import global.namespace.fun.io.scala.api._
 
 val store: Store = file(Paths get "hello-world.gz")
-val encoder: Encoder = json << gzip encoder store
+val encoder: Encoder = json << gzip << buffer << encoder store
 encoder encode "Hello world!"
 {% endhighlight %}
 
   </div>
 </div>
 
-The preceding code encodes the string `"Hello world!"` to JSON, compresses it using GZIP and writes the result to the 
-file `hello-world.gz`.
-Note that the expression `json().map(gzip())` actually _transforms_ the JSON codec with the GZIP filter into a new 
-codec.
-In Scala, this expression can be more concisely written as `json << gzip`. 
+The preceding code encodes the string `"Hello world!"` to JSON, compresses it using GZIP, buffers and writes the result 
+to the file `hello-world.gz`.
+Note that the expression `json().map(gzip()).map(buffer())` actually _transforms_ a JSON codec with a GZIP filter 
+and a buffer filter into a new codec.
+In Scala, this expression can be more concisely written as `json << gzip << buffer` (note that the `<<` operator is 
+associative). 
 As you can see, the design concept still holds and the resulting code is only slightly more complex.
 
-Creating an encoder from a transformed codec and a store is nice, but what if you want to read back something from the
+Creating an encoder from a transformed codec and a store is nice, but what if you wanted to read back something from the
 store?
 In this case, it may be more appropriate to create a `ConnectedCodec` instead of an `Encoder` like so:
 
@@ -182,6 +184,7 @@ import global.namespace.fun.io.api.Store;
 
 import java.nio.file.Paths;
 
+import static global.namespace.fun.io.bios.BIOS.buffer;
 import static global.namespace.fun.io.bios.BIOS.file;
 import static global.namespace.fun.io.bios.BIOS.gzip;
 import static global.namespace.fun.io.jackson.Jackson.json;
@@ -189,7 +192,7 @@ import static global.namespace.fun.io.jackson.Jackson.json;
 class Scratch {
     public static void main(String[] args) throws Exception {
         Store store = file(Paths.get("hello-world.gz"));
-        ConnectedCodec codec = json().map(gzip()).connect(store);
+        ConnectedCodec codec = json().map(gzip()).map(buffer()).connect(store);
         codec.encode("Hello world!");
         String clone = codec.decode(String.class);
         assert clone.equals("Hello world!");
@@ -204,12 +207,12 @@ class Scratch {
 import java.nio.file.Paths
 
 import global.namespace.fun.io.api.{ConnectedCodec, Store}
-import global.namespace.fun.io.bios.BIOS.{file, gzip}
+import global.namespace.fun.io.bios.BIOS.{buffer, file, gzip}
 import global.namespace.fun.io.jackson.Jackson.json
 import global.namespace.fun.io.scala.api._
 
 val store: Store = file(Paths get "hello-world.gz")
-val codec: ConnectedCodec = json << gzip << store
+val codec: ConnectedCodec = json << gzip << buffer << store
 codec encode "Hello world!"
 val clone: String = codec decode classOf[String]
 assert(clone == "Hello world!")
@@ -220,8 +223,8 @@ assert(clone == "Hello world!")
 
 A `ConnectedCodec` is an `Encoder` and a `Decoder` in one, so it can be used to create a deep clone of the original 
 object.
-To make this more useful, the `gzip()` filter and the `file(...)` store can be removed and the encoded data get buffered 
-on the heap instead:
+To make this more useful, the `gzip()` and `buffer()` filters and the `file(...)` store can be removed and the encoded 
+data get buffered on the heap instead:
 
 <nav>
   <div class="nav nav-tabs" role="tablist">
@@ -234,12 +237,10 @@ on the heap instead:
  
 {% highlight java %}
 import global.namespace.fun.io.api.ConnectedCodec;
-import global.namespace.fun.io.api.Store;
 
 import java.nio.file.Paths;
 
-import static global.namespace.fun.io.bios.BIOS.file;
-import static global.namespace.fun.io.bios.BIOS.gzip;
+import static global.namespace.fun.io.bios.BIOS.memory;
 import static global.namespace.fun.io.jackson.Jackson.json;
 
 class Scratch {
@@ -258,8 +259,8 @@ class Scratch {
 {% highlight scala %}
 import java.nio.file.Paths
 
-import global.namespace.fun.io.api.{ConnectedCodec, Store}
-import global.namespace.fun.io.bios.BIOS.{file, gzip}
+import global.namespace.fun.io.api.ConnectedCodec
+import global.namespace.fun.io.bios.BIOS.memory
 import global.namespace.fun.io.jackson.Jackson.json
 import global.namespace.fun.io.scala.api._
 
@@ -285,12 +286,10 @@ This can be simplified as follows:
  
 {% highlight java %}
 import global.namespace.fun.io.api.ConnectedCodec;
-import global.namespace.fun.io.api.Store;
 
 import java.nio.file.Paths;
 
-import static global.namespace.fun.io.bios.BIOS.file;
-import static global.namespace.fun.io.bios.BIOS.gzip;
+import static global.namespace.fun.io.bios.BIOS.memory;
 import static global.namespace.fun.io.jackson.Jackson.json;
 
 class Scratch {
@@ -308,8 +307,8 @@ class Scratch {
 {% highlight scala %}
 import java.nio.file.Paths
 
-import global.namespace.fun.io.api.{ConnectedCodec, Store}
-import global.namespace.fun.io.bios.BIOS.{file, gzip}
+import global.namespace.fun.io.api.ConnectedCodec
+import global.namespace.fun.io.bios.BIOS.memory
 import global.namespace.fun.io.jackson.Jackson.json
 import global.namespace.fun.io.scala.api._
 
@@ -357,7 +356,55 @@ assert(c == "Hello world!")
 </div>
 
 In contrast to the previous examples, this method uses `BIOS.serialization()` instead of `Jackson.json()` as the 
-`Codec`, so the object to clone must implement `java.io.Serializable`, which `java.lang.String` does.
+`Codec`, so the object to clone must implement `java.io.Serializable`.
+
+The BIOS facade class provides some utility methods for standard use cases based on the abstractions provided by the 
+API.
+One of these standard use cases is implemented by `BIOS.copy` in all its overloaded variants: 
+Copying all data from a given source of some form to a given sink of some form.
+Other than the naive _while-read-do-write_ loop, these copy methods employ a background thread for reading the data and 
+piping it to the current thread for writing the data.
+The result is a significant performance boost due to much better utilization of I/O channels:
+
+<nav>
+  <div class="nav nav-tabs" role="tablist">
+    <a class="nav-item nav-link active" id="java7-tab" data-toggle="tab" href="#java7" role="tab" aria-controls="java7" aria-selected="true">Java</a>
+    <a class="nav-item nav-link" id="scala7-tab" data-toggle="tab" href="#scala7" role="tab" aria-controls="scala7" aria-selected="false">Scala</a>
+  </div>
+</nav>
+<div class="tab-content">
+  <div class="tab-pane active" id="java7" role="tabpanel" aria-labelledby="java7-tab">
+ 
+{% highlight java %}
+import static global.namespace.fun.io.bios.BIOS.buffer;
+import static global.namespace.fun.io.bios.BIOS.copy;
+import static global.namespace.fun.io.bios.BIOS.file;
+import static global.namespace.fun.io.bios.BIOS.gzip;
+import static java.nio.file.Paths.get;
+
+class Scratch {
+    public static void main(String[] args) throws Exception {
+        copy(file(get("file.gz")).map(buffer()).map(gzip()), file(get(("file"))));
+    }
+}
+{% endhighlight %}
+
+  </div>
+  <div class="tab-pane" id="scala7" role="tabpanel" aria-labelledby="scala7-tab">
+
+{% highlight scala %}
+import java.nio.file.Paths.get
+
+import global.namespace.fun.io.bios.BIOS.{buffer, copy, file, gzip}
+import global.namespace.fun.io.scala.api._
+
+copy(file(get("file.gz")) >> buffer >> gzip, file(get("file")))
+{% endhighlight %}
+
+  </div>
+</div>
+
+The preceding code uncompresses the data from the file `file.gz` and writes the result to the file `file`.
 
 <div class="btn-group d-flex justify-content-center" role="group" aria-label="Pagination">
   <button type="button" class="btn btn-light"><a href="{{ site.baseurl }}{% link module-structure-and-features.md %}">&laquo; Module Structure And Features</a></button>
