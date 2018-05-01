@@ -359,8 +359,7 @@ assert(c == "Hello world!")
 In contrast to the previous examples, this method uses `BIOS.serialization()` instead of `Jackson.json()` as the 
 `Codec`, so the object to clone must implement `java.io.Serializable`.
 
-The BIOS facade class provides some utility methods for standard use cases based on the abstractions provided by the 
-API.
+The BIOS facade provides some utility methods for standard use cases based on the abstractions provided by the API.
 One of these standard use cases is implemented by `BIOS.copy` in all its overloaded variants: 
 Copying all data from a given source of some form to a given sink of some form.
 Other than the naive _while-read-do-write_ loop, these copy methods employ a background thread for reading the data and 
