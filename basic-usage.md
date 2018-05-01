@@ -273,6 +273,7 @@ assert(clone == "Hello world!")
   </div>
 </div>
 
+Note that `memory` returns just another `Store` which is backed by an array of bytes.
 This can be simplified as follows:
 
 <nav>
