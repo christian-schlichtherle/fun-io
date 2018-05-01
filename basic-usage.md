@@ -5,8 +5,8 @@ title: Basic Usage
 ## Configuring The Classpath
 
 First of all you need to decide on the set of features required by your application and add their respective modules to 
-its class path - see [Module Structure And Features]({{ site.baseurl }}{% link module-structure-and-features.md %}).
-A Java application typically has a single dependency on `fun-io-bios`.
+its class path - see [Module Structure And Features].
+A Java application typically has a dependency on `fun-io-bios`.
 A Scala application typically has the same dependencies as a Java application plus an additional dependency on
 `fun-io-scala-api` to improve the development experience in Scala. 
 
@@ -27,12 +27,12 @@ Assuming Maven is used for Java and SBT for Scala, you need to add the following
     <dependency>
         <groupId>global.namespace.fun-io</groupId>
         <artifactId>fun-io-bios</artifactId>
-        <version>1.1.0</version>
+        <version>1.2.0</version>
     </dependency>
     <dependency>
         <groupId>global.namespace.fun-io</groupId>
         <artifactId>fun-io-jackson</artifactId>
-        <version>1.1.0</version>
+        <version>1.2.0</version>
     </dependency>
 </dependencies>
 {% endhighlight %}
@@ -50,6 +50,24 @@ libraryDependencies ++= Seq(
 
   </div>
 </div>
+
+## Design Concept
+
+Fun I/O employs a few simple design principles:
+
++ The API is defined by abstract classes and interfaces in the module `fun-io-api`.
++ The module `fun-io-scala-api` adds operators and implicit conversions for an enhanced development experience in Scala.
++ Each implementation module provides a single facade class which consists of one or more static factory methods.
++ Each static factory method returns an instance of a class or interface defined by the API without revealing the actual 
+  implementation class.
++ Except for their expected side effect (e.g. reading or writing data), implementations are virtually stateless, and 
+  hence reusable and trivially thread-safe.
+
+With this design, the canonical way of using Fun I/O is to import some static factory methods from one or more facade 
+classes, as you will see on this page.
+It's perfectly fine to import all static factory methods using a wildcard like `*`.
+However, for the purpose of showing the originating facade class, the examples on this page do not use wildcard imports 
+for static factory methods.
 
 ## Encoding Objects
 
@@ -93,22 +111,14 @@ encoder encode "Hello world!"
   </div>
 </div>
 
-Fun I/O employs a few simple design principles:
-
-+ The API is defined by abstract classes and interfaces in the module `fun-io-api`.
-+ The module `fun-io-scala-api` adds operators and implicit conversions for an enhanced development experience in Scala.
-+ Each implementation module provides a single facade class which consists of one or more static factory methods.
-+ Each static factory method returns an instance of a class or interface defined by the API without revealing the actual 
-  implementation class.
-+ Most implementations are virtually stateless, and hence reusable and trivially thread-safe.
-
-With this design, the canonical way of using Fun I/O is to import all static factory methods from one or more facade 
-classes.
-In the previous example, the `BIOS` facade class provides the `stdout()` factory method which returns an instance of the 
+In the preceding code, the `BIOS` facade class provides the `stdout()` factory method which returns an instance of the 
 `Sink` interface.
 The `Jackson` facade class provides the `json()` factory method which returns an instance of the `Codec` interface.
 The codec and the sink are then combined into an instance of the `Encoder` interface, which is subsequently used to 
 encode the string `"Hello world!"`.
+
+There are many other `Codecs` and `Sinks` available - see [Module Structure And Features].
+Note that every `Store` is also a `Sink`, of which you will find plenty implementations provided by the facade classes.
 
 ## Applying Filters
 
@@ -127,8 +137,6 @@ Here is a slightly more complex example:
 import global.namespace.fun.io.api.Encoder;
 import global.namespace.fun.io.api.Store;
 
-import java.nio.file.Paths;
-
 import static global.namespace.fun.io.bios.BIOS.buffer;
 import static global.namespace.fun.io.bios.BIOS.file;
 import static global.namespace.fun.io.bios.BIOS.gzip;
@@ -136,7 +144,7 @@ import static global.namespace.fun.io.jackson.Jackson.json;
 
 class Scratch {
     public static void main(String[] args) throws Exception {
-        Store store = file(Paths.get("hello-world.gz"));
+        Store store = file("hello-world.gz");
         Encoder encode = json().map(gzip()).map(buffer()).encoder(store);
         encode.encode("Hello world!");
     }
@@ -147,14 +155,12 @@ class Scratch {
   <div class="tab-pane" id="scala2" role="tabpanel" aria-labelledby="scala2-tab">
 
 {% highlight scala %}
-import java.nio.file.Paths
-
 import global.namespace.fun.io.api.{Encoder, Store}
 import global.namespace.fun.io.bios.BIOS.{buffer, file, gzip}
 import global.namespace.fun.io.jackson.Jackson.json
 import global.namespace.fun.io.scala.api._                    // from `fun-io-scala-api`
 
-val store: Store = file(Paths get "hello-world.gz")
+val store: Store = file("hello-world.gz")
 val encoder: Encoder = json << gzip << buffer << encoder store
 encoder encode "Hello world!"
 {% endhighlight %}
@@ -187,8 +193,6 @@ In this case, it may be more appropriate to create a `ConnectedCodec` instead of
 import global.namespace.fun.io.api.ConnectedCodec;
 import global.namespace.fun.io.api.Store;
 
-import java.nio.file.Paths;
-
 import static global.namespace.fun.io.bios.BIOS.buffer;
 import static global.namespace.fun.io.bios.BIOS.file;
 import static global.namespace.fun.io.bios.BIOS.gzip;
@@ -196,7 +200,7 @@ import static global.namespace.fun.io.jackson.Jackson.json;
 
 class Scratch {
     public static void main(String[] args) throws Exception {
-        Store store = file(Paths.get("hello-world.gz"));
+        Store store = file("hello-world.gz");
         ConnectedCodec codec = json().map(gzip()).map(buffer()).connect(store);
         codec.encode("Hello world!");
         String clone = codec.decode(String.class);
@@ -209,14 +213,12 @@ class Scratch {
   <div class="tab-pane" id="scala3" role="tabpanel" aria-labelledby="scala3-tab">
 
 {% highlight scala %}
-import java.nio.file.Paths
-
 import global.namespace.fun.io.api.{ConnectedCodec, Store}
 import global.namespace.fun.io.bios.BIOS.{buffer, file, gzip}
 import global.namespace.fun.io.jackson.Jackson.json
 import global.namespace.fun.io.scala.api._
 
-val store: Store = file(Paths get "hello-world.gz")
+val store: Store = file("hello-world.gz")
 val codec: ConnectedCodec = json << gzip << buffer << store
 codec encode "Hello world!"
 val clone: String = codec decode classOf[String]
@@ -245,8 +247,6 @@ data get buffered on the heap instead:
 {% highlight java %}
 import global.namespace.fun.io.api.ConnectedCodec;
 
-import java.nio.file.Paths;
-
 import static global.namespace.fun.io.bios.BIOS.memory;
 import static global.namespace.fun.io.jackson.Jackson.json;
 
@@ -264,8 +264,6 @@ class Scratch {
   <div class="tab-pane" id="scala4" role="tabpanel" aria-labelledby="scala4-tab">
 
 {% highlight scala %}
-import java.nio.file.Paths
-
 import global.namespace.fun.io.api.ConnectedCodec
 import global.namespace.fun.io.bios.BIOS.memory
 import global.namespace.fun.io.jackson.Jackson.json
@@ -295,8 +293,6 @@ This can be simplified as follows:
 {% highlight java %}
 import global.namespace.fun.io.api.ConnectedCodec;
 
-import java.nio.file.Paths;
-
 import static global.namespace.fun.io.bios.BIOS.memory;
 import static global.namespace.fun.io.jackson.Jackson.json;
 
@@ -313,8 +309,6 @@ class Scratch {
   <div class="tab-pane" id="scala5" role="tabpanel" aria-labelledby="scala5-tab">
 
 {% highlight scala %}
-import java.nio.file.Paths
-
 import global.namespace.fun.io.api.ConnectedCodec
 import global.namespace.fun.io.bios.BIOS.memory
 import global.namespace.fun.io.jackson.Jackson.json
@@ -389,11 +383,10 @@ import static global.namespace.fun.io.bios.BIOS.buffer;
 import static global.namespace.fun.io.bios.BIOS.copy;
 import static global.namespace.fun.io.bios.BIOS.file;
 import static global.namespace.fun.io.bios.BIOS.gzip;
-import static java.nio.file.Paths.get;
 
 class Scratch {
     public static void main(String[] args) throws Exception {
-        copy(file(get("file.gz")).map(buffer()).map(gzip()), file(get(("file"))));
+        copy(file("file.gz").map(buffer()).map(gzip()), file("file"));
     }
 }
 {% endhighlight %}
@@ -402,20 +395,20 @@ class Scratch {
   <div class="tab-pane" id="scala7" role="tabpanel" aria-labelledby="scala7-tab">
 
 {% highlight scala %}
-import java.nio.file.Paths.get
-
 import global.namespace.fun.io.bios.BIOS.{buffer, copy, file, gzip}
 import global.namespace.fun.io.scala.api._
 
-copy(file(get("file.gz")) >> buffer >> gzip, file(get("file")))
+copy(file("file.gz") >> buffer >> gzip, file("file"))
 {% endhighlight %}
 
   </div>
 </div>
 
-The preceding code uncompresses the data from the file `file.gz` and writes the result to the file `file`.
+The preceding code uncompresses the data from the file `file.gz` and writes the uncompressed data to the file `file`.
 
 <div class="btn-group d-flex justify-content-center" role="group" aria-label="Pagination">
   <button type="button" class="btn btn-light"><a href="{{ site.baseurl }}{% link module-structure-and-features.md %}">&laquo; Module Structure And Features</a></button>
   <button type="button" class="btn btn-light"><a href="{{ site.baseurl }}{% link basic-archive-processing.md %}">Basic Archive Processing &raquo;</a></button>
 </div>
+
+[Module Structure And Features]: {{ site.baseurl }}{% link module-structure-and-features.md %}
