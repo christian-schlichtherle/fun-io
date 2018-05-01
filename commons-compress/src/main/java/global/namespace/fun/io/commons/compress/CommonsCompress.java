@@ -113,23 +113,26 @@ public final class CommonsCompress {
      ///////// ARCHIVE STORES /////////
     //////////////////////////////////
 
-    /** Returns an archive store for read/write access to the given JAR file. */
-    public static ArchiveStore<ZipArchiveEntry> jar(final File file) {
-        requireNonNull(file);
+    /** Returns an archive store for read/write access to the JAR file referenced by the given path. */
+    public static ArchiveStore<ZipArchiveEntry> jar(final File path) {
+        requireNonNull(path);
         return new ArchiveStore<ZipArchiveEntry>() {
 
             @Override
-            public Socket<ArchiveInput<ZipArchiveEntry>> input() { return () -> new ZipFileAdapter(new ZipFile(file)); }
+            public Socket<ArchiveInput<ZipArchiveEntry>> input() { return () -> new ZipFileAdapter(new ZipFile(path)); }
 
             @Override
             public Socket<ArchiveOutput<ZipArchiveEntry>> output() {
-                return () -> new JarArchiveOutputStreamAdapter(new JarArchiveOutputStream(new FileOutputStream(file)));
+                return () -> new JarArchiveOutputStreamAdapter(new JarArchiveOutputStream(new FileOutputStream(path)));
             }
         };
     }
 
+    /** Returns an archive store for read/write access to the JAR file referenced by the given path. */
+    public static ArchiveStore<ZipArchiveEntry> jar(String path) { return jar(new File(path)); }
+
     /**
-     * Returns an archive store for copy-only access tp a TAR file in the given store.
+     * Returns an archive store for copy-only access to the TAR file referenced by the given store.
      * The resulting archive store has very limited capabilities due to the constraints of the TAR file format.
      * For example, you can't just use an output stream socket to write a TAR entry because the size of a TAR entry must
      * be known in advance.
@@ -159,18 +162,21 @@ public final class CommonsCompress {
         };
     }
 
-    /** Returns an archive store for read/write access to the given ZIP file. */
-    public static ArchiveStore<ZipArchiveEntry> zip(final File file) {
-        requireNonNull(file);
+    /** Returns an archive store for read/write access to the ZIP file referenced by the given path. */
+    public static ArchiveStore<ZipArchiveEntry> zip(final File path) {
+        requireNonNull(path);
         return new ArchiveStore<ZipArchiveEntry>() {
 
             @Override
-            public Socket<ArchiveInput<ZipArchiveEntry>> input() { return () -> new ZipFileAdapter(new ZipFile(file)); }
+            public Socket<ArchiveInput<ZipArchiveEntry>> input() { return () -> new ZipFileAdapter(new ZipFile(path)); }
 
             @Override
             public Socket<ArchiveOutput<ZipArchiveEntry>> output() {
-                return () -> new ZipArchiveOutputStreamAdapter(new ZipArchiveOutputStream(file));
+                return () -> new ZipArchiveOutputStreamAdapter(new ZipArchiveOutputStream(path));
             }
         };
     }
+
+    /** Returns an archive store for read/write access to the ZIP file referenced by the given path. */
+    public static ArchiveStore<ZipArchiveEntry> zip(String path) { return zip(new File(path)); }
 }
