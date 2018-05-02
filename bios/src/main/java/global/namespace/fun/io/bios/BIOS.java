@@ -77,10 +77,10 @@ public final class BIOS {
      ///////// FILTERS /////////
     ///////////////////////////
 
-    /** Returns a filter which encodes the data in Base64 using the basic encoder and decoder. */
+    /** Returns a filter which encodes/decodes data using Base64. */
     public static Filter base64() { return base64(Base64.getEncoder(), Base64.getDecoder()); }
 
-    /** Returns a filter which encodes the data in Base64 using the given encoder and decoder. */
+    /** Returns a filter which encodes/decodes data using the given Base64 encoder and decoder. */
     public static Filter base64(Base64.Encoder e, Base64.Decoder d) {
         return new Base64Filter(requireNonNull(e), requireNonNull(d));
     }
@@ -92,8 +92,7 @@ public final class BIOS {
     public static Filter buffer(int size) { return new BufferedIOFilter(size); }
 
     /**
-     * Returns a filter which encrypts or decrypts the data using the given cipher suppliers for output and
-     * input.
+     * Returns a filter which encrypts/decrypts data using the given cipher suppliers for output and input.
      *
      * @param ciphers a function which returns an initialized cipher.
      *                If its input parameter is {@code false}, then the returned cipher must be initialized for input,
@@ -105,12 +104,14 @@ public final class BIOS {
     }
 
     /**
-     * Returns a filter which compresses the data using a ZIP deflater with the default compression level.
+     * Returns a filter which compresses/decompresses data using a ZIP deflater/inflater with the default compression
+     * level.
      */
     public static Filter deflate() { return deflate(Deflater.DEFAULT_COMPRESSION); }
 
     /**
-     * Returns a filter which compresses the data using a ZIP deflater with the given compression level.
+     * Returns a filter which compresses/decompresses data using a ZIP deflater/inflater with the given compression
+     * level.
      *
      * @see Deflater
      */
@@ -121,26 +122,26 @@ public final class BIOS {
         return deflate(() -> new Deflater(level), Inflater::new);
     }
 
-    /** Returns a filter which compresses the data using a ZIP deflater. */
+    /** Returns a filter which compresses/decompresses data using a ZIP deflater/inflater. */
     public static Filter deflate(XSupplier<Deflater> deflaterSupplier, XSupplier<Inflater> inflaterSupplier) {
         return new DeflateFilter(requireNonNull(deflaterSupplier), requireNonNull(inflaterSupplier));
     }
 
-    /** Returns a filter which produces the GZIP compression format. */
+    /** Returns a filter which compresses/decompresses data using the GZIP format. */
     public static Filter gzip() { return new GZIPFilter(); }
 
     /** Returns the identity filter. */
     public static Filter identity() { return Filter.IDENTITY; }
 
     /**
-     * Returns a filter which decompresses the data using a ZIP inflater.
-     * For the reverse operation, the filter uses a ZIP deflater with the default compression level.
+     * Returns a filter which decompresses/compresses data using a ZIP inflater/deflater with the default comporession
+     * level.
      */
     public static Filter inflate() { return inflate(Deflater.DEFAULT_COMPRESSION); }
 
     /**
-     * Returns a filter which decompresses the data using a ZIP inflater.
-     * For the reverse operation, the filter uses a ZIP deflater with the given compression level.
+     * Returns a filter which decompresses/compresses data using a ZIP inflater/deflater with the given compression
+     * level.
      */
     public static Filter inflate(int level) {
         if (level < Deflater.DEFAULT_COMPRESSION || Deflater.BEST_COMPRESSION < level) {
@@ -149,7 +150,7 @@ public final class BIOS {
         return inflate(Inflater::new, () -> new Deflater(level));
     }
 
-    /** Returns a filter which decompresses the data using a ZIP inflater. */
+    /** Returns a filter which decompresses/compresses data using a ZIP inflater/deflater. */
     public static Filter inflate(XSupplier<Inflater> inflaterSupplier, XSupplier<Deflater> deflaterSupplier) {
         return new InflateFilter(requireNonNull(inflaterSupplier), requireNonNull(deflaterSupplier));
     }

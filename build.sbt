@@ -18,7 +18,7 @@ import Dependencies._
 
 lazy val root: Project = project
   .in(file("."))
-  .aggregate(api, bios, commonsCompress, delta, it, jackson, jaxb, scalaApi, xz)
+  .aggregate(api, bios, commonsCompress, delta, it, jackson, jaxb, scalaApi, xz, zstd)
   .settings(releaseSettings)
   .settings(aggregateSettings)
   .settings(name := "Fun I/O")
@@ -76,7 +76,7 @@ lazy val delta: Project = project
 
 lazy val it: Project = project
   .in(file("it"))
-  .dependsOn(bios, commonsCompress, delta, jackson, jaxb, scalaApi, xz)
+  .dependsOn(bios, commonsCompress, delta, jackson, jaxb, scalaApi, xz, zstd)
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -136,4 +136,16 @@ lazy val xz: Project = project
     ),
     name := "Fun I/O XZ",
     normalizedName := "fun-io-xz"
+  )
+
+lazy val zstd: Project = project
+  .in(file("zstd"))
+  .dependsOn(bios)
+  .settings(javaLibrarySettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      ZstdJni
+    ),
+    name := "Fun I/O Zstd",
+    normalizedName := "fun-io-zstd"
   )

@@ -28,6 +28,7 @@ object Dependencies {
   val Scalacheck: ModuleID = "org.scalacheck" %% "scalacheck" % "1.13.5"
   val Scalatest: ModuleID = "org.scalatest" %% "scalatest" % "3.0.5"
   val Xz: ModuleID = "org.tukaani" % "xz" % "1.8"
+  val ZstdJni: ModuleID = "com.github.luben" % "zstd-jni" % "1.3.4-4"
 
   val ScalaVersion_2_10: String = sys.env.getOrElse("SCALA_VERSION_2_10", "2.10.7")
   val ScalaVersion_2_11: String = sys.env.getOrElse("SCALA_VERSION_2_11", "2.11.12")

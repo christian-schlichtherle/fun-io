@@ -54,59 +54,74 @@ public final class CommonsCompress {
      ///////// FILTERS /////////
     ///////////////////////////
 
-    /** Returns a filter which produces the LZ4 block format using the default parameters. */
+    /** Returns a filter which compresses/decompresses data using the LZ4 block format with default parameters. */
     public static Filter blockLZ4() {
         return blockLZ4(BlockLZ4CompressorOutputStream.createParameterBuilder().build());
     }
 
-    /** Returns a filter which produces the LZ4 block format using the given parameters. */
+    /** Returns a filter which compresses/decompresses data using the LZ4 block format with the given parameters. */
     public static Filter blockLZ4(Parameters p) { return new BlockLZ4Filter(requireNonNull(p)); }
 
-    /** Returns a filter which produces the BZIP2 compression format using the maximum block size. */
+    /** Returns a filter which compresses/decompresses data using the BZIP2 format with the maximum block size. */
     public static Filter bzip2() { return bzip2(MAX_BLOCKSIZE); }
 
-    /** Returns a filter which produces the BZIP2 compression format using the given block size. */
+    /** Returns a filter which compresses/decompresses data using the BZIP2 format with the given block size. */
     public static Filter bzip2(int blockSize) { return new BZIP2Filter(MAX_BLOCKSIZE); }
 
-    /** Returns a filter which compresses the data using a ZIP deflater with the default parameters. */
+    /** Returns a filter which compresses/decompresses data using a ZIP deflater/inflater with default parameters. */
     public static Filter deflate() { return deflate(new DeflateParameters()); }
 
-    /** Returns a filter which compresses the data using a ZIP deflater with the given parameters. */
+    /** Returns a filter which compresses/decompresses data using a ZIP deflater/inflater with the given parameters. */
     public static Filter deflate(DeflateParameters p) { return new DeflateFilter(requireNonNull(p)); }
 
-    /** Returns a filter which produces the LZ4 frame format using the default parameters. */
+    /** Returns a filter which compresses/decompresses data using the LZ4 frame format with default parameters. */
     public static Filter framedLZ4() { return framedLZ4(FramedLZ4CompressorOutputStream.Parameters.DEFAULT); }
 
-    /** Returns a filter which produces the LZ4 frame format using the given parameters. */
+    /** Returns a filter which compresses/decompresses data using the LZ4 frame format with the given parameters. */
     public static Filter framedLZ4(FramedLZ4CompressorOutputStream.Parameters p) {
         return new FramedLZ4Filter(requireNonNull(p));
     }
 
-    /** Returns a filter which produces the Snappy framing format using the default parameters. */
+    /** Returns a filter which compresses/decompresses data using the Snappy frame format with default parameters. */
     public static Filter framedSnappy() {
         return framedSnappy(
                 SnappyCompressorOutputStream.createParameterBuilder(SnappyCompressorInputStream.DEFAULT_BLOCK_SIZE).build(),
                 FramedSnappyDialect.STANDARD);
     }
 
-    /** Returns a filter which produces the Snappy framing format using the given parameters for output/input. */
+    /** Returns a filter which compresses/decompresses data using the Snappy frame format with the given parameters. */
     public static Filter framedSnappy(Parameters outputParameters, FramedSnappyDialect inputParameters) {
         return new FramedSnappyFilter(requireNonNull(outputParameters), requireNonNull(inputParameters));
     }
 
-    /** Returns a filter which produces the GZIP compression format using the default parameters. */
+    /** Returns a filter which compresses/decompresses data using the GZIP format with default parameters. */
     public static Filter gzip() { return gzip(new GzipParameters()); }
 
-    /** Returns a filter which produces the GZIP compression format using the given parameters. */
+    /** Returns a filter which compresses/decompresses data using the GZIP format with the given parameters. */
     public static Filter gzip(GzipParameters p) { return new GZIPFilter(requireNonNull(p)); }
 
-    /** Returns a filter which produces the LZMA compression format. */
+    /**
+     * Returns a filter which compresses/decompresses data using the LZMA format.
+     *
+     * @deprecated Use {@code global.namespace.fun.io.xz.XZ.lzma()} instead.
+     */
+    @Deprecated
     public static Filter lzma() { return new LZMAFilter(); }
 
-    /** Returns a filter which produces the LZMA2 compression format using the default preset. */
+    /**
+     * Returns a filter which compresses/decompresses data using the LZMA2 format with the default preset.
+     *
+     * @deprecated Use {@code global.namespace.fun.io.xz.XZ.lzma2()} instead.
+     */
+    @Deprecated
     public static Filter lzma2() { return lzma2(LZMA2Options.PRESET_DEFAULT); }
 
-    /** Returns a filter which produces the LZMA2 compression format using the given preset. */
+    /**
+     * Returns a filter which compresses/decompresses data using the LZMA2 format with the given preset.
+     *
+     * @deprecated Use {@code global.namespace.fun.io.xz.XZ.lzma2(preset)} instead.
+     */
+    @Deprecated
     public static Filter lzma2(int preset) { return new LZMA2Filter(preset); }
 
       //////////////////////////////////

@@ -18,8 +18,10 @@ package global.namespace.fun.io.xz;
 import global.namespace.fun.io.api.Filter;
 import org.tukaani.xz.FilterOptions;
 import org.tukaani.xz.LZMA2Options;
+import org.tukaani.xz.UnsupportedOptionsException;
 
 import static java.util.Objects.requireNonNull;
+import static org.tukaani.xz.LZMA2Options.PRESET_DEFAULT;
 
 /**
  * This facade provides static factory methods for XZ filters.
@@ -30,20 +32,35 @@ public final class XZ {
 
     private XZ() { }
 
-    /**
-     * Returns a filter which produces the LZMA2 compression format.
-     * This method is equivalent to {@code lzma2(new LZMA2Options())}.
-     */
-    public static Filter lzma2() { return xz(new LZMA2Options()); }
+    /** Returns a filter which compresses/decompresses data using the LZMA format. */
+    public static Filter lzma() { return new LZMAFilter(); }
 
     /**
-     * Returns a filter which produces the XZ compression format.
+     * Returns a filter which compresses/decompresses data using the LZMA2 format with the default preset.
+     * This method is equivalent to {@code xz(new LZMA2Options())}.
+     */
+    public static Filter lzma2() { return lzma2(PRESET_DEFAULT); }
+
+    /**
+     * Returns a filter which compresses/decompresses data using the LZMA2 format with the given preset.
+     * This method is equivalent to {@code xz(new LZMA2Options(preset))}.
+     */
+    public static Filter lzma2(final int preset) {
+        try {
+            return xz(new LZMA2Options(preset));
+        } catch (UnsupportedOptionsException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    /**
+     * Returns a filter which compresses/decompresses data using the XZ format.
      * This method is equivalent to {@code xz(o, org.tukaani.xz.XZ.CHECK_CRC64)}.
      */
     public static Filter xz(FilterOptions o) { return xz(o, org.tukaani.xz.XZ.CHECK_CRC64); }
 
     /**
-     * Returns a filter which produces the XZ compression format.
+     * Returns a filter which compresses/decompresses data using the XZ format.
      * This method is equivalent to {@code xz(new FilterOptions[] { o }, checkType)}.
      * <p>
      * This method does not check the integrity of the provided parameters.
@@ -56,7 +73,7 @@ public final class XZ {
     }
 
     /**
-     * Returns a filter which produces the XZ compression format.
+     * Returns a filter which compresses/decompresses data using the XZ format.
      * This method is equivalent to {@code xz(o, org.tukaani.xz.XZ.CHECK_CRC64)}.
      * <p>
      * This method does not check the integrity of the provided parameter.
@@ -65,7 +82,7 @@ public final class XZ {
     public static Filter xz(FilterOptions[] o) { return xz(o, org.tukaani.xz.XZ.CHECK_CRC64); }
 
     /**
-     * Returns a filter which produces the XZ compression format.
+     * Returns a filter which compresses/decompresses data using the XZ format.
      * <p>
      * This method does not check the integrity of the provided parameters.
      * Any error will only be detected when the transformed output stream socket gets used.

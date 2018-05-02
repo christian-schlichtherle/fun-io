@@ -18,12 +18,16 @@ package global.namespace.fun.io.it
 import java.io.InputStream
 
 import global.namespace.fun.io.api.{Codec, Filter, Store}
+import global.namespace.fun.io.bios.{BIOS => B}
 import global.namespace.fun.io.bios.BIOS._
+import global.namespace.fun.io.commons.compress.{CommonsCompress => CC}
+import global.namespace.fun.io.commons.compress.CommonsCompress._
 import global.namespace.fun.io.it.PBE.pbe
 import global.namespace.fun.io.jackson.Jackson._
 import global.namespace.fun.io.jaxb.JAXB.{xml => jaxb}
 import global.namespace.fun.io.scala.api._
-import global.namespace.fun.io.xz.XZ._
+import global.namespace.fun.io.xz.XZ
+import global.namespace.fun.io.zstd.Zstd._
 import javax.xml.bind.JAXBContext
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
@@ -48,25 +52,75 @@ class TransformedCodecSpec extends WordSpec {
     base64 + buffer,
     base64 + rot13 + buffer,
 
-    deflate + buffer,
-    deflate + base64 + buffer,
-    deflate + pbe + buffer,
-    deflate + pbe + base64 + buffer,
+    blockLZ4 + buffer,
+    blockLZ4 + base64 + buffer,
+    blockLZ4 + pbe + buffer,
+    blockLZ4 + pbe + base64 + buffer,
+
+    bzip2 + buffer,
+    bzip2 + base64 + buffer,
+    bzip2 + pbe + buffer,
+    bzip2 + pbe + base64 + buffer,
+
+    B.deflate + buffer,
+    B.deflate + base64 + buffer,
+    B.deflate + pbe + buffer,
+    B.deflate + pbe + base64 + buffer,
+
+    CC.deflate + buffer,
+    CC.deflate + base64 + buffer,
+    CC.deflate + pbe + buffer,
+    CC.deflate + pbe + base64 + buffer,
+
+    framedLZ4 + buffer,
+    framedLZ4 + base64 + buffer,
+    framedLZ4 + pbe + buffer,
+    framedLZ4 + pbe + base64 + buffer,
+
+    framedSnappy + buffer,
+    framedSnappy + base64 + buffer,
+    framedSnappy + pbe + buffer,
+    framedSnappy + pbe + base64 + buffer,
+
+    B.gzip + buffer,
+    B.gzip + base64 + buffer,
+    B.gzip + pbe + buffer,
+    B.gzip + pbe + base64 + buffer,
+
+    CC.gzip + buffer,
+    CC.gzip + base64 + buffer,
+    CC.gzip + pbe + buffer,
+    CC.gzip + pbe + base64 + buffer,
+
+    CC.lzma + buffer,
+    CC.lzma + base64 + buffer,
+    CC.lzma + pbe + buffer,
+    CC.lzma + pbe + base64 + buffer,
+
+    XZ.lzma + buffer,
+    XZ.lzma + base64 + buffer,
+    XZ.lzma + pbe + buffer,
+    XZ.lzma + pbe + base64 + buffer,
+
+    CC.lzma2 + buffer,
+    CC.lzma2 + base64 + buffer,
+    CC.lzma2 + pbe + buffer,
+    CC.lzma2 + pbe + base64 + buffer,
+
+    XZ.lzma2 + buffer,
+    XZ.lzma2 + base64 + buffer,
+    XZ.lzma2 + pbe + buffer,
+    XZ.lzma2 + pbe + base64 + buffer,
 
     pbe + buffer,
     pbe + base64 + buffer,
 
-    gzip + buffer,
-    gzip + base64 + buffer,
-    gzip + pbe + buffer,
-    gzip + pbe + base64 + buffer,
+    rot13 + buffer,
 
-    lzma2 + buffer,
-    lzma2 + base64 + buffer,
-    lzma2 + pbe + buffer,
-    lzma2 + pbe + base64 + buffer,
-
-    rot13 + buffer
+    zstd + buffer,
+    zstd + base64 + buffer,
+    zstd + pbe + buffer,
+    zstd + pbe + base64 + buffer
   )
 
   private def forAllTransformedCodecs(block: Codec => Unit): Unit = {
