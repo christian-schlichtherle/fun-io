@@ -34,7 +34,7 @@ It also uses the `Delta` facade again for patching the base archive file with th
 
 {% highlight java %}
 import static global.namespace.fun.io.bios.BIOS.jar;     // from `fun-io-bios`
-import static global.namespace.fun.io.delta.Delta.patch; // from `fun-io-delta`
+import static global.namespace.fun.io.delta.Delta.patch;
 
 class Scratch {
     public static void main(String[] args) throws Exception {
@@ -49,9 +49,9 @@ The following code diffs the base directory `base` to the update directory `upda
 `delta.zip`:
 
 {% highlight java %}
-import static global.namespace.fun.io.bios.BIOS.directory;                  // from `fun-io-bios`
-import static global.namespace.fun.io.commons.compress.CommonsCompress.zip; // from `fun-io-commons-compress`
-import static global.namespace.fun.io.delta.Delta.diff;                     // from `fun-io-delta`
+import static global.namespace.fun.io.bios.BIOS.directory;
+import static global.namespace.fun.io.commons.compress.CommonsCompress.zip;
+import static global.namespace.fun.io.delta.Delta.diff;
 
 class Scratch {
     public static void main(String[] args) throws Exception {
@@ -66,9 +66,9 @@ The following code patches the base directory `base` with the delta ZIP file `de
 `update`:
 
 {% highlight java %}
-import static global.namespace.fun.io.bios.BIOS.directory;                  // from `fun-io-bios`
-import static global.namespace.fun.io.commons.compress.CommonsCompress.zip; // from `fun-io-commons-compress`
-import static global.namespace.fun.io.delta.Delta.patch;                    // from `fun-io-delta`
+import static global.namespace.fun.io.bios.BIOS.directory;
+import static global.namespace.fun.io.commons.compress.CommonsCompress.zip;
+import static global.namespace.fun.io.delta.Delta.patch;
 
 class Scratch {
     public static void main(String[] args) throws Exception {
@@ -84,10 +84,10 @@ directory from that?
 The following code diffs the base directory `base` to the update directory `update` and computes a delta model:
 
 {% highlight java %}
-import global.namespace.fun.io.delta.model.DeltaModel;     // from `fun-io-delta`
+import global.namespace.fun.io.delta.model.DeltaModel;
 
-import static global.namespace.fun.io.bios.BIOS.directory; // from `fun-io-bios`
-import static global.namespace.fun.io.delta.Delta.diff;    // from `fun-io-delta`
+import static global.namespace.fun.io.bios.BIOS.directory;
+import static global.namespace.fun.io.delta.Delta.diff;
 
 class Scratch {
     public static void main(String[] args) throws Exception {

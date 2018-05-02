@@ -12,7 +12,9 @@ It also uses the `BIOS` facade for accessing directories like archive files and 
 {% highlight java %}
 import static global.namespace.fun.io.commons.compress.CommonsCompress.gzip; // from `fun-io-commons-compress`
 import static global.namespace.fun.io.commons.compress.CommonsCompress.tar;
-import static global.namespace.fun.io.bios.BIOS.*;                           // from `fun-io-bios`
+import static global.namespace.fun.io.bios.BIOS.copy;                        // from `fun-io-bios`
+import static global.namespace.fun.io.bios.BIOS.directory;
+import static global.namespace.fun.io.bios.BIOS.file;
 
 class Scratch {
     public static void main(String[] args) throws Exception {
@@ -26,9 +28,11 @@ class Scratch {
 The following code is the inverse of the previous operation:
 
 {% highlight java %}
-import static global.namespace.fun.io.commons.compress.CommonsCompress.gzip; // from `fun-io-commons-compress`
+import static global.namespace.fun.io.commons.compress.CommonsCompress.gzip;
 import static global.namespace.fun.io.commons.compress.CommonsCompress.tar;
-import static global.namespace.fun.io.bios.BIOS.*;                           // from `fun-io-bios`
+import static global.namespace.fun.io.bios.BIOS.copy;
+import static global.namespace.fun.io.bios.BIOS.directory;
+import static global.namespace.fun.io.bios.BIOS.file;
 
 class Scratch {
     public static void main(String[] args) throws Exception {
@@ -42,10 +46,11 @@ class Scratch {
 The following code transforms the TAR.GZ file `archive.tar.gz` to the ZIP file `archive.zip`:
 
 {% highlight java %}
-import static global.namespace.fun.io.commons.compress.CommonsCompress.gzip; // from `fun-io-commons-compress`
+import static global.namespace.fun.io.commons.compress.CommonsCompress.gzip;
 import static global.namespace.fun.io.commons.compress.CommonsCompress.tar;
 import static global.namespace.fun.io.commons.compress.CommonsCompress.zip;
-import static global.namespace.fun.io.bios.BIOS.*;                           // from `fun-io-bios`
+import static global.namespace.fun.io.bios.BIOS.copy;
+import static global.namespace.fun.io.bios.BIOS.file;
 
 class Scratch {
     public static void main(String[] args) throws Exception {
