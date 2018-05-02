@@ -30,13 +30,13 @@ implementations of the abstractions provided by the `fun-io-api` module:
     + `serialization` serializes/deserializes objects using `ObjectOutputStream`/`ObjectInputStream`.
     + `xml` encodes/decodes objects using `XMLEncoder`/`XMLDecoder`.
   + It also provides the following `Filter` functions:
-    + `base64` encodes/decodes data to/from Base64.
+    + `base64` encodes/decodes data using Base64.
     + `buffer` buffers I/O operations.
     + `cipher` encrypts/decrypts data using a function which provides initialized `javax.security.Cipher` objects.
-    + `deflate` deflates/inflates data using the ZIP compression.
-    + `gzip` compresses/decompresses data using the GZIP compression format.
+    + `deflate` compresses/decompresses data using a ZIP deflater/inflater.
+    + `gzip` compresses/decompresses data using the GZIP format.
     + `identity` is a no-op, forming filters into a [Monoid] under the operations `Filter.andThen` and `Filter.compose`.
-    + `inflate` inflates/deflates data using the ZIP compression.
+    + `inflate` decompresses/compresses data using a ZIP inflater/deflater.
   + It also provides the following `Source` functions:
     + `resource` reads a resource from the class path.
     + `stdin` reads the standard input.
@@ -65,12 +65,12 @@ implementations of the abstractions provided by the `fun-io-api` module:
   + The `CommonsCompress` class is a facade which provides the following `Filter` functions: 
     + `blockLZ4` compresses/decompresses data using the LZ4 block format.
     + `bzip2` compresses decompresses data using the BZIP2 format.
-    + `deflate` deflates/inflates data using the ZIP compression.
+    + `deflate` compresses/decompresses data using a ZIP deflater/inflater.
     + `framedLZ4` compresses/decompresses data using the LZ4 frame format.
     + `framedSnappy` compresses/decompresses data using the Snappy frame format.
-    + `gzip` compresses/decompresses data using the GZIP compression format.
-    + `lzma` compresses/decompresses data using the LZMA compression format.
-    + `lzma2` compresses/decompresses data using the LZMA2 compression format.
+    + `gzip` compresses/decompresses data using the GZIP format.
+    + `lzma` compresses/decompresses data using the LZMA format.
+    + `lzma2` compresses/decompresses data using the LZMA2 format.
   + It also provides the following `ArchiveStore` functions:
     + `jar` provides read/write access to JAR files.
     + `tar` provides copy-only access to TAR files.
@@ -86,8 +86,13 @@ implementations of the abstractions provided by the `fun-io-api` module:
 + [![Fun I/O XZ](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-xz.svg?label=Fun%20I/O%20XZ&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-xz%22)
   Depends on [XZ for Java] to provide implementations of the Fun I/O API.
   + The `XZ` class is a facade which provides the following `Filter` functions:
-    + `lzma2` compresses/decompresses data using the LZMA2 compression format.
-    + `xz` compresses/decompresses data using the XZ compression format.
+    + `lzma` compresses/decompresses data using the LZMA format.
+    + `lzma2` compresses/decompresses data using the LZMA2 format.
+    + `xz` compresses/decompresses data using the XZ format.
++ [![Fun I/O Zstd](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-zstd-jni.svg?label=Fun%20I/O%20Zstd&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-zstd%22)
+  Depends on [Zstd-JNI] to provide implementations of the Fun I/O API.
+  + The `ZstdJNI` class is a facade which provides the following `Filter` functions:
+    + `zstd` compresses/decompresses data using the Zstd format.
 
 ## Application Modules
 
@@ -110,3 +115,4 @@ Like implementation modules, the provide a single facade class containing static
 [JAXB]: https://javaee.github.io/jaxb-v2/
 [Monoid]: https://en.wikipedia.org/wiki/Monoid
 [XZ for Java]: https://tukaani.org/xz/
+[Zstd JNI]: https://github.com/luben/zstd-jni
