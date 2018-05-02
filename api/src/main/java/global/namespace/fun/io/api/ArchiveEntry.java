@@ -35,6 +35,7 @@ public abstract class ArchiveEntry<E> {
         }
     }
 
+    // TODO: This should be abstract and maybe `protected`:
     public boolean canEqual(Object that) { return that instanceof ArchiveEntry; }
 
     @Override
