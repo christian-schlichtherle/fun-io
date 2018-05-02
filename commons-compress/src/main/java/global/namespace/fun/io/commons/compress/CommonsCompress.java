@@ -17,6 +17,9 @@ package global.namespace.fun.io.commons.compress;
 
 import global.namespace.fun.io.api.*;
 import org.apache.commons.compress.archivers.jar.JarArchiveOutputStream;
+import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
+import org.apache.commons.compress.archivers.sevenz.SevenZFile;
+import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
@@ -36,7 +39,6 @@ import org.tukaani.xz.LZMA2Options;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import static global.namespace.fun.io.bios.BIOS.file;
 import static java.util.Objects.requireNonNull;
 import static org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream.MAX_BLOCKSIZE;
 
@@ -145,6 +147,32 @@ public final class CommonsCompress {
 
     /** Returns an archive store for read/write access to the JAR file referenced by the given path. */
     public static ArchiveStore<ZipArchiveEntry> jar(String path) { return jar(new File(path)); }
+
+    /**
+     * Returns an archive store for copy-only access to the 7zip file referenced by the given path.
+     * The resulting archive store has very limited capabilities due to the constraints of the 7zip file format.
+     * For example, you can't randomly access entries in a 7zip file because there is no central directory.
+     * <p>
+     * In fact, the only supported use case is to use the resulting archive store as a source or a sink for
+     * {@link global.namespace.fun.io.bios.BIOS#copy(ArchiveSource, ArchiveSink)}.
+     * This is still very powerful, because it allows you to pack or unpack a 7zip file from or to a directory
+     * or to transform it from or to another archive file format, e.g. ZIP.
+     */
+    public static ArchiveStore<SevenZArchiveEntry> sevenz(final File path) {
+        requireNonNull(path);
+        return new ArchiveStore<SevenZArchiveEntry>() {
+
+            @Override
+            public Socket<ArchiveInput<SevenZArchiveEntry>> input() {
+                return () -> new SevenZFileAdapter(new SevenZFile(path));
+            }
+
+            @Override
+            public Socket<ArchiveOutput<SevenZArchiveEntry>> output() {
+                return () -> new SevenZOutputFileAdapter(new SevenZOutputFile(path));
+            }
+        };
+    }
 
     /**
      * Returns an archive store for copy-only access to the TAR file referenced by the given store.

@@ -8,7 +8,6 @@ import global.namespace.fun.io.api.ArchiveEntrySink;
 import global.namespace.fun.io.api.ArchiveEntrySource;
 import global.namespace.fun.io.api.ArchiveOutput;
 import global.namespace.fun.io.api.Socket;
-import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 
@@ -17,7 +16,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import static global.namespace.fun.io.bios.BIOS.copy;
-import static java.util.Objects.requireNonNull;
 
 /**
  * Adapts a {@link ZipArchiveOutputStream} to an {@link ArchiveOutput}.
@@ -28,7 +26,7 @@ class ZipArchiveOutputStreamAdapter implements ArchiveOutput<ZipArchiveEntry> {
 
     private final ZipArchiveOutputStream zip;
 
-    ZipArchiveOutputStreamAdapter(final ZipArchiveOutputStream zip) { this.zip = requireNonNull(zip); }
+    ZipArchiveOutputStreamAdapter(final ZipArchiveOutputStream zip) { this.zip = zip; }
 
     /** Returns {@code false}. */
     @Override
@@ -70,7 +68,7 @@ class ZipArchiveOutputStreamAdapter implements ArchiveOutput<ZipArchiveEntry> {
                         public void close() throws IOException {
                             if (!closed) {
                                 closed = true;
-                                ((ArchiveOutputStream) out).closeArchiveEntry(); // not idempotent!
+                                zip.closeArchiveEntry(); // not idempotent!
                             }
                         }
                     };

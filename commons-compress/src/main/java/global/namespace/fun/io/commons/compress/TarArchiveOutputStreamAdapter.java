@@ -8,7 +8,6 @@ import global.namespace.fun.io.api.ArchiveEntrySink;
 import global.namespace.fun.io.api.ArchiveEntrySource;
 import global.namespace.fun.io.api.ArchiveOutput;
 import global.namespace.fun.io.api.Socket;
-import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 
@@ -17,7 +16,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import static global.namespace.fun.io.bios.BIOS.copy;
-import static java.util.Objects.requireNonNull;
 
 /**
  * Adapts a {@link TarArchiveOutputStream} to an {@link ArchiveOutput}.
@@ -28,7 +26,7 @@ final class TarArchiveOutputStreamAdapter implements ArchiveOutput<TarArchiveEnt
 
     private final TarArchiveOutputStream tar;
 
-    TarArchiveOutputStreamAdapter(final TarArchiveOutputStream tar) { this.tar = requireNonNull(tar); }
+    TarArchiveOutputStreamAdapter(final TarArchiveOutputStream tar) { this.tar = tar; }
 
     /** Returns {@code false}. */
     public boolean isJar() { return false; }
@@ -62,7 +60,7 @@ final class TarArchiveOutputStreamAdapter implements ArchiveOutput<TarArchiveEnt
                         public void close() throws IOException {
                             if (!closed) {
                                 closed = true;
-                                ((ArchiveOutputStream) out).closeArchiveEntry(); // not idempotent!
+                                tar.closeArchiveEntry(); // not idempotent!
                             }
                         }
                     };

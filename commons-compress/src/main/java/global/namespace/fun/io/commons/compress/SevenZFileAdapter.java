@@ -7,7 +7,8 @@ package global.namespace.fun.io.commons.compress;
 import global.namespace.fun.io.api.ArchiveEntrySource;
 import global.namespace.fun.io.api.ArchiveInput;
 import global.namespace.fun.io.api.Socket;
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
+import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 
 import java.io.IOException;
@@ -16,21 +17,19 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static global.namespace.fun.io.bios.BIOS.stream;
-
 /**
  * Adapts a {@link TarArchiveInputStream} to an {@link ArchiveInput}.
  *
  * @author Christian Schlichtherle
  */
-final class TarArchiveInputStreamAdapter implements ArchiveInput<TarArchiveEntry> {
+final class SevenZFileAdapter implements ArchiveInput<SevenZArchiveEntry> {
 
-    private final TarArchiveInputStream tar;
+    private final SevenZFile sevenz;
 
-    TarArchiveInputStreamAdapter(final TarArchiveInputStream tar) { this.tar = tar; }
+    SevenZFileAdapter(final SevenZFile sevenz) { this.sevenz = sevenz; }
 
-    public Iterator<ArchiveEntrySource<TarArchiveEntry>> iterator() {
-        return new Iterator<ArchiveEntrySource<TarArchiveEntry>>() {
+    public Iterator<ArchiveEntrySource<SevenZArchiveEntry>> iterator() {
+        return new Iterator<ArchiveEntrySource<SevenZArchiveEntry>>() {
 
             Object next;
 
@@ -38,7 +37,7 @@ final class TarArchiveInputStreamAdapter implements ArchiveInput<TarArchiveEntry
             public boolean hasNext() {
                 if (null == next) {
                     try {
-                        next = tar.getNextTarEntry();
+                        next = sevenz.getNextEntry();
                     } catch (IOException e) {
                         next = e;
                     }
@@ -47,10 +46,10 @@ final class TarArchiveInputStreamAdapter implements ArchiveInput<TarArchiveEntry
             }
 
             @Override
-            public ArchiveEntrySource<TarArchiveEntry> next() {
+            public ArchiveEntrySource<SevenZArchiveEntry> next() {
                 if (hasNext()) {
-                    if (next instanceof TarArchiveEntry) {
-                        final TarArchiveEntry entry = (TarArchiveEntry) next;
+                    if (next instanceof SevenZArchiveEntry) {
+                        final SevenZArchiveEntry entry = (SevenZArchiveEntry) next;
                         next = null;
                         return source(entry);
                     } else if (next instanceof Exception) {
@@ -62,12 +61,12 @@ final class TarArchiveInputStreamAdapter implements ArchiveInput<TarArchiveEntry
         };
     }
 
-    public Optional<ArchiveEntrySource<TarArchiveEntry>> source(String name) {
+    public Optional<ArchiveEntrySource<SevenZArchiveEntry>> source(String name) {
         throw new UnsupportedOperationException();
     }
 
-    private ArchiveEntrySource<TarArchiveEntry> source(TarArchiveEntry entry) {
-        return new ArchiveEntrySource<TarArchiveEntry>() {
+    private ArchiveEntrySource<SevenZArchiveEntry> source(SevenZArchiveEntry entry) {
+        return new ArchiveEntrySource<SevenZArchiveEntry>() {
 
             @Override
             public String name() { return entry.getName(); }
@@ -79,20 +78,25 @@ final class TarArchiveInputStreamAdapter implements ArchiveInput<TarArchiveEntry
             public boolean isDirectory() { return entry.isDirectory(); }
 
             @Override
-            public TarArchiveEntry entry() { return entry; }
+            public SevenZArchiveEntry entry() { return entry; }
 
             @Override
             public Socket<InputStream> input() {
-                return stream(tar).input().map(in -> {
-                    if (entry != tar.getCurrentEntry()) {
-                        throw new IllegalStateException("The TAR input stream is currently reading a different entry.");
-                    }
-                    return in;
-                });
+                return () -> new InputStream() {
+
+                    @Override
+                    public int read() throws IOException { return sevenz.read(); }
+
+                    @Override
+                    public int read(byte[] b) throws IOException { return sevenz.read(b); }
+
+                    @Override
+                    public int read(byte[] b, int off, int len) throws IOException { return sevenz.read(b, off, len); }
+                };
             }
         };
     }
 
     @Override
-    public void close() throws IOException { tar.close(); }
+    public void close() throws IOException { sevenz.close(); }
 }

@@ -64,7 +64,7 @@ class ZipOutputStreamAdapter implements ArchiveOutput<ZipEntry> {
                     return new FilterOutputStream(zip) {
 
                         @Override
-                        public void close() throws IOException { ((ZipOutputStream) out).closeEntry(); }
+                        public void close() throws IOException { zip.closeEntry(); }
                     };
                 };
             }
