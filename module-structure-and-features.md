@@ -73,6 +73,7 @@ implementations of the abstractions provided by the `fun-io-api` module:
     + `lzma2` compresses/decompresses data using the LZMA2 format.
   + It also provides the following `ArchiveStore` functions:
     + `jar` provides read/write access to JAR files.
+    + `sevenz` provides copy-only access to 7zip files.
     + `tar` provides copy-only access to TAR files.
     + `zip` provides read/write access to ZIP files.
 + [![Fun I/O Jackson](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-jackson.svg?label=Fun%20I/O%20Jackson&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-jackson%22)
