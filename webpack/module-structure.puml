@@ -11,6 +11,7 @@ folder global.namespace.fun-io {
     [fun-io-api] <|-- [fun-io-jaxb]
     [fun-io-api] <--- [fun-io-scala-api]
     [fun-io-api] <|-- [fun-io-xz]
+    [fun-io-api] <|-- [fun-io-zstd]
 
     [fun-io-bios] <-- [fun-io-delta]
     [fun-io-jackson] <-- [fun-io-delta]
@@ -28,6 +29,8 @@ folder global.namespace.fun-io {
 [jaxb-api] <-- [fun-io-jaxb]
 
 [xz] <--- [fun-io-xz]
+
+[zstd-jni] <--- [fun-io-zstd]
 
 legend
 * APIs are in <back:Chartreuse>Chartreuse</back>
