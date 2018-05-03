@@ -112,12 +112,6 @@ class TransformedCodecSpec extends WordSpec {
     XZ.lzma2 + pbe + buffer,
     XZ.lzma2 + pbe + base64 + buffer,
 
-    pack200,
-    //pack200 + buffer,
-    //pack200 + base64 + buffer,
-    //pack200 + pbe + buffer,
-    //pack200 + pbe + base64 + buffer,
-
     pbe + buffer,
     pbe + base64 + buffer,
 
