@@ -26,6 +26,7 @@ import java.io.OutputStream;
 import static org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream.MAX_BLOCKSIZE;
 import static org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream.MIN_BLOCKSIZE;
 
+/** @author Christian Schlichtherle */
 final class BZIP2Filter implements Filter {
 
     private final int blockSize;

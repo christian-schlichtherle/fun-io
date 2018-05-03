@@ -24,6 +24,7 @@ import org.apache.commons.compress.compressors.lz77support.Parameters;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/** @author Christian Schlichtherle */
 final class BlockLZ4Filter implements Filter {
 
     private final Parameters parameters;

@@ -23,6 +23,7 @@ import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/** @author Christian Schlichtherle */
 final class LZMA2Filter implements Filter {
 
     private final int preset;

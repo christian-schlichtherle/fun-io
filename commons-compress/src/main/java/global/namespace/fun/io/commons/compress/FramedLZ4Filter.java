@@ -23,6 +23,7 @@ import org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorOutputStre
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/** @author Christian Schlichtherle */
 final class FramedLZ4Filter implements Filter {
 
     private final FramedLZ4CompressorOutputStream.Parameters parameters;

@@ -18,10 +18,10 @@ package global.namespace.fun.io.it
 import java.io.InputStream
 
 import global.namespace.fun.io.api.{Codec, Filter, Store}
-import global.namespace.fun.io.bios.{BIOS => B}
 import global.namespace.fun.io.bios.BIOS._
-import global.namespace.fun.io.commons.compress.{CommonsCompress => CC}
+import global.namespace.fun.io.bios.{BIOS => B}
 import global.namespace.fun.io.commons.compress.CommonsCompress._
+import global.namespace.fun.io.commons.compress.{CommonsCompress => CC}
 import global.namespace.fun.io.it.PBE.pbe
 import global.namespace.fun.io.jackson.Jackson._
 import global.namespace.fun.io.jaxb.JAXB.{xml => jaxb}
@@ -111,6 +111,12 @@ class TransformedCodecSpec extends WordSpec {
     XZ.lzma2 + base64 + buffer,
     XZ.lzma2 + pbe + buffer,
     XZ.lzma2 + pbe + base64 + buffer,
+
+    pack200,
+    //pack200 + buffer,
+    //pack200 + base64 + buffer,
+    //pack200 + pbe + buffer,
+    //pack200 + pbe + base64 + buffer,
 
     pbe + buffer,
     pbe + base64 + buffer,

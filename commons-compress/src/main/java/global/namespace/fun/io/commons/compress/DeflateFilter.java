@@ -24,6 +24,7 @@ import org.apache.commons.compress.compressors.deflate.DeflateParameters;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/** @author Christian Schlichtherle */
 final class DeflateFilter implements Filter {
 
     private final DeflateParameters parameters;

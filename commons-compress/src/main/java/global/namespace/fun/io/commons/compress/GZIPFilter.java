@@ -24,6 +24,7 @@ import org.apache.commons.compress.compressors.gzip.GzipParameters;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/** @author Christian Schlichtherle */
 final class GZIPFilter implements Filter {
 
     private final GzipParameters parameters;

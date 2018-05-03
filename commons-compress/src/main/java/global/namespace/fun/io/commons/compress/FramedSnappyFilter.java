@@ -25,6 +25,7 @@ import org.apache.commons.compress.compressors.snappy.FramedSnappyDialect;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/** @author Christian Schlichtherle */
 final class FramedSnappyFilter implements Filter {
 
     private final Parameters outputParameters;

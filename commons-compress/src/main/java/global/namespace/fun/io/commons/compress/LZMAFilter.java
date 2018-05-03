@@ -23,6 +23,7 @@ import org.apache.commons.compress.compressors.lzma.LZMACompressorOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/** @author Christian Schlichtherle */
 final class LZMAFilter implements Filter {
 
     @Override
