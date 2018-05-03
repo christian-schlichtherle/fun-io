@@ -128,7 +128,7 @@ lazy val scalaApi: Project = project
 
 lazy val xz: Project = project
   .in(file("xz"))
-  .dependsOn(bios)
+  .dependsOn(api)
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -140,7 +140,7 @@ lazy val xz: Project = project
 
 lazy val zstd: Project = project
   .in(file("zstd"))
-  .dependsOn(bios)
+  .dependsOn(api)
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
