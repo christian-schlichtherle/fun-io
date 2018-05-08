@@ -90,9 +90,9 @@ implementations of the abstractions provided by the `fun-io-api` module:
     + `lzma` compresses/decompresses data using the LZMA format.
     + `lzma2` compresses/decompresses data using the LZMA2 format.
     + `xz` compresses/decompresses data using the XZ format.
-+ [![Fun I/O Zstd](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-zstd-jni.svg?label=Fun%20I/O%20Zstd&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-zstd%22)
-  Depends on [Zstd-JNI] to provide implementations of the Fun I/O API.
-  + The `ZstdJNI` class is a facade which provides the following `Filter` functions:
++ [![Fun I/O Zstd](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-zstd.svg?label=Fun%20I/O%20Zstd&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-zstd%22)
+  Depends on [Zstd-jni] to provide implementations of the Fun I/O API.
+  + The `Zstd` class is a facade which provides the following `Filter` functions:
     + `zstd` compresses/decompresses data using the Zstd format.
 
 ## Application Modules
@@ -116,4 +116,4 @@ Like implementation modules, the provide a single facade class containing static
 [JAXB]: https://javaee.github.io/jaxb-v2/
 [Monoid]: https://en.wikipedia.org/wiki/Monoid
 [XZ for Java]: https://tukaani.org/xz/
-[Zstd JNI]: https://github.com/luben/zstd-jni
+[Zstd-jni]: https://github.com/luben/zstd-jni
