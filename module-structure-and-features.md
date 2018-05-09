@@ -98,7 +98,8 @@ implementations of the abstractions provided by the `fun-io-api` module:
 ## Application Modules
 
 Application modules depend on the API and expect some implementation to be injected for a particular task.
-Like implementation modules, the provide a single facade class containing static methods to solve their particular task: 
+Like implementation modules, they provide a single facade class containing static methods to solve their particular 
+task: 
 
 + [![Fun I/O Delta](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-delta.svg?label=Fun%20I/O%20Delta&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-delta%22)
   Provides utility functions for diffing and patching archive files or directories.
