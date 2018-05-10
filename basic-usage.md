@@ -27,12 +27,12 @@ Assuming Maven is used for Java and SBT for Scala, you need to add the following
     <dependency>
         <groupId>global.namespace.fun-io</groupId>
         <artifactId>fun-io-bios</artifactId>
-        <version>1.2.0</version>
+        <version>1.3.3</version>
     </dependency>
     <dependency>
         <groupId>global.namespace.fun-io</groupId>
         <artifactId>fun-io-jackson</artifactId>
-        <version>1.2.0</version>
+        <version>1.3.3</version>
     </dependency>
 </dependencies>
 {% endhighlight %}
@@ -42,9 +42,9 @@ Assuming Maven is used for Java and SBT for Scala, you need to add the following
 
 {% highlight scala %}
 libraryDependencies ++= Seq(
-  "global.namespace.fun-io" % "fun-io-bios" % "1.1.0",
-  "global.namespace.fun-io" % "fun-io-jackson" % "1.1.0",
-  "global.namespace.fun-io" %% "fun-io-scala-api" % "1.1.0"
+  "global.namespace.fun-io" % "fun-io-bios" % "1.3.1",
+  "global.namespace.fun-io" % "fun-io-jackson" % "1.3.1",
+  "global.namespace.fun-io" %% "fun-io-scala-api" % "1.3.1"
 )
 {% endhighlight %}
 
