@@ -160,28 +160,28 @@ public final class BIOS {
     ///////////////////////////
 
     /**
-     * Returns a source which loads the resource with the given {@code name} using
-     * {@link ClassLoader#getSystemResourceAsStream(String)}.
+     * Returns a source which loads the resource with the given {@code name} using the current thread's
+     * {@linkplain Thread#getContextClassLoader() context class loader}.
      *
      * @param  name the name of the resource to load.
      */
     public static Source resource(String name) {
-        return () -> () -> Optional
-                .ofNullable(ClassLoader.getSystemResourceAsStream(name))
-                .orElseThrow(() -> new FileNotFoundException(name));
+        return resource(name, Thread.currentThread().getContextClassLoader());
     }
 
     /**
-     * Returns a source which loads the resource with the given {@code name} using
-     * {@link ClassLoader#getResourceAsStream(String)}.
+     * Returns a source which loads the resource with the given {@code name} using the given nullable class loader.
      *
      * @param  name the name of the resource to load.
      * @param  classLoader
-     *         The class loader to use for loading the resource.
+     *         The nullable class loader to use for loading the resource.
+     *         If this is {@code null}, then the system class loader is used.
      */
     public static Source resource(String name, ClassLoader classLoader) {
         return () -> () -> Optional
-                .ofNullable(classLoader.getResourceAsStream(name))
+                .ofNullable(null == classLoader
+                        ? ClassLoader.getSystemResourceAsStream(name)
+                        : classLoader.getResourceAsStream(name))
                 .orElseThrow(() -> new FileNotFoundException(name));
     }
 
