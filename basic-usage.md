@@ -27,12 +27,12 @@ Assuming Maven is used for Java and SBT for Scala, you need to add the following
     <dependency>
         <groupId>global.namespace.fun-io</groupId>
         <artifactId>fun-io-bios</artifactId>
-        <version>1.3.3</version>
+        <version>1.3.1</version>
     </dependency>
     <dependency>
         <groupId>global.namespace.fun-io</groupId>
         <artifactId>fun-io-jackson</artifactId>
-        <version>1.3.3</version>
+        <version>1.3.1</version>
     </dependency>
 </dependencies>
 {% endhighlight %}
