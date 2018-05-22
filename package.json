@@ -1,11 +1,11 @@
 {
   "name": "software-documentation-template",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "This is a template for software documentation projects using Jekyll, PlantUML, webpack, Bootstrap, JQuery et al.",
   "main": "bundle.js",
   "scripts": {
     "build": "npm-run-all webpack 'jekyll build'",
-    "clean": "rm -rf _site assets node_modules vendor/bundle",
+    "clean": "rm -rf _site node_modules vendor",
     "prepare": "bundle install",
     "jekyll": "bundle exec jekyll",
     "start": "npm-run-all --parallel 'webpack -- -w' 'jekyll serve'",
