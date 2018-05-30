@@ -21,9 +21,10 @@ import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.api.Store;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.OptionalLong;
+
+import static java.util.Arrays.copyOfRange;
 
 final class MemoryStore implements Store {
 
@@ -63,12 +64,15 @@ final class MemoryStore implements Store {
     @Override
     public boolean exists() { return optContent.isPresent(); }
 
-    private byte[] checkedContent() throws FileNotFoundException {
-        return optContent.orElseThrow(FileNotFoundException::new);
+    private byte[] checkedContent() throws NoContentException {
+        return optContent.orElseThrow(NoContentException::new);
     }
 
     @Override
     public byte[] content(final int max) throws IOException {
+        if (max < 0) {
+            throw new IllegalArgumentException(max + " < 0");
+        }
         final Optional<byte[]> optContent = this.optContent;
         if (optContent.isPresent()) {
             final byte[] content = optContent.get();
@@ -84,7 +88,7 @@ final class MemoryStore implements Store {
     }
 
     @Override
-    public void content(byte[] content) throws IOException {
-        optContent = Optional.of(content.clone());
+    public void content(byte[] b, int off, int len) throws IOException {
+        optContent = Optional.of(copyOfRange(b, off, off + len));
     }
 }

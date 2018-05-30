@@ -15,10 +15,7 @@
  */
 package global.namespace.fun.io.api;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.OptionalLong;
 
 import static java.util.Objects.requireNonNull;
@@ -54,10 +51,10 @@ public interface Store extends Source, Sink {
         return new Store() {
 
             @Override
-            public Socket<OutputStream> output() { return t.apply(Store.this.output()); }
+            public Socket<InputStream> input() { return t.unapply(Store.this.input()); }
 
             @Override
-            public Socket<InputStream> input() { return t.unapply(Store.this.input()); }
+            public Socket<OutputStream> output() { return t.apply(Store.this.output()); }
 
             @Override
             public void delete() throws IOException { Store.this.delete(); }
@@ -70,20 +67,22 @@ public interface Store extends Source, Sink {
     /**
      * Returns the content of this store.
      *
-     * @throws NoContentException if there is no content.
      * @throws ContentTooLargeException if the content exceeds {@link Integer#MAX_VALUE} bytes.
-     * @throws IOException if the content cannot be read for some reason.
+     * @throws IOException if there is no content or if the content cannot be read for some reason.
      */
     default byte[] content() throws IOException { return content(Integer.MAX_VALUE); }
 
     /**
      * Returns the content of this store.
      *
-     * @throws NoContentException if there is no content.
+     * @throws IllegalArgumentException if {@code max} is less than zero.
      * @throws ContentTooLargeException if the content exceeds {@code max } bytes.
-     * @throws IOException if the content cannot be read for some reason.
+     * @throws IOException if there is no content or if the content cannot be read for some reason.
      */
     default byte[] content(final int max) throws IOException {
+        if (max < 0) {
+            throw new IllegalArgumentException(max + " < 0");
+        }
         final OptionalLong size = size();
         if (size.isPresent()) {
             final long length = size.getAsLong();
@@ -105,10 +104,15 @@ public interface Store extends Source, Sink {
         }
     }
 
-    /** Sets the content of this store. */
-    default void content(final byte[] content) throws IOException {
+    /** Sets the content of this store from the given byte array. */
+    default void content(byte[] b) throws IOException {
+        content(b, 0, b.length);
+    }
+
+    /** Sets the content of this store from the given byte array at the given offset and length. */
+    default void content(final byte[] b, final int off, final int len) throws IOException {
         try {
-            acceptWriter(out -> out.write(content));
+            acceptWriter(out -> out.write(b, off, len));
         } catch (IOException e) {
             throw e;
         } catch (Exception e) {

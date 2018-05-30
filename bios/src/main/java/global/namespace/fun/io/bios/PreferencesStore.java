@@ -27,6 +27,8 @@ import java.util.OptionalLong;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import static java.util.Arrays.copyOfRange;
+
 final class PreferencesStore implements Store {
 
     private final Preferences prefs;
@@ -61,16 +63,10 @@ final class PreferencesStore implements Store {
     }
 
     @Override
-    public boolean exists() throws IOException {
-        try {
-            return prefs.nodeExists("");
-        } catch (BackingStoreException e) {
-            throw new IOException(e);
-        }
-    }
-
-    @Override
     public byte[] content(final int max) throws IOException {
+        if (max < 0) {
+            throw new IllegalArgumentException(max + " < 0");
+        }
         final Optional<byte[]> optContent = optContent();
         if (optContent.isPresent()) {
             final byte[] content = optContent.get();
@@ -88,9 +84,14 @@ final class PreferencesStore implements Store {
     }
 
     @Override
-    public void content(final byte[] content) throws IOException {
-        prefs.putByteArray(key, content);
+    public void content(final byte[] b) throws IOException {
+        prefs.putByteArray(key, b);
         sync();
+    }
+
+    @Override
+    public void content(byte[] b, int off, int len) throws IOException {
+        content(copyOfRange(b, off, off + len));
     }
 
     private Optional<byte[]> optContent() { return Optional.ofNullable(prefs.getByteArray(key, null)); }
