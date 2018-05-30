@@ -15,10 +15,13 @@
  */
 package global.namespace.fun.io.bios;
 
+import global.namespace.fun.io.api.ContentTooLargeException;
+import global.namespace.fun.io.api.NoContentException;
 import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.api.Store;
 
 import java.io.*;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.OptionalLong;
 import java.util.prefs.BackingStoreException;
@@ -67,13 +70,21 @@ final class PreferencesStore implements Store {
     }
 
     @Override
-    public byte[] content() throws IOException {
-        return optContent()
-                .orElseThrow(() -> new FileNotFoundException(
-                        "Cannot locate the key \"" + key + "\" in the " +
-                                (prefs.isUserNode() ? "user" : "system") +
-                                " preferences node for the absolute path \"" +
-                                prefs.absolutePath() + "\"."));
+    public byte[] content(final int max) throws IOException {
+        final Optional<byte[]> optContent = optContent();
+        if (optContent.isPresent()) {
+            final byte[] content = optContent.get();
+            final int length = content.length;
+            if (length <= max) {
+                return content;
+            } else {
+                throw new ContentTooLargeException(length, max);
+            }
+        } else {
+            throw new NoContentException(String.format(Locale.ENGLISH,
+                    "Cannot locate the key \"%s\" in the %s preferences node for the absolute path \"%s\".",
+                    key, (prefs.isUserNode() ? "user" : "system"), prefs.absolutePath()));
+        }
     }
 
     @Override
@@ -82,12 +93,13 @@ final class PreferencesStore implements Store {
         sync();
     }
 
-    private Optional<byte[]> optContent() {
-        return Optional.ofNullable(prefs.getByteArray(key, null));
-    }
+    private Optional<byte[]> optContent() { return Optional.ofNullable(prefs.getByteArray(key, null)); }
 
     private void sync() throws IOException {
-        try { prefs.flush(); }
-        catch (final BackingStoreException e) { throw new IOException(e); }
+        try {
+            prefs.flush();
+        } catch (BackingStoreException e) {
+            throw new IOException(e);
+        }
     }
 }

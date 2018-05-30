@@ -15,10 +15,13 @@
  */
 package global.namespace.fun.io.bios;
 
+import global.namespace.fun.io.api.ContentTooLargeException;
+import global.namespace.fun.io.api.NoContentException;
 import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.api.Store;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.OptionalLong;
 
@@ -65,8 +68,19 @@ final class MemoryStore implements Store {
     }
 
     @Override
-    public byte[] content() throws IOException {
-        return optContent.map(byte[]::clone).orElseThrow(FileNotFoundException::new);
+    public byte[] content(final int max) throws IOException {
+        final Optional<byte[]> optContent = this.optContent;
+        if (optContent.isPresent()) {
+            final byte[] content = optContent.get();
+            final int length = content.length;
+            if (length <= max) {
+                return content.clone();
+            } else {
+                throw new ContentTooLargeException(length, max);
+            }
+        } else {
+            throw new NoContentException();
+        }
     }
 
     @Override

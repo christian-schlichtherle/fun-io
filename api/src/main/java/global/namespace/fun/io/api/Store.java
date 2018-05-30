@@ -70,25 +70,38 @@ public interface Store extends Source, Sink {
     /**
      * Returns the content of this store.
      *
-     * @throws IOException if co content is present or cannot be read for some reason.
-     * @throws IllegalStateException if the content length exceeds {@link Integer#MAX_VALUE}.
+     * @throws NoContentException if there is no content.
+     * @throws ContentTooLargeException if the content exceeds {@link Integer#MAX_VALUE} bytes.
+     * @throws IOException if the content cannot be read for some reason.
      */
-    default byte[] content() throws IOException {
-        try {
-            return input().map(DataInputStream::new).apply(in -> {
-                @SuppressWarnings("ConstantConditions")
-                final long length = size().getAsLong();
-                if (length > Integer.MAX_VALUE) {
-                    throw new IllegalStateException("Content length " + length + " exceeds Integer.MAX_VALUE.");
-                }
+    default byte[] content() throws IOException { return content(Integer.MAX_VALUE); }
+
+    /**
+     * Returns the content of this store.
+     *
+     * @throws NoContentException if there is no content.
+     * @throws ContentTooLargeException if the content exceeds {@code max } bytes.
+     * @throws IOException if the content cannot be read for some reason.
+     */
+    default byte[] content(final int max) throws IOException {
+        final OptionalLong size = size();
+        if (size.isPresent()) {
+            final long length = size.getAsLong();
+            if (length <= max) {
                 final byte[] content = new byte[(int) length];
-                in.readFully(content);
+                try {
+                    input().map(DataInputStream::new).accept(in -> in.readFully(content));
+                } catch (IOException | RuntimeException e) {
+                    throw e;
+                } catch (Exception e) {
+                    throw new IOException(e);
+                }
                 return content;
-            });
-        } catch (IOException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new IOException(e);
+            } else {
+                throw new ContentTooLargeException(length, max);
+            }
+        } else {
+            throw new NoContentException();
         }
     }
 
