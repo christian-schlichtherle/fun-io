@@ -23,6 +23,7 @@ import javax.crypto.Cipher;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
+import java.net.URL;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -173,15 +174,13 @@ public final class BIOS {
      * Returns a source which loads the resource with the given {@code name} using the given nullable class loader.
      *
      * @param  name the name of the resource to load.
-     * @param  classLoader
+     * @param  cl
      *         The nullable class loader to use for loading the resource.
      *         If this is {@code null}, then the system class loader is used.
      */
-    public static Source resource(String name, ClassLoader classLoader) {
+    public static Source resource(String name, ClassLoader cl) {
         return () -> () -> Optional
-                .ofNullable(null == classLoader
-                        ? ClassLoader.getSystemResourceAsStream(name)
-                        : classLoader.getResourceAsStream(name))
+                .ofNullable(null == cl ? ClassLoader.getSystemResourceAsStream(name) : cl.getResourceAsStream(name))
                 .orElseThrow(() -> new FileNotFoundException(name));
     }
 
@@ -199,6 +198,12 @@ public final class BIOS {
     public static Source stream(InputStream in) {
         requireNonNull(in);
         return () -> () -> new UncloseableInputStream(in);
+    }
+
+    /** Returns a source which reads the content of the given URL. */
+    public static Source url(URL url) {
+        requireNonNull(url);
+        return () -> url::openStream;
     }
 
       /////////////////////////
