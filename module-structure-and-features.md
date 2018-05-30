@@ -41,6 +41,7 @@ implementations of the abstractions provided by the `fun-io-api` module:
     + `resource` reads a resource from the class path.
     + `stdin` reads the standard input.
     + `stream` reads an arbitrary input stream without ever closing it.
+    + `url` reads the content of an URL.
   + It also provides the following `Sink` functions:
     + `stderr` writes to standard error.
     + `stdout` writes to standard output.
