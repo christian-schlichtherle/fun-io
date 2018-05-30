@@ -15,6 +15,9 @@
  */
 package global.namespace.fun.io.api;
 
+import global.namespace.fun.io.api.function.XConsumer;
+import global.namespace.fun.io.api.function.XFunction;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,37 +29,97 @@ public interface Buffer extends Store, Closeable {
     static Buffer of(Store s) {
         return new Buffer() {
 
-            boolean closed;
-
-            @Override
-            public Socket<OutputStream> output() {
-                check();
-                return s.output();
-            }
-
             @Override
             public Socket<InputStream> input() {
-                check();
                 return s.input();
             }
 
             @Override
+            public void acceptReader(XConsumer<? super InputStream> reader) throws Exception {
+                s.acceptReader(reader);
+            }
+
+            @Override
+            public <U> U applyReader(XFunction<? super InputStream, ? extends U> reader) throws Exception {
+                return s.applyReader(reader);
+            }
+
+            @Override
+            public Socket<OutputStream> output() {
+                return s.output();
+            }
+
+            @Override
+            public void acceptWriter(XConsumer<? super OutputStream> writer) throws Exception {
+                s.acceptWriter(writer);
+            }
+
+            @Override
+            public <U> U applyWriter(XFunction<? super OutputStream, ? extends U> writer) throws Exception {
+                return s.applyWriter(writer);
+            }
+
+            @Override
             public void delete() throws IOException {
-                check();
                 s.delete();
             }
 
             @Override
             public OptionalLong size() throws IOException {
-                check();
                 return s.size();
             }
 
-            private void check() {
-                if (closed) {
-                    throw new IllegalStateException("This buffer is already closed.");
-                }
+            @Override
+            public boolean exists() throws IOException {
+                return s.exists();
             }
+
+            @Override
+            public ConnectedCodec connect(Codec c) {
+                return s.connect(c);
+            }
+
+            @Override
+            public byte[] content() throws IOException {
+                return s.content();
+            }
+
+            @Override
+            public byte[] content(int max) throws IOException {
+                return s.content(max);
+            }
+
+            @Override
+            public void content(byte[] b) throws IOException {
+                s.content(b);
+            }
+
+            @Override
+            public void content(byte[] b, int off, int len) throws IOException {
+                s.content(b, off, len);
+            }
+        };
+    }
+
+    /**
+     * Returns a buffer which applies the given filter to the I/O streams loaned by this buffer.
+     *
+     * @param t the filter to apply to the I/O streams loaned by this buffer.
+     */
+    default Buffer map(Filter t) {
+        return new Buffer() {
+
+            @Override
+            public Socket<InputStream> input() { return t.unapply(Buffer.this.input()); }
+
+            @Override
+            public Socket<OutputStream> output() { return t.apply(Buffer.this.output()); }
+
+            @Override
+            public void delete() throws IOException { Buffer.this.delete(); }
+
+            @Override
+            public OptionalLong size() throws IOException { return Buffer.this.size(); }
         };
     }
 
