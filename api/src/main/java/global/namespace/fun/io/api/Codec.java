@@ -46,10 +46,33 @@ public interface Codec {
      * decoding it again.
      */
     default <T> T clone(T t, XSupplier<Store> storeSupplier) throws Exception {
-        return clone(t, (Socket<Buffer>) () -> Buffer.of(storeSupplier.get()));
+        final Store s = storeSupplier.get();
+        Throwable e = null;
+        try {
+            return connect(s).clone(t);
+        } catch (Throwable e2) {
+            e = e2;
+            throw e2;
+        } finally {
+            if (e != null) {
+                try {
+                    s.deleteIfExists();
+                } catch (Throwable e2) {
+                    e.addSuppressed(e2);
+                }
+            } else {
+                s.deleteIfExists();
+            }
+        }
     }
 
-    /** Returns a deep clone of the given object by encoding it to a loaned buffer and decoding it again. */
+    /**
+     * Returns a deep clone of the given object by encoding it to a loaned buffer and decoding it again.
+     *
+     * @deprecated The {@link Buffer} interface is redundant since the introduction of {@link Store#deleteIfExists()} in
+     *             Fun I/O 1.4.0.
+     */
+    @Deprecated
     default <T> T clone(T t, Socket<Buffer> bufferSocket) throws Exception {
         return bufferSocket.apply(buffer -> connect(buffer).clone(t));
     }

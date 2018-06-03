@@ -62,7 +62,13 @@ final class RealPathStore implements BIOS.FileStore, BIOS.PathStore {
     public Socket<OutputStream> output() { return () -> newOutputStream(path, outputOptions); }
 
     @Override
+    public void deleteIfExists() throws IOException { Files.deleteIfExists(path); }
+
+    @Override
     public void delete() throws IOException { Files.delete(path); }
+
+    @Override
+    public boolean exists() { return Files.exists(path); }
 
     @Override
     public OptionalLong size() throws IOException {
@@ -72,7 +78,4 @@ final class RealPathStore implements BIOS.FileStore, BIOS.PathStore {
             return OptionalLong.empty();
         }
     }
-
-    @Override
-    public boolean exists() { return Files.exists(path); }
 }

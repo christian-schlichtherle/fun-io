@@ -30,14 +30,20 @@ public interface Store extends Source, Sink {
     /** The default buffer size, which is {@value}. */
     int BUFSIZE = 8 * 1024;
 
+    default void deleteIfExists() throws IOException {
+        if (exists()) {
+            delete();
+        }
+    }
+
     /** Deletes the content of this store. */
     void delete() throws IOException;
 
-    /** Returns the size of the content of this store, if present. */
-    OptionalLong size() throws IOException;
-
     /** Returns {@code true} if and only if some content exists in this store. */
     default boolean exists() throws IOException { return size().isPresent(); }
+
+    /** Returns the size of the content of this store, if present. */
+    OptionalLong size() throws IOException;
 
     /** Connects this store to the given codec. */
     default ConnectedCodec connect(Codec c) { return Internal.connect(requireNonNull(c), this); }

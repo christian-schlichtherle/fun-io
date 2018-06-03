@@ -24,6 +24,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.OptionalLong;
 
+/**
+ * @deprecated The {@link Buffer} interface is redundant since the introduction of {@link Store#deleteIfExists()} in
+ *             Fun I/O 1.4.0.
+ */
+@Deprecated
 public interface Buffer extends Store, Closeable {
 
     static Buffer of(Store s) {
@@ -124,9 +129,5 @@ public interface Buffer extends Store, Closeable {
     }
 
     /** Deletes the content of this buffer, if any. */
-    default void close() throws IOException {
-        if (exists()) {
-            delete();
-        }
-    }
+    default void close() throws IOException { deleteIfExists(); }
 }
