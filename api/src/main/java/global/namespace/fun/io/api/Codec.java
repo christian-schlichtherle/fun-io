@@ -45,25 +45,9 @@ public interface Codec {
      * Returns a deep clone of the given object by encoding it to a temporary store obtained from the given supplier and
      * decoding it again.
      */
-    default <T> T clone(T t, XSupplier<Store> storeSupplier) throws Exception {
-        final Store s = storeSupplier.get();
-        Throwable e = null;
-        try {
-            return connect(s).clone(t);
-        } catch (Throwable e2) {
-            e = e2;
-            throw e2;
-        } finally {
-            if (e != null) {
-                try {
-                    s.deleteIfExists();
-                } catch (Throwable e2) {
-                    e.addSuppressed(e2);
-                }
-            } else {
-                s.deleteIfExists();
-            }
-        }
+    default <T> T clone(final T t, final XSupplier<Store> storeSupplier) throws Exception {
+        final Socket<CompositeClosable<Store>> s = () -> CompositeClosable.of(storeSupplier.get(), Store::deleteIfExists);
+        return s.apply(cc -> connect(cc.get()).clone(t));
     }
 
     /**
