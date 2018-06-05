@@ -2,10 +2,28 @@
 title: Basic Usage
 ---
 
+## Design Concept
+
+Fun I/O employs a few simple design principles:
+
++ The API is defined by abstract classes and interfaces in the module `fun-io-api`.
++ The module `fun-io-scala-api` adds operators and implicit conversions for an enhanced development experience in Scala.
++ Each implementation module provides a single facade class which consists of one or more static factory methods.
++ Each static factory method returns an instance of a class or interface defined by the API without revealing the actual 
+  implementation class.
++ Except for their expected side effect (e.g. reading or writing data), implementations are virtually stateless, and 
+  hence reusable and trivially thread-safe.
+
+With this design, the canonical way of using Fun I/O is to import some static factory methods from one or more facade 
+classes.
+It's perfectly fine to import all static factory methods using a wildcard like `*`.
+However, for the purpose of showing the originating facade class, the examples on this page do not use wildcard imports 
+for static factory methods.
+
 ## Configuring The Classpath
 
-First of all you need to decide on the set of features required by your application and add their respective modules to 
-its class path - see [Module Structure And Features].
+Once you've decided on the set of features required by your application you need to add the respective modules to the 
+class path - see [Module Structure And Features].
 A Java application typically has a dependency on `fun-io-bios`.
 A Scala application typically has the same dependencies as a Java application plus an additional dependency on
 `fun-io-scala-api` to improve the development experience in Scala. 
@@ -50,24 +68,6 @@ libraryDependencies ++= Seq(
 
   </div>
 </div>
-
-## Design Concept
-
-Fun I/O employs a few simple design principles:
-
-+ The API is defined by abstract classes and interfaces in the module `fun-io-api`.
-+ The module `fun-io-scala-api` adds operators and implicit conversions for an enhanced development experience in Scala.
-+ Each implementation module provides a single facade class which consists of one or more static factory methods.
-+ Each static factory method returns an instance of a class or interface defined by the API without revealing the actual 
-  implementation class.
-+ Except for their expected side effect (e.g. reading or writing data), implementations are virtually stateless, and 
-  hence reusable and trivially thread-safe.
-
-With this design, the canonical way of using Fun I/O is to import some static factory methods from one or more facade 
-classes, as you will see on this page.
-It's perfectly fine to import all static factory methods using a wildcard like `*`.
-However, for the purpose of showing the originating facade class, the examples on this page do not use wildcard imports 
-for static factory methods.
 
 ## Encoding Objects
 
