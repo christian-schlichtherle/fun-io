@@ -10,10 +10,10 @@ name.
 ## Some Algebra
 
 Filters are associative by nature, which means that `a.andThen(b).andThen(c) = a.andThen(b.andThen(c))`, where `a`, `b` 
-and `c` are `Filter`s and `andThen` is an operation to apply two filters in order.
-The same axiom holds for the `compose` operation, which applies two filters in reverse order. 
+and `c` are `Filter` instances and `andThen` is an operation to apply two filter instances in order.
+The same axiom holds for the `compose` operation, which applies two filter instances in reverse order. 
 There is also a trivial identity element, which simply does nothing.
-Hence, `Filter`s form a [monoid] under the operations `andThen` and `compose`. 
+Hence, the `Filter` interface forms a [monoid] under the operations `andThen` and `compose`. 
  
 ## How To Use A Filter
 
