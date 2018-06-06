@@ -10,6 +10,6 @@ al.
 Fun I/O supports Java 8 or later and Scala 2.10, 2.11 and 2.12 equally well via dedicated APIs and is covered by the 
 Apache License, version 2.0.
 
-## Documentation
+## User Documentation
 
 User documentation is available at https://christian-schlichtherle.github.io/fun-io/ .
