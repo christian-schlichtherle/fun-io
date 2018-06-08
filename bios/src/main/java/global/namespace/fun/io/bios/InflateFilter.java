@@ -28,7 +28,7 @@ import java.util.zip.DeflaterInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterOutputStream;
 
-public class InflateFilter implements Filter {
+final class InflateFilter implements Filter {
 
     private final XSupplier<Inflater> inflaterSupplier;
     private final XSupplier<Deflater> deflaterSupplier;
