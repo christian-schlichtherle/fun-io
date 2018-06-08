@@ -16,7 +16,7 @@ import static java.util.Optional.empty;
  * @author Christian Schlichtherle
  */
 @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "ConstantConditions"})
-public class ArchiveDiffBuilder {
+public final class ArchiveDiffBuilder {
 
     private Optional<MessageDigest> digest = empty();
 

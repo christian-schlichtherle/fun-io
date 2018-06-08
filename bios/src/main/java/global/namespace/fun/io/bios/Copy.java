@@ -35,7 +35,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Christian Schlichtherle (copied and edited from the {@code Streams} class in TrueCommons I/O 2.3.2)
  */
-class Copy {
+final class Copy {
 
     private Copy() { }
 

@@ -28,7 +28,7 @@ import static java.util.Collections.emptyList;
  *
  * @author Christian Schlichtherle
  */
-public class Delta {
+public final class Delta {
 
     private Delta() { }
 

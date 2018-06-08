@@ -22,7 +22,7 @@ import global.namespace.fun.io.api.Filter;
  *
  * @author Christian Schlichtherle
  */
-public class Zstd {
+public final class Zstd {
 
     private Zstd() { }
 

@@ -21,7 +21,7 @@ package global.namespace.fun.io.bios;
  * @author Christian Schlichtherle (copied and edited from TrueUpdate 0.8.1, where it was copied and edited from
  *                                  TrueCommons I/O 2.3.2)
  */
-class ThreadGroups {
+final class ThreadGroups {
 
     private ThreadGroups() { }
 

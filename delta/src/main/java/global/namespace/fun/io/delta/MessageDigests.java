@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author Christian Schlichtherle
  */
-class MessageDigests {
+final class MessageDigests {
 
     private MessageDigests() { }
 

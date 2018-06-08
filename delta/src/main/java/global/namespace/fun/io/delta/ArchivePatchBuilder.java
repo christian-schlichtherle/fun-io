@@ -13,7 +13,7 @@ import static java.util.Optional.empty;
  * @author Christian Schlichtherle
  */
 @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "ConstantConditions"})
-public class ArchivePatchBuilder {
+public final class ArchivePatchBuilder {
 
     private Optional<ArchiveSource<?>> base = empty(), delta = empty();
 
