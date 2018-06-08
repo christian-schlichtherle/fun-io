@@ -4,7 +4,6 @@
  */
 package global.namespace.fun.io.bios;
 
-import global.namespace.fun.io.api.ArchiveEntrySink;
 import global.namespace.fun.io.api.ArchiveEntrySource;
 import global.namespace.fun.io.api.ArchiveInput;
 import global.namespace.fun.io.api.Socket;
@@ -17,7 +16,6 @@ import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import static global.namespace.fun.io.bios.BIOS.copy;
 import static java.util.Objects.requireNonNull;
 
 /**
