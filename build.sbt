@@ -29,6 +29,7 @@ lazy val api: Project = project
   .settings(
     libraryDependencies ++= Seq(
       MockitoCore % Test,
+      Scalacheck % Test,
       Scalatest % Test
     ),
     name := "Fun I/O API",
@@ -42,6 +43,7 @@ lazy val bios: Project = project
   .settings(
     libraryDependencies ++= Seq(
       MockitoCore % Test,
+      Scalacheck % Test,
       Scalatest % Test
     ),
     name := "Fun I/O Basic",

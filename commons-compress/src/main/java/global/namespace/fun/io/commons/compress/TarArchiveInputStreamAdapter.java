@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static global.namespace.fun.io.api.ArchiveEntryNames.isInternal;
 import static global.namespace.fun.io.bios.BIOS.stream;
 
 /**
@@ -36,14 +37,23 @@ final class TarArchiveInputStreamAdapter implements ArchiveInput<TarArchiveEntry
 
             @Override
             public boolean hasNext() {
-                if (null == next) {
+                if (null != next) {
+                    return true;
+                } else {
                     try {
-                        next = tar.getNextTarEntry();
+                        TarArchiveEntry entry;
+                        while (null != (entry = tar.getNextTarEntry())) {
+                            if (isInternal(entry.getName())) {
+                                next = entry;
+                                return true;
+                            }
+                        }
                     } catch (IOException e) {
                         next = e;
+                        return true;
                     }
+                    return false;
                 }
-                return null != next;
             }
 
             @Override

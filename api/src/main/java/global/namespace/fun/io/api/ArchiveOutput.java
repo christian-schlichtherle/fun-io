@@ -17,6 +17,14 @@ public interface ArchiveOutput<E> extends Closeable {
     /** Returns {@code true} if and only if this is a JAR file. */
     boolean isJar();
 
-    /** Returns a sink for writing the archive entry with the given name. */
+    /**
+     * Returns a sink for writing the archive entry with the given name.
+     *
+     * @param name the archive entry name, where elements are separated by {@code /} and directory names end with a
+     *             {@code /}.
+     * @throws IllegalArgumentException if the normalized form of the given archive entry name is absolute or empty or
+     *                                  has {@code ..} as its first path segment.
+     * @see ArchiveEntryNames#requireInternal(String)
+     */
     ArchiveEntrySink<E> sink(String name);
 }

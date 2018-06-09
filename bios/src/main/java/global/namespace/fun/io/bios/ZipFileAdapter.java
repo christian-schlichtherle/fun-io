@@ -12,10 +12,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import static global.namespace.fun.io.api.ArchiveEntryNames.isInternal;
+import static global.namespace.fun.io.api.ArchiveEntryNames.requireInternal;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -34,18 +37,40 @@ final class ZipFileAdapter implements ArchiveInput<ZipEntry> {
         return new Iterator<ArchiveEntrySource<ZipEntry>>() {
 
             final Enumeration<? extends ZipEntry> en = zip.entries();
+            ZipEntry next;
 
             @Override
-            public boolean hasNext() { return en.hasMoreElements(); }
+            public boolean hasNext() {
+                if (null != next) {
+                    return true;
+                } else {
+                    while (en.hasMoreElements()) {
+                        final ZipEntry entry = en.nextElement();
+                        if (isInternal(entry.getName())) {
+                            next = entry;
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            }
 
             @Override
-            public ArchiveEntrySource<ZipEntry> next() { return source(en.nextElement()); }
+            public ArchiveEntrySource<ZipEntry> next() {
+                if (hasNext()) {
+                    final ZipEntry entry = next;
+                    next = null;
+                    return source(entry);
+                } else {
+                    throw new NoSuchElementException();
+                }
+            }
         };
     }
 
     @Override
     public Optional<ArchiveEntrySource<ZipEntry>> source(String name) {
-        return Optional.ofNullable(zip.getEntry(name)).map(this::source);
+        return Optional.ofNullable(zip.getEntry(requireInternal(name))).map(this::source);
     }
 
     private ArchiveEntrySource<ZipEntry> source(ZipEntry entry) {

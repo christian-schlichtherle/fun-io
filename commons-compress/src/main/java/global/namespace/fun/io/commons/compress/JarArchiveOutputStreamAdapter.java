@@ -10,6 +10,8 @@ import org.apache.commons.compress.archivers.jar.JarArchiveEntry;
 import org.apache.commons.compress.archivers.jar.JarArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 
+import static global.namespace.fun.io.api.ArchiveEntryNames.requireInternal;
+
 /**
  * Adapts a {@link JarArchiveOutputStream} to an {@link ArchiveOutput}.
  *
@@ -24,5 +26,7 @@ final class JarArchiveOutputStreamAdapter extends ZipArchiveOutputStreamAdapter 
     public boolean isJar() { return true; }
 
     @Override
-    public ArchiveEntrySink<ZipArchiveEntry> sink(String name) { return sink(new JarArchiveEntry(name)); }
+    public ArchiveEntrySink<ZipArchiveEntry> sink(String name) {
+        return sink(new JarArchiveEntry(requireInternal(name)));
+    }
 }

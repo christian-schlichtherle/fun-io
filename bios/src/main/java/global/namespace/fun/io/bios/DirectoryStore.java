@@ -10,11 +10,13 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.Optional;
 
+import static global.namespace.fun.io.api.ArchiveEntryNames.requireInternal;
 import static global.namespace.fun.io.bios.BIOS.copy;
 
 /**
@@ -26,8 +28,13 @@ import static global.namespace.fun.io.bios.BIOS.copy;
 final class DirectoryStore implements ArchiveStore<Path> {
 
     private final Path directory;
+    private final String separator;
 
-    DirectoryStore(final Path directory) { this.directory = directory; }
+    DirectoryStore(final Path directory) {
+        this.directory = directory;
+        final FileSystem fs = directory.getFileSystem();
+        this.separator = fs.getSeparator();
+    }
 
     @Override
     public Socket<ArchiveInput<Path>> input() {
@@ -55,7 +62,7 @@ final class DirectoryStore implements ArchiveStore<Path> {
             ArchiveEntrySource<Path> source(Path path) {
                 return new ArchiveEntrySource<Path>() {
 
-                    final String name = directory.relativize(path).toString();
+                    final String name = relativize(path);
 
                     @Override
                     public String name() { return isDirectory() ? name + '/' : name; }
@@ -106,7 +113,7 @@ final class DirectoryStore implements ArchiveStore<Path> {
             ArchiveEntrySink<Path> sink(Path path) {
                 return new ArchiveEntrySink<Path>() {
 
-                    final String name = directory.relativize(path).toString();
+                    final String name = relativize(path);
 
                     @Override
                     public String name() { return isDirectory() ? name + '/' : name; }
@@ -154,5 +161,11 @@ final class DirectoryStore implements ArchiveStore<Path> {
         };
     }
 
-    private Path resolve(String name) { return directory.resolve(name); }
+    private Path resolve(String name) {
+        return directory.resolve(requireInternal(name).replace("/", separator));
+    }
+
+    private String relativize(Path path) {
+        return directory.relativize(path).toString().replace(separator, "/");
+    }
 }

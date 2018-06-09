@@ -14,6 +14,7 @@ import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import static global.namespace.fun.io.api.ArchiveEntryNames.requireInternal;
 import static global.namespace.fun.io.bios.BIOS.copy;
 
 /**
@@ -32,7 +33,7 @@ final class SevenZOutputFileAdapter implements ArchiveOutput<SevenZArchiveEntry>
 
     public ArchiveEntrySink<SevenZArchiveEntry> sink(String name) {
         final SevenZArchiveEntry entry = new SevenZArchiveEntry();
-        entry.setName(name);
+        entry.setName(requireInternal(name));
         return sink(entry);
     }
 

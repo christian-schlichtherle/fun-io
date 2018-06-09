@@ -11,6 +11,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
+import static global.namespace.fun.io.api.ArchiveEntryNames.requireInternal;
+
 /**
  * Adapts a {@link JarOutputStream} to an {@link ArchiveOutput}.
  *
@@ -25,5 +27,5 @@ final class JarOutputStreamAdapter extends ZipOutputStreamAdapter {
     public boolean isJar() { return true; }
 
     @Override
-    public ArchiveEntrySink<ZipEntry> sink(String name) { return sink(new JarEntry(name)); }
+    public ArchiveEntrySink<ZipEntry> sink(String name) { return sink(new JarEntry(requireInternal(name))); }
 }

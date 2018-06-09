@@ -17,6 +17,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static global.namespace.fun.io.api.ArchiveEntryNames.isInternal;
+
 /**
  * Adapts a {@link TarArchiveInputStream} to an {@link ArchiveInput}.
  *
@@ -35,14 +37,23 @@ final class SevenZFileAdapter implements ArchiveInput<SevenZArchiveEntry> {
 
             @Override
             public boolean hasNext() {
-                if (null == next) {
+                if (null != next) {
+                    return true;
+                } else {
                     try {
-                        next = sevenz.getNextEntry();
+                        SevenZArchiveEntry entry;
+                        while (null != (entry = sevenz.getNextEntry())) {
+                            if (isInternal(entry.getName())) {
+                                next = entry;
+                                return true;
+                            }
+                        }
                     } catch (IOException e) {
                         next = e;
+                        return true;
                     }
+                    return false;
                 }
-                return null != next;
             }
 
             @Override

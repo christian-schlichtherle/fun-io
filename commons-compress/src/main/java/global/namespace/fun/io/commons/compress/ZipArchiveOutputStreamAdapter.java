@@ -15,6 +15,7 @@ import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import static global.namespace.fun.io.api.ArchiveEntryNames.requireInternal;
 import static global.namespace.fun.io.bios.BIOS.copy;
 
 /**
@@ -33,7 +34,9 @@ class ZipArchiveOutputStreamAdapter implements ArchiveOutput<ZipArchiveEntry> {
     public boolean isJar() { return false; }
 
     @Override
-    public ArchiveEntrySink<ZipArchiveEntry> sink(String name) { return sink(new ZipArchiveEntry(name)); }
+    public ArchiveEntrySink<ZipArchiveEntry> sink(String name) {
+        return sink(new ZipArchiveEntry(requireInternal(name)));
+    }
 
     ArchiveEntrySink<ZipArchiveEntry> sink(ZipArchiveEntry entry) {
         return new ArchiveEntrySink<ZipArchiveEntry>() {

@@ -15,6 +15,7 @@ import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import static global.namespace.fun.io.api.ArchiveEntryNames.requireInternal;
 import static global.namespace.fun.io.bios.BIOS.copy;
 
 /**
@@ -31,7 +32,9 @@ final class TarArchiveOutputStreamAdapter implements ArchiveOutput<TarArchiveEnt
     /** Returns {@code false}. */
     public boolean isJar() { return false; }
 
-    public ArchiveEntrySink<TarArchiveEntry> sink(String name) { return sink(new TarArchiveEntry(name)); }
+    public ArchiveEntrySink<TarArchiveEntry> sink(String name) {
+        return sink(new TarArchiveEntry(requireInternal(name)));
+    }
 
     private ArchiveEntrySink<TarArchiveEntry> sink(TarArchiveEntry entry) {
         return new ArchiveEntrySink<TarArchiveEntry>() {
