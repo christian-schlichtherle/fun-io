@@ -24,7 +24,6 @@ public interface ArchiveOutput<E> extends Closeable {
      *             {@code /}.
      * @throws IllegalArgumentException if the normalized form of the given archive entry name is absolute or empty or
      *                                  has {@code ..} as its first path segment.
-     * @see ArchiveEntryNames#requireInternal(String)
      */
     ArchiveEntrySink<E> sink(String name);
 }

@@ -16,7 +16,7 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.Optional;
 
-import static global.namespace.fun.io.api.ArchiveEntryNames.requireInternal;
+import static global.namespace.fun.io.bios.ArchiveEntryNames.requireInternal;
 import static global.namespace.fun.io.bios.BIOS.copy;
 
 /**

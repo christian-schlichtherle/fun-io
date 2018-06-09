@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package global.namespace.fun.io.api
+package global.namespace.fun.io.bios
 
-import global.namespace.fun.io.api.ArchiveEntryNames.requireInternal
+import global.namespace.fun.io.bios.ArchiveEntryNames.requireInternal
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
 import org.scalatest.prop.PropertyChecks._

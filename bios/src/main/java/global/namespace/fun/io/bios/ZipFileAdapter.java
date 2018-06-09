@@ -17,8 +17,8 @@ import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import static global.namespace.fun.io.api.ArchiveEntryNames.isInternal;
-import static global.namespace.fun.io.api.ArchiveEntryNames.requireInternal;
+import static global.namespace.fun.io.bios.ArchiveEntryNames.isInternal;
+import static global.namespace.fun.io.bios.ArchiveEntryNames.requireInternal;
 import static java.util.Objects.requireNonNull;
 
 /**

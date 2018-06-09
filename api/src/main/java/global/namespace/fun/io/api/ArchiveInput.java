@@ -25,7 +25,6 @@ public interface ArchiveInput<E> extends Iterable<ArchiveEntrySource<E>>, Closea
      *                                       random access, e.g. the TAR file format.
      * @throws IllegalArgumentException if the normalized form of the given archive entry name is absolute or empty or
      *                                  has {@code ..} as its first path segment.
-     * @see ArchiveEntryNames#requireInternal(String)
      */
     Optional<ArchiveEntrySource<E>> source(String name);
 }

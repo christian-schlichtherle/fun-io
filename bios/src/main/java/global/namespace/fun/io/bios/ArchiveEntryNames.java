@@ -2,7 +2,7 @@
  * Copyright (C) 2013-2018 Schlichtherle IT Services.
  * All rights reserved. Use is subject to license terms.
  */
-package global.namespace.fun.io.api;
+package global.namespace.fun.io.bios;
 
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;

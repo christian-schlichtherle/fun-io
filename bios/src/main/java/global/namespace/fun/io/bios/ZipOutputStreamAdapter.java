@@ -15,7 +15,7 @@ import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static global.namespace.fun.io.api.ArchiveEntryNames.requireInternal;
+import static global.namespace.fun.io.bios.ArchiveEntryNames.requireInternal;
 import static global.namespace.fun.io.bios.BIOS.copy;
 import static java.util.Objects.requireNonNull;
 

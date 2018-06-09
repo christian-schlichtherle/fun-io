@@ -11,7 +11,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
-import static global.namespace.fun.io.api.ArchiveEntryNames.requireInternal;
+import static global.namespace.fun.io.bios.ArchiveEntryNames.requireInternal;
 
 /**
  * Adapts a {@link JarOutputStream} to an {@link ArchiveOutput}.
