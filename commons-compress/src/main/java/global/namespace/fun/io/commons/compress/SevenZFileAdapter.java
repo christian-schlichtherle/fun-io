@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static global.namespace.fun.io.bios.ArchiveEntryNames.isInternal;
+import static global.namespace.fun.io.spi.ArchiveEntryNames.isInternal;
 
 /**
  * Adapts a {@link TarArchiveInputStream} to an {@link ArchiveInput}.

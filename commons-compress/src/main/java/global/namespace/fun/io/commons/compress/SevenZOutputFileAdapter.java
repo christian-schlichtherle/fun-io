@@ -14,8 +14,8 @@ import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static global.namespace.fun.io.bios.ArchiveEntryNames.requireInternal;
-import static global.namespace.fun.io.bios.BIOS.copy;
+import static global.namespace.fun.io.spi.ArchiveEntryNames.requireInternal;
+import static global.namespace.fun.io.spi.Copy.copy;
 
 /**
  * Adapts a {@link SevenZOutputFile} to an {@link ArchiveOutput}.

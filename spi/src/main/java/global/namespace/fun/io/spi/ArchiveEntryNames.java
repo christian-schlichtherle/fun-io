@@ -2,7 +2,7 @@
  * Copyright (C) 2013-2018 Schlichtherle IT Services.
  * All rights reserved. Use is subject to license terms.
  */
-package global.namespace.fun.io.bios;
+package global.namespace.fun.io.spi;
 
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -16,10 +16,9 @@ import java.nio.file.Path;
 public final class ArchiveEntryNames {
 
     private static final FileSystem fileSystem = FileSystems.getDefault();
+    private static final Path dotDot = fileSystem.getPath("..");
+    private static final Path empty = fileSystem.getPath("");
     private static final String separator = fileSystem.getSeparator();
-    private static final Path empty = fileSystem.getPath(""), dotDot = fileSystem.getPath("..");
-
-    private ArchiveEntryNames() { }
 
     /**
      * Returns the normalized form of the given archive entry name.

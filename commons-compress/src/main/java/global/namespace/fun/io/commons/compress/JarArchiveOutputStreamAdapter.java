@@ -10,7 +10,7 @@ import org.apache.commons.compress.archivers.jar.JarArchiveEntry;
 import org.apache.commons.compress.archivers.jar.JarArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 
-import static global.namespace.fun.io.bios.ArchiveEntryNames.requireInternal;
+import static global.namespace.fun.io.spi.ArchiveEntryNames.requireInternal;
 
 /**
  * Adapts a {@link JarArchiveOutputStream} to an {@link ArchiveOutput}.

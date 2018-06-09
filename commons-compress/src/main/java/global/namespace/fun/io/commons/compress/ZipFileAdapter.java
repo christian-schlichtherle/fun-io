@@ -17,8 +17,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static global.namespace.fun.io.bios.ArchiveEntryNames.isInternal;
-import static global.namespace.fun.io.bios.ArchiveEntryNames.requireInternal;
+import static global.namespace.fun.io.spi.ArchiveEntryNames.isInternal;
+import static global.namespace.fun.io.spi.ArchiveEntryNames.requireInternal;
 
 /**
  * Adapts a {@link ZipFile} to an {@link ArchiveInput}.

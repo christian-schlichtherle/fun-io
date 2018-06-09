@@ -18,6 +18,9 @@ package global.namespace.fun.io.bios;
 import global.namespace.fun.io.api.*;
 import global.namespace.fun.io.api.function.XFunction;
 import global.namespace.fun.io.api.function.XSupplier;
+import global.namespace.fun.io.spi.Copy;
+import global.namespace.fun.io.spi.UncloseableInputStream;
+import global.namespace.fun.io.spi.UncloseableOutputStream;
 
 import javax.crypto.Cipher;
 import java.beans.XMLDecoder;
@@ -370,13 +373,7 @@ public final class BIOS {
      * @param source the archive source to read the entries from.
      * @param sink the archive sink to write the entries to.
      */
-    public static void copy(final ArchiveSource<?> source, final ArchiveSink<?> sink) throws Exception {
-        source.acceptReader(input -> sink.acceptWriter(output -> {
-            for (ArchiveEntrySource<?> entry : input) {
-                entry.copyTo(output.sink(entry.name()));
-            }
-        }));
-    }
+    public static void copy(ArchiveSource<?> source, ArchiveSink<?> sink) throws Exception { Copy.copy(source, sink); }
 
     /**
      * Copies the data from the given source to the given sink.
@@ -388,7 +385,7 @@ public final class BIOS {
      * @param source the source for reading the data from.
      * @param sink the sink for writing the data to.
      */
-    public static void copy(Source source, Sink sink) throws Exception { copy(source.input(), sink.output()); }
+    public static void copy(Source source, Sink sink) throws Exception { Copy.copy(source, sink); }
 
     /**
      * Copies the data from the given input stream socket to the given output stream socket.
@@ -401,7 +398,7 @@ public final class BIOS {
      * @param output the output stream socket for writing the data to.
      */
     public static void copy(Socket<? extends InputStream> input, Socket<? extends OutputStream> output) throws Exception {
-        input.accept(in -> output.accept(out -> Copy.cat(in, out)));
+        Copy.copy(input, output);
     }
 
     /**

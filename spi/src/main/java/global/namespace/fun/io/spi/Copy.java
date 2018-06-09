@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package global.namespace.fun.io.bios;
+package global.namespace.fun.io.spi;
 
-import global.namespace.fun.io.api.Store;
+import global.namespace.fun.io.api.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,11 +31,11 @@ import java.util.concurrent.locks.ReentrantLock;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Provides a high-performance copy function.
+ * Provides high-performance copy functions.
  *
- * @author Christian Schlichtherle (copied and edited from the {@code Streams} class in TrueCommons I/O 2.3.2)
+ * @author Christian Schlichtherle
  */
-final class Copy {
+public final class Copy {
 
     private Copy() { }
 
@@ -47,6 +47,49 @@ final class Copy {
     private static final int FIFO_SIZE = 4;
 
     private static final ExecutorService executor = Executors.newCachedThreadPool(new ReaderThreadFactory());
+
+    /**
+     * Copies the entries from the given archive source to the given archive sink.
+     * <p>
+     * This is a high performance implementation which uses a pooled background thread to fill a FIFO of pooled buffers
+     * which is concurrently flushed by the current thread.
+     * It performs best when used with <em>unbuffered</em> streams.
+     *
+     * @param source the archive source to read the entries from.
+     * @param sink the archive sink to write the entries to.
+     */
+    public static void copy(final ArchiveSource<?> source, final ArchiveSink<?> sink) throws Exception {
+        source.acceptReader(input -> sink.acceptWriter(output -> {
+            for (ArchiveEntrySource<?> entry : input) {
+                entry.copyTo(output.sink(entry.name()));
+            }
+        }));
+    }
+
+    /**
+     * Copies the data from the given source to the given sink.
+     * <p>
+     * This is a high performance implementation which uses a pooled background thread to fill a FIFO of pooled buffers
+     * which is concurrently flushed by the current thread.
+     *
+     * @param source the source for reading the data from.
+     * @param sink the sink for writing the data to.
+     */
+    public static void copy(Source source, Sink sink) throws Exception { copy(source.input(), sink.output()); }
+
+    /**
+     * Copies the data from the given input stream socket to the given output stream socket.
+     * <p>
+     * This is a high performance implementation which uses a pooled background thread to fill a FIFO of pooled buffers
+     * which is concurrently flushed by the current thread.
+     * It performs best when used with <em>unbuffered</em> streams.
+     *
+     * @param input the input stream socket for reading the data from.
+     * @param output the output stream socket for writing the data to.
+     */
+    public static void copy(Socket<? extends InputStream> input, Socket<? extends OutputStream> output) throws Exception {
+        input.accept(in -> output.accept(out -> Copy.cat(in, out)));
+    }
 
     /**
      * Copies the data from the given input stream to the given output stream <em>without</em> closing them.
@@ -64,7 +107,7 @@ final class Copy {
      * @param in the input stream.
      * @param out the output stream.
      */
-    static void cat(final InputStream in, final OutputStream out) throws IOException {
+    private static void cat(final InputStream in, final OutputStream out) throws IOException {
         requireNonNull(in);
         requireNonNull(out);
 
@@ -87,13 +130,13 @@ final class Copy {
         final class ReaderTask implements Runnable {
 
             /** The index of the next buffer to be written. */
-            int off;
+            private int off;
 
             /** The number of buffers filled with data to be written. */
-            int size;
+            private int size;
 
             /** The Throwable that happened in this task, if any. */
-            volatile Throwable exception;
+            private volatile Throwable exception;
 
             @Override
             public void run() {

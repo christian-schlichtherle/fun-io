@@ -3,7 +3,7 @@ package global.namespace.fun.io.it
 import java.io.File
 
 import global.namespace.fun.io.api.{ArchiveInput, ArchiveSource, ArchiveStore}
-import global.namespace.fun.io.bios.BIOS.copy
+import global.namespace.fun.io.spi.Copy.copy
 import global.namespace.fun.io.bios.{BIOS => B}
 import global.namespace.fun.io.commons.compress.{CommonsCompress => CC}
 import global.namespace.fun.io.delta.Delta.diff

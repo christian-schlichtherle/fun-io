@@ -16,8 +16,8 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.Optional;
 
-import static global.namespace.fun.io.bios.ArchiveEntryNames.requireInternal;
-import static global.namespace.fun.io.bios.BIOS.copy;
+import static global.namespace.fun.io.spi.ArchiveEntryNames.requireInternal;
+import static global.namespace.fun.io.spi.Copy.copy;
 
 /**
  * Provides access to directories as if they were archive files.

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package global.namespace.fun.io.bios;
+package global.namespace.fun.io.spi;
 
 /**
  * Provides functions for {@link ThreadGroup}s.

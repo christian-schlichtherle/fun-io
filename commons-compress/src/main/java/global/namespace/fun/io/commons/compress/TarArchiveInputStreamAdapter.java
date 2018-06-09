@@ -7,6 +7,7 @@ package global.namespace.fun.io.commons.compress;
 import global.namespace.fun.io.api.ArchiveEntrySource;
 import global.namespace.fun.io.api.ArchiveInput;
 import global.namespace.fun.io.api.Socket;
+import global.namespace.fun.io.spi.UncloseableInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 
@@ -16,8 +17,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static global.namespace.fun.io.bios.ArchiveEntryNames.isInternal;
-import static global.namespace.fun.io.bios.BIOS.stream;
+import static global.namespace.fun.io.spi.ArchiveEntryNames.isInternal;
 
 /**
  * Adapts a {@link TarArchiveInputStream} to an {@link ArchiveInput}.
@@ -93,12 +93,12 @@ final class TarArchiveInputStreamAdapter implements ArchiveInput<TarArchiveEntry
 
             @Override
             public Socket<InputStream> input() {
-                return stream(tar).input().map(in -> {
+                return () -> {
                     if (entry != tar.getCurrentEntry()) {
                         throw new IllegalStateException("The TAR input stream is currently reading a different entry.");
                     }
-                    return in;
-                });
+                    return new UncloseableInputStream(tar);
+                };
             }
         };
     }

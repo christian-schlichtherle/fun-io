@@ -13,15 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package global.namespace.fun.io.bios;
+package global.namespace.fun.io.spi;
 
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-final class UncloseableOutputStream extends FilterOutputStream {
+/**
+ * A filter output stream which just {@linkplain #flush() flushes} the underlying output stream on any call to its
+ * {@link #close()} method.
+ *
+ * @author Christian Schlichtherle
+ */
+public final class UncloseableOutputStream extends FilterOutputStream {
 
-    UncloseableOutputStream(OutputStream out) { super(out); }
+    public UncloseableOutputStream(OutputStream out) { super(out); }
 
     @Override
     public void close() throws IOException { out.flush(); }

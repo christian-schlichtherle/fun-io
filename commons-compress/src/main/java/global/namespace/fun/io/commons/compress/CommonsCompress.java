@@ -153,8 +153,8 @@ public final class CommonsCompress {
      * The resulting archive store has very limited capabilities due to the constraints of the 7zip file format.
      * For example, you can't randomly access entries in a 7zip file because there is no central directory.
      * <p>
-     * In fact, the only supported use case is to use the resulting archive store as a source or a sink for
-     * {@link global.namespace.fun.io.bios.BIOS#copy(ArchiveSource, ArchiveSink)}.
+     * In fact, the only supported use case is to use the resulting archive store as a source or a sink for archive
+     * copying.
      * This is still very powerful, because it allows you to pack or unpack a 7zip file from or to a directory
      * or to transform it from or to another archive file format, e.g. ZIP.
      */
@@ -181,8 +181,8 @@ public final class CommonsCompress {
      * be known in advance.
      * Similarly, you can't randomly access entries in a TAR file because there is no central directory.
      * <p>
-     * In fact, the only supported use case is to use the resulting archive store as a source or a sink for
-     * {@link global.namespace.fun.io.bios.BIOS#copy(ArchiveSource, ArchiveSink)}.
+     * In fact, the only supported use case is to use the resulting archive store as a source or a sink for archive
+     * copying.
      * This is still very powerful, because it allows you to pack or unpack a TAR file from or to a directory
      * or to transform it from or to another archive file format, e.g. ZIP.
      * <p>

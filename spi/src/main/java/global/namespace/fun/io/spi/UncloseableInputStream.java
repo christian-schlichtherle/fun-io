@@ -13,16 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package global.namespace.fun.io.bios;
+package global.namespace.fun.io.spi;
 
 import java.io.FilterInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
-final class UncloseableInputStream extends FilterInputStream {
+/**
+ * A filter input stream which ignores any call to its {@link #close()} method.
+ *
+ * @author Christian Schlichtherle
+ */
+public final class UncloseableInputStream extends FilterInputStream {
 
-    UncloseableInputStream(InputStream in) { super(in); }
+    public UncloseableInputStream(InputStream in) { super(in); }
 
     @Override
-    public void close() throws IOException { }
+    public void close() { }
 }

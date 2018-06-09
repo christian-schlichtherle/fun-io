@@ -18,7 +18,7 @@ import Dependencies._
 
 lazy val root: Project = project
   .in(file("."))
-  .aggregate(api, bios, commonsCompress, delta, it, jackson, jaxb, scalaApi, xz, zstd)
+  .aggregate(api, bios, commonsCompress, delta, it, jackson, jaxb, scalaApi, spi, xz, zstd)
   .settings(releaseSettings)
   .settings(aggregateSettings)
   .settings(name := "Fun I/O")
@@ -29,7 +29,6 @@ lazy val api: Project = project
   .settings(
     libraryDependencies ++= Seq(
       MockitoCore % Test,
-      Scalacheck % Test,
       Scalatest % Test
     ),
     name := "Fun I/O API",
@@ -38,7 +37,7 @@ lazy val api: Project = project
 
 lazy val bios: Project = project
   .in(file("bios"))
-  .dependsOn(api)
+  .dependsOn(spi)
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -46,13 +45,13 @@ lazy val bios: Project = project
       Scalacheck % Test,
       Scalatest % Test
     ),
-    name := "Fun I/O Basic",
+    name := "Fun I/O BIOS",
     normalizedName := "fun-io-bios"
   )
 
 lazy val commonsCompress: Project = project
   .in(file("commons-compress"))
-  .dependsOn(bios)
+  .dependsOn(spi)
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -78,7 +77,7 @@ lazy val delta: Project = project
 
 lazy val it: Project = project
   .in(file("it"))
-  .dependsOn(bios, commonsCompress, delta, jackson, jaxb, scalaApi, xz, zstd)
+  .dependsOn(bios, commonsCompress, delta, jackson, jaxb, scalaApi, spi, xz, zstd)
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -126,6 +125,20 @@ lazy val scalaApi: Project = project
     ),
     name := "Fun I/O Scala API",
     normalizedName := "fun-io-scala-api"
+  )
+
+lazy val spi: Project = project
+  .in(file("spi"))
+  .dependsOn(api)
+  .settings(javaLibrarySettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      MockitoCore % Test,
+      Scalacheck % Test,
+      Scalatest % Test
+    ),
+    name := "Fun I/O SPI",
+    normalizedName := "fun-io-spi"
   )
 
 lazy val xz: Project = project
