@@ -15,7 +15,6 @@
  */
 package global.namespace.fun.io.it.aws
 
-import java.util
 import java.util.UUID.randomUUID
 
 import global.namespace.fun.io.api.ArchiveStore
@@ -28,6 +27,8 @@ import software.amazon.awssdk.services.s3.model.{ObjectIdentifier, S3Object}
 import scala.collection.JavaConverters._
 
 class S3Spec extends ArchiveSpecSuite[S3Object] {
+
+  override protected[this] def disabled: Boolean = sys.env contains "TRAVIS"
 
   override protected[this] def withTempArchive: (ArchiveStore[S3Object] => Any) => Unit = {
     test: (ArchiveStore[S3Object] => Any) => {
