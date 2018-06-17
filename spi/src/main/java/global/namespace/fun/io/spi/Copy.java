@@ -88,7 +88,7 @@ public final class Copy {
      * @param output the output stream socket for writing the data to.
      */
     public static void copy(Socket<? extends InputStream> input, Socket<? extends OutputStream> output) throws Exception {
-        input.accept(in -> output.accept(out -> Copy.cat(in, out)));
+        input.accept(in -> output.accept(out -> cat(in, out)));
     }
 
     /**
