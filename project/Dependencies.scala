@@ -25,8 +25,10 @@ object Dependencies {
   val JaxbApi: ModuleID = "javax.xml.bind" % "jaxb-api" % JAXB_Version
   val JaxbRuntime: ModuleID = "org.glassfish.jaxb" % "jaxb-runtime" % JAXB_Version
   val MockitoCore: ModuleID = "org.mockito" % "mockito-core" % "2.18.3"
+  val S3: ModuleID = "software.amazon.awssdk" % "s3" % "2.0.0-preview-10"
   val Scalacheck: ModuleID = "org.scalacheck" %% "scalacheck" % "1.14.0"
   val Scalatest: ModuleID = "org.scalatest" %% "scalatest" % "3.0.5"
+  val Slf4jSimple: ModuleID = "org.slf4j" % "slf4j-simple" % "1.7.25"
   val Xz: ModuleID = "org.tukaani" % "xz" % "1.8"
   val ZstdJni: ModuleID = "com.github.luben" % "zstd-jni" % "1.3.4-10"
 

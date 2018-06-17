@@ -18,7 +18,7 @@ import Dependencies._
 
 lazy val root: Project = project
   .in(file("."))
-  .aggregate(api, bios, commonsCompress, delta, it, jackson, jaxb, scalaApi, spi, xz, zstd)
+  .aggregate(api, aws, bios, commonsCompress, delta, it, jackson, jaxb, scalaApi, spi, xz, zstd)
   .settings(releaseSettings)
   .settings(aggregateSettings)
   .settings(name := "Fun I/O")
@@ -33,6 +33,18 @@ lazy val api: Project = project
     ),
     name := "Fun I/O API",
     normalizedName := "fun-io-api"
+  )
+
+lazy val aws: Project = project
+  .in(file("aws"))
+  .dependsOn(spi)
+  .settings(javaLibrarySettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      S3
+    ),
+    name := "Fun I/O AWS",
+    normalizedName := "fun-io-aws"
   )
 
 lazy val bios: Project = project
@@ -77,13 +89,14 @@ lazy val delta: Project = project
 
 lazy val it: Project = project
   .in(file("it"))
-  .dependsOn(bios, commonsCompress, delta, jackson, jaxb, scalaApi, spi, xz, zstd)
+  .dependsOn(aws, bios, commonsCompress, delta, jackson, jaxb, scalaApi, spi, xz, zstd)
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
       MockitoCore % Test,
       Scalacheck % Test,
-      Scalatest % Test
+      Scalatest % Test,
+      Slf4jSimple % Runtime
     ),
     name := "Fun I/O IT",
     publishArtifact := false
