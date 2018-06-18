@@ -33,6 +33,9 @@ abstract class ArchiveSpecSuite[E] extends WordSpec {
 
   "An archive store" should {
     "support copying its entries" in {
+      if (disabled) {
+        pending
+      }
       forAll(JARs) { inputJar: ArchiveStore[ZipArchiveEntry] =>
         withTempJAR { outputJar: ArchiveStore[ZipArchiveEntry] =>
           withTempArchive { tempArchive: ArchiveStore[E] =>
@@ -53,6 +56,8 @@ abstract class ArchiveSpecSuite[E] extends WordSpec {
       }
     }
   }
+
+  protected[this] def disabled: Boolean = false
 
   protected[this] def withTempArchive: (ArchiveStore[E] => Any) => Unit = {
     ArchiveSpecSuite.withTempArchive(archiveFactory)
