@@ -19,7 +19,6 @@ import java.nio.file.Path
 
 import global.namespace.fun.io.bios.BIOS
 import global.namespace.fun.io.it.ArchiveSpecSuite
-import global.namespace.fun.io.it.ArchiveSpecSuite.ArchiveFactory
 
 class DirectorySpec extends ArchiveSpecSuite[Path] {
 

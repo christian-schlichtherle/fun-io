@@ -20,7 +20,6 @@ import java.io.File
 import global.namespace.fun.io.bios.BIOS
 import global.namespace.fun.io.commons.compress.CommonsCompress
 import global.namespace.fun.io.it.ArchiveSpecSuite
-import global.namespace.fun.io.it.ArchiveSpecSuite.ArchiveFactory
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry
 
 class TarGzSpec extends ArchiveSpecSuite[TarArchiveEntry] {
