@@ -19,7 +19,6 @@ import java.util.zip.ZipEntry
 
 import global.namespace.fun.io.bios.BIOS
 import global.namespace.fun.io.it.ArchiveSpecSuite
-import global.namespace.fun.io.it.ArchiveSpecSuite.ArchiveFactory
 
 class JarSpec extends ArchiveSpecSuite[ZipEntry] {
 

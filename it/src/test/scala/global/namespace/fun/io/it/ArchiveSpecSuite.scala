@@ -15,12 +15,9 @@
  */
 package global.namespace.fun.io.it
 
-import java.io.File
-
 import global.namespace.fun.io.api.{ArchiveInput, ArchiveStore}
 import global.namespace.fun.io.commons.compress.CommonsCompress._
 import global.namespace.fun.io.delta.Delta.diff
-import global.namespace.fun.io.it.ArchiveSpecSuite._
 import global.namespace.fun.io.spi.Copy.copy
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 import org.scalatest.Matchers._
@@ -29,14 +26,15 @@ import org.scalatest.prop.PropertyChecks._
 
 import scala.collection.JavaConverters._
 
-abstract class ArchiveSpecSuite[E] extends WordSpec {
+/** @author Christian Schlichtherle */
+abstract class ArchiveSpecSuite[E] extends WordSpec with ArchiveSpecMixin[E] {
 
   "An archive store" should {
     "support copying its entries" in {
       if (disabled) {
         pending
       }
-      forAll(JARs) { inputJar: ArchiveStore[ZipArchiveEntry] =>
+      forAll(Table("JAR", Test1Jar, Test2Jar)) { inputJar: ArchiveStore[ZipArchiveEntry] =>
         withTempJAR { outputJar: ArchiveStore[ZipArchiveEntry] =>
           withTempArchive { tempArchive: ArchiveStore[E] =>
             copy(inputJar, tempArchive)
@@ -57,43 +55,5 @@ abstract class ArchiveSpecSuite[E] extends WordSpec {
     }
   }
 
-  protected[this] def disabled: Boolean = false
-
-  protected[this] def withTempArchive: (ArchiveStore[E] => Any) => Unit = {
-    ArchiveSpecSuite.withTempArchive(archiveFactory)
-  }
-
-  protected[this] def archiveFactory: ArchiveFactory[E]
-}
-
-object ArchiveSpecSuite {
-
-  type ArchiveFactory[E] = File => ArchiveStore[E]
-
-  private val JARs = Table(
-    "JAR",
-    jar(resourceFile("test1.jar")),
-    jar(resourceFile("test2.jar"))
-  )
-
-  private def resourceFile(name: String): File = {
-    new File((classOf[DiffAndPatchSpec] getResource name).toURI)
-  }
-
-  private def withTempJAR: (ArchiveStore[ZipArchiveEntry] => Any) => Unit = withTempArchive(jar)
-
-  private def withTempArchive[E](factory: ArchiveFactory[E])(test: ArchiveStore[E] => Any): Unit = {
-    val file = File.createTempFile("tmp", null)
-    file delete ()
-    try {
-      test(factory(file))
-    } finally {
-      deleteAll(file)
-    }
-  }
-
-  private def deleteAll(file: File): Unit = {
-    Option(file listFiles ()) foreach (_ foreach deleteAll)
-    file delete ()
-  }
+  def withTempJAR: (ArchiveStore[ZipArchiveEntry] => Any) => Unit = withTempArchiveFile(jar)
 }
