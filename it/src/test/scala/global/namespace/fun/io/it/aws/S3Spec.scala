@@ -20,7 +20,6 @@ import java.util.UUID.randomUUID
 import global.namespace.fun.io.api.ArchiveStore
 import global.namespace.fun.io.aws.AWS.s3
 import global.namespace.fun.io.it.ArchiveSpecSuite
-import global.namespace.fun.io.it.ArchiveSpecSuite.ArchiveFactory
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.{ObjectIdentifier, S3Object}
 
@@ -28,9 +27,9 @@ import scala.collection.JavaConverters._
 
 class S3Spec extends ArchiveSpecSuite[S3Object] {
 
-  override protected[this] def disabled: Boolean = sys.env contains "TRAVIS"
+  override def disabled: Boolean = sys.env contains "TRAVIS"
 
-  override protected[this] def withTempArchive: (ArchiveStore[S3Object] => Any) => Unit = {
+  override def withTempArchive: (ArchiveStore[S3Object] => Any) => Unit = {
     test: (ArchiveStore[S3Object] => Any) => {
       val client = S3Client.create
       val bucket = "test-" + randomUUID
@@ -47,5 +46,5 @@ class S3Spec extends ArchiveSpecSuite[S3Object] {
     }
   }
 
-  override protected[this] def archiveFactory: ArchiveFactory[S3Object] = ???
+  override def archiveFactory: ArchiveFactory[S3Object] = ???
 }
