@@ -152,14 +152,16 @@ public final class AWS {
                                 return () -> {
                                     final File temp = File.createTempFile("tmp", null);
                                     temp.deleteOnExit();
-                                    return new FilterOutputStream(new FileOutputStream(temp)) {
+                                    return new FileOutputStream(temp) {
 
                                         @Override
                                         public void close() throws IOException {
                                             super.close();
-                                            client.putObject(b -> b.bucket(bucket).key(object.key()),
-                                                    RequestBody.fromFile(temp));
-                                            temp.delete();
+                                            if (temp.isFile()) { // idempotence!
+                                                client.putObject(b -> b.bucket(bucket).key(object.key()),
+                                                        RequestBody.fromFile(temp));
+                                                temp.delete();
+                                            }
                                         }
                                     };
                                 };
