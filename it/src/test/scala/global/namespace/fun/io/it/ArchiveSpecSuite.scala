@@ -27,7 +27,7 @@ import org.scalatest.prop.PropertyChecks._
 import scala.collection.JavaConverters._
 
 /** @author Christian Schlichtherle */
-abstract class ArchiveSpecSuite[E] extends WordSpec with ArchiveSpecMixin[E] {
+abstract class ArchiveSpecSuite[E] extends WordSpec with ArchiveSpecContext[E] {
 
   "An archive store" should {
     "support copying its entries" in {

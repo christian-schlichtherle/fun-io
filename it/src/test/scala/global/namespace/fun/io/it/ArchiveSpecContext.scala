@@ -22,7 +22,7 @@ import global.namespace.fun.io.commons.compress.CommonsCompress.jar
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 
 /** @author Christian Schlichtherle */
-trait ArchiveSpecMixin[E] {
+trait ArchiveSpecContext[E] {
 
   type ArchiveFile[A] = ArchiveStore[A]
   type ArchiveFileFactory[A] = File => ArchiveFile[A]
@@ -32,7 +32,7 @@ trait ArchiveSpecMixin[E] {
   val Test2Jar: ArchiveFile[ZipArchiveEntry] = jar(resourceFile("test2.jar"))
 
   private def resourceFile(name: String) = {
-    new File((classOf[ArchiveSpecMixin[_]] getResource name).toURI)
+    new File((classOf[ArchiveSpecContext[_]] getResource name).toURI)
   }
 
   def disabled: Boolean = false
