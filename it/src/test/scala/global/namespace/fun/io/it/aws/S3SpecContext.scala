@@ -26,14 +26,15 @@ import software.amazon.awssdk.services.s3.model.{ObjectIdentifier, S3Object}
 import scala.collection.JavaConverters._
 import scala.util.control.NonFatal
 
-trait S3SpecMixin { this: ArchiveSpecContext[S3Object] =>
+trait S3SpecContext { this: ArchiveSpecContext[S3Object] =>
 
-  override def disabled: Boolean = sys.env contains "TRAVIS"
+  lazy val client: S3Client = S3Client.create
+
+  override lazy val disabled: Boolean = sys.env contains "TRAVIS"
 
   override def withTempArchiveStore: (ArchiveStore[S3Object] => Any) => Unit = {
     test: (ArchiveStore[S3Object] => Any) => {
       var t: Throwable = null
-      val client = S3Client.create
       val bucket = "test-" + randomUUID
       client createBucket (b => b bucket bucket)
       try {
