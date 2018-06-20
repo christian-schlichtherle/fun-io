@@ -21,5 +21,5 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 
 class ZipSpec extends ArchiveSpecSuite[ZipArchiveEntry] {
 
-  override def archiveFactory: ArchiveFactory[ZipArchiveEntry] = CommonsCompress.zip
+  override def archiveFileFactory: ArchiveFileFactory[ZipArchiveEntry] = CommonsCompress.zip
 }

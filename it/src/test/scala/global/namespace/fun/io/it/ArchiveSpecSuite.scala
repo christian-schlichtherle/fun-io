@@ -34,9 +34,9 @@ abstract class ArchiveSpecSuite[E] extends WordSpec with ArchiveSpecMixin[E] {
       if (disabled) {
         pending
       }
-      forAll(Table("JAR", Test1Jar, Test2Jar)) { inputJar: ArchiveStore[ZipArchiveEntry] =>
-        withTempJAR { outputJar: ArchiveStore[ZipArchiveEntry] =>
-          withTempArchive { tempArchive: ArchiveStore[E] =>
+      forAll(Table("JAR", Test1Jar, Test2Jar)) { inputJar: ArchiveFile[ZipArchiveEntry] =>
+        withTempJAR { outputJar: ArchiveFile[ZipArchiveEntry] =>
+          withTempArchiveStore { tempArchive: ArchiveStore[E] =>
             copy(inputJar, tempArchive)
             copy(tempArchive, outputJar)
 
@@ -55,5 +55,5 @@ abstract class ArchiveSpecSuite[E] extends WordSpec with ArchiveSpecMixin[E] {
     }
   }
 
-  def withTempJAR: (ArchiveStore[ZipArchiveEntry] => Any) => Unit = withTempArchiveFile(jar)
+  def withTempJAR: (ArchiveFile[ZipArchiveEntry] => Any) => Unit = withTempArchiveFile(jar)
 }

@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package global.namespace.fun.io.it.commons.compress
+package global.namespace.fun.io.it.bios
 
-import global.namespace.fun.io.commons.compress.CommonsCompress
+import java.util.zip.ZipEntry
+
+import global.namespace.fun.io.bios.BIOS
 import global.namespace.fun.io.it.ArchiveSpecSuite
-import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry
 
-class SevenzSpec extends ArchiveSpecSuite[SevenZArchiveEntry] {
+class ZipSpec extends ArchiveSpecSuite[ZipEntry] {
 
-  override def archiveFileFactory: ArchiveFileFactory[SevenZArchiveEntry] = CommonsCompress.sevenz
+  override def archiveFileFactory: ArchiveFileFactory[ZipEntry] = BIOS.zip
 }
