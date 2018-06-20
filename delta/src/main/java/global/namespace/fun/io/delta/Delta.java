@@ -4,7 +4,6 @@
  */
 package global.namespace.fun.io.delta;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import global.namespace.fun.io.api.*;
 import global.namespace.fun.io.delta.dto.DeltaDTO;
@@ -20,6 +19,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
+import static com.fasterxml.jackson.core.JsonGenerator.Feature.AUTO_CLOSE_TARGET;
 import static global.namespace.fun.io.jackson.Jackson.json;
 import static java.util.Collections.emptyList;
 
@@ -66,7 +67,8 @@ public final class Delta {
 
     private static Codec jsonCodec() {
         final ObjectMapper mapper = new ObjectMapper();
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
+        mapper.configure(AUTO_CLOSE_TARGET, false);
+        mapper.setSerializationInclusion(NON_DEFAULT);
         return json(mapper);
     }
 
