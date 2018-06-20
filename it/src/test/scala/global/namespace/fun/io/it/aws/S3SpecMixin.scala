@@ -19,14 +19,14 @@ import java.util.UUID.randomUUID
 
 import global.namespace.fun.io.api.ArchiveStore
 import global.namespace.fun.io.aws.AWS.s3
-import global.namespace.fun.io.it.ArchiveSpecMixin
+import global.namespace.fun.io.it.ArchiveSpecContext
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.{ObjectIdentifier, S3Object}
 
 import scala.collection.JavaConverters._
 import scala.util.control.NonFatal
 
-trait S3SpecMixin { this: ArchiveSpecMixin[S3Object] =>
+trait S3SpecMixin { this: ArchiveSpecContext[S3Object] =>
 
   override def disabled: Boolean = sys.env contains "TRAVIS"
 

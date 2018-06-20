@@ -16,7 +16,7 @@ import org.scalatest.WordSpec
 import scala.collection.JavaConverters._
 
 /** @author Christian Schlichtherle */
-abstract class DiffAndPatchSpecSuite[E] extends WordSpec with ArchiveSpecMixin[E] {
+abstract class DiffAndPatchSpecSuite[E] extends WordSpec with ArchiveSpecContext[E] {
 
   "Diffing two archive stores and patching the first with the delta" should {
     "produce a clone of the second archive store" in {
