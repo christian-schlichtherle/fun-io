@@ -15,7 +15,7 @@
  */
 package global.namespace.fun.io.it.aws
 
-import global.namespace.fun.io.it.ArchiveSpecSuite
+import global.namespace.fun.io.it.DiffAndPatchSpecSuite
 import software.amazon.awssdk.services.s3.model.S3Object
 
-class S3Spec extends ArchiveSpecSuite[S3Object] with S3SpecMixin
+class S3DiffAndPatchSpec extends DiffAndPatchSpecSuite[S3Object] with S3SpecMixin
