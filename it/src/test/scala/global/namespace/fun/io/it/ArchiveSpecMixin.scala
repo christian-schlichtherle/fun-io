@@ -24,11 +24,12 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 /** @author Christian Schlichtherle */
 trait ArchiveSpecMixin[E] {
 
-  type ArchiveFactory[A] = File => ArchiveStore[A]
+  type ArchiveFile[A] = ArchiveStore[A]
+  type ArchiveFileFactory[A] = File => ArchiveFile[A]
 
-  val Test1Jar: ArchiveStore[ZipArchiveEntry] = jar(resourceFile("test1.jar"))
+  val Test1Jar: ArchiveFile[ZipArchiveEntry] = jar(resourceFile("test1.jar"))
 
-  val Test2Jar: ArchiveStore[ZipArchiveEntry] = jar(resourceFile("test2.jar"))
+  val Test2Jar: ArchiveFile[ZipArchiveEntry] = jar(resourceFile("test2.jar"))
 
   private def resourceFile(name: String) = {
     new File((classOf[ArchiveSpecMixin[_]] getResource name).toURI)
@@ -36,11 +37,11 @@ trait ArchiveSpecMixin[E] {
 
   def disabled: Boolean = false
 
-  def withTempArchive: (ArchiveStore[E] => Any) => Unit = withTempArchiveFile(archiveFactory)
+  def withTempArchiveStore: (ArchiveStore[E] => Any) => Unit = withTempArchiveFile(archiveFileFactory)
 
-  def archiveFactory: ArchiveFactory[E]
+  def archiveFileFactory: ArchiveFileFactory[E]
 
-  def withTempArchiveFile[A](factory: ArchiveFactory[A])(test: ArchiveStore[A] => Any): Unit = {
+  def withTempArchiveFile[A](factory: ArchiveFileFactory[A])(test: ArchiveFile[A] => Any): Unit = {
     val file = File.createTempFile("tmp", null)
     file delete ()
     try {

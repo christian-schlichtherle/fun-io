@@ -24,7 +24,7 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry
 
 class TarGzSpec extends ArchiveSpecSuite[TarArchiveEntry] {
 
-  override def archiveFactory: ArchiveFactory[TarArchiveEntry] = {
+  override def archiveFileFactory: ArchiveFileFactory[TarArchiveEntry] = {
     f: File => CommonsCompress.tar(BIOS.file(f).map(CommonsCompress.gzip))
   }
 }

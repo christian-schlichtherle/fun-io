@@ -24,5 +24,5 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry
 
 class TarSpec extends ArchiveSpecSuite[TarArchiveEntry] {
 
-  override def archiveFactory: ArchiveFactory[TarArchiveEntry] = (f: File) => CommonsCompress.tar(BIOS.file(f))
+  override def archiveFileFactory: ArchiveFileFactory[TarArchiveEntry] = (f: File) => CommonsCompress.tar(BIOS.file(f))
 }

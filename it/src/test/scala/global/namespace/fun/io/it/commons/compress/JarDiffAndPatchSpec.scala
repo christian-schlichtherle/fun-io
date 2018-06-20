@@ -16,10 +16,10 @@
 package global.namespace.fun.io.it.commons.compress
 
 import global.namespace.fun.io.commons.compress.CommonsCompress
-import global.namespace.fun.io.it.ArchiveSpecSuite
-import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry
+import global.namespace.fun.io.it.{ArchiveSpecSuite, DiffAndPatchSpecSuite}
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 
-class SevenzSpec extends ArchiveSpecSuite[SevenZArchiveEntry] {
+class JarDiffAndPatchSpec extends DiffAndPatchSpecSuite[ZipArchiveEntry] {
 
-  override def archiveFileFactory: ArchiveFileFactory[SevenZArchiveEntry] = CommonsCompress.sevenz
+  override def archiveFileFactory: ArchiveFileFactory[ZipArchiveEntry] = CommonsCompress.jar
 }
