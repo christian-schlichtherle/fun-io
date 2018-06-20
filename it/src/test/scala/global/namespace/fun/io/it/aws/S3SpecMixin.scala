@@ -46,9 +46,14 @@ trait S3SpecMixin { this: ArchiveSpecContext[S3Object] =>
             .listObjectsV2Paginator(b => b.bucket(bucket))
             .contents.asScala.map(o => ObjectIdentifier.builder.key(o.key).build).toSeq
           client deleteObjects (b => b bucket bucket delete (b => b objects (objects: _*)))
-          client deleteBucket (b => b bucket bucket)
         } catch {
           case NonFatal(t1) => if (null != t) t.addSuppressed(t1) else throw t1
+        } finally {
+          try {
+            client deleteBucket (b => b bucket bucket)
+          } catch {
+            case NonFatal(t1) => if (null != t) t.addSuppressed(t1) else throw t1
+          }
         }
       }
     }
