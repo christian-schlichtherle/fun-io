@@ -35,8 +35,6 @@ trait ArchiveSpecContext[E] {
     new File((classOf[ArchiveSpecContext[_]] getResource name).toURI)
   }
 
-  def disabled: Boolean = false
-
   def withTempArchiveStore: (ArchiveStore[E] => Any) => Unit = withTempArchiveFile(archiveFileFactory)
 
   def archiveFileFactory: ArchiveFileFactory[E]

@@ -20,9 +20,6 @@ abstract class DiffAndPatchSpecSuite[E] extends WordSpec with ArchiveSpecContext
 
   "Diffing two archive stores and patching the first with the delta" should {
     "produce a clone of the second archive store" in {
-      if (disabled) {
-        pending
-      }
       withTempArchiveStore { first: ArchiveStore[E] =>
         withTempArchiveStore { second: ArchiveStore[E] =>
           withTempArchiveStore { delta: ArchiveStore[E] =>

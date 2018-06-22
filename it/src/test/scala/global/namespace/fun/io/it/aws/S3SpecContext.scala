@@ -20,17 +20,30 @@ import java.util.UUID.randomUUID
 import global.namespace.fun.io.api.ArchiveStore
 import global.namespace.fun.io.aws.AWS.s3
 import global.namespace.fun.io.it.ArchiveSpecContext
+import org.scalatest._
+import org.scalatest.exceptions.{TableDrivenPropertyCheckFailedException, TestCanceledException}
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.{ObjectIdentifier, S3Object}
 
 import scala.collection.JavaConverters._
 import scala.util.control.NonFatal
 
-trait S3SpecContext { this: ArchiveSpecContext[S3Object] =>
+trait S3SpecContext extends TestSuiteMixin { this: ArchiveSpecContext[S3Object] with TestSuite =>
 
-  lazy val client: S3Client = S3Client.create
+  lazy val client: S3Client = {
+    try {
+      S3Client.create
+    } catch {
+      case NonFatal(e) => cancel("Cannot create an AWS S3 client.", e)
+    }
+  }
 
-  override lazy val disabled: Boolean = sys.env contains "TRAVIS"
+  abstract override protected def withFixture(test: NoArgTest): Outcome = {
+    super.withFixture(test) match {
+      case Failed(e) if e.isInstanceOf[TableDrivenPropertyCheckFailedException] && e.getCause.isInstanceOf[TestCanceledException] => Canceled(e.getCause)
+      case other => other
+    }
+  }
 
   override def withTempArchiveStore: (ArchiveStore[S3Object] => Any) => Unit = {
     test: (ArchiveStore[S3Object] => Any) => {

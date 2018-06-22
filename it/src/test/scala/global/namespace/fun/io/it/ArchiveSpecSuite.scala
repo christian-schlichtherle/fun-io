@@ -31,9 +31,6 @@ abstract class ArchiveSpecSuite[E] extends WordSpec with ArchiveSpecContext[E] {
 
   "An archive store" should {
     "support copying its entries" in {
-      if (disabled) {
-        pending
-      }
       forAll(Table("JAR", Test1Jar, Test2Jar)) { inputJar: ArchiveFile[ZipArchiveEntry] =>
         withTempJAR { outputJar: ArchiveFile[ZipArchiveEntry] =>
           withTempArchiveStore { tempArchive: ArchiveStore[E] =>
