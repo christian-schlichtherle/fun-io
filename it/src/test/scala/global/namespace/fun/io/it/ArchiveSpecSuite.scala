@@ -16,7 +16,6 @@
 package global.namespace.fun.io.it
 
 import global.namespace.fun.io.api.{ArchiveInput, ArchiveStore}
-import global.namespace.fun.io.commons.compress.CommonsCompress._
 import global.namespace.fun.io.delta.Delta.diff
 import global.namespace.fun.io.spi.Copy.copy
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
@@ -32,8 +31,8 @@ abstract class ArchiveSpecSuite[E] extends WordSpec with ArchiveSpecContext[E] {
   "An archive store" should {
     "support copying its entries" in {
       forAll(Table("JAR", Test1Jar, Test2Jar)) { inputJar: ArchiveFile[ZipArchiveEntry] =>
-        withTempJAR { outputJar: ArchiveFile[ZipArchiveEntry] =>
-          withTempArchiveStore { tempArchive: ArchiveStore[E] =>
+        withTempArchiveStore { tempArchive: ArchiveStore[E] =>
+          withTempJAR { outputJar: ArchiveFile[ZipArchiveEntry] =>
             copy(inputJar, tempArchive)
             copy(tempArchive, outputJar)
 
@@ -51,6 +50,4 @@ abstract class ArchiveSpecSuite[E] extends WordSpec with ArchiveSpecContext[E] {
       }
     }
   }
-
-  def withTempJAR: (ArchiveFile[ZipArchiveEntry] => Any) => Unit = withTempArchiveFile(jar)
 }

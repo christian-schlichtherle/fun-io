@@ -35,6 +35,8 @@ trait ArchiveSpecContext[E] {
     new File((classOf[ArchiveSpecContext[_]] getResource name).toURI)
   }
 
+  def withTempJAR: (ArchiveFile[ZipArchiveEntry] => Any) => Unit = withTempArchiveFile(jar)
+
   def withTempArchiveStore: (ArchiveStore[E] => Any) => Unit = withTempArchiveFile(archiveFileFactory)
 
   def archiveFileFactory: ArchiveFileFactory[E]

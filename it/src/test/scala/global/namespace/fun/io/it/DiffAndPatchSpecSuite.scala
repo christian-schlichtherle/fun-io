@@ -10,6 +10,7 @@ import global.namespace.fun.io.api.{ArchiveInput, ArchiveStore}
 import global.namespace.fun.io.bios.BIOS._
 import global.namespace.fun.io.delta.Delta.{diff, patch}
 import global.namespace.fun.io.it.DiffAndPatchSpecSuite._
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
 
@@ -22,12 +23,12 @@ abstract class DiffAndPatchSpecSuite[E] extends WordSpec with ArchiveSpecContext
     "produce a clone of the second archive store" in {
       withTempArchiveStore { first: ArchiveStore[E] =>
         withTempArchiveStore { second: ArchiveStore[E] =>
-          withTempArchiveStore { delta: ArchiveStore[E] =>
+          withTempJAR { delta: ArchiveStore[ZipArchiveEntry] =>
             withTempArchiveStore { clone: ArchiveStore[E] =>
               copy(Test1Jar, first)
               copy(Test2Jar, second)
 
-              diff first first second second digest sha1 to delta
+              diff base first update second digest sha1 to delta
               patch base first delta delta to clone
 
               val secondEntries: Set[String] = second applyReader {
