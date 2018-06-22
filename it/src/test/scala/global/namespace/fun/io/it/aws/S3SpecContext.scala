@@ -21,7 +21,6 @@ import global.namespace.fun.io.api.ArchiveStore
 import global.namespace.fun.io.aws.AWS.s3
 import global.namespace.fun.io.it.ArchiveSpecContext
 import org.scalatest._
-import org.scalatest.exceptions.{TableDrivenPropertyCheckFailedException, TestCanceledException}
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.{ObjectIdentifier, S3Object}
 
@@ -30,19 +29,15 @@ import scala.util.control.NonFatal
 
 trait S3SpecContext extends TestSuiteMixin { this: ArchiveSpecContext[S3Object] with TestSuite =>
 
-  lazy val client: S3Client = {
-    try {
-      S3Client.create
-    } catch {
-      case NonFatal(e) => cancel("Cannot create an AWS S3 client.", e)
-    }
-  }
+  lazy val client: S3Client = S3Client.create
 
   abstract override protected def withFixture(test: NoArgTest): Outcome = {
-    super.withFixture(test) match {
-      case Failed(e) if e.isInstanceOf[TableDrivenPropertyCheckFailedException] && e.getCause.isInstanceOf[TestCanceledException] => Canceled(e.getCause)
-      case other => other
+    try {
+      client
+    } catch {
+      case NonFatal(e) => return Canceled("Cannot create an AWS S3 client", e)
     }
+    super.withFixture(test)
   }
 
   override def withTempArchiveStore: (ArchiveStore[S3Object] => Any) => Unit = {
