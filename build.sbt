@@ -76,7 +76,7 @@ lazy val commonsCompress: Project = project
 
 lazy val delta: Project = project
   .in(file("delta"))
-  .dependsOn(bios, jackson)
+  .dependsOn(bios % Test, jackson)
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
