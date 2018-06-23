@@ -17,12 +17,12 @@ Apache License, version 2.0.
 
 ## Introduction
 
-Fun I/O composes the low level classes `InputStream` and `OutputStream` into powerful, high level abstractions like 
-`Codec`, `Source`, `Sink`, `Store`, `ArchiveStore`, `Socket`, `Filter` et al.
+Fun I/O composes the low level classes `InputStream` and `OutputStream` et al into powerful, high level abstractions 
+like `Codec`, `Source`, `Sink`, `Store`, `ArchiveStore`, `Socket`, `Filter` et al.
 These abstractions are:
 
 + Easy to use and implement.
-+ Stateless and therefore reusable and thread-safe by design (except for their observable side effects of course, e.g.
++ Stateless by design and therefore reusable and thread-safe (except for their observable side effects of course, e.g.
   writing data to a file).
 + Composable into stateless I/O subsystems.
 + Interoperable with any code which deals with an `InputStream` or `OutputStream` directly.
