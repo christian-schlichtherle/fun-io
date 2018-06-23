@@ -145,8 +145,8 @@ import static global.namespace.fun.io.jackson.Jackson.json;
 class Scratch {
     public static void main(String[] args) throws Exception {
         Store store = file("hello-world.gz");
-        Encoder encode = json().map(gzip()).map(buffer()).encoder(store);
-        encode.encode("Hello world!");
+        Encoder encoder = json().map(gzip()).map(buffer()).encoder(store);
+        encoder.encode("Hello world!");
     }
 }
 {% endhighlight %}
