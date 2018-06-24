@@ -158,9 +158,12 @@ public final class AWS {
                                         public void close() throws IOException {
                                             super.close();
                                             if (temp.isFile()) { // idempotence!
-                                                client.putObject(b -> b.bucket(bucket).key(object.key()),
-                                                        RequestBody.fromFile(temp));
-                                                temp.delete();
+                                                try {
+                                                    client.putObject(b -> b.bucket(bucket).key(object.key()),
+                                                            RequestBody.fromFile(temp));
+                                                } finally {
+                                                    temp.delete();
+                                                }
                                             }
                                         }
                                     };
