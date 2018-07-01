@@ -17,14 +17,12 @@ package global.namespace.fun.io.bios
 
 import java.io.{ByteArrayInputStream, InputStream, OutputStream}
 
-import global.namespace.fun.io.api.function.XConsumer
 import global.namespace.fun.io.api.{Socket, Source, Store}
 import global.namespace.fun.io.bios.BIOS._
 import org.mockito.Mockito._
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
 import org.scalatest.mockito.MockitoSugar.mock
-import org.mockito.ArgumentMatchers._
 
 class BIOSSpec extends WordSpec {
 
@@ -58,11 +56,9 @@ class BIOSSpec extends WordSpec {
       }
 
       "a source" in {
+        val socket: Socket[InputStream] = () => new ByteArrayInputStream("Hello world!".getBytes)
         val source = mock[Source]
-        val socket = mock[Socket[InputStream]]
         when(source.input) thenReturn socket
-        when(socket accept any()) thenCallRealMethod ()
-        when(socket.get) thenReturn new ByteArrayInputStream("Hello world!".getBytes)
         new String(content(source)) shouldBe "Hello world!"
       }
     }
