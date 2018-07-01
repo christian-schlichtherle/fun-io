@@ -420,4 +420,29 @@ public final class BIOS {
     public static <T extends Serializable> T clone(T t, int bufferSize) throws Exception {
         return serialization().connect(memory(bufferSize)).clone(t);
     }
+
+    /**
+     * Returns the content of the given source.
+     *
+     * @throws ContentTooLargeException if the content exceeds {@link Integer#MAX_VALUE} bytes.
+     * @throws IOException if there is no content or if the content cannot be read for some reason.
+     */
+    public static byte[] content(Source source) throws Exception { return content(source, Integer.MAX_VALUE); }
+
+    /**
+     * Returns the content of the given source.
+     *
+     * @throws IllegalArgumentException if {@code max} is less than zero.
+     * @throws ContentTooLargeException if the content exceeds {@code max } bytes.
+     * @throws IOException if there is no content or if the content cannot be read for some reason.
+     */
+    public static byte[] content(final Source source, final int max) throws Exception {
+        if (source instanceof Store) {
+            return ((Store) source).content(max);
+        } else {
+            final Store memory = memory();
+            copy(source, memory);
+            return memory.content(max);
+        }
+    }
 }

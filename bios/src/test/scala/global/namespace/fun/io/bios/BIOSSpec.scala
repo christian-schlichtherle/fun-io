@@ -15,11 +15,16 @@
  */
 package global.namespace.fun.io.bios
 
-import java.io.{InputStream, OutputStream}
+import java.io.{ByteArrayInputStream, InputStream, OutputStream}
 
+import global.namespace.fun.io.api.function.XConsumer
+import global.namespace.fun.io.api.{Socket, Source, Store}
+import global.namespace.fun.io.bios.BIOS._
 import org.mockito.Mockito._
+import org.scalatest.Matchers._
 import org.scalatest.WordSpec
 import org.scalatest.mockito.MockitoSugar.mock
+import org.mockito.ArgumentMatchers._
 
 class BIOSSpec extends WordSpec {
 
@@ -27,7 +32,7 @@ class BIOSSpec extends WordSpec {
     "never close the given stream" when {
       "given an input stream" in {
         val in = mock[InputStream]
-        val source = BIOS stream in
+        val source = stream(in)
         source acceptReader (_.read)
         verify(in) read ()
         verify(in, never) close ()
@@ -35,7 +40,7 @@ class BIOSSpec extends WordSpec {
 
       "given an output stream" in {
         val out = mock[OutputStream]
-        val sink = BIOS stream out
+        val sink = stream(out)
         sink acceptWriter ((_: OutputStream) write 0)
         verify(out) write 0
         verify(out) flush ()
@@ -43,4 +48,25 @@ class BIOSSpec extends WordSpec {
       }
     }
   }
+
+  "BIOS.content" should {
+    "return the content of the parameter object" when given {
+      "a store" in {
+        val store = mock[Store]
+        when(store content Int.MaxValue) thenReturn "Hello world!".getBytes
+        new String(content(store)) shouldBe "Hello world!"
+      }
+
+      "a source" in {
+        val source = mock[Source]
+        val socket = mock[Socket[InputStream]]
+        when(source.input) thenReturn socket
+        when(socket accept any()) thenCallRealMethod ()
+        when(socket.get) thenReturn new ByteArrayInputStream("Hello world!".getBytes)
+        new String(content(source)) shouldBe "Hello world!"
+      }
+    }
+  }
+
+  private def given = afterWord("given")
 }
