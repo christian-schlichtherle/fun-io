@@ -41,7 +41,10 @@ lazy val aws: Project = project
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
-      S3
+      MockitoCore % Test,
+      S3,
+      Scalacheck % Test,
+      Scalatest % Test
     ),
     name := "Fun I/O AWS",
     normalizedName := "fun-io-aws"
@@ -146,7 +149,6 @@ lazy val spi: Project = project
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
-      MockitoCore % Test,
       Scalacheck % Test,
       Scalatest % Test
     ),

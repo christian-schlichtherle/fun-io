@@ -50,12 +50,12 @@ public final class AWS {
      * Returns an archive store using the given S3 client for the named S3 bucket and prefix.
      */
     public static ArchiveStore<S3Object> s3(final S3Client client, final String bucket, final String prefix) {
-        final String normalized = requireInternal(prefix);
+        final String normalized = prefix.isEmpty() ? prefix : requireInternal(prefix);
         if (!normalized.equals(prefix)) {
-            throw new IllegalArgumentException("prefix must be in normalized form, but was `" + prefix + "`.");
+            throw new IllegalArgumentException("prefix must be in normalized form, but is `" + prefix + "`.");
         }
         if (!(normalized.isEmpty() || normalized.endsWith("/"))) {
-            throw new IllegalArgumentException("`" + prefix + "` must end with a `/`.");
+            throw new IllegalArgumentException("prefix must be empty or end with a `/`, but is `" + prefix + "`.");
         }
         return checked(client, bucket, normalized);
     }
