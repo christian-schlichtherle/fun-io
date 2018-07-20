@@ -7,7 +7,7 @@ Its artifacts are hosted on Maven Central with the common group ID
 [`global.namespace.fun-io`](http://search.maven.org/#search%7Cga%7C1%7Cglobal.namespace.fun-io).
 The following diagram shows the module structure:
 
-![Module Structure]({{ site.baseurl }}{% link assets/module-structure.svg %})
+[![Module Structure][Module Structure]{:width="100%"}][Module Structure]
 
 ## API Modules
 
@@ -119,3 +119,4 @@ task:
 [Monoid]: https://en.wikipedia.org/wiki/Monoid
 [XZ for Java]: https://tukaani.org/xz/
 [Zstd-jni]: https://github.com/luben/zstd-jni
+[Module Structure]: {{ "/assets/module-structure.svg" | relative_url }}
