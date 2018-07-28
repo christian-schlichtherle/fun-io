@@ -24,6 +24,10 @@ API modules provide powerful abstractions for simple and safe synchronous I/O op
 Each implementation module provides a single facade class which contains many static factory methods for different 
 implementations of the abstractions provided by the `fun-io-api` module:
 
++ [![Fun I/O AWS](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-bios.svg?label=Fun%20I/O%20AWS&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-aws%22)
+  Depends on the [AWS SDK for Java 2.0] to provide implementations of the Fun I/O API.
+  + The `AWS` class is a facade which provides the following `ArchiveStore` functions:
+    + `s3` provides read/write access to an AWS S3 bucket or any sub-tree of it.
 + [![Fun I/O BIOS](https://img.shields.io/maven-central/v/global.namespace.fun-io/fun-io-bios.svg?label=Fun%20I/O%20BIOS&maxAge=3600)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22global.namespace.fun-io%22%20AND%20a%3A%22fun-io-bios%22)
   The Basic Input/Output System (pun intended) provides basic implementations of the Fun I/O API.
   + The `BIOS` class is a facade which provides the following `Codec` functions:
@@ -120,3 +124,4 @@ task:
 [XZ for Java]: https://tukaani.org/xz/
 [Zstd-jni]: https://github.com/luben/zstd-jni
 [Module Structure]: {{ "/assets/module-structure.svg" | relative_url }}
+[AWS SDK for Java 2.0]: https://github.com/aws/aws-sdk-java-v2
