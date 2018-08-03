@@ -40,29 +40,27 @@ trait S3SpecContext extends TestSuiteMixin { this: ArchiveSpecContext[S3Object] 
     super.withFixture(test)
   }
 
-  override def withTempArchiveStore: (ArchiveStore[S3Object] => Any) => Unit = {
-    test: (ArchiveStore[S3Object] => Any) => {
-      var t: Throwable = null
-      val bucket = "test-" + randomUUID
-      client createBucket (b => b bucket bucket)
+  override def withTempArchiveStore(test: ArchiveStore[S3Object] => Any): Unit = {
+    var t: Throwable = null
+    val bucket = "test-" + randomUUID
+    client createBucket (b => b bucket bucket)
+    try {
+      test(s3(client, bucket, "test/"))
+    } catch {
+      case NonFatal(t1) => t = t1; throw t1
+    } finally {
       try {
-        test(s3(client, bucket, "test/"))
+        val objects = client
+          .listObjectsV2Paginator(b => b.bucket(bucket))
+          .contents.asScala.map(o => ObjectIdentifier.builder.key(o.key).build).toSeq
+        client deleteObjects (b => b bucket bucket delete (b => b objects (objects: _*)))
       } catch {
-        case NonFatal(t1) => t = t1; throw t1
+        case NonFatal(t1) => if (null != t) t.addSuppressed(t1) else throw t1
       } finally {
         try {
-          val objects = client
-            .listObjectsV2Paginator(b => b.bucket(bucket))
-            .contents.asScala.map(o => ObjectIdentifier.builder.key(o.key).build).toSeq
-          client deleteObjects (b => b bucket bucket delete (b => b objects (objects: _*)))
+          client deleteBucket (b => b bucket bucket)
         } catch {
           case NonFatal(t1) => if (null != t) t.addSuppressed(t1) else throw t1
-        } finally {
-          try {
-            client deleteBucket (b => b bucket bucket)
-          } catch {
-            case NonFatal(t1) => if (null != t) t.addSuppressed(t1) else throw t1
-          }
         }
       }
     }
