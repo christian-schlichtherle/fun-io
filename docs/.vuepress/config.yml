@@ -1,0 +1,11 @@
+base: /fun-io/
+description: Functional I/O for Java and Scala
+themeConfig:
+  sidebar:
+  - /
+  - module-structure-and-features
+  - basic-usage
+  - basic-archive-processing
+  - advanced-archive-processing
+  sidebarDepth: 2
+title: Fun I/O
