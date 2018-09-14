@@ -12,6 +12,7 @@
   "scripts": {
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",
-    "docs:deploy": "npm-run-all docs:build 'gh-pages -d docs/.vuepress/dist'"
+    "docs:deploy": "npm-run-all docs:build gh-pages",
+    "gh-pages": "gh-pages -d docs/.vuepress/dist"
   }
 }

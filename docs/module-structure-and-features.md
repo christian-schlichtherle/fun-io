@@ -14,7 +14,7 @@ API modules provide powerful abstractions for simple and safe synchronous I/O op
 ### Fun I/O API
 
 ::: tip
-This is a transitive dependency of all other modules, so you don't need to add it directly.
+This module is a transitive dependency of all other modules, so you don't need to add it directly.
 :::
 
 The module
@@ -97,8 +97,8 @@ provides basic implementations of the Fun I/O API (BIOS stands for "Basic Input/
 ### Fun I/O Commons Compress
 
 ::: tip
-Use this module when working with ZIP files and its derivatives (JAR, WAR, EAR etc).
-It provides better performance and more accuracy when processing archive entries.
+Use this module when processing archive files (JAR, 7zip, TAR, ZIP and derivatives).
+It provides better performance and more accuracy than the module `fun-io-bios`.
 :::
 
 The module
