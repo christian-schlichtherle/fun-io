@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Filters | Fun I/O</title>
+    <meta name="description" content="Functional I/O for Java and Scala">
+    
+    
+    <link rel="preload" href="/fun-io/assets/css/0.styles.5d06ddf7.css" as="style"><link rel="preload" href="/fun-io/assets/js/app.ad3e142d.js" as="script"><link rel="preload" href="/fun-io/assets/js/8.7f798d0f.js" as="script"><link rel="prefetch" href="/fun-io/assets/js/4.dea02d82.js"><link rel="prefetch" href="/fun-io/assets/js/2.d79c5407.js"><link rel="prefetch" href="/fun-io/assets/js/3.8bf0153b.js"><link rel="prefetch" href="/fun-io/assets/js/5.ba482a9e.js"><link rel="prefetch" href="/fun-io/assets/js/6.a7ab40d1.js"><link rel="prefetch" href="/fun-io/assets/js/7.cab18d0a.js"><link rel="prefetch" href="/fun-io/assets/js/9.90e2511d.js">
+    <link rel="stylesheet" href="/fun-io/assets/css/0.styles.5d06ddf7.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/fun-io/" class="home-link router-link-active"><!----> <span class="site-name">
+      Fun I/O
+    </span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <!----></div></header> <div class="sidebar-mask"></div> <div class="sidebar"><!---->  <ul class="sidebar-links"><li><a href="/fun-io/" class="sidebar-link">Home</a></li><li><a href="/fun-io/module-structure-and-features.html" class="sidebar-link">Module Structure And Features</a></li><li><a href="/fun-io/basic-usage.html" class="sidebar-link">Basic Usage</a></li><li><a href="/fun-io/basic-archive-processing.html" class="sidebar-link">Basic Archive Processing</a></li><li><a href="/fun-io/advanced-archive-processing.html" class="sidebar-link">Advanced Archive Processing</a></li></ul> </div> <div class="page"><!---->  <div class="content"><h1 id="filters"><a href="#filters" aria-hidden="true" class="header-anchor">#</a> Filters</h1> <div><p>The <code>Filter</code> interface transforms the data as it is written to an <code>OutputStream</code> or read from an <code>InputStream</code>.
+Their implementation is often based on the <code>FilterOutputStream</code> and <code>FilterInputStream</code> classes, hence the interface
+name.</p></div> <h2 id="some-algebra"><a href="#some-algebra" aria-hidden="true" class="header-anchor">#</a> Some Algebra</h2> <div><p>Filters are associative by nature, which means that <code>a.andThen(b).andThen(c) = a.andThen(b.andThen(c))</code>, where <code>a</code>, <code>b</code>
+and <code>c</code> are <code>Filter</code> instances and <code>andThen</code> is an operation to apply two filter instances in order.
+The same axiom holds for the <code>compose</code> operation, which applies two filter instances in reverse order.
+There is also a trivial identity element, which simply does nothing.
+Hence, the <code>Filter</code> interface forms a <a href="https://en.wikipedia.org/wiki/Monoid" target="_blank" rel="noopener noreferrer">monoid<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> under the operations <code>andThen</code> and <code>compose</code>.</p></div> <h2 id="how-to-use-a-filter"><a href="#how-to-use-a-filter" aria-hidden="true" class="header-anchor">#</a> How To Use A Filter</h2> <p><strong>TODO</strong></p> <h2 id="how-to-write-a-filter"><a href="#how-to-write-a-filter" aria-hidden="true" class="header-anchor">#</a> How To Write A Filter</h2> <p><strong>TODO</strong></p></div> <div class="page-edit"><!----> <!----></div> <!----> </div></div></div>
+    <script src="/fun-io/assets/js/8.7f798d0f.js" defer></script><script src="/fun-io/assets/js/app.ad3e142d.js" defer></script>
+  </body>
+</html>
