@@ -33,21 +33,28 @@ following to its project configuration:
 ::: code
 
 ```pom
-<dependencies>
-    <dependency>
-        <groupId>global.namespace.fun-io</groupId>
-        <artifactId>fun-io-bios</artifactId>
-        <version>1.4.0</version>
-    </dependency>
-    <dependency>
-        <groupId>global.namespace.fun-io</groupId>
-        <artifactId>fun-io-jackson</artifactId>
-        <version>1.4.0</version>
-    </dependency>
-</dependencies>
+<!-- pom.xml -->
+<project>
+    ...
+    <dependencies>
+        ...
+        <dependency>
+            <groupId>global.namespace.fun-io</groupId>
+            <artifactId>fun-io-bios</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>global.namespace.fun-io</groupId>
+            <artifactId>fun-io-jackson</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+    </dependencies>
+</project>
 ```
 
 ```sbt
+// build.sbt
+...
 libraryDependencies ++= Seq(
   "global.namespace.fun-io" % "fun-io-bios" % "1.4.0",
   "global.namespace.fun-io" % "fun-io-jackson" % "1.4.0",
