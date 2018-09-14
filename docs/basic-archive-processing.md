@@ -61,14 +61,14 @@ class Scratch {
 
 Fun I/O treats S3 buckets like archive files.
 This feature enables you to copy and transform data between an S3 bucket (with an optional key prefix) and any other 
-supported archive file, directory or S3 bucket (and optional key prefix).
+supported archive file, directory or S3 bucket (with an optional key prefix).
 
 The following code "unpacks" the TAR.GZ file `archive.tgz` to the S3 bucket `bucket` with the key prefix `archive/`:
 
 ```java
 import software.amazon.awssdk.services.s3.S3Client;
 
-import static global.namespace.fun.io.aws.AWS.s3;
+import static global.namespace.fun.io.aws.AWS.s3; // from `fun-io-aws`
 import static global.namespace.fun.io.bios.BIOS.copy;
 import static global.namespace.fun.io.bios.BIOS.file;
 import static global.namespace.fun.io.commons.compress.CommonsCompress.gzip;

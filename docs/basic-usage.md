@@ -34,7 +34,7 @@ following to its project configuration:
 
 ```pom
 <!-- pom.xml -->
-<project>
+<project ...>
     ...
     <dependencies>
         ...
@@ -135,7 +135,7 @@ import global.namespace.fun.io.jackson.Jackson.json
 import global.namespace.fun.io.scala.api._                    // from `fun-io-scala-api`
 
 val store: Store = file("hello-world.gz")
-val encoder: Encoder = json << gzip << buffer << encoder store
+val encoder: Encoder = json << gzip << buffer encoder store
 encoder encode "Hello world!"
 ```
 
