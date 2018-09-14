@@ -1,4 +1,5 @@
 /.idea
+/docs/.vuepress/dist
 /node_modules
 *.iml
 target/
