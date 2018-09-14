@@ -2,15 +2,8 @@ module.exports = {
     base: '/fun-io/',
     description: 'Functional I/O for Java and Scala',
     markdown: {
-        anchor: {
-            level: [2, 3]
-        },
-        config: md => {
-            let markup = require('vuepress-theme-craftdocs/markup');
-            md.use(markup)
-        }
+        config: md => md.use(require('./theme/markup'))
     },
-    theme: 'craftdocs',
     themeConfig: {
         codeLanguages: {
             java: 'Java',
