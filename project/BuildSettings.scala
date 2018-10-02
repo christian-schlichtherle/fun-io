@@ -44,7 +44,7 @@ object BuildSettings {
 
   private def commonSettings: Seq[Setting[_]] = {
     Seq(
-      homepage := Some(url("http://truevfs.net/")),
+      homepage := Some(url("https://christian-schlichtherle.github.com/fun-io/")),
       licenses := Seq("Apache License, Version 2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")),
       organization := "global.namespace.fun-io",
       organizationHomepage := Some(new URL("http://schlichtherle.de")),
