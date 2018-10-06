@@ -1,3 +1,0 @@
-[submodule "docs/.vuepress/theme"]
-	path = docs/.vuepress/theme
-	url = https://github.com/christian-schlichtherle/vuepress-theme-craftdocs.git
