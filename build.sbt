@@ -96,6 +96,7 @@ lazy val it: Project = project
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
+      JaxbRuntime % Test,
       MockitoCore % Test,
       Scalacheck % Test,
       Scalatest % Test,
@@ -123,9 +124,7 @@ lazy val jaxb: Project = project
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
-      ActivationApi,
-      JaxbApi,
-      JaxbRuntime
+      JaxbApi % Provided
     ),
     name := "Fun I/O JAXB",
     normalizedName := "fun-io-jaxb"
