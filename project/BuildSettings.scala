@@ -80,7 +80,7 @@ object BuildSettings {
           }
         )
       },
-      // Set default scalaVersion here or otherwise `+publishSigned` will fail:
+      // Set default scalaVersion here or otherwise `+publishSigned` et al will fail:
       scalaVersion := ScalaVersion_2_12,
       scmInfo := Some(ScmInfo(
         browseUrl = url("https://github.com/christian-schlichtherle/fun-io"),
