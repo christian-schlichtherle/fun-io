@@ -96,10 +96,10 @@ lazy val it: Project = project
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
-      JaxbRuntime % Test,
-      MockitoCore % Test,
-      Scalacheck % Test,
-      Scalatest % Test,
+      JaxbRuntime,
+      MockitoCore,
+      Scalacheck,
+      Scalatest,
       Slf4jSimple % Runtime
     ),
     name := "Fun I/O IT",
