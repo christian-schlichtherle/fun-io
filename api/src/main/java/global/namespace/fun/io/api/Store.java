@@ -49,28 +49,6 @@ public interface Store extends Source, Sink {
     default ConnectedCodec connect(Codec c) { return Internal.connect(requireNonNull(c), this); }
 
     /**
-     * Returns a store which applies the given filter to the I/O streams loaned by this store.
-     *
-     * @param t the filter to apply to the I/O streams loaned by this store.
-     */
-    default Store map(Filter t) {
-        return new Store() {
-
-            @Override
-            public Socket<InputStream> input() { return t.unapply(Store.this.input()); }
-
-            @Override
-            public Socket<OutputStream> output() { return t.apply(Store.this.output()); }
-
-            @Override
-            public void delete() throws IOException { Store.this.delete(); }
-
-            @Override
-            public OptionalLong size() throws IOException { return Store.this.size(); }
-        };
-    }
-
-    /**
      * Returns the content of this store.
      *
      * @throws ContentTooLargeException if the content exceeds {@link Integer#MAX_VALUE} bytes.
@@ -124,5 +102,27 @@ public interface Store extends Source, Sink {
         } catch (Exception e) {
             throw new IOException(e);
         }
+    }
+
+    /**
+     * Returns a store which applies the given filter to the I/O streams loaned by this store.
+     *
+     * @param t the filter to apply to the I/O streams loaned by this store.
+     */
+    default Store map(Filter t) {
+        return new Store() {
+
+            @Override
+            public Socket<InputStream> input() { return t.unapply(Store.this.input()); }
+
+            @Override
+            public Socket<OutputStream> output() { return t.apply(Store.this.output()); }
+
+            @Override
+            public void delete() throws IOException { Store.this.delete(); }
+
+            @Override
+            public OptionalLong size() throws IOException { return Store.this.size(); }
+        };
     }
 }
