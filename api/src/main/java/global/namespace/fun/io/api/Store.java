@@ -67,24 +67,22 @@ public interface Store extends Source, Sink {
         if (max < 0) {
             throw new IllegalArgumentException(max + " < 0");
         }
-        final OptionalLong size = size();
-        if (size.isPresent()) {
-            final long length = size.getAsLong();
-            if (length <= max) {
-                final byte[] content = new byte[(int) length];
-                try {
-                    input().map(DataInputStream::new).accept(in -> in.readFully(content));
-                } catch (IOException | RuntimeException e) {
-                    throw e;
-                } catch (Exception e) {
-                    throw new IOException(e);
+        try {
+            return applyReader(in -> {
+                final ByteArrayOutputStream out = new ByteArrayOutputStream(BUFSIZE);
+                final byte[] b = new byte[BUFSIZE];
+                for (int total = 0, n; 0 <= (n = in.read(b)); ) {
+                    if (max < (total += n)) {
+                        throw new ContentTooLargeException(total, max);
+                    }
+                    out.write(b,0, n);
                 }
-                return content;
-            } else {
-                throw new ContentTooLargeException(length, max);
-            }
-        } else {
-            throw new NoContentException();
+                return out.toByteArray();
+            });
+        } catch (IOException | RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new IOException(e);
         }
     }
 
@@ -97,7 +95,7 @@ public interface Store extends Source, Sink {
     default void content(final byte[] b, final int off, final int len) throws IOException {
         try {
             acceptWriter(out -> out.write(b, off, len));
-        } catch (IOException e) {
+        } catch (IOException | RuntimeException e) {
             throw e;
         } catch (Exception e) {
             throw new IOException(e);

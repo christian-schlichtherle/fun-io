@@ -21,6 +21,7 @@ import java.util.UUID
 
 import global.namespace.fun.io.api._
 import global.namespace.fun.io.bios.BIOS._
+import global.namespace.fun.io.scala.api._
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
 import org.scalatest.prop.PropertyChecks._
@@ -29,8 +30,8 @@ class ContentSpec extends WordSpec {
 
   "Every type of store" should {
     "support reading and writing its content" in {
-      val tests = Table[() => Store](
-        "store",
+      val storeProviders = Table[() => Store](
+        "store provider",
         () => memory,
         () => file {
           val file = File.createTempFile("tmp", null)
@@ -44,48 +45,55 @@ class ContentSpec extends WordSpec {
         },
         () => userPreferences(classOf[ContentSpec], UUID.randomUUID.toString)
       )
-      forAll(tests) { storeFactory =>
-        val store = storeFactory()
+      val filters = Table[Filter](
+        "filter",
+        identity,
+        deflate
+      )
+      forAll(storeProviders) { storeProvider =>
+        forAll(filters) { filter =>
+          val store = storeProvider() >> filter
 
-        store.exists shouldBe false
-        intercept[IOException](store.content)
+          store.exists shouldBe false
+          intercept[IOException](store.content)
 
-        store content "123".getBytes
-        store.exists shouldBe true
-        new String(store.content) shouldBe "123"
-        new String(store content 3) shouldBe "123"
-        intercept[ContentTooLargeException](store content 2)
+          store content "123".getBytes
+          store.exists shouldBe true
+          new String(store.content) shouldBe "123"
+          new String(store content 3) shouldBe "123"
+          intercept[ContentTooLargeException](store content 2)
 
-        store delete ()
-        store.exists shouldBe false
-        intercept[IOException](store.content)
+          store delete()
+          store.exists shouldBe false
+          intercept[IOException](store.content)
 
-        store.content("123".getBytes, 1, 2)
-        new String(store.content) shouldBe "23"
-        new String(store content 2) shouldBe "23"
-        intercept[ContentTooLargeException](store content 1)
+          store.content("123".getBytes, 1, 2)
+          new String(store.content) shouldBe "23"
+          new String(store content 2) shouldBe "23"
+          intercept[ContentTooLargeException](store content 1)
 
-        store delete ()
-        store.exists shouldBe false
-        intercept[IOException](store.content)
+          store delete()
+          store.exists shouldBe false
+          intercept[IOException](store.content)
 
-        store.content("123".getBytes, 2, 1)
-        new String(store.content) shouldBe "3"
-        new String(store content 1) shouldBe "3"
-        intercept[ContentTooLargeException](store content 0)
+          store.content("123".getBytes, 2, 1)
+          new String(store.content) shouldBe "3"
+          new String(store content 1) shouldBe "3"
+          intercept[ContentTooLargeException](store content 0)
 
-        store delete ()
-        store.exists shouldBe false
-        intercept[IOException](store.content)
+          store delete()
+          store.exists shouldBe false
+          intercept[IOException](store.content)
 
-        store.content("123".getBytes, 3, 0)
-        new String(store.content) shouldBe ""
-        new String(store content 0) shouldBe ""
-        intercept[IllegalArgumentException](store content -1)
+          store.content("123".getBytes, 3, 0)
+          new String(store.content) shouldBe ""
+          new String(store content 0) shouldBe ""
+          intercept[IllegalArgumentException](store content -1)
 
-        store delete ()
-        store.exists shouldBe false
-        intercept[IOException](store.content)
+          store delete()
+          store.exists shouldBe false
+          intercept[IOException](store.content)
+        }
       }
     }
   }
