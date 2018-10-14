@@ -23,6 +23,9 @@ import javax.crypto.*;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * @author Christian Schlichtherle
+ */
 final class CipherFilter implements Filter {
 
     private final XSupplier<Cipher> inputCipherSupplier, outputCipherSupplier;
@@ -33,12 +36,12 @@ final class CipherFilter implements Filter {
     }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+    public Socket<OutputStream> output(Socket<OutputStream> output) {
         return output.map(out -> new CipherOutputStream(out, outputCipherSupplier.get()));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> input) {
+    public Socket<InputStream> input(Socket<InputStream> input) {
         return input.map(in -> new CipherInputStream(in, inputCipherSupplier.get()));
     }
 }

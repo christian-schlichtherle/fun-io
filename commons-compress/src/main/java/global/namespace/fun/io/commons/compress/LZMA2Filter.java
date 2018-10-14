@@ -23,18 +23,24 @@ import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/** @author Christian Schlichtherle */
+/**
+ * @author Christian Schlichtherle
+ */
 final class LZMA2Filter implements Filter {
 
     private final int preset;
 
-    LZMA2Filter(final int preset) { this.preset = preset; }
+    LZMA2Filter(final int preset) {
+        this.preset = preset;
+    }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+    public Socket<OutputStream> output(Socket<OutputStream> output) {
         return output.map(os -> new XZCompressorOutputStream(os, preset));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(XZCompressorInputStream::new); }
+    public Socket<InputStream> input(Socket<InputStream> input) {
+        return input.map(XZCompressorInputStream::new);
+    }
 }

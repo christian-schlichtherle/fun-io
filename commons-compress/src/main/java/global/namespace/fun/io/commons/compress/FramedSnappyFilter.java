@@ -25,7 +25,9 @@ import org.apache.commons.compress.compressors.snappy.FramedSnappyDialect;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/** @author Christian Schlichtherle */
+/**
+ * @author Christian Schlichtherle
+ */
 final class FramedSnappyFilter implements Filter {
 
     private final Parameters outputParameters;
@@ -37,12 +39,12 @@ final class FramedSnappyFilter implements Filter {
     }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+    public Socket<OutputStream> output(Socket<OutputStream> output) {
         return output.map(os -> new FramedSnappyCompressorOutputStream(os, outputParameters));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> input) {
+    public Socket<InputStream> input(Socket<InputStream> input) {
         return input.map(is -> new FramedSnappyCompressorInputStream(is, inputParameters));
     }
 }

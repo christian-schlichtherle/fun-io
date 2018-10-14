@@ -27,7 +27,9 @@ import static java.util.Objects.requireNonNull;
  */
 public interface Store extends Source, Sink {
 
-    /** The default buffer size, which is {@value}. */
+    /**
+     * The default buffer size, which is {@value}.
+     */
     int BUFSIZE = 8 * 1024;
 
     default void deleteIfExists() throws IOException {
@@ -36,32 +38,46 @@ public interface Store extends Source, Sink {
         }
     }
 
-    /** Deletes the content of this store. */
+    /**
+     * Deletes the content of this store.
+     */
     void delete() throws IOException;
 
-    /** Returns {@code true} if and only if this store has any content. */
-    default boolean exists() throws IOException { return size().isPresent(); }
+    /**
+     * Returns {@code true} if and only if this store has any content.
+     */
+    default boolean exists() throws IOException {
+        return size().isPresent();
+    }
 
-    /** Returns the size of this storage if and only if this store has any content. */
+    /**
+     * Returns the size of this storage if and only if this store has any content.
+     */
     OptionalLong size() throws IOException;
 
-    /** Connects this store to the given codec. */
-    default ConnectedCodec connect(Codec c) { return Internal.connect(requireNonNull(c), this); }
+    /**
+     * Connects this store to the given codec.
+     */
+    default ConnectedCodec connect(Codec c) {
+        return Internal.connect(requireNonNull(c), this);
+    }
 
     /**
      * Returns the content of this store.
      *
      * @throws ContentTooLargeException if the content exceeds {@link Integer#MAX_VALUE} bytes.
-     * @throws IOException if there is no content or if the content cannot be read for some reason.
+     * @throws IOException              if there is no content or if the content cannot be read for some reason.
      */
-    default byte[] content() throws IOException { return content(Integer.MAX_VALUE); }
+    default byte[] content() throws IOException {
+        return content(Integer.MAX_VALUE);
+    }
 
     /**
      * Returns the content of this store.
      *
      * @throws IllegalArgumentException if {@code max} is less than zero.
      * @throws ContentTooLargeException if the content exceeds {@code max } bytes.
-     * @throws IOException if there is no content or if the content cannot be read for some reason.
+     * @throws IOException              if there is no content or if the content cannot be read for some reason.
      */
     default byte[] content(final int max) throws IOException {
         if (max < 0) {
@@ -88,12 +104,16 @@ public interface Store extends Source, Sink {
         }
     }
 
-    /** Sets the content of this store from the given byte array. */
+    /**
+     * Sets the content of this store from the given byte array.
+     */
     default void content(byte[] b) throws IOException {
         content(b, 0, b.length);
     }
 
-    /** Sets the content of this store from the given byte array at the given offset and length. */
+    /**
+     * Sets the content of this store from the given byte array at the given offset and length.
+     */
     default void content(final byte[] b, final int off, final int len) throws IOException {
         try {
             acceptWriter(out -> out.write(b, off, len));
@@ -105,48 +125,11 @@ public interface Store extends Source, Sink {
     }
 
     /**
-     * Returns a store which applies the given filter to the I/O streams loaned by this store.
+     * Returns a store which applies the given filter to this store.
      *
-     * @param t the filter to apply to the I/O streams loaned by this store.
+     * @param f the filter to apply to this store.
      */
-    default Store map(Filter t) {
-        return new Store() {
-
-            @Override
-            public Socket<InputStream> input() { return t.unapply(Store.this.input()); }
-
-            @Override
-            public Socket<OutputStream> output() { return t.apply(Store.this.output()); }
-
-            @Override
-            public void delete() throws IOException { Store.this.delete(); }
-
-            @Override
-            public OptionalLong size() throws IOException { return Store.this.size(); }
-
-            @Override
-            public byte[] content(int max) throws IOException {
-                if (max < 0) {
-                    throw new IllegalArgumentException(max + " < 0");
-                }
-                try {
-                    return applyReader(in -> {
-                        final ByteArrayOutputStream out = new ByteArrayOutputStream(BUFSIZE);
-                        final byte[] b = new byte[BUFSIZE];
-                        for (int total = 0, n; 0 <= (n = in.read(b)); ) {
-                            if (max < (total += n)) {
-                                throw new ContentTooLargeException(total, max);
-                            }
-                            out.write(b,0, n);
-                        }
-                        return out.toByteArray();
-                    });
-                } catch (IOException | RuntimeException e) {
-                    throw e;
-                } catch (Exception e) {
-                    throw new IOException(e);
-                }
-            }
-        };
+    default Store map(Filter f) {
+        return f.store(this);
     }
 }

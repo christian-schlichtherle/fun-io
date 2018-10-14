@@ -24,20 +24,24 @@ import org.apache.commons.compress.compressors.deflate.DeflateParameters;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/** @author Christian Schlichtherle */
+/**
+ * @author Christian Schlichtherle
+ */
 final class DeflateFilter implements Filter {
 
     private final DeflateParameters parameters;
 
-    DeflateFilter(final DeflateParameters p) { this.parameters = p; }
+    DeflateFilter(final DeflateParameters p) {
+        this.parameters = p;
+    }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+    public Socket<OutputStream> output(Socket<OutputStream> output) {
         return output.map(out -> new DeflateCompressorOutputStream(out, parameters));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> input) {
+    public Socket<InputStream> input(Socket<InputStream> input) {
         return input.map(in -> new DeflateCompressorInputStream(in, parameters));
     }
 }

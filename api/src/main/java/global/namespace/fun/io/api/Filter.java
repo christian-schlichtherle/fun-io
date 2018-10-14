@@ -15,18 +15,21 @@
  */
 package global.namespace.fun.io.api;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.OptionalLong;
 
 import static java.util.Objects.requireNonNull;
 
 /**
  * Decorates input and output stream {@linkplain Socket sockets} in order to transform the transmitted content.
  * <p>
- * With an encryption filter for example, the {@link #apply} method would decorate the loaned output streams
+ * With an encryption filter for example, the {@link #output} method would decorate the loaned output streams
  * with a new {@link javax.crypto.CipherOutputStream} in order to encrypt the data before writing it to the underlying
  * output stream.
- * Likewise, the {@link #unapply} method would decorate the loaned input streams with a new
+ * Likewise, the {@link #input} method would decorate the loaned input streams with a new
  * {@link javax.crypto.CipherInputStream} in order to decrypt the data after reading it from the underlying input
  * stream.
  * <p>
@@ -58,31 +61,161 @@ import static java.util.Objects.requireNonNull;
  */
 public interface Filter {
 
-    /** The identity filter. */
+    /**
+     * The identity filter.
+     */
     Filter IDENTITY = new Filter() {
 
         @Override
-        public Socket<OutputStream> apply(Socket<OutputStream> output) { return output; }
+        public Socket<OutputStream> output(Socket<OutputStream> output) {
+            return output;
+        }
 
         @Override
-        public Socket<InputStream> unapply(Socket<InputStream> input) { return input; }
+        public Socket<InputStream> input(Socket<InputStream> input) {
+            return input;
+        }
+
+        @Override
+        public Sink sink(Sink sink) {
+            return sink;
+        }
+
+        @Override
+        public Source source(Source source) {
+            return source;
+        }
+
+        @Override
+        public Store store(Store store) {
+            return store;
+        }
+
+        @Override
+        public Codec codec(Codec codec) {
+            return codec;
+        }
+
+        @Override
+        public Filter compose(Filter before) {
+            return before;
+        }
+
+        @Override
+        public Filter andThen(Filter after) {
+            return after;
+        }
     };
 
-    /** Returns an output stream socket which decorates the given output stream socket. */
-    Socket<OutputStream> apply(Socket<OutputStream> output);
+    /**
+     * Returns an output stream socket which applies this filter to the given output stream socket.
+     */
+    Socket<OutputStream> output(Socket<OutputStream> output);
 
-    /** Returns a sink which decorates the given sink. */
-    default Sink apply(Sink sink) { return () -> apply(sink.output()); }
+    /**
+     * Returns an input stream socket which applies this filter to the given input stream socket.
+     */
+    Socket<InputStream> input(Socket<InputStream> input);
 
-    /** Returns an input stream socket which decorates the given input stream socket. */
-    Socket<InputStream> unapply(Socket<InputStream> input);
+    /**
+     * Returns a sink which applies this filter to the given sink.
+     */
+    default Sink sink(Sink sink) {
+        return () -> output(sink.output());
+    }
 
-    /** Returns a source which decorates the given source. */
-    default Source unapply(Source source) { return () -> unapply(source.input()); };
+    /**
+     * Returns a source which applies this filter to the given source.
+     */
+    default Source source(Source source) {
+        return () -> input(source.input());
+    }
 
-    /** Returns a filter which applies the given filter <em>before</em> this filter. */
-    default Filter compose(Filter before) { return Internal.compose(requireNonNull(before), this); }
+    /**
+     * Returns a store which applies this filter to the given store.
+     *
+     * @param store the store to apply this filter to.
+     */
+    default Store store(Store store) {
+        return new Store() {
 
-    /** Returns a filter which applies the given filter <em>after</em> this filter. */
-    default Filter andThen(Filter after) { return Internal.compose(this, requireNonNull(after)); }
+            @Override
+            public Socket<OutputStream> output() {
+                return Filter.this.output(store.output());
+            }
+
+            @Override
+            public Socket<InputStream> input() {
+                return Filter.this.input(store.input());
+            }
+
+            @Override
+            public void delete() throws IOException {
+                store.delete();
+            }
+
+            @Override
+            public OptionalLong size() throws IOException {
+                return store.size();
+            }
+
+            @Override
+            public byte[] content(final int max) throws IOException {
+                if (max < 0) {
+                    throw new IllegalArgumentException(max + " < 0");
+                }
+                try {
+                    return applyReader(in -> {
+                        final ByteArrayOutputStream out = new ByteArrayOutputStream(BUFSIZE);
+                        final byte[] b = new byte[BUFSIZE];
+                        for (int total = 0, n; 0 <= (n = in.read(b)); ) {
+                            if (max < (total += n)) {
+                                throw new ContentTooLargeException(total, max);
+                            }
+                            out.write(b, 0, n);
+                        }
+                        return out.toByteArray();
+                    });
+                } catch (IOException | RuntimeException e) {
+                    throw e;
+                } catch (Exception e) {
+                    throw new IOException(e);
+                }
+            }
+        };
+    }
+
+    /**
+     * Returns a codec which applies this filter to the the given codec.
+     *
+     * @param codec the codec to apply this filter to.
+     */
+    default Codec codec(Codec codec) {
+        return new Codec() {
+
+            @Override
+            public Encoder encoder(Socket<OutputStream> output) {
+                return codec.encoder(output(output));
+            }
+
+            @Override
+            public Decoder decoder(Socket<InputStream> input) {
+                return codec.decoder(input(input));
+            }
+        };
+    }
+
+    /**
+     * Returns a filter which applies the given filter <em>before</em> this filter.
+     */
+    default Filter compose(Filter before) {
+        return Internal.compose(requireNonNull(before), this);
+    }
+
+    /**
+     * Returns a filter which applies the given filter <em>after</em> this filter.
+     */
+    default Filter andThen(Filter after) {
+        return Internal.compose(this, requireNonNull(after));
+    }
 }

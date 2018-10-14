@@ -8,6 +8,9 @@ import java.io.BufferedOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * @author Christian Schlichtherle
+ */
 final class BufferedIOFilter implements Filter {
 
     private final int size;
@@ -20,10 +23,12 @@ final class BufferedIOFilter implements Filter {
     }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+    public Socket<OutputStream> output(Socket<OutputStream> output) {
         return output.map(out -> new BufferedOutputStream(out, size));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(in -> new BufferedInputStream(in, size)); }
+    public Socket<InputStream> input(Socket<InputStream> input) {
+        return input.map(in -> new BufferedInputStream(in, size));
+    }
 }

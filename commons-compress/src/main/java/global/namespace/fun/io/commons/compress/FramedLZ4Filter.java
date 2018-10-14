@@ -23,18 +23,24 @@ import org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorOutputStre
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/** @author Christian Schlichtherle */
+/**
+ * @author Christian Schlichtherle
+ */
 final class FramedLZ4Filter implements Filter {
 
     private final FramedLZ4CompressorOutputStream.Parameters parameters;
 
-    FramedLZ4Filter(final FramedLZ4CompressorOutputStream.Parameters p) { this.parameters = p; }
+    FramedLZ4Filter(final FramedLZ4CompressorOutputStream.Parameters p) {
+        this.parameters = p;
+    }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+    public Socket<OutputStream> output(Socket<OutputStream> output) {
         return output.map(os -> new FramedLZ4CompressorOutputStream(os, parameters));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(FramedLZ4CompressorInputStream::new); }
+    public Socket<InputStream> input(Socket<InputStream> input) {
+        return input.map(FramedLZ4CompressorInputStream::new);
+    }
 }

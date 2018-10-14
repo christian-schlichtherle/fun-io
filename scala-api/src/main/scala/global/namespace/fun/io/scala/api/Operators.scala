@@ -22,26 +22,26 @@ import global.namespace.fun.io.api._
   * @author Christian Schlichtherle */
 private[api] trait Operators {
 
-  implicit class WithFilter(t1: Filter) {
+  implicit class WithFilter(f1: Filter) {
 
-    def +(t2: Filter): Filter = t1 compose t2
+    def +(t2: Filter): Filter = f1 compose t2
 
-    def <<(t2: Filter): Filter = t1 compose t2
-    def <<(s: Store): Store = s map t1
+    def <<(f2: Filter): Filter = f1 compose f2
+    def <<(s: Store): Store = f1 store s
 
-    def >>(t2: Filter): Filter = t1 andThen t2
-    def >>(c: Codec): Codec = c map t1
+    def >>(f2: Filter): Filter = f1 andThen f2
+    def >>(c: Codec): Codec = f1 codec c
   }
 
   implicit class WithStore(s: Store) {
 
-    def >>(t: Filter): Store = s map t
+    def >>(f: Filter): Store = s map f
     def >>(c: Codec): ConnectedCodec = s connect c
   }
 
   implicit class WithCodec(c: Codec) {
 
-    def <<(t: Filter): Codec = c map t
+    def <<(f: Filter): Codec = c map f
     def <<(s: Store): ConnectedCodec = c connect s
   }
 }

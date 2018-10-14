@@ -28,6 +28,9 @@ import java.util.zip.DeflaterInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterOutputStream;
 
+/**
+ * @author Christian Schlichtherle
+ */
 final class InflateFilter implements Filter {
 
     private final XSupplier<Inflater> inflaterSupplier;
@@ -39,7 +42,7 @@ final class InflateFilter implements Filter {
     }
 
     @Override
-    public Socket<OutputStream> apply(final Socket<OutputStream> output) {
+    public Socket<OutputStream> output(final Socket<OutputStream> output) {
         return output.map(out -> new InflaterOutputStream(out, inflaterSupplier.get(), Store.BUFSIZE) {
 
             boolean closed;
@@ -56,7 +59,7 @@ final class InflateFilter implements Filter {
     }
 
     @Override
-    public Socket<InputStream> unapply(final Socket<InputStream> input) {
+    public Socket<InputStream> input(final Socket<InputStream> input) {
         return input.map(in -> new DeflaterInputStream(in, deflaterSupplier.get(), Store.BUFSIZE) {
 
             boolean closed;

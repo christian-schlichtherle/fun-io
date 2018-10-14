@@ -20,13 +20,18 @@ import global.namespace.fun.io.api.Filter;
 
 import java.io.*;
 
+/**
+ * @author Christian Schlichtherle
+ */
 public class ROTFilter implements Filter {
 
     private static final int ALPHABET_LENGTH = 'Z' - 'A' + 1;
 
     private int apply[] = new int[ALPHABET_LENGTH], unapply[] = new int[ALPHABET_LENGTH];
 
-    public ROTFilter() { this(13); }
+    public ROTFilter() {
+        this(13);
+    }
 
     public ROTFilter(final int positions) {
         if (positions < 1 || ALPHABET_LENGTH - 1 < positions) {
@@ -39,37 +44,18 @@ public class ROTFilter implements Filter {
     }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> output) {
-        return output.map(out -> new FilterOutputStream(out) {
-
-            @Override
-            public void write(int b) throws IOException { out.write(apply(b)); }
-
-            @Override
-            public void write(final byte[] b, final int off, final int len) throws IOException {
-                if ((off | len | (b.length - (len + off)) | (off + len)) < 0) {
-                    throw new IndexOutOfBoundsException();
-                }
-                final byte[] rotated = new byte[len];
-                for (int i = 0 ; i < len ; i++) {
-                    rotated[i] = (byte) apply(b[off + i]);
-                }
-                out.write(rotated);
-            }
-        });
-    }
-
-    @Override
-    public Socket<InputStream> unapply(Socket<InputStream> input) {
+    public Socket<InputStream> input(Socket<InputStream> input) {
         return input.map(in -> new FilterInputStream(in) {
 
             @Override
-            public int read() throws IOException { return unapply(in.read()); }
+            public int read() throws IOException {
+                return unapply(in.read());
+            }
 
             @Override
             public int read(final byte[] b, final int off, final int len) throws IOException {
                 int read = in.read(b, off, len);
-                for (int i = 0 ; i < read; i++) {
+                for (int i = 0; i < read; i++) {
                     b[off + i] = (byte) unapply(b[off + i]);
                 }
                 return read;
@@ -77,9 +63,36 @@ public class ROTFilter implements Filter {
         });
     }
 
-    private int apply(int b) { return rotate(b, apply); }
+    @Override
+    public Socket<OutputStream> output(Socket<OutputStream> output) {
+        return output.map(out -> new FilterOutputStream(out) {
 
-    private int unapply(int b) { return rotate(b, unapply); }
+            @Override
+            public void write(int b) throws IOException {
+                out.write(apply2output(b));
+            }
+
+            @Override
+            public void write(final byte[] b, final int off, final int len) throws IOException {
+                if ((off | len | (b.length - (len + off)) | (off + len)) < 0) {
+                    throw new IndexOutOfBoundsException();
+                }
+                final byte[] rotated = new byte[len];
+                for (int i = 0; i < len; i++) {
+                    rotated[i] = (byte) apply2output(b[off + i]);
+                }
+                out.write(rotated);
+            }
+        });
+    }
+
+    private int apply2output(int b) {
+        return rotate(b, apply);
+    }
+
+    private int unapply(int b) {
+        return rotate(b, unapply);
+    }
 
     private static int rotate(final int b, int[] map) {
         if ('A' <= b && b <= 'Z') {
