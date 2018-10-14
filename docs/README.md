@@ -5,8 +5,7 @@ home: true
 title: Fun I/O
 ---
 
-Fun I/O provides functional, high level abstractions for codecs, sources, sinks, stores, archives, filters, sockets et 
-al.
+Fun I/O provides functional programming patterns and high level abstractions for reusable, reliable and synchronous I/O.
 Fun I/O supports Java 8 or later and Scala 2.10, 2.11 and 2.12 equally well via dedicated APIs and is covered by the 
 Apache License, version 2.0.
 
