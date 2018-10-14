@@ -39,10 +39,10 @@ public interface Store extends Source, Sink {
     /** Deletes the content of this store. */
     void delete() throws IOException;
 
-    /** Returns {@code true} if and only if some content exists in this store. */
+    /** Returns {@code true} if and only if this store has any content. */
     default boolean exists() throws IOException { return size().isPresent(); }
 
-    /** Returns the size of the content of this store, if present. */
+    /** Returns the size of this storage if and only if this store has any content. */
     OptionalLong size() throws IOException;
 
     /** Connects this store to the given codec. */
@@ -67,22 +67,24 @@ public interface Store extends Source, Sink {
         if (max < 0) {
             throw new IllegalArgumentException(max + " < 0");
         }
-        try {
-            return applyReader(in -> {
-                final ByteArrayOutputStream out = new ByteArrayOutputStream(BUFSIZE);
-                final byte[] b = new byte[BUFSIZE];
-                for (int total = 0, n; 0 <= (n = in.read(b)); ) {
-                    if (max < (total += n)) {
-                        throw new ContentTooLargeException(total, max);
-                    }
-                    out.write(b,0, n);
+        final OptionalLong size = size();
+        if (size.isPresent()) {
+            final long length = size.getAsLong();
+            if (length <= max) {
+                final byte[] content = new byte[(int) length];
+                try {
+                    input().map(DataInputStream::new).accept(in -> in.readFully(content));
+                } catch (IOException | RuntimeException e) {
+                    throw e;
+                } catch (Exception e) {
+                    throw new IOException(e);
                 }
-                return out.toByteArray();
-            });
-        } catch (IOException | RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new IOException(e);
+                return content;
+            } else {
+                throw new ContentTooLargeException(length, max);
+            }
+        } else {
+            throw new NoContentException();
         }
     }
 
@@ -121,6 +123,30 @@ public interface Store extends Source, Sink {
 
             @Override
             public OptionalLong size() throws IOException { return Store.this.size(); }
+
+            @Override
+            public byte[] content(int max) throws IOException {
+                if (max < 0) {
+                    throw new IllegalArgumentException(max + " < 0");
+                }
+                try {
+                    return applyReader(in -> {
+                        final ByteArrayOutputStream out = new ByteArrayOutputStream(BUFSIZE);
+                        final byte[] b = new byte[BUFSIZE];
+                        for (int total = 0, n; 0 <= (n = in.read(b)); ) {
+                            if (max < (total += n)) {
+                                throw new ContentTooLargeException(total, max);
+                            }
+                            out.write(b,0, n);
+                        }
+                        return out.toByteArray();
+                    });
+                } catch (IOException | RuntimeException e) {
+                    throw e;
+                } catch (Exception e) {
+                    throw new IOException(e);
+                }
+            }
         };
     }
 }
