@@ -23,17 +23,24 @@ import global.namespace.fun.io.api.Socket;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * @author Christian Schlichtherle
+ */
 final class ZstdFilter implements Filter {
 
     final int level;
 
-    ZstdFilter(final int level) { this.level = level; }
+    ZstdFilter(final int level) {
+        this.level = level;
+    }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+    public Socket<OutputStream> output(Socket<OutputStream> output) {
         return output.map(out -> new ZstdOutputStream(out, level));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(ZstdInputStream::new); }
+    public Socket<InputStream> input(Socket<InputStream> input) {
+        return input.map(ZstdInputStream::new);
+    }
 }

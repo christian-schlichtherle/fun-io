@@ -39,10 +39,10 @@ final class BZIP2Filter implements Filter {
     }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+    public Socket<OutputStream> output(Socket<OutputStream> output) {
         return output.map(out -> new BZip2CompressorOutputStream(out, blockSize));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(BZip2CompressorInputStream::new); }
+    public Socket<InputStream> input(Socket<InputStream> input) { return input.map(BZip2CompressorInputStream::new); }
 }

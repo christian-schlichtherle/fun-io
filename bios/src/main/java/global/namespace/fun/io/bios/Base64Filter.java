@@ -23,6 +23,9 @@ import java.io.OutputStream;
 import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
 
+/**
+ * @author Christian Schlichtherle
+ */
 final class Base64Filter implements Filter {
 
     private final Encoder encoder;
@@ -34,8 +37,12 @@ final class Base64Filter implements Filter {
     }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> output) { return output.map(encoder::wrap); }
+    public Socket<OutputStream> output(Socket<OutputStream> output) {
+        return output.map(encoder::wrap);
+    }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(decoder::wrap); }
+    public Socket<InputStream> input(Socket<InputStream> input) {
+        return input.map(decoder::wrap);
+    }
 }

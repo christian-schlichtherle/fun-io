@@ -24,18 +24,24 @@ import org.apache.commons.compress.compressors.lz77support.Parameters;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/** @author Christian Schlichtherle */
+/**
+ * @author Christian Schlichtherle
+ */
 final class BlockLZ4Filter implements Filter {
 
     private final Parameters parameters;
 
-    BlockLZ4Filter(Parameters p) { this.parameters = p; }
+    BlockLZ4Filter(Parameters p) {
+        this.parameters = p;
+    }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+    public Socket<OutputStream> output(Socket<OutputStream> output) {
         return output.map(os -> new BlockLZ4CompressorOutputStream(os, parameters));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(BlockLZ4CompressorInputStream::new); }
+    public Socket<InputStream> input(Socket<InputStream> input) {
+        return input.map(BlockLZ4CompressorInputStream::new);
+    }
 }

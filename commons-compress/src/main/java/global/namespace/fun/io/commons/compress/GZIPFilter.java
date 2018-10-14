@@ -24,18 +24,24 @@ import org.apache.commons.compress.compressors.gzip.GzipParameters;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/** @author Christian Schlichtherle */
+/**
+ * @author Christian Schlichtherle
+ */
 final class GZIPFilter implements Filter {
 
     private final GzipParameters parameters;
 
-    GZIPFilter(final GzipParameters p) { this.parameters = p; }
+    GZIPFilter(final GzipParameters p) {
+        this.parameters = p;
+    }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+    public Socket<OutputStream> output(Socket<OutputStream> output) {
         return output.map(out -> new GzipCompressorOutputStream(out, parameters));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(GzipCompressorInputStream::new); }
+    public Socket<InputStream> input(Socket<InputStream> input) {
+        return input.map(GzipCompressorInputStream::new);
+    }
 }

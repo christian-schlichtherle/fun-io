@@ -29,14 +29,18 @@ import java.io.InputStream;
 @FunctionalInterface
 public interface Source {
 
-    /** Returns the underlying input stream socket for reading the content of this source. */
+    /**
+     * Returns the underlying input stream socket for reading the content of this source.
+     */
     Socket<InputStream> input();
 
     /**
      * Loans an input stream from the underlying {@linkplain #input() socket} to the given consumer.
      * The input stream will be closed upon return from this method.
      */
-    default void acceptReader(XConsumer<? super InputStream> reader) throws Exception { input().accept(reader); }
+    default void acceptReader(XConsumer<? super InputStream> reader) throws Exception {
+        input().accept(reader);
+    }
 
     /**
      * Loans an input stream from the underlying {@linkplain #input() socket} to the given function and returns its
@@ -55,7 +59,9 @@ public interface Source {
      * Returns a source which applies the given filter to the I/O streams loaned by the underlying
      * {@linkplain #input() input stream socket}.
      *
-     * @param t the filter to apply to the I/O streams loaned by the underlying input stream socket.
+     * @param f the filter to apply to the I/O streams loaned by the underlying input stream socket.
      */
-    default Source map(Filter t) { return () -> t.unapply(input()); }
+    default Source map(Filter f) {
+        return f.source(this);
+    }
 }

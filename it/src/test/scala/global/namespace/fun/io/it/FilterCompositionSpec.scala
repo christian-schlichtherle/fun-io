@@ -30,6 +30,9 @@ import org.scalatest.prop.PropertyChecks._
 
 import scala.io.Source
 
+/**
+  * @author Christian Schlichtherle
+  */
 class FilterCompositionSpec extends WordSpec {
 
   "A sequence of filters" when {
@@ -91,10 +94,13 @@ private object FilterCompositionSpec {
 
   private[this] class MessageFilter(message: String) extends Filter {
 
-    def apply(oss: Socket[OutputStream]): Socket[OutputStream] = {
-      oss.map((out: OutputStream) => { out write message.getBytes; out })
+    def output(oss: Socket[OutputStream]): Socket[OutputStream] = {
+      oss.map((out: OutputStream) => {
+        out write message.getBytes; out
+      })
     }
 
-    def unapply(iss: Socket[InputStream]): Socket[InputStream] = iss
+    def input(iss: Socket[InputStream]): Socket[InputStream] = iss
   }
+
 }

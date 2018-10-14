@@ -27,10 +27,12 @@ import java.io.OutputStream;
 final class LZMAFilter implements Filter {
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+    public Socket<OutputStream> output(Socket<OutputStream> output) {
         return output.map(LZMACompressorOutputStream::new);
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(LZMAInputStream::new); }
+    public Socket<InputStream> input(Socket<InputStream> input) {
+        return input.map(LZMAInputStream::new);
+    }
 }

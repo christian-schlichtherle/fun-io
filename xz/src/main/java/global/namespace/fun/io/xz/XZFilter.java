@@ -24,6 +24,9 @@ import org.tukaani.xz.XZOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * @author Christian Schlichtherle
+ */
 final class XZFilter implements Filter {
 
     private final FilterOptions[] filterOptions;
@@ -36,10 +39,12 @@ final class XZFilter implements Filter {
     }
 
     @Override
-    public Socket<OutputStream> apply(Socket<OutputStream> output) {
+    public Socket<OutputStream> output(Socket<OutputStream> output) {
         return output.map(out -> new XZOutputStream(out, filterOptions, checkType));
     }
 
     @Override
-    public Socket<InputStream> unapply(Socket<InputStream> input) { return input.map(XZInputStream::new); }
+    public Socket<InputStream> input(Socket<InputStream> input) {
+        return input.map(XZInputStream::new);
+    }
 }

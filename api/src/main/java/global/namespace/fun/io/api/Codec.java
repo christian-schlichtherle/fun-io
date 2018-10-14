@@ -29,17 +29,29 @@ import static java.util.Objects.requireNonNull;
  */
 public interface Codec {
 
-    /** Returns an encoder which writes object graphs to the given output stream socket. */
+    /**
+     * Returns an encoder which writes object graphs to the given output stream socket.
+     */
     Encoder encoder(Socket<OutputStream> output);
 
-    /** Returns an encoder which writes object graphs to the given sink. */
-    default Encoder encoder(Sink sink) { return encoder(sink.output()); }
+    /**
+     * Returns an encoder which writes object graphs to the given sink.
+     */
+    default Encoder encoder(Sink sink) {
+        return encoder(sink.output());
+    }
 
-    /** Returns a decoder which reads object graphs from the given input stream socket. */
+    /**
+     * Returns a decoder which reads object graphs from the given input stream socket.
+     */
     Decoder decoder(Socket<InputStream> input);
 
-    /** Returns a decoder which reads object graphs from the given source. */
-    default Decoder decoder(Source source) { return decoder(source.input()); }
+    /**
+     * Returns a decoder which reads object graphs from the given source.
+     */
+    default Decoder decoder(Source source) {
+        return decoder(source.input());
+    }
 
     /**
      * Returns a deep clone of the given object by encoding it to a temporary store obtained from the given supplier and
@@ -51,32 +63,18 @@ public interface Codec {
     }
 
     /**
-     * Returns a deep clone of the given object by encoding it to a loaned buffer and decoding it again.
-     *
-     * @deprecated The {@link Buffer} interface is redundant since the introduction of {@link Store#deleteIfExists()} in
-     *             Fun I/O 1.4.0.
+     * Connects this codec to the given store.
      */
-    @Deprecated
-    default <T> T clone(T t, Socket<Buffer> bufferSocket) throws Exception {
-        return bufferSocket.apply(buffer -> connect(buffer).clone(t));
+    default ConnectedCodec connect(Store store) {
+        return Internal.connect(this, requireNonNull(store));
     }
 
-    /** Connects this codec to the given store. */
-    default ConnectedCodec connect(Store store) { return Internal.connect(this, requireNonNull(store)); }
-
     /**
-     * Returns a codec which applies the given filter to the I/O streams loaned to this codec.
+     * Returns a codec which applies the given filter to this codec.
      *
-     * @param t the filter to apply to the I/O streams loaned to this codec.
+     * @param f the filter to apply to this codec.
      */
-    default Codec map(Filter t) {
-        return new Codec() {
-
-            @Override
-            public Encoder encoder(Socket<OutputStream> output) { return Codec.this.encoder(t.apply(output)); }
-
-            @Override
-            public Decoder decoder(Socket<InputStream> input) { return Codec.this.decoder(t.unapply(input)); }
-        };
+    default Codec map(Filter f) {
+        return f.codec(this);
     }
 }

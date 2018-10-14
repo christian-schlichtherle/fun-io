@@ -29,14 +29,18 @@ import java.io.OutputStream;
 @FunctionalInterface
 public interface Sink {
 
-    /** Returns the underlying output stream socket for (over)writing the content of this sink. */
+    /**
+     * Returns the underlying output stream socket for (over)writing the content of this sink.
+     */
     Socket<OutputStream> output();
 
     /**
      * Loans an output stream from the underlying {@linkplain #output() socket} to the given consumer.
      * The output stream will be closed upon return from this method.
      */
-    default void acceptWriter(XConsumer<? super OutputStream> writer) throws Exception { output().accept(writer); }
+    default void acceptWriter(XConsumer<? super OutputStream> writer) throws Exception {
+        output().accept(writer);
+    }
 
     /**
      * Loans an output stream from the underlying {@linkplain #output() socket} to the given function and returns its
@@ -55,7 +59,9 @@ public interface Sink {
      * Returns a sink which applies the given filter to the I/O streams loaned by the underlying
      * {@linkplain #output() output stream socket}.
      *
-     * @param t the filter to apply to the I/O streams loaned by the underlying output stream socket.
+     * @param f the filter to apply to the I/O streams loaned by the underlying output stream socket.
      */
-    default Sink map(Filter t) { return () -> t.apply(output()); }
+    default Sink map(Filter f) {
+        return f.sink(this);
+    }
 }

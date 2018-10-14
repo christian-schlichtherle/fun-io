@@ -18,28 +18,41 @@ package global.namespace.fun.io.api;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * @author Christian Schlichtherle
+ */
 final class Internal {
 
-    private Internal() { }
+    private Internal() {
+    }
 
     static Filter compose(Filter first, Filter second) {
         return new Filter() {
 
             @Override
-            public Socket<OutputStream> apply(Socket<OutputStream> output) { return second.apply(first.apply(output)); }
+            public Socket<OutputStream> output(Socket<OutputStream> output) {
+                return second.output(first.output(output));
+            }
 
             @Override
-            public Socket<InputStream> unapply(Socket<InputStream> input) { return second.unapply(first.unapply(input)); }
+            public Socket<InputStream> input(Socket<InputStream> input) {
+                return second.input(first.input(input));
+            }
         };
     }
 
     static ConnectedCodec connect(Codec c, Store s) {
         return new ConnectedCodec() {
-            @Override
-            public Codec codec() { return c; }
 
             @Override
-            public Store store() { return s; }
+            public Codec codec() {
+                return c;
+            }
+
+            @Override
+            public Store store() {
+                return s;
+            }
         };
     }
 }
