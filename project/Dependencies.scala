@@ -30,6 +30,7 @@ object Dependencies {
   val Slf4jSimple: ModuleID = "org.slf4j" % "slf4j-simple" % "1.7.25"
   val Xz: ModuleID = "org.tukaani" % "xz" % "1.8"
   val ZstdJni: ModuleID = "com.github.luben" % "zstd-jni" % "1.3.5-4"
+  val AwsJavaSdkS3: ModuleID = "com.amazonaws" % "aws-java-sdk-s3" % "1.11.433"
 
   val ScalaVersion_2_10: String = sys.env.getOrElse("SCALA_VERSION_2_10", "2.10.7")
   val ScalaVersion_2_11: String = sys.env.getOrElse("SCALA_VERSION_2_11", "2.11.12")
