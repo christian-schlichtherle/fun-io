@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @author Christian Schlichtherle
  */
-public abstract class ArchiveEntry<E> {
+public abstract class ArchiveEntry {
 
     /**
      * Returns the name of the underlying archive entry.
@@ -37,7 +37,7 @@ public abstract class ArchiveEntry<E> {
         if (!(obj instanceof ArchiveEntry)) {
             return false;
         }
-        final ArchiveEntry<?> that = (ArchiveEntry) obj;
+        final ArchiveEntry that = (ArchiveEntry) obj;
         return that.canEqual(this) &&
                 this.name().equals(that.name()) &&
                 this.size() == that.size() &&

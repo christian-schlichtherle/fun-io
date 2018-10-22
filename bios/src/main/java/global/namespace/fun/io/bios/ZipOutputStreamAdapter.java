@@ -24,7 +24,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Christian Schlichtherle
  */
-class ZipOutputStreamAdapter implements ArchiveOutput<ZipEntry> {
+class ZipOutputStreamAdapter implements ArchiveOutput {
 
     private final ZipOutputStream zip;
 
@@ -33,12 +33,12 @@ class ZipOutputStreamAdapter implements ArchiveOutput<ZipEntry> {
     }
 
     @Override
-    public ArchiveEntrySink<ZipEntry> sink(String name) {
+    public ArchiveEntrySink sink(String name) {
         return sink(new ZipEntry(requireInternal(name)));
     }
 
-    ArchiveEntrySink<ZipEntry> sink(ZipEntry entry) {
-        return new ArchiveEntrySink<ZipEntry>() {
+    ArchiveEntrySink sink(ZipEntry entry) {
+        return new ArchiveEntrySink() {
 
             @Override
             public Socket<OutputStream> output() {
@@ -61,7 +61,7 @@ class ZipOutputStreamAdapter implements ArchiveOutput<ZipEntry> {
             }
 
             @Override
-            public void copyFrom(ArchiveEntrySource<?> source) throws Exception {
+            public void copyFrom(ArchiveEntrySource source) throws Exception {
                 copy(source, this);
             }
         };

@@ -15,7 +15,7 @@ import java.io.InputStream;
  *
  * @author Christian Schlichtherle
  */
-abstract class ZipArchiveEntrySource extends ArchiveEntrySource<ZipArchiveEntry> {
+abstract class ZipArchiveEntrySource extends ArchiveEntrySource {
 
     abstract Socket<InputStream> rawInput();
 

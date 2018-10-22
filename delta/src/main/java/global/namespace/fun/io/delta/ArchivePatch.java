@@ -25,38 +25,42 @@ import static java.util.Arrays.asList;
  *
  * @author Christian Schlichtherle
  */
-abstract class ArchivePatch<B, D> {
+abstract class ArchivePatch {
 
-    abstract ArchiveSource<B> baseSource();
+    abstract ArchiveSource baseSource();
 
-    abstract ArchiveSource<D> deltaSource();
+    abstract ArchiveSource deltaSource();
 
-    <U> void to(ArchiveSink<U> update) throws Exception {
-        this.<U>accept(engine -> update.acceptWriter(engine::to));
+    void to(ArchiveSink update) throws Exception {
+        this.accept(engine -> update.acceptWriter(engine::to));
     }
 
-    private <U> void accept(XConsumer<Engine<U>> consumer) throws Exception {
+    private void accept(XConsumer<Engine> consumer) throws Exception {
         baseSource().acceptReader(baseInput -> deltaSource().acceptReader(deltaInput -> consumer.accept(
-                new Engine<U>() {
+                new Engine() {
 
-                    ArchiveInput<B> baseInput() { return baseInput; }
+                    ArchiveInput baseInput() {
+                        return baseInput;
+                    }
 
-                    ArchiveInput<D> deltaInput() { return deltaInput; }
+                    ArchiveInput deltaInput() {
+                        return deltaInput;
+                    }
                 }
         )));
     }
 
-    private abstract class Engine<U> {
+    private abstract class Engine {
 
         DeltaModel model;
 
         WithMessageDigest digest;
 
-        abstract ArchiveInput<B> baseInput();
+        abstract ArchiveInput baseInput();
 
-        abstract ArchiveInput<D> deltaInput();
+        abstract ArchiveInput deltaInput();
 
-        void to(final ArchiveOutput<U> updateOutput) throws Exception {
+        void to(final ArchiveOutput updateOutput) throws Exception {
             for (Predicate<String> filter : passFilters(updateOutput)) {
                 to(updateOutput, filter);
             }
@@ -68,7 +72,7 @@ abstract class ArchivePatch<B, D> {
          * The filters should properly partition the set of entry sources, i.e. each entry source should be accepted by
          * exactly one filter.
          */
-        Iterable<Predicate<String>> passFilters(final ArchiveOutput<U> updateOutput) {
+        Iterable<Predicate<String>> passFilters(final ArchiveOutput updateOutput) {
             if (updateOutput.isJar()) {
                 // java.util.JarInputStream assumes that the file entry
                 // "META-INF/MANIFEST.MF" should either be the first or the second
@@ -87,11 +91,11 @@ abstract class ArchivePatch<B, D> {
             }
         }
 
-        void to(final ArchiveOutput<U> updateOutput, final Predicate<String> filter) throws Exception {
+        void to(final ArchiveOutput updateOutput, final Predicate<String> filter) throws Exception {
 
-            abstract class Patch<E> {
+            abstract class Patch {
 
-                abstract ArchiveInput<E> input();
+                abstract ArchiveInput input();
 
                 abstract IOException ioException(Throwable cause);
 
@@ -99,9 +103,9 @@ abstract class ArchivePatch<B, D> {
                     for (final EntryNameAndDigestValue entryNameAndDigestValue : collection) {
                         final String name = entryNameAndDigestValue.name();
                         if (filter.test(name)) {
-                            final Optional<ArchiveEntrySource<E>> optEntry = input().source(name);
+                            final Optional<ArchiveEntrySource> optEntry = input().source(name);
                             if (optEntry.isPresent()) {
-                                final ArchiveEntrySource<E> entry = optEntry.get();
+                                final ArchiveEntrySource entry = optEntry.get();
                                 if (!digestValueOf(entry).equals(entryNameAndDigestValue.digestValue())) {
                                     throw ioException(new WrongMessageDigestException(name));
                                 }
@@ -114,22 +118,30 @@ abstract class ArchivePatch<B, D> {
                 }
             }
 
-            class OnBaseInputPatch extends Patch<B> {
+            class OnBaseInputPatch extends Patch {
 
                 @Override
-                ArchiveInput<B> input() { return baseInput(); }
+                ArchiveInput input() {
+                    return baseInput();
+                }
 
                 @Override
-                IOException ioException(Throwable cause) { return new WrongBaseArchiveFileException(cause); }
+                IOException ioException(Throwable cause) {
+                    return new WrongBaseArchiveFileException(cause);
+                }
             }
 
-            class OnDeltaInputPatch extends Patch<D> {
+            class OnDeltaInputPatch extends Patch {
 
                 @Override
-                ArchiveInput<D> input() { return deltaInput(); }
+                ArchiveInput input() {
+                    return deltaInput();
+                }
 
                 @Override
-                IOException ioException(Throwable cause) { return new InvalidDeltaArchiveFileException(cause); }
+                IOException ioException(Throwable cause) {
+                    return new InvalidDeltaArchiveFileException(cause);
+                }
             }
 
             // Order is important here!
@@ -141,7 +153,9 @@ abstract class ArchivePatch<B, D> {
             new OnDeltaInputPatch().apply(model().addedEntries());
         }
 
-        String digestValueOf(Source source) throws Exception { return digest().digestValueOf(source); }
+        String digestValueOf(Source source) throws Exception {
+            return digest().digestValueOf(source);
+        }
 
         WithMessageDigest digest() throws Exception {
             final WithMessageDigest digest = this.digest;

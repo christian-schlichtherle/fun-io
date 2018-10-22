@@ -23,18 +23,18 @@ import static global.namespace.fun.io.spi.Copy.copy;
  *
  * @author Christian Schlichtherle
  */
-final class TarArchiveOutputStreamAdapter implements ArchiveOutput<TarArchiveEntry> {
+final class TarArchiveOutputStreamAdapter implements ArchiveOutput {
 
     private final TarArchiveOutputStream tar;
 
     TarArchiveOutputStreamAdapter(final TarArchiveOutputStream tar) { this.tar = tar; }
 
-    public ArchiveEntrySink<TarArchiveEntry> sink(String name) {
+    public ArchiveEntrySink sink(String name) {
         return sink(new TarArchiveEntry(requireInternal(name)));
     }
 
-    private ArchiveEntrySink<TarArchiveEntry> sink(TarArchiveEntry entry) {
-        return new ArchiveEntrySink<TarArchiveEntry>() {
+    private ArchiveEntrySink sink(TarArchiveEntry entry) {
+        return new ArchiveEntrySink() {
 
             @Override
             public Socket<OutputStream> output() {
@@ -56,7 +56,7 @@ final class TarArchiveOutputStreamAdapter implements ArchiveOutput<TarArchiveEnt
             }
 
             @Override
-            public void copyFrom(final ArchiveEntrySource<?> source) throws Exception {
+            public void copyFrom(final ArchiveEntrySource source) throws Exception {
                 entry.setSize(source.size());
                 copy(source, this);
             }

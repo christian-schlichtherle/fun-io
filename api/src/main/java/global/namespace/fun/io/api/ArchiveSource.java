@@ -14,16 +14,16 @@ import global.namespace.fun.io.api.function.XFunction;
  * @author Christian Schlichtherle
  */
 @FunctionalInterface
-public interface ArchiveSource<E> {
+public interface ArchiveSource {
 
     /** Returns the underlying archive file input socket for reading the archive entries. */
-    Socket<ArchiveInput<E>> input();
+    Socket<ArchiveInput> input();
 
     /**
      * Loans an archive file input from the underlying {@linkplain #input() socket} to the given consumer.
      * The archive file input will be closed upon return from this method.
      */
-    default void acceptReader(XConsumer<? super ArchiveInput<E>> reader) throws Exception {
+    default void acceptReader(XConsumer<? super ArchiveInput> reader) throws Exception {
         input().accept(reader);
     }
 
@@ -35,7 +35,7 @@ public interface ArchiveSource<E> {
      * It is an error to return the loaned archive file input from the given function or any other object which holds
      * on to it.
      */
-    default <U> U applyReader(XFunction<? super ArchiveInput<E>, ? extends U> reader) throws Exception {
+    default <U> U applyReader(XFunction<? super ArchiveInput, ? extends U> reader) throws Exception {
         return input().apply(reader);
     }
 }

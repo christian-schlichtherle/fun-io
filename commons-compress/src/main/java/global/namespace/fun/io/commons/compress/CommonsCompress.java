@@ -17,13 +17,10 @@ package global.namespace.fun.io.commons.compress;
 
 import global.namespace.fun.io.api.*;
 import org.apache.commons.compress.archivers.jar.JarArchiveOutputStream;
-import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.compress.compressors.deflate.DeflateParameters;
@@ -131,22 +128,22 @@ public final class CommonsCompress {
     //////////////////////////////////
 
     /** Returns an archive store for read/write access to the JAR file referenced by the given path. */
-    public static ArchiveStore<ZipArchiveEntry> jar(final File path) {
+    public static ArchiveStore jar(final File path) {
         requireNonNull(path);
-        return new ArchiveStore<ZipArchiveEntry>() {
+        return new ArchiveStore() {
 
             @Override
-            public Socket<ArchiveInput<ZipArchiveEntry>> input() { return () -> new ZipFileAdapter(new ZipFile(path)); }
+            public Socket<ArchiveInput> input() { return () -> new ZipFileAdapter(new ZipFile(path)); }
 
             @Override
-            public Socket<ArchiveOutput<ZipArchiveEntry>> output() {
+            public Socket<ArchiveOutput> output() {
                 return () -> new JarArchiveOutputStreamAdapter(new JarArchiveOutputStream(new FileOutputStream(path)));
             }
         };
     }
 
     /** Returns an archive store for read/write access to the JAR file referenced by the given path. */
-    public static ArchiveStore<ZipArchiveEntry> jar(String path) { return jar(new File(path)); }
+    public static ArchiveStore jar(String path) { return jar(new File(path)); }
 
     /**
      * Returns an archive store for copy-only access to the 7zip file referenced by the given path.
@@ -158,17 +155,17 @@ public final class CommonsCompress {
      * This is still very powerful, because it allows you to pack or unpack a 7zip file from or to a directory
      * or to transform it from or to another archive file format, e.g. ZIP.
      */
-    public static ArchiveStore<SevenZArchiveEntry> sevenz(final File path) {
+    public static ArchiveStore sevenz(final File path) {
         requireNonNull(path);
-        return new ArchiveStore<SevenZArchiveEntry>() {
+        return new ArchiveStore() {
 
             @Override
-            public Socket<ArchiveInput<SevenZArchiveEntry>> input() {
+            public Socket<ArchiveInput> input() {
                 return () -> new SevenZFileAdapter(new SevenZFile(path));
             }
 
             @Override
-            public Socket<ArchiveOutput<SevenZArchiveEntry>> output() {
+            public Socket<ArchiveOutput> output() {
                 return () -> new SevenZOutputFileAdapter(new SevenZOutputFile(path));
             }
         };
@@ -189,37 +186,37 @@ public final class CommonsCompress {
      * Note that the parameter is a {@link Store}, so you can apply any {@link Filter} to it, e.g.
      * {@link #gzip()}.
      */
-    public static ArchiveStore<TarArchiveEntry> tar(final Store store) {
+    public static ArchiveStore tar(final Store store) {
         requireNonNull(store);
-        return new ArchiveStore<TarArchiveEntry>() {
+        return new ArchiveStore() {
 
             @Override
-            public Socket<ArchiveInput<TarArchiveEntry>> input() {
+            public Socket<ArchiveInput> input() {
                 return store.input().map(in -> new TarArchiveInputStreamAdapter(new TarArchiveInputStream(in)));
             }
 
             @Override
-            public Socket<ArchiveOutput<TarArchiveEntry>> output() {
+            public Socket<ArchiveOutput> output() {
                 return store.output().map(out -> new TarArchiveOutputStreamAdapter(new TarArchiveOutputStream(out)));
             }
         };
     }
 
     /** Returns an archive store for read/write access to the ZIP file referenced by the given path. */
-    public static ArchiveStore<ZipArchiveEntry> zip(final File path) {
+    public static ArchiveStore zip(final File path) {
         requireNonNull(path);
-        return new ArchiveStore<ZipArchiveEntry>() {
+        return new ArchiveStore() {
 
             @Override
-            public Socket<ArchiveInput<ZipArchiveEntry>> input() { return () -> new ZipFileAdapter(new ZipFile(path)); }
+            public Socket<ArchiveInput> input() { return () -> new ZipFileAdapter(new ZipFile(path)); }
 
             @Override
-            public Socket<ArchiveOutput<ZipArchiveEntry>> output() {
+            public Socket<ArchiveOutput> output() {
                 return () -> new ZipArchiveOutputStreamAdapter(new ZipArchiveOutputStream(path));
             }
         };
     }
 
     /** Returns an archive store for read/write access to the ZIP file referenced by the given path. */
-    public static ArchiveStore<ZipArchiveEntry> zip(String path) { return zip(new File(path)); }
+    public static ArchiveStore zip(String path) { return zip(new File(path)); }
 }

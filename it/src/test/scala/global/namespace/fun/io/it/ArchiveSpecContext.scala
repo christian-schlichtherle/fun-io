@@ -19,29 +19,28 @@ import java.io.File
 
 import global.namespace.fun.io.api.ArchiveStore
 import global.namespace.fun.io.commons.compress.CommonsCompress.jar
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 
 /** @author Christian Schlichtherle */
-trait ArchiveSpecContext[E] {
+trait ArchiveSpecContext {
 
-  type ArchiveFile[A] = ArchiveStore[A]
-  type ArchiveFileFactory[A] = File => ArchiveFile[A]
+  type ArchiveFile = ArchiveStore
+  type ArchiveFileFactory = File => ArchiveFile
 
-  val Test1Jar: ArchiveFile[ZipArchiveEntry] = jar(resourceFile("test1.jar"))
+  val Test1Jar: ArchiveFile = jar(resourceFile("test1.jar"))
 
-  val Test2Jar: ArchiveFile[ZipArchiveEntry] = jar(resourceFile("test2.jar"))
+  val Test2Jar: ArchiveFile = jar(resourceFile("test2.jar"))
 
   private def resourceFile(name: String) = {
-    new File((classOf[ArchiveSpecContext[_]] getResource name).toURI)
+    new File((classOf[ArchiveSpecContext] getResource name).toURI)
   }
 
-  def withTempJAR(test: ArchiveFile[ZipArchiveEntry] => Any): Unit = withTempArchiveFile(jar)(test)
+  def withTempJAR(test: ArchiveFile => Any): Unit = withTempArchiveFile(jar)(test)
 
-  def withTempArchiveStore(test: ArchiveStore[E] => Any): Unit = withTempArchiveFile(archiveFileFactory)(test)
+  def withTempArchiveStore(test: ArchiveStore => Any): Unit = withTempArchiveFile(archiveFileFactory)(test)
 
-  def archiveFileFactory: ArchiveFileFactory[E]
+  def archiveFileFactory: ArchiveFileFactory
 
-  def withTempArchiveFile[A](factory: ArchiveFileFactory[A])(test: ArchiveFile[A] => Any): Unit = {
+  def withTempArchiveFile(factory: ArchiveFileFactory)(test: ArchiveFile => Any): Unit = {
     val file = File.createTempFile("tmp", null)
     file delete ()
     try {

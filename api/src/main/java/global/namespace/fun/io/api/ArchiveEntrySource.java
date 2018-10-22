@@ -9,12 +9,12 @@ package global.namespace.fun.io.api;
  *
  * @author Christian Schlichtherle
  */
-public abstract class ArchiveEntrySource<E> extends ArchiveEntry<E> implements Source {
+public abstract class ArchiveEntrySource extends ArchiveEntry implements Source {
 
     /**
      * Copies the underlying archive entry in this archive file to the given archive entry sink.
      */
-    public final void copyTo(ArchiveEntrySink<?> sink) throws Exception {
+    public final void copyTo(ArchiveEntrySink sink) throws Exception {
         sink.copyFrom(this);
     }
 

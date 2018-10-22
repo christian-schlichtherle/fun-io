@@ -26,15 +26,15 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Christian Schlichtherle
  */
-final class ZipFileAdapter implements ArchiveInput<ZipEntry> {
+final class ZipFileAdapter implements ArchiveInput {
 
     private final ZipFile zip;
 
     ZipFileAdapter(final ZipFile input) { this.zip = requireNonNull(input); }
 
     @Override
-    public Iterator<ArchiveEntrySource<ZipEntry>> iterator() {
-        return new Iterator<ArchiveEntrySource<ZipEntry>>() {
+    public Iterator<ArchiveEntrySource> iterator() {
+        return new Iterator<ArchiveEntrySource>() {
 
             final Enumeration<? extends ZipEntry> en = zip.entries();
             ZipEntry next;
@@ -56,7 +56,7 @@ final class ZipFileAdapter implements ArchiveInput<ZipEntry> {
             }
 
             @Override
-            public ArchiveEntrySource<ZipEntry> next() {
+            public ArchiveEntrySource next() {
                 if (hasNext()) {
                     final ZipEntry entry = next;
                     next = null;
@@ -69,12 +69,12 @@ final class ZipFileAdapter implements ArchiveInput<ZipEntry> {
     }
 
     @Override
-    public Optional<ArchiveEntrySource<ZipEntry>> source(String name) {
+    public Optional<ArchiveEntrySource> source(String name) {
         return Optional.ofNullable(zip.getEntry(requireInternal(name))).map(this::source);
     }
 
-    private ArchiveEntrySource<ZipEntry> source(ZipEntry entry) {
-        return new ArchiveEntrySource<ZipEntry>() {
+    private ArchiveEntrySource source(ZipEntry entry) {
+        return new ArchiveEntrySource() {
 
             @Override
             public String name() { return entry.getName(); }

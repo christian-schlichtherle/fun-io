@@ -23,7 +23,7 @@ import static global.namespace.fun.io.spi.Copy.copy;
  *
  * @author Christian Schlichtherle
  */
-class ZipArchiveOutputStreamAdapter implements ArchiveOutput<ZipArchiveEntry> {
+class ZipArchiveOutputStreamAdapter implements ArchiveOutput {
 
     private final ZipArchiveOutputStream zip;
 
@@ -32,12 +32,12 @@ class ZipArchiveOutputStreamAdapter implements ArchiveOutput<ZipArchiveEntry> {
     }
 
     @Override
-    public ArchiveEntrySink<ZipArchiveEntry> sink(String name) {
+    public ArchiveEntrySink sink(String name) {
         return sink(new ZipArchiveEntry(requireInternal(name)));
     }
 
-    ArchiveEntrySink<ZipArchiveEntry> sink(ZipArchiveEntry entry) {
-        return new ArchiveEntrySink<ZipArchiveEntry>() {
+    ArchiveEntrySink sink(ZipArchiveEntry entry) {
+        return new ArchiveEntrySink() {
 
             @Override
             public Socket<OutputStream> output() {
@@ -65,7 +65,7 @@ class ZipArchiveOutputStreamAdapter implements ArchiveOutput<ZipArchiveEntry> {
             }
 
             @Override
-            public void copyFrom(final ArchiveEntrySource<?> source) throws Exception {
+            public void copyFrom(final ArchiveEntrySource source) throws Exception {
                 if (source instanceof ZipArchiveEntrySource) {
                     final ZipArchiveEntrySource zipSource = (ZipArchiveEntrySource) source;
                     final ZipArchiveEntry origin = zipSource.entry();

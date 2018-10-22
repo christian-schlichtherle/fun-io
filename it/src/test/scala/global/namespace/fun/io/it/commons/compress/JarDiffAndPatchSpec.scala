@@ -16,10 +16,9 @@
 package global.namespace.fun.io.it.commons.compress
 
 import global.namespace.fun.io.commons.compress.CommonsCompress
-import global.namespace.fun.io.it.{ArchiveSpecSuite, DiffAndPatchSpecSuite}
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
+import global.namespace.fun.io.it.DiffAndPatchSpecSuite
 
-class JarDiffAndPatchSpec extends DiffAndPatchSpecSuite[ZipArchiveEntry] {
+class JarDiffAndPatchSpec extends DiffAndPatchSpecSuite {
 
-  override def archiveFileFactory: ArchiveFileFactory[ZipArchiveEntry] = CommonsCompress.jar
+  override def archiveFileFactory: ArchiveFileFactory = CommonsCompress.jar
 }

@@ -45,14 +45,14 @@ public final class AWS {
     /**
      * Returns an archive store using the given S3 client for the named S3 bucket.
      */
-    public static ArchiveStore<S3Object> s3(S3Client client, String bucket) {
+    public static ArchiveStore s3(S3Client client, String bucket) {
         return s3(client, bucket, "");
     }
 
     /**
      * Returns an archive store using the given S3 client for the named S3 bucket and prefix.
      */
-    public static ArchiveStore<S3Object> s3(final S3Client client, final String bucket, final String prefix) {
+    public static ArchiveStore s3(final S3Client client, final String bucket, final String prefix) {
         final String normalized = prefix.isEmpty() ? prefix : requireInternal(prefix);
         if (!normalized.equals(prefix)) {
             throw new IllegalArgumentException("prefix must be in normalized form, but is `" + prefix + "`.");
@@ -63,12 +63,12 @@ public final class AWS {
         return checked(client, bucket, normalized);
     }
 
-    private static ArchiveStore<S3Object> checked(S3Client client, String bucket, String prefix) {
-        return new ArchiveStore<S3Object>() {
+    private static ArchiveStore checked(S3Client client, String bucket, String prefix) {
+        return new ArchiveStore() {
 
             @Override
-            public Socket<ArchiveInput<S3Object>> input() {
-                return () -> new ArchiveInput<S3Object>() {
+            public Socket<ArchiveInput> input() {
+                return () -> new ArchiveInput() {
 
                     Map<String, S3Object> objects = client
                             .listObjectsV2Paginator(b -> b.bucket(bucket).prefix(prefix))
@@ -80,7 +80,7 @@ public final class AWS {
                             ));
 
                     @Override
-                    public Iterator<ArchiveEntrySource<S3Object>> iterator() {
+                    public Iterator<ArchiveEntrySource> iterator() {
                         return requireNonNull(objects, "Already closed.")
                                 .values()
                                 .stream()
@@ -89,13 +89,13 @@ public final class AWS {
                     }
 
                     @Override
-                    public Optional<ArchiveEntrySource<S3Object>> source(String name) {
+                    public Optional<ArchiveEntrySource> source(String name) {
                         return ofNullable(requireNonNull(objects, "Already closed.").get(requireInternal(name)))
                                 .map(this::source);
                     }
 
-                    ArchiveEntrySource<S3Object> source(S3Object object) {
-                        return new ArchiveEntrySource<S3Object>() {
+                    ArchiveEntrySource source(S3Object object) {
+                        return new ArchiveEntrySource() {
 
                             @Override
                             public Socket<InputStream> input() {
@@ -127,19 +127,19 @@ public final class AWS {
             }
 
             @Override
-            public Socket<ArchiveOutput<S3Object>> output() {
-                return () -> new ArchiveOutput<S3Object>() {
+            public Socket<ArchiveOutput> output() {
+                return () -> new ArchiveOutput() {
 
                     @Override
-                    public ArchiveEntrySink<S3Object> sink(String name) {
+                    public ArchiveEntrySink sink(String name) {
                         return sink(S3Object.builder().key(prefix + requireInternal(name)).build());
                     }
 
-                    ArchiveEntrySink<S3Object> sink(S3Object object) {
-                        return new ArchiveEntrySink<S3Object>() {
+                    ArchiveEntrySink sink(S3Object object) {
+                        return new ArchiveEntrySink() {
 
                             @Override
-                            public void copyFrom(ArchiveEntrySource<?> source) throws Exception {
+                            public void copyFrom(ArchiveEntrySource source) throws Exception {
                                 copy(source, this);
                             }
 

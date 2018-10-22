@@ -18,7 +18,6 @@ package global.namespace.fun.io.it
 import global.namespace.fun.io.api.{ArchiveInput, ArchiveStore}
 import global.namespace.fun.io.delta.Delta.diff
 import global.namespace.fun.io.spi.Copy.copy
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
 import org.scalatest.prop.PropertyChecks._
@@ -26,18 +25,18 @@ import org.scalatest.prop.PropertyChecks._
 import scala.collection.JavaConverters._
 
 /** @author Christian Schlichtherle */
-abstract class ArchiveSpecSuite[E] extends WordSpec with ArchiveSpecContext[E] {
+abstract class ArchiveSpecSuite extends WordSpec with ArchiveSpecContext {
 
   "An archive store" should {
     "support copying its entries" in {
-      forAll(Table("JAR", Test1Jar, Test2Jar)) { inputJar: ArchiveFile[ZipArchiveEntry] =>
-        withTempArchiveStore { tempArchive: ArchiveStore[E] =>
-          withTempJAR { outputJar: ArchiveFile[ZipArchiveEntry] =>
+      forAll(Table("JAR", Test1Jar, Test2Jar)) { inputJar: ArchiveFile =>
+        withTempArchiveStore { tempArchive: ArchiveStore =>
+          withTempJAR { outputJar: ArchiveFile =>
             copy(inputJar, tempArchive)
             copy(tempArchive, outputJar)
 
-            val inputEntries: Set[String]  = inputJar applyReader {
-              (_: ArchiveInput[_]).asScala.filterNot(_.isDirectory).map(_.name).toSet
+            val inputEntries: Set[String] = inputJar applyReader {
+              (_: ArchiveInput).asScala.filterNot(_.isDirectory).map(_.name).toSet
             }
 
             val model = (diff base inputJar update outputJar).toModel

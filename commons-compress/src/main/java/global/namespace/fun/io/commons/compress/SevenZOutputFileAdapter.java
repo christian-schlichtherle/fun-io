@@ -22,7 +22,7 @@ import static global.namespace.fun.io.spi.Copy.copy;
  *
  * @author Christian Schlichtherle
  */
-final class SevenZOutputFileAdapter implements ArchiveOutput<SevenZArchiveEntry> {
+final class SevenZOutputFileAdapter implements ArchiveOutput {
 
     private final SevenZOutputFile sevenz;
 
@@ -30,14 +30,14 @@ final class SevenZOutputFileAdapter implements ArchiveOutput<SevenZArchiveEntry>
         this.sevenz = sevenz;
     }
 
-    public ArchiveEntrySink<SevenZArchiveEntry> sink(String name) {
+    public ArchiveEntrySink sink(String name) {
         final SevenZArchiveEntry entry = new SevenZArchiveEntry();
         entry.setName(requireInternal(name));
         return sink(entry);
     }
 
-    private ArchiveEntrySink<SevenZArchiveEntry> sink(SevenZArchiveEntry entry) {
-        return new ArchiveEntrySink<SevenZArchiveEntry>() {
+    private ArchiveEntrySink sink(SevenZArchiveEntry entry) {
+        return new ArchiveEntrySink() {
 
             @Override
             public Socket<OutputStream> output() {
@@ -78,7 +78,7 @@ final class SevenZOutputFileAdapter implements ArchiveOutput<SevenZArchiveEntry>
             }
 
             @Override
-            public void copyFrom(final ArchiveEntrySource<?> source) throws Exception {
+            public void copyFrom(final ArchiveEntrySource source) throws Exception {
                 entry.setSize(source.size());
                 entry.setDirectory(source.isDirectory());
                 copy(source, this);

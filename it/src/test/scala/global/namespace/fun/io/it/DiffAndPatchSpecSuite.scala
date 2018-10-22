@@ -10,21 +10,20 @@ import global.namespace.fun.io.api.{ArchiveInput, ArchiveStore}
 import global.namespace.fun.io.bios.BIOS._
 import global.namespace.fun.io.delta.Delta.{diff, patch}
 import global.namespace.fun.io.it.DiffAndPatchSpecSuite._
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
 
 import scala.collection.JavaConverters._
 
 /** @author Christian Schlichtherle */
-abstract class DiffAndPatchSpecSuite[E] extends WordSpec with ArchiveSpecContext[E] {
+abstract class DiffAndPatchSpecSuite extends WordSpec with ArchiveSpecContext {
 
   "Diffing two archive stores and patching the first with the delta" should {
     "produce a clone of the second archive store" in {
-      withTempArchiveStore { first: ArchiveStore[E] =>
-        withTempArchiveStore { second: ArchiveStore[E] =>
-          withTempJAR { delta: ArchiveStore[ZipArchiveEntry] =>
-            withTempArchiveStore { clone: ArchiveStore[E] =>
+      withTempArchiveStore { first: ArchiveStore =>
+        withTempArchiveStore { second: ArchiveStore =>
+          withTempJAR { delta: ArchiveStore =>
+            withTempArchiveStore { clone: ArchiveStore =>
               copy(Test1Jar, first)
               copy(Test2Jar, second)
 
@@ -32,7 +31,7 @@ abstract class DiffAndPatchSpecSuite[E] extends WordSpec with ArchiveSpecContext
               patch base first delta delta to clone
 
               val secondEntries: Set[String] = second applyReader {
-                (_: ArchiveInput[_]).asScala.filterNot(_.isDirectory).map(_.name).toSet
+                (_: ArchiveInput).asScala.filterNot(_.isDirectory).map(_.name).toSet
               }
 
               val model = (diff base second update clone digest md5).toModel

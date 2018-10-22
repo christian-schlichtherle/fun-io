@@ -12,7 +12,7 @@ import java.io.Closeable;
  * @author Christian Schlichtherle
  * @see ArchiveInput
  */
-public interface ArchiveOutput<E> extends Closeable {
+public interface ArchiveOutput extends Closeable {
 
     /**
      * Returns {@code true} if and only if this is a JAR file.
@@ -29,5 +29,5 @@ public interface ArchiveOutput<E> extends Closeable {
      * @throws IllegalArgumentException if the normalized form of the given archive entry name is absolute or empty or
      *                                  has {@code ..} as its first path segment.
      */
-    ArchiveEntrySink<E> sink(String name);
+    ArchiveEntrySink sink(String name);
 }

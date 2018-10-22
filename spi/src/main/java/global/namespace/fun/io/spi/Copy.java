@@ -58,9 +58,9 @@ public final class Copy {
      * @param source the archive source to read the entries from.
      * @param sink the archive sink to write the entries to.
      */
-    public static void copy(final ArchiveSource<?> source, final ArchiveSink<?> sink) throws Exception {
+    public static void copy(final ArchiveSource source, final ArchiveSink sink) throws Exception {
         source.acceptReader(input -> sink.acceptWriter(output -> {
-            for (ArchiveEntrySource<?> entry : input) {
+            for (ArchiveEntrySource entry : input) {
                 entry.copyTo(output.sink(entry.name()));
             }
         }));

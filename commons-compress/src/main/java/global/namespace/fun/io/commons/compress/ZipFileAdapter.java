@@ -25,15 +25,15 @@ import static global.namespace.fun.io.spi.ArchiveEntryNames.requireInternal;
  *
  * @author Christian Schlichtherle
  */
-final class ZipFileAdapter implements ArchiveInput<ZipArchiveEntry> {
+final class ZipFileAdapter implements ArchiveInput {
 
     private final ZipFile zip;
 
     ZipFileAdapter(final ZipFile zip) { this.zip = zip; }
 
     @Override
-    public Iterator<ArchiveEntrySource<ZipArchiveEntry>> iterator() {
-        return new Iterator<ArchiveEntrySource<ZipArchiveEntry>>() {
+    public Iterator<ArchiveEntrySource> iterator() {
+        return new Iterator<ArchiveEntrySource>() {
 
             final Enumeration<ZipArchiveEntry> en = zip.getEntries();
             ZipArchiveEntry next;
@@ -55,7 +55,7 @@ final class ZipFileAdapter implements ArchiveInput<ZipArchiveEntry> {
             }
 
             @Override
-            public ArchiveEntrySource<ZipArchiveEntry> next() {
+            public ArchiveEntrySource next() {
                 if (hasNext()) {
                     final ZipArchiveEntry entry = next;
                     next = null;
@@ -68,7 +68,7 @@ final class ZipFileAdapter implements ArchiveInput<ZipArchiveEntry> {
     }
 
     @Override
-    public Optional<ArchiveEntrySource<ZipArchiveEntry>> source(String name) {
+    public Optional<ArchiveEntrySource> source(String name) {
         return Optional.ofNullable(zip.getEntry(requireInternal(name))).map(this::source);
     }
 

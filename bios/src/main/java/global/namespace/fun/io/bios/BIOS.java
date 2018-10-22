@@ -34,7 +34,10 @@ import java.util.Base64;
 import java.util.Optional;
 import java.util.jar.JarOutputStream;
 import java.util.prefs.Preferences;
-import java.util.zip.*;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 import static global.namespace.fun.io.api.Store.BUFSIZE;
 import static java.nio.file.StandardOpenOption.APPEND;
@@ -315,49 +318,49 @@ public final class BIOS {
     //////////////////////////////////
 
     /** Returns an archive store for transparent read/write access to the directory referenced by the given path. */
-    public static ArchiveStore<Path> directory(File path) { return directory(path.toPath()); }
+    public static ArchiveStore directory(File path) { return directory(path.toPath()); }
 
     /** Returns an archive store for transparent read/write access to the directory referenced by the given path. */
-    public static ArchiveStore<Path> directory(Path path) { return new DirectoryStore(requireNonNull(path)); }
+    public static ArchiveStore directory(Path path) { return new DirectoryStore(requireNonNull(path)); }
 
     /** Returns an archive store for transparent read/write access to the directory referenced by the given path. */
-    public static ArchiveStore<Path> directory(String path) { return directory(Paths.get(path)); }
+    public static ArchiveStore directory(String path) { return directory(Paths.get(path)); }
 
     /** Returns an archive store for read/write access to the JAR file referenced by the given path. */
-    public static ArchiveStore<ZipEntry> jar(final File path) {
+    public static ArchiveStore jar(final File path) {
         requireNonNull(path);
-        return new ArchiveStore<ZipEntry>() {
+        return new ArchiveStore() {
 
             @Override
-            public Socket<ArchiveInput<ZipEntry>> input() { return () -> new ZipFileAdapter(new ZipFile(path)); }
+            public Socket<ArchiveInput> input() { return () -> new ZipFileAdapter(new ZipFile(path)); }
 
             @Override
-            public Socket<ArchiveOutput<ZipEntry>> output() {
+            public Socket<ArchiveOutput> output() {
                 return () -> new JarOutputStreamAdapter(new JarOutputStream(new FileOutputStream(path)));
             }
         };
     }
 
     /** Returns an archive store for read/write access to the JAR file referenced by the given path. */
-    public static ArchiveStore<ZipEntry> jar(String path) { return jar(new File(path)); }
+    public static ArchiveStore jar(String path) { return jar(new File(path)); }
 
     /** Returns an archive store for read/write access to the ZIP file referenced by the given path. */
-    public static ArchiveStore<ZipEntry> zip(final File path) {
+    public static ArchiveStore zip(final File path) {
         requireNonNull(path);
-        return new ArchiveStore<ZipEntry>() {
+        return new ArchiveStore() {
 
             @Override
-            public Socket<ArchiveInput<ZipEntry>> input() { return () -> new ZipFileAdapter(new ZipFile(path)); }
+            public Socket<ArchiveInput> input() { return () -> new ZipFileAdapter(new ZipFile(path)); }
 
             @Override
-            public Socket<ArchiveOutput<ZipEntry>> output() {
+            public Socket<ArchiveOutput> output() {
                 return () -> new ZipOutputStreamAdapter(new ZipOutputStream(new FileOutputStream(path)));
             }
         };
     }
 
     /** Returns an archive store for read/write access to the ZIP file referenced by the given path. */
-    public static ArchiveStore<ZipEntry> zip(String path) { return zip(new File(path)); }
+    public static ArchiveStore zip(String path) { return zip(new File(path)); }
 
       /////////////////////////////
      ///////// UTILITIES /////////
@@ -373,7 +376,7 @@ public final class BIOS {
      * @param source the archive source to read the entries from.
      * @param sink the archive sink to write the entries to.
      */
-    public static void copy(ArchiveSource<?> source, ArchiveSink<?> sink) throws Exception { Copy.copy(source, sink); }
+    public static void copy(ArchiveSource source, ArchiveSink sink) throws Exception { Copy.copy(source, sink); }
 
     /**
      * Copies the data from the given source to the given sink.

@@ -15,12 +15,10 @@
  */
 package global.namespace.fun.io.it.bios
 
-import java.nio.file.Path
-
 import global.namespace.fun.io.bios.BIOS
-import global.namespace.fun.io.it.{ArchiveSpecSuite, DiffAndPatchSpecSuite}
+import global.namespace.fun.io.it.DiffAndPatchSpecSuite
 
-class DirectoryDiffAndPatchSpec extends DiffAndPatchSpecSuite[Path] {
+class DirectoryDiffAndPatchSpec extends DiffAndPatchSpecSuite {
 
-  override def archiveFileFactory: ArchiveFileFactory[Path] = BIOS.directory
+  override def archiveFileFactory: ArchiveFileFactory = BIOS.directory
 }

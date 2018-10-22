@@ -22,12 +22,12 @@ import global.namespace.fun.io.aws.AWS.s3
 import global.namespace.fun.io.it.ArchiveSpecContext
 import org.scalatest._
 import software.amazon.awssdk.services.s3.S3Client
-import software.amazon.awssdk.services.s3.model.{ObjectIdentifier, S3Object}
+import software.amazon.awssdk.services.s3.model.ObjectIdentifier
 
 import scala.collection.JavaConverters._
 import scala.util.control.NonFatal
 
-trait S3SpecContext extends TestSuiteMixin { this: ArchiveSpecContext[S3Object] with TestSuite =>
+trait S3SpecContext extends TestSuiteMixin { this: ArchiveSpecContext with TestSuite =>
 
   lazy val client: S3Client = S3Client.create
 
@@ -40,7 +40,7 @@ trait S3SpecContext extends TestSuiteMixin { this: ArchiveSpecContext[S3Object] 
     super.withFixture(test)
   }
 
-  override def withTempArchiveStore(test: ArchiveStore[S3Object] => Any): Unit = {
+  override def withTempArchiveStore(test: ArchiveStore => Any): Unit = {
     var t: Throwable = null
     val bucket = "test-" + randomUUID
     client createBucket (b => b bucket bucket)
@@ -66,5 +66,5 @@ trait S3SpecContext extends TestSuiteMixin { this: ArchiveSpecContext[S3Object] 
     }
   }
 
-  override def archiveFileFactory: ArchiveFileFactory[S3Object] = ???
+  override def archiveFileFactory: ArchiveFileFactory = ???
 }

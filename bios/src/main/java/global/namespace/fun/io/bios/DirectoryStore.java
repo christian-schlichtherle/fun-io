@@ -25,7 +25,7 @@ import static global.namespace.fun.io.spi.Copy.copy;
  *
  * @author Christian Schlichtherle
  */
-final class DirectoryStore implements ArchiveStore<Path> {
+final class DirectoryStore implements ArchiveStore {
 
     private final Path directory;
     private final String separator;
@@ -37,11 +37,11 @@ final class DirectoryStore implements ArchiveStore<Path> {
     }
 
     @Override
-    public Socket<ArchiveInput<Path>> input() {
-        return () -> new ArchiveInput<Path>() {
+    public Socket<ArchiveInput> input() {
+        return () -> new ArchiveInput() {
 
             @Override
-            public Iterator<ArchiveEntrySource<Path>> iterator() {
+            public Iterator<ArchiveEntrySource> iterator() {
                 try {
                     return Files
                             .walk(directory)
@@ -54,13 +54,13 @@ final class DirectoryStore implements ArchiveStore<Path> {
             }
 
             @Override
-            public Optional<ArchiveEntrySource<Path>> source(final String name) {
+            public Optional<ArchiveEntrySource> source(final String name) {
                 final Path path = resolve(name);
                 return Optional.ofNullable(Files.exists(path) ? source(path) : null);
             }
 
-            ArchiveEntrySource<Path> source(Path path) {
-                return new ArchiveEntrySource<Path>() {
+            ArchiveEntrySource source(Path path) {
+                return new ArchiveEntrySource() {
 
                     final String name = relativize(path);
 
@@ -103,39 +103,32 @@ final class DirectoryStore implements ArchiveStore<Path> {
     }
 
     @Override
-    public Socket<ArchiveOutput<Path>> output() {
-        return () -> new ArchiveOutput<Path>() {
+    public Socket<ArchiveOutput> output() {
+        return () -> new ArchiveOutput() {
 
             @Override
-            public ArchiveEntrySink<Path> sink(String name) {
+            public ArchiveEntrySink sink(String name) {
                 return sink(resolve(name));
             }
 
-            ArchiveEntrySink<Path> sink(Path path) {
-                return new ArchiveEntrySink<Path>() {
-
-                    final String name = relativize(path);
-
-                    Path entry() {
-                        return path;
-                    }
+            ArchiveEntrySink sink(Path path) {
+                return new ArchiveEntrySink() {
 
                     @Override
                     public Socket<OutputStream> output() {
                         return () -> {
-                            final Path entry = entry();
-                            final Path parent = entry.getParent();
+                            final Path parent = path.getParent();
                             if (null != parent) {
                                 Files.createDirectories(parent);
                             }
-                            return Files.newOutputStream(entry);
+                            return Files.newOutputStream(path);
                         };
                     }
 
                     @Override
-                    public void copyFrom(final ArchiveEntrySource<?> source) throws Exception {
+                    public void copyFrom(final ArchiveEntrySource source) throws Exception {
                         if (source.isDirectory()) {
-                            Files.createDirectories(entry());
+                            Files.createDirectories(path);
                         } else {
                             copy(source, this);
                         }

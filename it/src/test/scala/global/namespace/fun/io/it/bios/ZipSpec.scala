@@ -15,12 +15,10 @@
  */
 package global.namespace.fun.io.it.bios
 
-import java.util.zip.ZipEntry
-
 import global.namespace.fun.io.bios.BIOS
 import global.namespace.fun.io.it.ArchiveSpecSuite
 
-class ZipSpec extends ArchiveSpecSuite[ZipEntry] {
+class ZipSpec extends ArchiveSpecSuite {
 
-  override def archiveFileFactory: ArchiveFileFactory[ZipEntry] = BIOS.zip
+  override def archiveFileFactory: ArchiveFileFactory = BIOS.zip
 }

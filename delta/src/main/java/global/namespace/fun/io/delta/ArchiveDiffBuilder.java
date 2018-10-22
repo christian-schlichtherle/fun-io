@@ -20,7 +20,7 @@ public final class ArchiveDiffBuilder {
 
     private Optional<MessageDigest> digest = empty();
 
-    private Optional<ArchiveSource<?>> base = empty(), update = empty();
+    private Optional<ArchiveSource> base = empty(), update = empty();
 
     ArchiveDiffBuilder() { }
 
@@ -34,10 +34,10 @@ public final class ArchiveDiffBuilder {
      * Returns this archive diff builder with the given source for reading the base archive file.
      * This is an alias for {@link #base(ArchiveSource)}.
      */
-    public ArchiveDiffBuilder first(ArchiveSource<?> base) { return base(base); }
+    public ArchiveDiffBuilder first(ArchiveSource base) { return base(base); }
 
     /** Returns this archive diff builder with the given source for reading the base archive file. */
-    public ArchiveDiffBuilder base(final ArchiveSource<?> base) {
+    public ArchiveDiffBuilder base(final ArchiveSource base) {
         this.base = Optional.of(base);
         return this;
     }
@@ -46,10 +46,10 @@ public final class ArchiveDiffBuilder {
      * Returns this archive diff builder with the given source for reading the update archive file.
      * This is an alias for {@link #update(ArchiveSource)}.
      */
-    public ArchiveDiffBuilder second(ArchiveSource<?> update) { return update(update); }
+    public ArchiveDiffBuilder second(ArchiveSource update) { return update(update); }
 
     /** Returns this archive diff builder with the given source for reading the update archive file. */
-    public ArchiveDiffBuilder update(final ArchiveSource<?> update) {
+    public ArchiveDiffBuilder update(final ArchiveSource update) {
         this.update = Optional.of(update);
         return this;
     }
@@ -65,22 +65,22 @@ public final class ArchiveDiffBuilder {
 
     /** Writes the delta archive file computed from the base and update archive files to the given sink. */
     @SuppressWarnings("unchecked")
-    public void to(ArchiveSink<?> delta) throws Exception { build().to(delta); }
+    public void to(ArchiveSink delta) throws Exception { build().to(delta); }
 
-    private ArchiveDiff<?, ?> build() {
+    private ArchiveDiff build() {
         return create(digest.orElseGet(MessageDigests::sha1), base.get(), update.get());
     }
 
-    private static <B, U> ArchiveDiff<B, U> create(MessageDigest digest,
-                                                   ArchiveSource<B> baseSource,
-                                                   ArchiveSource<U> updateSource) {
-        return new ArchiveDiff<B, U>() {
+    private static <B, U> ArchiveDiff create(MessageDigest digest,
+                                             ArchiveSource baseSource,
+                                             ArchiveSource updateSource) {
+        return new ArchiveDiff() {
 
             public MessageDigest digest() { return digest; }
 
-            ArchiveSource<B> baseSource() { return baseSource; }
+            ArchiveSource baseSource() { return baseSource; }
 
-            ArchiveSource<U> updateSource() { return updateSource; }
+            ArchiveSource updateSource() { return updateSource; }
         };
     }
 }

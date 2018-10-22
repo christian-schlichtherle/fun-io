@@ -20,9 +20,8 @@ import java.io.File
 import global.namespace.fun.io.bios.BIOS
 import global.namespace.fun.io.commons.compress.CommonsCompress
 import global.namespace.fun.io.it.ArchiveSpecSuite
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry
 
-class TarSpec extends ArchiveSpecSuite[TarArchiveEntry] {
+class TarSpec extends ArchiveSpecSuite {
 
-  override def archiveFileFactory: ArchiveFileFactory[TarArchiveEntry] = (f: File) => CommonsCompress.tar(BIOS.file(f))
+  override def archiveFileFactory: ArchiveFileFactory = (f: File) => CommonsCompress.tar(BIOS.file(f))
 }

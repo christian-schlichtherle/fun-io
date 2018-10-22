@@ -15,12 +15,10 @@
  */
 package global.namespace.fun.io.it.bios
 
-import java.util.zip.ZipEntry
-
 import global.namespace.fun.io.bios.BIOS
 import global.namespace.fun.io.it.DiffAndPatchSpecSuite
 
-class JarDiffAndPatchSpec extends DiffAndPatchSpecSuite[ZipEntry] {
+class JarDiffAndPatchSpec extends DiffAndPatchSpecSuite {
 
-  override def archiveFileFactory: ArchiveFileFactory[ZipEntry] = BIOS.jar
+  override def archiveFileFactory: ArchiveFileFactory = BIOS.jar
 }

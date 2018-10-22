@@ -20,11 +20,10 @@ import java.io.File
 import global.namespace.fun.io.bios.BIOS
 import global.namespace.fun.io.commons.compress.CommonsCompress
 import global.namespace.fun.io.it.ArchiveSpecSuite
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry
 
-class TarGzSpec extends ArchiveSpecSuite[TarArchiveEntry] {
+class TarGzSpec extends ArchiveSpecSuite {
 
-  override def archiveFileFactory: ArchiveFileFactory[TarArchiveEntry] = {
+  override def archiveFileFactory: ArchiveFileFactory = {
     f: File => CommonsCompress.tar(BIOS.file(f).map(CommonsCompress.gzip))
   }
 }

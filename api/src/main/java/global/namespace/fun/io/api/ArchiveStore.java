@@ -11,4 +11,4 @@ package global.namespace.fun.io.api;
  *
  * @author Christian Schlichtherle
  */
-public interface ArchiveStore<E> extends ArchiveSource<E>, ArchiveSink<E> { }
+public interface ArchiveStore extends ArchiveSource, ArchiveSink { }

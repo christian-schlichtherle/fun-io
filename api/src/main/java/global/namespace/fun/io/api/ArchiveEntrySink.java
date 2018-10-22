@@ -9,10 +9,10 @@ package global.namespace.fun.io.api;
  *
  * @author Christian Schlichtherle
  */
-public abstract class ArchiveEntrySink<E> implements Sink {
+public abstract class ArchiveEntrySink implements Sink {
 
     /**
      * Copies the underlying archive entry in this archive file from the given archive entry source.
      */
-    public abstract void copyFrom(ArchiveEntrySource<?> source) throws Exception;
+    public abstract void copyFrom(ArchiveEntrySource source) throws Exception;
 }

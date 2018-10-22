@@ -24,14 +24,14 @@ import static global.namespace.fun.io.spi.ArchiveEntryNames.isInternal;
  *
  * @author Christian Schlichtherle
  */
-final class SevenZFileAdapter implements ArchiveInput<SevenZArchiveEntry> {
+final class SevenZFileAdapter implements ArchiveInput {
 
     private final SevenZFile sevenz;
 
     SevenZFileAdapter(final SevenZFile sevenz) { this.sevenz = sevenz; }
 
-    public Iterator<ArchiveEntrySource<SevenZArchiveEntry>> iterator() {
-        return new Iterator<ArchiveEntrySource<SevenZArchiveEntry>>() {
+    public Iterator<ArchiveEntrySource> iterator() {
+        return new Iterator<ArchiveEntrySource>() {
 
             Object next;
 
@@ -57,7 +57,7 @@ final class SevenZFileAdapter implements ArchiveInput<SevenZArchiveEntry> {
             }
 
             @Override
-            public ArchiveEntrySource<SevenZArchiveEntry> next() {
+            public ArchiveEntrySource next() {
                 if (hasNext()) {
                     if (next instanceof SevenZArchiveEntry) {
                         final SevenZArchiveEntry entry = (SevenZArchiveEntry) next;
@@ -72,12 +72,12 @@ final class SevenZFileAdapter implements ArchiveInput<SevenZArchiveEntry> {
         };
     }
 
-    public Optional<ArchiveEntrySource<SevenZArchiveEntry>> source(String name) {
+    public Optional<ArchiveEntrySource> source(String name) {
         throw new UnsupportedOperationException();
     }
 
-    private ArchiveEntrySource<SevenZArchiveEntry> source(SevenZArchiveEntry entry) {
-        return new ArchiveEntrySource<SevenZArchiveEntry>() {
+    private ArchiveEntrySource source(SevenZArchiveEntry entry) {
+        return new ArchiveEntrySource() {
 
             @Override
             public String name() { return entry.getName(); }

@@ -15,40 +15,57 @@ import static java.util.Optional.empty;
 @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "ConstantConditions"})
 public final class ArchivePatchBuilder {
 
-    private Optional<ArchiveSource<?>> base = empty(), delta = empty();
+    private Optional<ArchiveSource> base = empty(), delta = empty();
 
-    ArchivePatchBuilder() { }
+    ArchivePatchBuilder() {
+    }
 
     /**
      * Returns this archive patch builder with the given source for reading the base archive file.
      * This is an alias for {@link #base(ArchiveSource)}.
      */
-    public ArchivePatchBuilder first(ArchiveSource<?> base) { return base(base); }
+    public ArchivePatchBuilder first(ArchiveSource base) {
+        return base(base);
+    }
 
-    /** Returns this archive patch builder with the given source for reading the base archive file. */
-    public ArchivePatchBuilder base(final ArchiveSource<?> base) {
+    /**
+     * Returns this archive patch builder with the given source for reading the base archive file.
+     */
+    public ArchivePatchBuilder base(final ArchiveSource base) {
         this.base = Optional.of(base);
         return this;
     }
 
-    /** Returns this archive patch builder with the given source for reading the delta archive file. */
-    public ArchivePatchBuilder delta(final ArchiveSource<?> delta) {
+    /**
+     * Returns this archive patch builder with the given source for reading the delta archive file.
+     */
+    public ArchivePatchBuilder delta(final ArchiveSource delta) {
         this.delta = Optional.of(delta);
         return this;
     }
 
-    /** Writes the update archive file computed from the base and delta archive files to the given sink. */
+    /**
+     * Writes the update archive file computed from the base and delta archive files to the given sink.
+     */
     @SuppressWarnings("unchecked")
-    public void to(ArchiveSink<?> update) throws Exception { build().to(update); }
+    public void to(ArchiveSink update) throws Exception {
+        build().to(update);
+    }
 
-    private ArchivePatch<?, ?> build() { return create(base.get(), delta.get()); }
+    private ArchivePatch build() {
+        return create(base.get(), delta.get());
+    }
 
-    private static <B, D> ArchivePatch<B, D> create(ArchiveSource<B> baseSource, ArchiveSource<D> deltaSource) {
-        return new ArchivePatch<B, D>() {
+    private static ArchivePatch create(ArchiveSource baseSource, ArchiveSource deltaSource) {
+        return new ArchivePatch() {
 
-            ArchiveSource<B> baseSource() { return baseSource; }
+            ArchiveSource baseSource() {
+                return baseSource;
+            }
 
-            ArchiveSource<D> deltaSource() { return deltaSource; }
+            ArchiveSource deltaSource() {
+                return deltaSource;
+            }
         };
     }
 }

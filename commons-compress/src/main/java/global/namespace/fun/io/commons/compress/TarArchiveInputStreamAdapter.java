@@ -24,14 +24,14 @@ import static global.namespace.fun.io.spi.ArchiveEntryNames.isInternal;
  *
  * @author Christian Schlichtherle
  */
-final class TarArchiveInputStreamAdapter implements ArchiveInput<TarArchiveEntry> {
+final class TarArchiveInputStreamAdapter implements ArchiveInput {
 
     private final TarArchiveInputStream tar;
 
     TarArchiveInputStreamAdapter(final TarArchiveInputStream tar) { this.tar = tar; }
 
-    public Iterator<ArchiveEntrySource<TarArchiveEntry>> iterator() {
-        return new Iterator<ArchiveEntrySource<TarArchiveEntry>>() {
+    public Iterator<ArchiveEntrySource> iterator() {
+        return new Iterator<ArchiveEntrySource>() {
 
             Object next;
 
@@ -57,7 +57,7 @@ final class TarArchiveInputStreamAdapter implements ArchiveInput<TarArchiveEntry
             }
 
             @Override
-            public ArchiveEntrySource<TarArchiveEntry> next() {
+            public ArchiveEntrySource next() {
                 if (hasNext()) {
                     if (next instanceof TarArchiveEntry) {
                         final TarArchiveEntry entry = (TarArchiveEntry) next;
@@ -72,12 +72,12 @@ final class TarArchiveInputStreamAdapter implements ArchiveInput<TarArchiveEntry
         };
     }
 
-    public Optional<ArchiveEntrySource<TarArchiveEntry>> source(String name) {
+    public Optional<ArchiveEntrySource> source(String name) {
         throw new UnsupportedOperationException();
     }
 
-    private ArchiveEntrySource<TarArchiveEntry> source(TarArchiveEntry entry) {
-        return new ArchiveEntrySource<TarArchiveEntry>() {
+    private ArchiveEntrySource source(TarArchiveEntry entry) {
+        return new ArchiveEntrySource() {
 
             @Override
             public String name() { return entry.getName(); }

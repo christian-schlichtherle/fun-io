@@ -13,7 +13,7 @@ import java.util.Optional;
  * @see ArchiveOutput
  * @author Christian Schlichtherle
  */
-public interface ArchiveInput<E> extends Iterable<ArchiveEntrySource<E>>, Closeable {
+public interface ArchiveInput extends Iterable<ArchiveEntrySource>, Closeable {
 
     /**
      * Returns a source for reading the archive entry with the given name, if it exists (optional operation).
@@ -26,5 +26,5 @@ public interface ArchiveInput<E> extends Iterable<ArchiveEntrySource<E>>, Closea
      * @throws IllegalArgumentException if the normalized form of the given archive entry name is absolute or empty or
      *                                  has {@code ..} as its first path segment.
      */
-    Optional<ArchiveEntrySource<E>> source(String name);
+    Optional<ArchiveEntrySource> source(String name);
 }

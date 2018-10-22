@@ -17,9 +17,8 @@ package global.namespace.fun.io.it.commons.compress
 
 import global.namespace.fun.io.commons.compress.CommonsCompress
 import global.namespace.fun.io.it.ArchiveSpecSuite
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 
-class ZipSpec extends ArchiveSpecSuite[ZipArchiveEntry] {
+class ZipSpec extends ArchiveSpecSuite {
 
-  override def archiveFileFactory: ArchiveFileFactory[ZipArchiveEntry] = CommonsCompress.zip
+  override def archiveFileFactory: ArchiveFileFactory = CommonsCompress.zip
 }
