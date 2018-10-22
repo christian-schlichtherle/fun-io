@@ -98,11 +98,6 @@ public final class AWS {
                         return new ArchiveEntrySource<S3Object>() {
 
                             @Override
-                            public S3Object entry() {
-                                return object;
-                            }
-
-                            @Override
                             public Socket<InputStream> input() {
                                 return () -> client.getObject(b -> b.bucket(bucket).key(object.key()));
                             }
