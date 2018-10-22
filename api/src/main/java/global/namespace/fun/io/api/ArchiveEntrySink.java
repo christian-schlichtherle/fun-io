@@ -15,5 +15,5 @@ public abstract class ArchiveEntrySink<E> extends ArchiveEntry<E> implements Sin
     public abstract void copyFrom(ArchiveEntrySource<?> source) throws Exception;
 
     @Override
-    public boolean canEqual(Object that) { return that instanceof ArchiveEntrySink; }
+    protected boolean canEqual(Object that) { return that instanceof ArchiveEntrySink; }
 }

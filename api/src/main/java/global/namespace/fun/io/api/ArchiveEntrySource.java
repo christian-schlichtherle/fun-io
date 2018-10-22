@@ -15,5 +15,5 @@ public abstract class ArchiveEntrySource<E> extends ArchiveEntry<E> implements S
     public final void copyTo(ArchiveEntrySink<?> sink) throws Exception { sink.copyFrom(this); }
 
     @Override
-    public boolean canEqual(Object that) { return that instanceof ArchiveEntrySource; }
+    protected boolean canEqual(Object that) { return that instanceof ArchiveEntrySource; }
 }

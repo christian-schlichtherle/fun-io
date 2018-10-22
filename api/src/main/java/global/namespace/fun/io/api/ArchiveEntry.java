@@ -27,16 +27,15 @@ public abstract class ArchiveEntry<E> {
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
-        } else if (this.canEqual(obj)) {
-            final ArchiveEntry<?> that = (ArchiveEntry) obj;
-            return this.entry().equals(that.entry());
-        } else {
+        }
+        if (!(obj instanceof ArchiveEntry)) {
             return false;
         }
+        final ArchiveEntry<?> that = (ArchiveEntry) obj;
+        return that.canEqual(this) && this.entry().equals(that.entry());
     }
 
-    // TODO: This should be abstract and maybe `protected`:
-    public boolean canEqual(Object that) { return that instanceof ArchiveEntry; }
+    protected abstract boolean canEqual(Object that);
 
     @Override
     public int hashCode() { return entry().hashCode(); }
