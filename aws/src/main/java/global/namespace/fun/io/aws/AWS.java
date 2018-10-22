@@ -39,12 +39,15 @@ import static java.util.Optional.ofNullable;
  */
 public final class AWS {
 
-    private AWS() { }
+    private AWS() {
+    }
 
     /**
      * Returns an archive store using the given S3 client for the named S3 bucket.
      */
-    public static ArchiveStore<S3Object> s3(S3Client client, String bucket) { return s3(client, bucket, ""); }
+    public static ArchiveStore<S3Object> s3(S3Client client, String bucket) {
+        return s3(client, bucket, "");
+    }
 
     /**
      * Returns an archive store using the given S3 client for the named S3 bucket and prefix.
@@ -95,7 +98,9 @@ public final class AWS {
                         return new ArchiveEntrySource<S3Object>() {
 
                             @Override
-                            public S3Object entry() { return object; }
+                            public S3Object entry() {
+                                return object;
+                            }
 
                             @Override
                             public Socket<InputStream> input() {
@@ -103,18 +108,26 @@ public final class AWS {
                             }
 
                             @Override
-                            public boolean isDirectory() { return object.key().endsWith("/"); }
+                            public boolean isDirectory() {
+                                return object.key().endsWith("/");
+                            }
 
                             @Override
-                            public String name() { return object.key().substring(prefix.length()); }
+                            public String name() {
+                                return object.key().substring(prefix.length());
+                            }
 
                             @Override
-                            public long size() { return object.size(); }
+                            public long size() {
+                                return object.size();
+                            }
                         };
                     }
 
                     @Override
-                    public void close() { objects = null; }
+                    public void close() {
+                        objects = null;
+                    }
                 };
             }
 
@@ -134,15 +147,6 @@ public final class AWS {
                             public void copyFrom(ArchiveEntrySource<?> source) throws Exception {
                                 copy(source, this);
                             }
-
-                            @Override
-                            public S3Object entry() { return object; }
-
-                            @Override
-                            public boolean isDirectory() { return object.key().endsWith("/"); }
-
-                            @Override
-                            public String name() { return object.key().substring(prefix.length()); }
 
                             @Override
                             public Socket<OutputStream> output() {
@@ -166,14 +170,12 @@ public final class AWS {
                                     };
                                 };
                             }
-
-                            @Override
-                            public long size() { return -1; }
                         };
                     }
 
                     @Override
-                    public void close() { }
+                    public void close() {
+                    }
                 };
             }
         };

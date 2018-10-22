@@ -89,9 +89,6 @@ final class SevenZFileAdapter implements ArchiveInput<SevenZArchiveEntry> {
             public boolean isDirectory() { return entry.isDirectory(); }
 
             @Override
-            public SevenZArchiveEntry entry() { return entry; }
-
-            @Override
             public Socket<InputStream> input() {
                 return () -> new InputStream() {
 

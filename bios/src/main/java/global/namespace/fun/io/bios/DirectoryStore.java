@@ -65,22 +65,23 @@ final class DirectoryStore implements ArchiveStore<Path> {
                     final String name = relativize(path);
 
                     @Override
-                    public String name() { return isDirectory() ? name + '/' : name; }
+                    public String name() {
+                        return isDirectory() ? name + '/' : name;
+                    }
 
                     @Override
                     public long size() {
                         try {
-                            return Files.size(entry());
+                            return Files.size(path);
                         } catch (IOException ignored) {
                             return 0;
                         }
                     }
 
                     @Override
-                    public boolean isDirectory() { return Files.isDirectory(path); }
-
-                    @Override
-                    public Path entry() { return path; }
+                    public boolean isDirectory() {
+                        return Files.isDirectory(path);
+                    }
 
                     @Override
                     public Socket<InputStream> input() {
@@ -88,7 +89,7 @@ final class DirectoryStore implements ArchiveStore<Path> {
                             if (isDirectory()) {
                                 return new ByteArrayInputStream(new byte[0]);
                             } else {
-                                return Files.newInputStream(entry());
+                                return Files.newInputStream(path);
                             }
                         };
                     }
@@ -96,7 +97,8 @@ final class DirectoryStore implements ArchiveStore<Path> {
             }
 
             @Override
-            public void close() { }
+            public void close() {
+            }
         };
     }
 
@@ -105,30 +107,18 @@ final class DirectoryStore implements ArchiveStore<Path> {
         return () -> new ArchiveOutput<Path>() {
 
             @Override
-            public ArchiveEntrySink<Path> sink(String name) { return sink(resolve(name)); }
+            public ArchiveEntrySink<Path> sink(String name) {
+                return sink(resolve(name));
+            }
 
             ArchiveEntrySink<Path> sink(Path path) {
                 return new ArchiveEntrySink<Path>() {
 
                     final String name = relativize(path);
 
-                    @Override
-                    public String name() { return isDirectory() ? name + '/' : name; }
-
-                    @Override
-                    public long size() {
-                        try {
-                            return Files.size(entry());
-                        } catch (IOException ignored) {
-                            return 0;
-                        }
+                    Path entry() {
+                        return path;
                     }
-
-                    @Override
-                    public boolean isDirectory() { return Files.isDirectory(path); }
-
-                    @Override
-                    public Path entry() { return path; }
 
                     @Override
                     public Socket<OutputStream> output() {
@@ -154,7 +144,8 @@ final class DirectoryStore implements ArchiveStore<Path> {
             }
 
             @Override
-            public void close()  { }
+            public void close() {
+            }
         };
     }
 

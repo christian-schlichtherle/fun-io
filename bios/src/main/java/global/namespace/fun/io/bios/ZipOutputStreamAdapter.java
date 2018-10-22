@@ -28,25 +28,17 @@ class ZipOutputStreamAdapter implements ArchiveOutput<ZipEntry> {
 
     private final ZipOutputStream zip;
 
-    ZipOutputStreamAdapter(final ZipOutputStream zip) { this.zip = requireNonNull(zip); }
+    ZipOutputStreamAdapter(final ZipOutputStream zip) {
+        this.zip = requireNonNull(zip);
+    }
 
     @Override
-    public ArchiveEntrySink<ZipEntry> sink(String name) { return sink(new ZipEntry(requireInternal(name))); }
+    public ArchiveEntrySink<ZipEntry> sink(String name) {
+        return sink(new ZipEntry(requireInternal(name)));
+    }
 
     ArchiveEntrySink<ZipEntry> sink(ZipEntry entry) {
         return new ArchiveEntrySink<ZipEntry>() {
-
-            @Override
-            public String name() { return entry.getName(); }
-
-            @Override
-            public long size() { return entry.getSize(); }
-
-            @Override
-            public boolean isDirectory() { return entry.isDirectory(); }
-
-            @Override
-            public ZipEntry entry() { return entry; }
 
             @Override
             public Socket<OutputStream> output() {
@@ -61,16 +53,22 @@ class ZipOutputStreamAdapter implements ArchiveOutput<ZipEntry> {
                     return new FilterOutputStream(zip) {
 
                         @Override
-                        public void close() throws IOException { zip.closeEntry(); }
+                        public void close() throws IOException {
+                            zip.closeEntry();
+                        }
                     };
                 };
             }
 
             @Override
-            public void copyFrom(ArchiveEntrySource<?> source) throws Exception { copy(source, this); }
+            public void copyFrom(ArchiveEntrySource<?> source) throws Exception {
+                copy(source, this);
+            }
         };
     }
 
     @Override
-    public void close() throws IOException { zip.close(); }
+    public void close() throws IOException {
+        zip.close();
+    }
 }

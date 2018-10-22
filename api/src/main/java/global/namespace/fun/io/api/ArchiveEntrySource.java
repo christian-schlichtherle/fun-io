@@ -11,9 +11,15 @@ package global.namespace.fun.io.api;
  */
 public abstract class ArchiveEntrySource<E> extends ArchiveEntry<E> implements Source {
 
-    /** Copies the underlying archive entry in this archive file to the given archive entry sink. */
-    public final void copyTo(ArchiveEntrySink<?> sink) throws Exception { sink.copyFrom(this); }
+    /**
+     * Copies the underlying archive entry in this archive file to the given archive entry sink.
+     */
+    public final void copyTo(ArchiveEntrySink<?> sink) throws Exception {
+        sink.copyFrom(this);
+    }
 
     @Override
-    protected boolean canEqual(Object that) { return that instanceof ArchiveEntrySource; }
+    protected boolean canEqual(Object that) {
+        return that instanceof ArchiveEntrySource;
+    }
 }

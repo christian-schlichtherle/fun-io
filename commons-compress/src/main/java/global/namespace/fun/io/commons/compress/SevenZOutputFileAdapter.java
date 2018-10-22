@@ -26,7 +26,9 @@ final class SevenZOutputFileAdapter implements ArchiveOutput<SevenZArchiveEntry>
 
     private final SevenZOutputFile sevenz;
 
-    SevenZOutputFileAdapter(final SevenZOutputFile sevenz) { this.sevenz = sevenz; }
+    SevenZOutputFileAdapter(final SevenZOutputFile sevenz) {
+        this.sevenz = sevenz;
+    }
 
     public ArchiveEntrySink<SevenZArchiveEntry> sink(String name) {
         final SevenZArchiveEntry entry = new SevenZArchiveEntry();
@@ -38,18 +40,6 @@ final class SevenZOutputFileAdapter implements ArchiveOutput<SevenZArchiveEntry>
         return new ArchiveEntrySink<SevenZArchiveEntry>() {
 
             @Override
-            public String name() { return entry.getName(); }
-
-            @Override
-            public long size() { return entry.getSize(); }
-
-            @Override
-            public boolean isDirectory() { return entry.isDirectory(); }
-
-            @Override
-            public SevenZArchiveEntry entry() { return entry; }
-
-            @Override
             public Socket<OutputStream> output() {
                 return () -> {
                     sevenz.putArchiveEntry(entry);
@@ -58,16 +48,23 @@ final class SevenZOutputFileAdapter implements ArchiveOutput<SevenZArchiveEntry>
                         boolean closed;
 
                         @Override
-                        public void write(int b) throws IOException { sevenz.write(b); }
+                        public void write(int b) throws IOException {
+                            sevenz.write(b);
+                        }
 
                         @Override
-                        public void write(byte[] b) throws IOException { sevenz.write(b); }
+                        public void write(byte[] b) throws IOException {
+                            sevenz.write(b);
+                        }
 
                         @Override
-                        public void write(byte[] b, int off, int len) throws IOException { sevenz.write(b, off, len); }
+                        public void write(byte[] b, int off, int len) throws IOException {
+                            sevenz.write(b, off, len);
+                        }
 
                         @Override
-                        public void flush() { }
+                        public void flush() {
+                        }
 
                         @Override
                         public void close() throws IOException {
@@ -81,7 +78,7 @@ final class SevenZOutputFileAdapter implements ArchiveOutput<SevenZArchiveEntry>
             }
 
             @Override
-            public void copyFrom(ArchiveEntrySource<?> source) throws Exception {
+            public void copyFrom(final ArchiveEntrySource<?> source) throws Exception {
                 entry.setSize(source.size());
                 entry.setDirectory(source.isDirectory());
                 copy(source, this);
@@ -90,5 +87,7 @@ final class SevenZOutputFileAdapter implements ArchiveOutput<SevenZArchiveEntry>
     }
 
     @Override
-    public void close() throws IOException { sevenz.close(); }
+    public void close() throws IOException {
+        sevenz.close();
+    }
 }

@@ -27,7 +27,9 @@ class ZipArchiveOutputStreamAdapter implements ArchiveOutput<ZipArchiveEntry> {
 
     private final ZipArchiveOutputStream zip;
 
-    ZipArchiveOutputStreamAdapter(final ZipArchiveOutputStream zip) { this.zip = zip; }
+    ZipArchiveOutputStreamAdapter(final ZipArchiveOutputStream zip) {
+        this.zip = zip;
+    }
 
     @Override
     public ArchiveEntrySink<ZipArchiveEntry> sink(String name) {
@@ -36,18 +38,6 @@ class ZipArchiveOutputStreamAdapter implements ArchiveOutput<ZipArchiveEntry> {
 
     ArchiveEntrySink<ZipArchiveEntry> sink(ZipArchiveEntry entry) {
         return new ArchiveEntrySink<ZipArchiveEntry>() {
-
-            @Override
-            public String name() { return entry.getName(); }
-
-            @Override
-            public long size() { return entry.getSize(); }
-
-            @Override
-            public boolean isDirectory() { return entry.isDirectory(); }
-
-            @Override
-            public ZipArchiveEntry entry() { return entry; }
 
             @Override
             public Socket<OutputStream> output() {
@@ -86,10 +76,11 @@ class ZipArchiveOutputStreamAdapter implements ArchiveOutput<ZipArchiveEntry> {
                 }
                 copy(source, this);
             }
-
         };
     }
 
     @Override
-    public void close() throws IOException { zip.close(); }
+    public void close() throws IOException {
+        zip.close();
+    }
 }

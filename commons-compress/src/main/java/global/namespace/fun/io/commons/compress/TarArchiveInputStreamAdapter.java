@@ -89,9 +89,6 @@ final class TarArchiveInputStreamAdapter implements ArchiveInput<TarArchiveEntry
             public boolean isDirectory() { return entry.isDirectory(); }
 
             @Override
-            public TarArchiveEntry entry() { return entry; }
-
-            @Override
             public Socket<InputStream> input() {
                 return () -> {
                     if (entry != tar.getCurrentEntry()) {

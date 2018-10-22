@@ -37,18 +37,6 @@ final class TarArchiveOutputStreamAdapter implements ArchiveOutput<TarArchiveEnt
         return new ArchiveEntrySink<TarArchiveEntry>() {
 
             @Override
-            public String name() { return entry.getName(); }
-
-            @Override
-            public long size() { return entry.getSize(); }
-
-            @Override
-            public boolean isDirectory() { return entry.isDirectory(); }
-
-            @Override
-            public TarArchiveEntry entry() { return entry; }
-
-            @Override
             public Socket<OutputStream> output() {
                 return () -> {
                     tar.putArchiveEntry(entry);
@@ -68,7 +56,7 @@ final class TarArchiveOutputStreamAdapter implements ArchiveOutput<TarArchiveEnt
             }
 
             @Override
-            public void copyFrom(ArchiveEntrySource<?> source) throws Exception {
+            public void copyFrom(final ArchiveEntrySource<?> source) throws Exception {
                 entry.setSize(source.size());
                 copy(source, this);
             }

@@ -18,4 +18,6 @@ import java.io.InputStream;
 abstract class ZipArchiveEntrySource extends ArchiveEntrySource<ZipArchiveEntry> {
 
     abstract Socket<InputStream> rawInput();
+
+    public abstract ZipArchiveEntry entry();
 }
