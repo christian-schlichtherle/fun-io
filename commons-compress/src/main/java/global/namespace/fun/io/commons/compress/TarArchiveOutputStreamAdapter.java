@@ -29,9 +29,6 @@ final class TarArchiveOutputStreamAdapter implements ArchiveOutput<TarArchiveEnt
 
     TarArchiveOutputStreamAdapter(final TarArchiveOutputStream tar) { this.tar = tar; }
 
-    /** Returns {@code false}. */
-    public boolean isJar() { return false; }
-
     public ArchiveEntrySink<TarArchiveEntry> sink(String name) {
         return sink(new TarArchiveEntry(requireInternal(name)));
     }

@@ -28,9 +28,6 @@ final class SevenZOutputFileAdapter implements ArchiveOutput<SevenZArchiveEntry>
 
     SevenZOutputFileAdapter(final SevenZOutputFile sevenz) { this.sevenz = sevenz; }
 
-    /** Returns {@code false}. */
-    public boolean isJar() { return false; }
-
     public ArchiveEntrySink<SevenZArchiveEntry> sink(String name) {
         final SevenZArchiveEntry entry = new SevenZArchiveEntry();
         entry.setName(requireInternal(name));

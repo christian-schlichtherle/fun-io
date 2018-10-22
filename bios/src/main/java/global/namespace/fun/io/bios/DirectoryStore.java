@@ -105,9 +105,6 @@ final class DirectoryStore implements ArchiveStore<Path> {
         return () -> new ArchiveOutput<Path>() {
 
             @Override
-            public boolean isJar() { return false; }
-
-            @Override
             public ArchiveEntrySink<Path> sink(String name) { return sink(resolve(name)); }
 
             ArchiveEntrySink<Path> sink(Path path) {

@@ -29,10 +29,6 @@ class ZipArchiveOutputStreamAdapter implements ArchiveOutput<ZipArchiveEntry> {
 
     ZipArchiveOutputStreamAdapter(final ZipArchiveOutputStream zip) { this.zip = zip; }
 
-    /** Returns {@code false}. */
-    @Override
-    public boolean isJar() { return false; }
-
     @Override
     public ArchiveEntrySink<ZipArchiveEntry> sink(String name) {
         return sink(new ZipArchiveEntry(requireInternal(name)));

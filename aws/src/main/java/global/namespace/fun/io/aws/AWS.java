@@ -123,9 +123,6 @@ public final class AWS {
                 return () -> new ArchiveOutput<S3Object>() {
 
                     @Override
-                    public boolean isJar() { return false; }
-
-                    @Override
                     public ArchiveEntrySink<S3Object> sink(String name) {
                         return sink(S3Object.builder().key(prefix + requireInternal(name)).build());
                     }
