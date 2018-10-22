@@ -19,5 +19,5 @@ abstract class ZipArchiveEntrySource extends ArchiveEntrySource<ZipArchiveEntry>
 
     abstract Socket<InputStream> rawInput();
 
-    public abstract ZipArchiveEntry entry();
+    abstract ZipArchiveEntry entry();
 }
