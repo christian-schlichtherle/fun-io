@@ -56,10 +56,9 @@ public interface Sink {
     }
 
     /**
-     * Returns a sink which applies the given filter to the I/O streams loaned by the underlying
-     * {@linkplain #output() output stream socket}.
+     * Returns a sink which applies the given filter to this sink.
      *
-     * @param f the filter to apply to the I/O streams loaned by the underlying output stream socket.
+     * @param f the filter to apply to this sink.
      */
     default Sink map(Filter f) {
         return f.sink(this);

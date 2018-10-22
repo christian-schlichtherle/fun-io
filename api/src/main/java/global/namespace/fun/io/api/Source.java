@@ -56,10 +56,9 @@ public interface Source {
     }
 
     /**
-     * Returns a source which applies the given filter to the I/O streams loaned by the underlying
-     * {@linkplain #input() input stream socket}.
+     * Returns a source which applies the given filter to this source.
      *
-     * @param f the filter to apply to the I/O streams loaned by the underlying input stream socket.
+     * @param f the filter to apply to this source.
      */
     default Source map(Filter f) {
         return f.source(this);
