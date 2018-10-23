@@ -21,7 +21,7 @@ import global.namespace.fun.io.api.function.XFunction;
 import java.io.InputStream;
 
 /**
- * An abstraction for safe reading from input streams without leaking resources.
+ * An abstraction for safe reading from an input stream without leaking resources.
  * A source provides a {@linkplain #input() socket} for safe access to an {@linkplain InputStream input stream}.
  *
  * @author Christian Schlichtherle

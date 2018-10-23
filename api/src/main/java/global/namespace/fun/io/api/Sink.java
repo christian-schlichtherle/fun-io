@@ -21,7 +21,7 @@ import global.namespace.fun.io.api.function.XFunction;
 import java.io.OutputStream;
 
 /**
- * An abstraction for safe writing to output streams without leaking resources.
+ * An abstraction for safe writing to an output stream without leaking resources.
  * A sink provides a {@linkplain #output()} socket} for safe access to an {@linkplain OutputStream output stream}.
  *
  * @author Christian Schlichtherle
