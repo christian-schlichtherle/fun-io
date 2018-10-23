@@ -17,13 +17,13 @@ package global.namespace.fun.io.it.aws.sdk1
 
 import java.util.UUID.randomUUID
 
+import com.amazonaws.services.s3.model.{ListObjectsV2Request, ListObjectsV2Result}
 import com.amazonaws.services.s3.{AmazonS3, AmazonS3ClientBuilder}
 import global.namespace.fun.io.api.ArchiveStore
 import global.namespace.fun.io.aws.sdk1.AWS.s3
 import global.namespace.fun.io.it.ArchiveSpecContext
 import org.scalatest._
 
-import scala.util.control.Breaks._
 import scala.util.control.NonFatal
 
 trait S3SpecContext extends TestSuiteMixin {
@@ -50,17 +50,13 @@ trait S3SpecContext extends TestSuiteMixin {
       case NonFatal(t1) => t = t1; throw t1
     } finally {
       try {
-        breakable {
-          var result = client listObjects bucket
-          while (true) {
-            result.getObjectSummaries.forEach(summary => client.deleteObject(summary.getBucketName, summary.getKey))
-            if (result.isTruncated) {
-              result = client listNextBatchOfObjects result
-            } else {
-              break
-            }
-          }
-        }
+        val request = new ListObjectsV2Request withBucketName bucket
+        var result: ListObjectsV2Result = null
+        do {
+          result = client listObjectsV2 request
+          result.getObjectSummaries.forEach(summary => client.deleteObject(summary.getBucketName, summary.getKey))
+          request setContinuationToken result.getContinuationToken
+        } while (result.isTruncated)
       } catch {
         case NonFatal(t1) => if (null != t) t.addSuppressed(t1) else throw t1
       } finally {

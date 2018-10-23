@@ -16,15 +16,16 @@
 package global.namespace.fun.io.aws.sdk1;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ListObjectsV2Request;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import global.namespace.fun.io.api.*;
 
 import java.io.*;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static global.namespace.fun.io.spi.ArchiveEntryNames.requireInternal;
 import static global.namespace.fun.io.spi.Copy.copy;
@@ -69,14 +70,20 @@ public final class AWS {
             public Socket<ArchiveInput> input() {
                 return () -> new ArchiveInput() {
 
-                    Map<String, S3ObjectSummary> objects = client
-                            .listObjectsV2(bucket, prefix)
-                            .getObjectSummaries()
-                            .stream()
-                            .collect(Collectors.toMap(
-                                    o -> o.getKey().substring(prefix.length()),
-                                    Function.identity()
-                            ));
+                    Map<String, S3ObjectSummary> objects = new LinkedHashMap<>();
+
+                    {
+                        final ListObjectsV2Request request = new ListObjectsV2Request()
+                                .withBucketName(bucket)
+                                .withPrefix(prefix);
+                        ListObjectsV2Result result;
+                        do {
+                            result = client.listObjectsV2(request);
+                            result.getObjectSummaries().forEach(summary ->
+                                    objects.put(summary.getKey().substring(prefix.length()), summary));
+                            request.setContinuationToken(result.getNextContinuationToken());
+                        } while (result.isTruncated());
+                    }
 
                     @Override
                     public Iterator<ArchiveEntrySource> iterator() {
@@ -131,8 +138,9 @@ public final class AWS {
 
                     @Override
                     public ArchiveEntrySink sink(String name) {
-                        final String prefixedName = prefix + requireInternal(name);
                         return new ArchiveEntrySink() {
+
+                            final String prefixedName = prefix + requireInternal(name);
 
                             @Override
                             public void copyFrom(ArchiveEntrySource source) throws Exception {
