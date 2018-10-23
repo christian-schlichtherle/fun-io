@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package global.namespace.fun.io.it.aws
+package global.namespace.fun.io.it.aws.sdk2
 
-import global.namespace.fun.io.it.ArchiveSpecSuite
+import global.namespace.fun.io.it.DiffAndPatchSpecSuite
 
-class S3Spec extends ArchiveSpecSuite with S3SpecContext
+class S3DiffAndPatchSpec extends DiffAndPatchSpecSuite with S3SpecContext

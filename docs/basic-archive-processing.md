@@ -63,12 +63,23 @@ Fun I/O treats S3 buckets like archive files.
 This feature enables you to copy and transform data between an S3 bucket (with an optional key prefix) and any other 
 supported archive file, directory or S3 bucket (with an optional key prefix).
 
-The following code "unpacks" the TAR.GZ file `archive.tgz` to the S3 bucket `bucket` with the key prefix `archive/`:
+Fun I/O provides two modules for accessing S3:
+
++ Fun I/O AWS SDK1 (alias `fun-io-aws-sdk1`) depends on the Amazon SDK for Java and provides the package 
+  `global.namespace.fun.io.aws.sdk1`. 
++ Fun I/O AWS SDK2 (alias `fun-io-aws-sdk2`) depends on the Amazon SDK for Java 2 and provides the package 
+  `global.namespace.fun.io.aws.sdk2`.  
+
+Both packages provide a facade class named `AWS` with identical behavior.
+
+The following code uses Fun I/O AWS SDK1 to "unpack" the TAR.GZ file `archive.tgz` to the S3 bucket `bucket` with the 
+key prefix `archive/`:
 
 ```java
-import software.amazon.awssdk.services.s3.S3Client;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
-import static global.namespace.fun.io.aws.AWS.s3; // from `fun-io-aws`
+import static global.namespace.fun.io.aws.sdk1.AWS.s3; // from `fun-io-aws-sdk1`
 import static global.namespace.fun.io.bios.BIOS.copy;
 import static global.namespace.fun.io.bios.BIOS.file;
 import static global.namespace.fun.io.commons.compress.CommonsCompress.gzip;
@@ -76,7 +87,7 @@ import static global.namespace.fun.io.commons.compress.CommonsCompress.tar;
 
 class Scratch {
     public static void main(String[] args) throws Exception {
-        S3Client client = S3Client.create();
+        AmazonS3 client = AmazonS3ClientBuilder.defaultClient();
         copy(tar(file("archive.tgz").map(gzip())), s3(client, "bucket", "archive/"));
     }
 }

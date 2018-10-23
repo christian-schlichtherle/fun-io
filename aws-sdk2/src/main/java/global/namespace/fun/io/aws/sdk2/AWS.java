@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package global.namespace.fun.io.aws;
+package global.namespace.fun.io.aws.sdk2;
 
 import global.namespace.fun.io.api.*;
 import software.amazon.awssdk.core.sync.RequestBody;

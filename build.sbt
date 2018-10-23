@@ -18,7 +18,7 @@ import Dependencies._
 
 lazy val root: Project = project
   .in(file("."))
-  .aggregate(api, aws, awsSdk1, bios, commonsCompress, delta, it, jackson, jaxb, scalaApi, spi, xz, zstd)
+  .aggregate(api, awsSdk1, awsSdk2, bios, commonsCompress, delta, it, jackson, jaxb, scalaApi, spi, xz, zstd)
   .settings(releaseSettings)
   .settings(aggregateSettings)
   .settings(name := "Fun I/O")
@@ -35,21 +35,6 @@ lazy val api: Project = project
     normalizedName := "fun-io-api"
   )
 
-lazy val aws: Project = project
-  .in(file("aws"))
-  .dependsOn(spi)
-  .settings(javaLibrarySettings)
-  .settings(
-    libraryDependencies ++= Seq(
-      MockitoCore % Test,
-      S3,
-      Scalacheck % Test,
-      Scalatest % Test
-    ),
-    name := "Fun I/O AWS",
-    normalizedName := "fun-io-aws"
-  )
-
 lazy val awsSdk1: Project = project
   .in(file("aws-sdk1"))
   .dependsOn(spi)
@@ -63,6 +48,21 @@ lazy val awsSdk1: Project = project
     ),
     name := "Fun I/O AWS SDK1",
     normalizedName := "fun-io-aws-sdk1"
+  )
+
+lazy val awsSdk2: Project = project
+  .in(file("aws-sdk2"))
+  .dependsOn(spi)
+  .settings(javaLibrarySettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      MockitoCore % Test,
+      S3,
+      Scalacheck % Test,
+      Scalatest % Test
+    ),
+    name := "Fun I/O AWS SDK2",
+    normalizedName := "fun-io-aws-sdk2"
   )
 
 lazy val bios: Project = project
@@ -107,7 +107,7 @@ lazy val delta: Project = project
 
 lazy val it: Project = project
   .in(file("it"))
-  .dependsOn(aws, awsSdk1, bios, commonsCompress, delta, jackson, jaxb, scalaApi, spi, xz, zstd)
+  .dependsOn(awsSdk1, awsSdk2, bios, commonsCompress, delta, jackson, jaxb, scalaApi, spi, xz, zstd)
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(

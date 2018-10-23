@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package global.namespace.fun.io.aws
+package global.namespace.fun.io.aws.sdk2
 
-import global.namespace.fun.io.aws.AWS.s3
+import global.namespace.fun.io.aws.sdk2.AWS.s3
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
 import org.scalatest.mockito.MockitoSugar._

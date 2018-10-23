@@ -38,10 +38,19 @@ extends the Java API with operators and implicit conversions to improve the deve
 Each implementation module provides a single facade class which contains many static factory methods for different 
 implementations of the abstractions provided by the `fun-io-api` module.
 
-### Fun I/O AWS
+### Fun I/O AWS SDK1
 
 The module
-[`fun-io-aws`](https://search.maven.org/search?q=g:global.namespace.fun-io%20AND%20a:fun-io-aws)
+[`fun-io-aws-sdk1`](https://search.maven.org/search?q=g:global.namespace.fun-io%20AND%20a:fun-io-aws-sdk1)
+depends on the [AWS SDK for Java] to provide implementations of the Fun I/O API:
+
++ The `AWS` class is a facade which provides the following `ArchiveStore` functions:
+  + `s3` provides read/write access to an AWS S3 bucket or any sub-tree of it.
+
+### Fun I/O AWS SDK2
+
+The module
+[`fun-io-aws-sdk2`](https://search.maven.org/search?q=g:global.namespace.fun-io%20AND%20a:fun-io-aws-sdk2)
 depends on the [AWS SDK for Java 2.0] to provide implementations of the Fun I/O API:
 
 + The `AWS` class is a facade which provides the following `ArchiveStore` functions:
@@ -181,4 +190,5 @@ provides utility functions for diffing and patching archive files or directories
 [XZ for Java]: https://tukaani.org/xz/
 [Zstd-jni]: https://github.com/luben/zstd-jni
 [Module Structure]: /fun-io/module-structure.svg
+[AWS SDK for Java]:     https://github.com/aws/aws-sdk-java
 [AWS SDK for Java 2.0]: https://github.com/aws/aws-sdk-java-v2
