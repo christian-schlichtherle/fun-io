@@ -80,15 +80,6 @@ final class TarArchiveInputStreamAdapter implements ArchiveInputStream {
         return new ArchiveEntrySource() {
 
             @Override
-            public String name() { return entry.getName(); }
-
-            @Override
-            public long size() { return entry.getSize(); }
-
-            @Override
-            public boolean isDirectory() { return entry.isDirectory(); }
-
-            @Override
             public Socket<InputStream> input() {
                 return () -> {
                     if (entry != tar.getCurrentEntry()) {
@@ -97,6 +88,15 @@ final class TarArchiveInputStreamAdapter implements ArchiveInputStream {
                     return new UncloseableInputStream(tar);
                 };
             }
+
+            @Override
+            public String name() { return entry.getName(); }
+
+            @Override
+            public boolean directory() { return entry.isDirectory(); }
+
+            @Override
+            public long size() { return entry.getSize(); }
         };
     }
 

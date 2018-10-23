@@ -31,7 +31,7 @@ abstract class DiffAndPatchSpecSuite extends WordSpec with ArchiveSpecContext {
               patch base first delta delta to clone
 
               val secondEntries: Set[String] = second applyReader {
-                (_: ArchiveInputStream).asScala.filterNot(_.isDirectory).map(_.name).toSet
+                (_: ArchiveInputStream).asScala.filterNot(_.directory).map(_.name).toSet
               }
 
               val model = (diff base second update clone digest md5).toModel

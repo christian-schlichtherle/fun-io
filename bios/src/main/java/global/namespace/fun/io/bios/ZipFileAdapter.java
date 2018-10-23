@@ -77,16 +77,16 @@ final class ZipFileAdapter implements ArchiveInputStream {
         return new ArchiveEntrySource() {
 
             @Override
+            public Socket<InputStream> input() { return () -> zip.getInputStream(entry); }
+
+            @Override
             public String name() { return entry.getName(); }
 
             @Override
+            public boolean directory() { return entry.isDirectory(); }
+
+            @Override
             public long size() { return entry.getSize(); }
-
-            @Override
-            public boolean isDirectory() { return entry.isDirectory(); }
-
-            @Override
-            public Socket<InputStream> input() { return () -> zip.getInputStream(entry); }
         };
     }
 

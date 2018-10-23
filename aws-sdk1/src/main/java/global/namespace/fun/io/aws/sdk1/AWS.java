@@ -109,13 +109,13 @@ public final class AWS {
                             }
 
                             @Override
-                            public boolean isDirectory() {
-                                return object.getKey().endsWith("/");
+                            public String name() {
+                                return object.getKey().substring(prefix.length());
                             }
 
                             @Override
-                            public String name() {
-                                return object.getKey().substring(prefix.length());
+                            public boolean directory() {
+                                return object.getKey().endsWith("/");
                             }
 
                             @Override

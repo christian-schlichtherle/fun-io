@@ -93,7 +93,7 @@ abstract class ArchiveDiff implements WithMessageDigest {
             final Assembly assembly = new Assembly();
 
             for (final ArchiveEntrySource baseEntry : baseInput()) {
-                if (!baseEntry.isDirectory()) {
+                if (!baseEntry.directory()) {
                     final Optional<ArchiveEntrySource> updateEntry = updateInput().source(baseEntry.name());
                     if (updateEntry.isPresent()) {
                         assembly.visitEntriesInBothFiles(baseEntry, updateEntry.get());
@@ -104,7 +104,7 @@ abstract class ArchiveDiff implements WithMessageDigest {
             }
 
             for (final ArchiveEntrySource updateEntry : updateInput()) {
-                if (!updateEntry.isDirectory()) {
+                if (!updateEntry.directory()) {
                     final Optional<ArchiveEntrySource> baseEntry = baseInput().source(updateEntry.name());
                     if (!baseEntry.isPresent()) {
                         assembly.visitEntryInUpdateFile(updateEntry);

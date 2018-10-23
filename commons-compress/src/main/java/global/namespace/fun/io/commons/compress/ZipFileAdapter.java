@@ -88,10 +88,10 @@ final class ZipFileAdapter implements ArchiveInputStream {
             public String name() { return entry.getName(); }
 
             @Override
-            public long size() { return entry.getSize(); }
+            public boolean directory() { return entry.isDirectory(); }
 
             @Override
-            public boolean isDirectory() { return entry.isDirectory(); }
+            public long size() { return entry.getSize(); }
         };
     }
 

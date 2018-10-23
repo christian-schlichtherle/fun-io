@@ -80,15 +80,6 @@ final class SevenZFileAdapter implements ArchiveInputStream {
         return new ArchiveEntrySource() {
 
             @Override
-            public String name() { return entry.getName(); }
-
-            @Override
-            public long size() { return entry.getSize(); }
-
-            @Override
-            public boolean isDirectory() { return entry.isDirectory(); }
-
-            @Override
             public Socket<InputStream> input() {
                 return () -> new InputStream() {
 
@@ -102,6 +93,15 @@ final class SevenZFileAdapter implements ArchiveInputStream {
                     public int read(byte[] b, int off, int len) throws IOException { return sevenz.read(b, off, len); }
                 };
             }
+
+            @Override
+            public String name() { return entry.getName(); }
+
+            @Override
+            public boolean directory() { return entry.isDirectory(); }
+
+            @Override
+            public long size() { return entry.getSize(); }
         };
     }
 

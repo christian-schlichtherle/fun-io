@@ -80,7 +80,7 @@ final class SevenZOutputFileAdapter implements ArchiveOutputStream {
             @Override
             public void copyFrom(final ArchiveEntrySource source) throws Exception {
                 entry.setSize(source.size());
-                entry.setDirectory(source.isDirectory());
+                entry.setDirectory(source.directory());
                 copy(source, this);
             }
         };

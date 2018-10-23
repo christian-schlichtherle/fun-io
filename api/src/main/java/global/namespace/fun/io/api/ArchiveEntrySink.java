@@ -5,7 +5,7 @@
 package global.namespace.fun.io.api;
 
 /**
- * An abstraction for writing the content of an underlying archive entry.
+ * An abstraction for writing an archive entry.
  *
  * @author Christian Schlichtherle
  */

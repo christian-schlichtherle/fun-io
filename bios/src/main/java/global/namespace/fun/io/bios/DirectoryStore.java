@@ -65,8 +65,24 @@ final class DirectoryStore implements ArchiveStore {
                     final String name = relativize(path);
 
                     @Override
+                    public Socket<InputStream> input() {
+                        return () -> {
+                            if (directory()) {
+                                return new ByteArrayInputStream(new byte[0]);
+                            } else {
+                                return Files.newInputStream(path);
+                            }
+                        };
+                    }
+
+                    @Override
                     public String name() {
-                        return isDirectory() ? name + '/' : name;
+                        return directory() ? name + '/' : name;
+                    }
+
+                    @Override
+                    public boolean directory() {
+                        return Files.isDirectory(path);
                     }
 
                     @Override
@@ -76,22 +92,6 @@ final class DirectoryStore implements ArchiveStore {
                         } catch (IOException ignored) {
                             return 0;
                         }
-                    }
-
-                    @Override
-                    public boolean isDirectory() {
-                        return Files.isDirectory(path);
-                    }
-
-                    @Override
-                    public Socket<InputStream> input() {
-                        return () -> {
-                            if (isDirectory()) {
-                                return new ByteArrayInputStream(new byte[0]);
-                            } else {
-                                return Files.newInputStream(path);
-                            }
-                        };
                     }
                 };
             }
@@ -127,7 +127,7 @@ final class DirectoryStore implements ArchiveStore {
 
                     @Override
                     public void copyFrom(final ArchiveEntrySource source) throws Exception {
-                        if (source.isDirectory()) {
+                        if (source.directory()) {
                             Files.createDirectories(path);
                         } else {
                             copy(source, this);

@@ -36,7 +36,7 @@ abstract class ArchiveSpecSuite extends WordSpec with ArchiveSpecContext {
             copy(tempArchive, outputJar)
 
             val inputEntries: Set[String] = inputJar applyReader {
-              (_: ArchiveInputStream).asScala.filterNot(_.isDirectory).map(_.name).toSet
+              (_: ArchiveInputStream).asScala.filterNot(_.directory).map(_.name).toSet
             }
 
             val model = (diff base inputJar update outputJar).toModel
