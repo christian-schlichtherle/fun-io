@@ -41,12 +41,12 @@ following to its project configuration:
         <dependency>
             <groupId>global.namespace.fun-io</groupId>
             <artifactId>fun-io-bios</artifactId>
-            <version>1.7.3</version>
+            <version>2.0.0</version>
         </dependency>
         <dependency>
             <groupId>global.namespace.fun-io</groupId>
             <artifactId>fun-io-jackson</artifactId>
-            <version>1.7.3</version>
+            <version>2.0.0</version>
         </dependency>
     </dependencies>
 </project>
@@ -56,9 +56,9 @@ following to its project configuration:
 // build.sbt
 ...
 libraryDependencies ++= Seq(
-  "global.namespace.fun-io" % "fun-io-bios" % "1.7.3",
-  "global.namespace.fun-io" % "fun-io-jackson" % "1.7.3",
-  "global.namespace.fun-io" %% "fun-io-scala-api" % "1.7.3"
+  "global.namespace.fun-io" % "fun-io-bios" % "2.0.0",
+  "global.namespace.fun-io" % "fun-io-jackson" % "2.0.0",
+  "global.namespace.fun-io" %% "fun-io-scala-api" % "2.0.0"
 )
 ```
 
