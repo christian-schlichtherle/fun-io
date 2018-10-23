@@ -22,10 +22,9 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 
 import java.io.*;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static global.namespace.fun.io.spi.ArchiveEntryNames.requireInternal;
 import static global.namespace.fun.io.spi.Copy.copy;
@@ -70,14 +69,13 @@ public final class AWS {
             public Socket<ArchiveInput> input() {
                 return () -> new ArchiveInput() {
 
-                    Map<String, S3Object> objects = client
-                            .listObjectsV2Paginator(b -> b.bucket(bucket).prefix(prefix))
-                            .contents()
-                            .stream()
-                            .collect(Collectors.toMap(
-                                    o -> o.key().substring(prefix.length()),
-                                    Function.identity()
-                            ));
+                    Map<String, S3Object> objects = new LinkedHashMap<>();
+
+                    {
+                        client.listObjectsV2Paginator(b -> b.bucket(bucket).prefix(prefix)).forEach(response ->
+                                response.contents().forEach(object ->
+                                        objects.put(object.key().substring(prefix.length()), object)));
+                    }
 
                     @Override
                     public Iterator<ArchiveEntrySource> iterator() {

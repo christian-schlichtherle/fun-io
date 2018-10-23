@@ -52,7 +52,9 @@ trait S3SpecContext extends TestSuiteMixin { this: ArchiveSpecContext with TestS
       try {
         val objects = client
           .listObjectsV2Paginator(b => b.bucket(bucket))
-          .contents.asScala.map(o => ObjectIdentifier.builder.key(o.key).build).toSeq
+          .asScala
+          .flatMap(r => r.contents.asScala.map(o => ObjectIdentifier.builder.key(o.key).build))
+          .toSeq
         client deleteObjects (b => b bucket bucket delete (b => b objects (objects: _*)))
       } catch {
         case NonFatal(t1) => if (null != t) t.addSuppressed(t1) else throw t1
