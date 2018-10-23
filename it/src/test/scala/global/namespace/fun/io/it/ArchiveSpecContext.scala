@@ -23,24 +23,23 @@ import global.namespace.fun.io.commons.compress.CommonsCompress.jar
 /** @author Christian Schlichtherle */
 trait ArchiveSpecContext {
 
-  type ArchiveFile = ArchiveStore
-  type ArchiveFileFactory = File => ArchiveFile
+  type ArchiveStoreFactory = File => ArchiveStore
 
-  val Test1Jar: ArchiveFile = jar(resourceFile("test1.jar"))
+  val Test1Jar: ArchiveStore = jar(resourceFile("test1.jar"))
 
-  val Test2Jar: ArchiveFile = jar(resourceFile("test2.jar"))
+  val Test2Jar: ArchiveStore = jar(resourceFile("test2.jar"))
 
   private def resourceFile(name: String) = {
     new File((classOf[ArchiveSpecContext] getResource name).toURI)
   }
 
-  def withTempJAR(test: ArchiveFile => Any): Unit = withTempArchiveFile(jar)(test)
+  def withTempJAR(test: ArchiveStore => Any): Unit = withTempArchiveFile(jar)(test)
 
-  def withTempArchiveStore(test: ArchiveStore => Any): Unit = withTempArchiveFile(archiveFileFactory)(test)
+  def withTempArchiveStore(test: ArchiveStore => Any): Unit = withTempArchiveFile(archiveStoreFactory)(test)
 
-  def archiveFileFactory: ArchiveFileFactory
+  def archiveStoreFactory: ArchiveStoreFactory
 
-  def withTempArchiveFile(factory: ArchiveFileFactory)(test: ArchiveFile => Any): Unit = {
+  def withTempArchiveFile(factory: ArchiveStoreFactory)(test: ArchiveStore => Any): Unit = {
     val file = File.createTempFile("tmp", null)
     file delete ()
     try {

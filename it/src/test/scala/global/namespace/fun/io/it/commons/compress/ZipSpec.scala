@@ -20,5 +20,5 @@ import global.namespace.fun.io.it.ArchiveSpecSuite
 
 class ZipSpec extends ArchiveSpecSuite {
 
-  override def archiveFileFactory: ArchiveFileFactory = CommonsCompress.zip
+  override def archiveStoreFactory: ArchiveStoreFactory = CommonsCompress.zip
 }

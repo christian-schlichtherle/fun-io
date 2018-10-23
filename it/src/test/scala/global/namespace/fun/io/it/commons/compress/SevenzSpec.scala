@@ -20,5 +20,5 @@ import global.namespace.fun.io.it.ArchiveSpecSuite
 
 class SevenzSpec extends ArchiveSpecSuite {
 
-  override def archiveFileFactory: ArchiveFileFactory = CommonsCompress.sevenz
+  override def archiveStoreFactory: ArchiveStoreFactory = CommonsCompress.sevenz
 }

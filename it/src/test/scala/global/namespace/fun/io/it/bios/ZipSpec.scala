@@ -20,5 +20,5 @@ import global.namespace.fun.io.it.ArchiveSpecSuite
 
 class ZipSpec extends ArchiveSpecSuite {
 
-  override def archiveFileFactory: ArchiveFileFactory = BIOS.zip
+  override def archiveStoreFactory: ArchiveStoreFactory = BIOS.zip
 }

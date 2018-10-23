@@ -20,5 +20,5 @@ import global.namespace.fun.io.it.DiffAndPatchSpecSuite
 
 class DirectoryDiffAndPatchSpec extends DiffAndPatchSpecSuite {
 
-  override def archiveFileFactory: ArchiveFileFactory = BIOS.directory
+  override def archiveStoreFactory: ArchiveStoreFactory = BIOS.directory
 }

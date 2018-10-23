@@ -20,5 +20,5 @@ import global.namespace.fun.io.it.DiffAndPatchSpecSuite
 
 class JarDiffAndPatchSpec extends DiffAndPatchSpecSuite {
 
-  override def archiveFileFactory: ArchiveFileFactory = CommonsCompress.jar
+  override def archiveStoreFactory: ArchiveStoreFactory = CommonsCompress.jar
 }

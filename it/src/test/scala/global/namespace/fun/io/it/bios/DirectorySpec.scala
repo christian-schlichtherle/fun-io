@@ -20,5 +20,5 @@ import global.namespace.fun.io.it.ArchiveSpecSuite
 
 class DirectorySpec extends ArchiveSpecSuite {
 
-  override def archiveFileFactory: ArchiveFileFactory = BIOS.directory
+  override def archiveStoreFactory: ArchiveStoreFactory = BIOS.directory
 }

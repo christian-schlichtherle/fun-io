@@ -69,5 +69,5 @@ trait S3SpecContext extends TestSuiteMixin {
     }
   }
 
-  override def archiveFileFactory: ArchiveFileFactory = ???
+  override def archiveStoreFactory: ArchiveStoreFactory = ???
 }

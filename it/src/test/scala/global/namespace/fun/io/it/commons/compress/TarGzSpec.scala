@@ -23,7 +23,7 @@ import global.namespace.fun.io.it.ArchiveSpecSuite
 
 class TarGzSpec extends ArchiveSpecSuite {
 
-  override def archiveFileFactory: ArchiveFileFactory = {
+  override def archiveStoreFactory: ArchiveStoreFactory = {
     f: File => CommonsCompress.tar(BIOS.file(f).map(CommonsCompress.gzip))
   }
 }

@@ -23,5 +23,5 @@ import global.namespace.fun.io.it.ArchiveSpecSuite
 
 class TarSpec extends ArchiveSpecSuite {
 
-  override def archiveFileFactory: ArchiveFileFactory = (f: File) => CommonsCompress.tar(BIOS.file(f))
+  override def archiveStoreFactory: ArchiveStoreFactory = (f: File) => CommonsCompress.tar(BIOS.file(f))
 }

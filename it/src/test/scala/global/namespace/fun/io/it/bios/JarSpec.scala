@@ -20,5 +20,5 @@ import global.namespace.fun.io.it.ArchiveSpecSuite
 
 class JarSpec extends ArchiveSpecSuite {
 
-  override def archiveFileFactory: ArchiveFileFactory = BIOS.jar
+  override def archiveStoreFactory: ArchiveStoreFactory = BIOS.jar
 }

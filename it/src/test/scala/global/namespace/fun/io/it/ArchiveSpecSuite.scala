@@ -29,9 +29,9 @@ abstract class ArchiveSpecSuite extends WordSpec with ArchiveSpecContext {
 
   "An archive store" should {
     "support copying its entries" in {
-      forAll(Table("JAR", Test1Jar, Test2Jar)) { inputJar: ArchiveFile =>
+      forAll(Table("JAR", Test1Jar, Test2Jar)) { inputJar: ArchiveStore =>
         withTempArchiveStore { tempArchive: ArchiveStore =>
-          withTempJAR { outputJar: ArchiveFile =>
+          withTempJAR { outputJar: ArchiveStore =>
             copy(inputJar, tempArchive)
             copy(tempArchive, outputJar)
 

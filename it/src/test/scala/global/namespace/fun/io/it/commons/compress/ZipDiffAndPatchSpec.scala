@@ -20,5 +20,5 @@ import global.namespace.fun.io.it.DiffAndPatchSpecSuite
 
 class ZipDiffAndPatchSpec extends DiffAndPatchSpecSuite {
 
-  override def archiveFileFactory: ArchiveFileFactory = CommonsCompress.zip
+  override def archiveStoreFactory: ArchiveStoreFactory = CommonsCompress.zip
 }
