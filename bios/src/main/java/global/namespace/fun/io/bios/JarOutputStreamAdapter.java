@@ -5,7 +5,7 @@
 package global.namespace.fun.io.bios;
 
 import global.namespace.fun.io.api.ArchiveEntrySink;
-import global.namespace.fun.io.api.ArchiveOutput;
+import global.namespace.fun.io.api.ArchiveOutputStream;
 
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
@@ -13,7 +13,7 @@ import java.util.jar.JarOutputStream;
 import static global.namespace.fun.io.spi.ArchiveEntryNames.requireInternal;
 
 /**
- * Adapts a {@link JarOutputStream} to an {@link ArchiveOutput}.
+ * Adapts a {@link JarOutputStream} to an {@link ArchiveOutputStream}.
  *
  * @author Christian Schlichtherle
  */

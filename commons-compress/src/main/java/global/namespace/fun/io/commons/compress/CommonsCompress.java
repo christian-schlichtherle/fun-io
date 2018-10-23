@@ -133,10 +133,10 @@ public final class CommonsCompress {
         return new ArchiveStore() {
 
             @Override
-            public Socket<ArchiveInput> input() { return () -> new ZipFileAdapter(new ZipFile(path)); }
+            public Socket<ArchiveInputStream> input() { return () -> new ZipFileAdapter(new ZipFile(path)); }
 
             @Override
-            public Socket<ArchiveOutput> output() {
+            public Socket<ArchiveOutputStream> output() {
                 return () -> new JarArchiveOutputStreamAdapter(new JarArchiveOutputStream(new FileOutputStream(path)));
             }
         };
@@ -160,12 +160,12 @@ public final class CommonsCompress {
         return new ArchiveStore() {
 
             @Override
-            public Socket<ArchiveInput> input() {
+            public Socket<ArchiveInputStream> input() {
                 return () -> new SevenZFileAdapter(new SevenZFile(path));
             }
 
             @Override
-            public Socket<ArchiveOutput> output() {
+            public Socket<ArchiveOutputStream> output() {
                 return () -> new SevenZOutputFileAdapter(new SevenZOutputFile(path));
             }
         };
@@ -191,12 +191,12 @@ public final class CommonsCompress {
         return new ArchiveStore() {
 
             @Override
-            public Socket<ArchiveInput> input() {
+            public Socket<ArchiveInputStream> input() {
                 return store.input().map(in -> new TarArchiveInputStreamAdapter(new TarArchiveInputStream(in)));
             }
 
             @Override
-            public Socket<ArchiveOutput> output() {
+            public Socket<ArchiveOutputStream> output() {
                 return store.output().map(out -> new TarArchiveOutputStreamAdapter(new TarArchiveOutputStream(out)));
             }
         };
@@ -208,10 +208,10 @@ public final class CommonsCompress {
         return new ArchiveStore() {
 
             @Override
-            public Socket<ArchiveInput> input() { return () -> new ZipFileAdapter(new ZipFile(path)); }
+            public Socket<ArchiveInputStream> input() { return () -> new ZipFileAdapter(new ZipFile(path)); }
 
             @Override
-            public Socket<ArchiveOutput> output() {
+            public Socket<ArchiveOutputStream> output() {
                 return () -> new ZipArchiveOutputStreamAdapter(new ZipArchiveOutputStream(path));
             }
         };

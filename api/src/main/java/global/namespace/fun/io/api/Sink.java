@@ -15,45 +15,15 @@
  */
 package global.namespace.fun.io.api;
 
-import global.namespace.fun.io.api.function.XConsumer;
-import global.namespace.fun.io.api.function.XFunction;
-
 import java.io.OutputStream;
 
 /**
- * An abstraction for safe writing to an output stream without leaking resources.
- * A sink provides a {@linkplain #output()} socket} for safe access to an {@linkplain OutputStream output stream}.
+ * An abstraction for safe access to some {@linkplain OutputStream output stream}.
  *
  * @author Christian Schlichtherle
  */
 @FunctionalInterface
-public interface Sink {
-
-    /**
-     * Returns the underlying output stream socket for (over)writing the content of this sink.
-     */
-    Socket<OutputStream> output();
-
-    /**
-     * Loans an output stream from the underlying {@linkplain #output() socket} to the given consumer.
-     * The output stream will be closed upon return from this method.
-     */
-    default void acceptWriter(XConsumer<? super OutputStream> writer) throws Exception {
-        output().accept(writer);
-    }
-
-    /**
-     * Loans an output stream from the underlying {@linkplain #output() socket} to the given function and returns its
-     * value.
-     * The output stream will be closed upon return from this method.
-     * <p>
-     * It is an error to return the loaned output stream from the given function or any other object which holds on to
-     * it.
-     * Use the {@link #map(Filter)} method instead if you need to transform the underlying output stream socket.
-     */
-    default <U> U applyWriter(XFunction<? super OutputStream, ? extends U> writer) throws Exception {
-        return output().apply(writer);
-    }
+public interface Sink extends GenSink<OutputStream> {
 
     /**
      * Returns a sink which applies the given filter to this sink.

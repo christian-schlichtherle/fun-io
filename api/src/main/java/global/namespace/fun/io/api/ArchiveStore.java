@@ -5,10 +5,10 @@
 package global.namespace.fun.io.api;
 
 /**
- * An abstraction for safe reading and writing of archive entries from and to an archive file without leaking resources.
- * An archive file store provides an {@linkplain #input() archive file input socket} and an
- * {@linkplain #output() archive file output socket}.
+ * An abstraction for safe access to an {@link ArchiveInputStream archive input stream} and
+ * {@link ArchiveOutputStream archive output stream}.
  *
  * @author Christian Schlichtherle
  */
-public interface ArchiveStore extends ArchiveSource, ArchiveSink { }
+public interface ArchiveStore extends ArchiveSource, ArchiveSink {
+}

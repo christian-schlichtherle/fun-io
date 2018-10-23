@@ -15,13 +15,17 @@
  */
 package global.namespace.fun.io.api;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.OptionalLong;
 
 import static java.util.Objects.requireNonNull;
 
 /**
- * Emits input and output stream {@linkplain Socket sockets} in order to enable access to its stored content.
+ * An abstraction for safe access to an {@link InputStream input stream} and
+ * {@link OutputStream output stream}.
  *
  * @author Christian Schlichtherle
  */

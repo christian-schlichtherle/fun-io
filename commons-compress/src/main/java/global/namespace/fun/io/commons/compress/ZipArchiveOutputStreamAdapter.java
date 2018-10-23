@@ -6,7 +6,7 @@ package global.namespace.fun.io.commons.compress;
 
 import global.namespace.fun.io.api.ArchiveEntrySink;
 import global.namespace.fun.io.api.ArchiveEntrySource;
-import global.namespace.fun.io.api.ArchiveOutput;
+import global.namespace.fun.io.api.ArchiveOutputStream;
 import global.namespace.fun.io.api.Socket;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
@@ -19,11 +19,11 @@ import static global.namespace.fun.io.spi.ArchiveEntryNames.requireInternal;
 import static global.namespace.fun.io.spi.Copy.copy;
 
 /**
- * Adapts a {@link ZipArchiveOutputStream} to an {@link ArchiveOutput}.
+ * Adapts a {@link ZipArchiveOutputStream} to an {@link ArchiveOutputStream}.
  *
  * @author Christian Schlichtherle
  */
-class ZipArchiveOutputStreamAdapter implements ArchiveOutput {
+class ZipArchiveOutputStreamAdapter implements ArchiveOutputStream {
 
     private final ZipArchiveOutputStream zip;
 

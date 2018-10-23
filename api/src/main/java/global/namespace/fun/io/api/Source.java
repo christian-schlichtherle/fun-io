@@ -15,45 +15,15 @@
  */
 package global.namespace.fun.io.api;
 
-import global.namespace.fun.io.api.function.XConsumer;
-import global.namespace.fun.io.api.function.XFunction;
-
 import java.io.InputStream;
 
 /**
- * An abstraction for safe reading from an input stream without leaking resources.
- * A source provides a {@linkplain #input() socket} for safe access to an {@linkplain InputStream input stream}.
+ * An abstraction for safe access to some {@linkplain InputStream input stream}.
  *
  * @author Christian Schlichtherle
  */
 @FunctionalInterface
-public interface Source {
-
-    /**
-     * Returns the underlying input stream socket for reading the content of this source.
-     */
-    Socket<InputStream> input();
-
-    /**
-     * Loans an input stream from the underlying {@linkplain #input() socket} to the given consumer.
-     * The input stream will be closed upon return from this method.
-     */
-    default void acceptReader(XConsumer<? super InputStream> reader) throws Exception {
-        input().accept(reader);
-    }
-
-    /**
-     * Loans an input stream from the underlying {@linkplain #input() socket} to the given function and returns its
-     * value.
-     * The input stream will be closed upon return from this method.
-     * <p>
-     * It is an error to return the loaned input stream from the given function or any other object which holds on to
-     * it.
-     * Use the {@link #map(Filter)} method instead if you need to transform the underlying input stream socket.
-     */
-    default <U> U applyReader(XFunction<? super InputStream, ? extends U> reader) throws Exception {
-        return input().apply(reader);
-    }
+public interface Source extends GenSource<InputStream> {
 
     /**
      * Returns a source which applies the given filter to this source.

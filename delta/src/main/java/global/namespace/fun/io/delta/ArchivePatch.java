@@ -39,11 +39,11 @@ abstract class ArchivePatch {
         baseSource().acceptReader(baseInput -> deltaSource().acceptReader(deltaInput -> consumer.accept(
                 new Engine() {
 
-                    ArchiveInput baseInput() {
+                    ArchiveInputStream baseInput() {
                         return baseInput;
                     }
 
-                    ArchiveInput deltaInput() {
+                    ArchiveInputStream deltaInput() {
                         return deltaInput;
                     }
                 }
@@ -56,11 +56,11 @@ abstract class ArchivePatch {
 
         WithMessageDigest digest;
 
-        abstract ArchiveInput baseInput();
+        abstract ArchiveInputStream baseInput();
 
-        abstract ArchiveInput deltaInput();
+        abstract ArchiveInputStream deltaInput();
 
-        void to(final ArchiveOutput updateOutput) throws Exception {
+        void to(final ArchiveOutputStream updateOutput) throws Exception {
             for (Predicate<String> filter : passFilters(updateOutput)) {
                 to(updateOutput, filter);
             }
@@ -72,7 +72,7 @@ abstract class ArchivePatch {
          * The filters should properly partition the set of entry sources, i.e. each entry source should be accepted by
          * exactly one filter.
          */
-        Iterable<Predicate<String>> passFilters(final ArchiveOutput updateOutput) {
+        Iterable<Predicate<String>> passFilters(final ArchiveOutputStream updateOutput) {
             if (updateOutput.isJar()) {
                 // java.util.JarInputStream assumes that the file entry
                 // "META-INF/MANIFEST.MF" should either be the first or the second
@@ -91,11 +91,11 @@ abstract class ArchivePatch {
             }
         }
 
-        void to(final ArchiveOutput updateOutput, final Predicate<String> filter) throws Exception {
+        void to(final ArchiveOutputStream updateOutput, final Predicate<String> filter) throws Exception {
 
             abstract class Patch {
 
-                abstract ArchiveInput input();
+                abstract ArchiveInputStream input();
 
                 abstract IOException ioException(Throwable cause);
 
@@ -121,7 +121,7 @@ abstract class ArchivePatch {
             class OnBaseInputPatch extends Patch {
 
                 @Override
-                ArchiveInput input() {
+                ArchiveInputStream input() {
                     return baseInput();
                 }
 
@@ -134,7 +134,7 @@ abstract class ArchivePatch {
             class OnDeltaInputPatch extends Patch {
 
                 @Override
-                ArchiveInput input() {
+                ArchiveInputStream input() {
                     return deltaInput();
                 }
 

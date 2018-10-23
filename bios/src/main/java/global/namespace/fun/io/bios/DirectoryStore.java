@@ -37,8 +37,8 @@ final class DirectoryStore implements ArchiveStore {
     }
 
     @Override
-    public Socket<ArchiveInput> input() {
-        return () -> new ArchiveInput() {
+    public Socket<ArchiveInputStream> input() {
+        return () -> new ArchiveInputStream() {
 
             @Override
             public Iterator<ArchiveEntrySource> iterator() {
@@ -103,8 +103,8 @@ final class DirectoryStore implements ArchiveStore {
     }
 
     @Override
-    public Socket<ArchiveOutput> output() {
-        return () -> new ArchiveOutput() {
+    public Socket<ArchiveOutputStream> output() {
+        return () -> new ArchiveOutputStream() {
 
             @Override
             public ArchiveEntrySink sink(String name) {

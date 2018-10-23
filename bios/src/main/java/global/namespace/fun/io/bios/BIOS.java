@@ -332,10 +332,10 @@ public final class BIOS {
         return new ArchiveStore() {
 
             @Override
-            public Socket<ArchiveInput> input() { return () -> new ZipFileAdapter(new ZipFile(path)); }
+            public Socket<ArchiveInputStream> input() { return () -> new ZipFileAdapter(new ZipFile(path)); }
 
             @Override
-            public Socket<ArchiveOutput> output() {
+            public Socket<ArchiveOutputStream> output() {
                 return () -> new JarOutputStreamAdapter(new JarOutputStream(new FileOutputStream(path)));
             }
         };
@@ -350,10 +350,10 @@ public final class BIOS {
         return new ArchiveStore() {
 
             @Override
-            public Socket<ArchiveInput> input() { return () -> new ZipFileAdapter(new ZipFile(path)); }
+            public Socket<ArchiveInputStream> input() { return () -> new ZipFileAdapter(new ZipFile(path)); }
 
             @Override
-            public Socket<ArchiveOutput> output() {
+            public Socket<ArchiveOutputStream> output() {
                 return () -> new ZipOutputStreamAdapter(new ZipOutputStream(new FileOutputStream(path)));
             }
         };

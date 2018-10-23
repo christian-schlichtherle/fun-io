@@ -6,7 +6,7 @@ package global.namespace.fun.io.commons.compress;
 
 import global.namespace.fun.io.api.ArchiveEntrySink;
 import global.namespace.fun.io.api.ArchiveEntrySource;
-import global.namespace.fun.io.api.ArchiveOutput;
+import global.namespace.fun.io.api.ArchiveOutputStream;
 import global.namespace.fun.io.api.Socket;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
@@ -19,11 +19,11 @@ import static global.namespace.fun.io.spi.ArchiveEntryNames.requireInternal;
 import static global.namespace.fun.io.spi.Copy.copy;
 
 /**
- * Adapts a {@link TarArchiveOutputStream} to an {@link ArchiveOutput}.
+ * Adapts a {@link TarArchiveOutputStream} to an {@link ArchiveOutputStream}.
  *
  * @author Christian Schlichtherle
  */
-final class TarArchiveOutputStreamAdapter implements ArchiveOutput {
+final class TarArchiveOutputStreamAdapter implements ArchiveOutputStream {
 
     private final TarArchiveOutputStream tar;
 

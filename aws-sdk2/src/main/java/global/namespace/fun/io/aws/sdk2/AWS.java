@@ -66,8 +66,8 @@ public final class AWS {
         return new ArchiveStore() {
 
             @Override
-            public Socket<ArchiveInput> input() {
-                return () -> new ArchiveInput() {
+            public Socket<ArchiveInputStream> input() {
+                return () -> new ArchiveInputStream() {
 
                     Map<String, S3Object> objects = new LinkedHashMap<>();
 
@@ -125,8 +125,8 @@ public final class AWS {
             }
 
             @Override
-            public Socket<ArchiveOutput> output() {
-                return () -> new ArchiveOutput() {
+            public Socket<ArchiveOutputStream> output() {
+                return () -> new ArchiveOutputStream() {
 
                     @Override
                     public ArchiveEntrySink sink(String name) {

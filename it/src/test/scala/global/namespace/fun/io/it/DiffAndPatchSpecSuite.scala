@@ -6,7 +6,7 @@ package global.namespace.fun.io.it
 
 import java.security.MessageDigest
 
-import global.namespace.fun.io.api.{ArchiveInput, ArchiveStore}
+import global.namespace.fun.io.api.{ArchiveInputStream, ArchiveStore}
 import global.namespace.fun.io.bios.BIOS._
 import global.namespace.fun.io.delta.Delta.{diff, patch}
 import global.namespace.fun.io.it.DiffAndPatchSpecSuite._
@@ -31,7 +31,7 @@ abstract class DiffAndPatchSpecSuite extends WordSpec with ArchiveSpecContext {
               patch base first delta delta to clone
 
               val secondEntries: Set[String] = second applyReader {
-                (_: ArchiveInput).asScala.filterNot(_.isDirectory).map(_.name).toSet
+                (_: ArchiveInputStream).asScala.filterNot(_.isDirectory).map(_.name).toSet
               }
 
               val model = (diff base second update clone digest md5).toModel

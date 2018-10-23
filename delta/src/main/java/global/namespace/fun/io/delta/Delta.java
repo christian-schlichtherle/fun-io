@@ -44,11 +44,11 @@ public final class Delta {
     /** Returns a builder for patching a base archive file with a delta archive file to an update archive file. */
     public static ArchivePatchBuilder patch() { return new ArchivePatchBuilder(); }
 
-    static void encodeModel(ArchiveOutput output, DeltaModel model) throws Exception {
+    static void encodeModel(ArchiveOutputStream output, DeltaModel model) throws Exception {
         encodeModel(output.sink(META_INF_DELTA_JSON), model);
     }
 
-    static DeltaModel decodeModel(ArchiveInput input) throws Exception {
+    static DeltaModel decodeModel(ArchiveInputStream input) throws Exception {
         return decodeModel(input.source(META_INF_DELTA_JSON).orElseThrow(() ->
                 new InvalidDeltaArchiveFileException(new MissingArchiveEntryException(META_INF_DELTA_JSON))));
     }

@@ -5,7 +5,7 @@
 package global.namespace.fun.io.commons.compress;
 
 import global.namespace.fun.io.api.ArchiveEntrySource;
-import global.namespace.fun.io.api.ArchiveInput;
+import global.namespace.fun.io.api.ArchiveInputStream;
 import global.namespace.fun.io.api.Socket;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
@@ -21,11 +21,11 @@ import static global.namespace.fun.io.spi.ArchiveEntryNames.isInternal;
 import static global.namespace.fun.io.spi.ArchiveEntryNames.requireInternal;
 
 /**
- * Adapts a {@link ZipFile} to an {@link ArchiveInput}.
+ * Adapts a {@link ZipFile} to an {@link ArchiveInputStream}.
  *
  * @author Christian Schlichtherle
  */
-final class ZipFileAdapter implements ArchiveInput {
+final class ZipFileAdapter implements ArchiveInputStream {
 
     private final ZipFile zip;
 

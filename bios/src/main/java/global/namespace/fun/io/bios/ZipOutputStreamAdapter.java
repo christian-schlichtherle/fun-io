@@ -6,7 +6,7 @@ package global.namespace.fun.io.bios;
 
 import global.namespace.fun.io.api.ArchiveEntrySink;
 import global.namespace.fun.io.api.ArchiveEntrySource;
-import global.namespace.fun.io.api.ArchiveOutput;
+import global.namespace.fun.io.api.ArchiveOutputStream;
 import global.namespace.fun.io.api.Socket;
 
 import java.io.FilterOutputStream;
@@ -20,11 +20,11 @@ import static global.namespace.fun.io.spi.Copy.copy;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Adapts a {@link ZipOutputStream} to an {@link ArchiveOutput}.
+ * Adapts a {@link ZipOutputStream} to an {@link ArchiveOutputStream}.
  *
  * @author Christian Schlichtherle
  */
-class ZipOutputStreamAdapter implements ArchiveOutput {
+class ZipOutputStreamAdapter implements ArchiveOutputStream {
 
     private final ZipOutputStream zip;
 

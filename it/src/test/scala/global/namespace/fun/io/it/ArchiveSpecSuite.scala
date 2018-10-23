@@ -15,7 +15,7 @@
  */
 package global.namespace.fun.io.it
 
-import global.namespace.fun.io.api.{ArchiveInput, ArchiveStore}
+import global.namespace.fun.io.api.{ArchiveInputStream, ArchiveStore}
 import global.namespace.fun.io.delta.Delta.diff
 import global.namespace.fun.io.spi.Copy.copy
 import org.scalatest.Matchers._
@@ -36,7 +36,7 @@ abstract class ArchiveSpecSuite extends WordSpec with ArchiveSpecContext {
             copy(tempArchive, outputJar)
 
             val inputEntries: Set[String] = inputJar applyReader {
-              (_: ArchiveInput).asScala.filterNot(_.isDirectory).map(_.name).toSet
+              (_: ArchiveInputStream).asScala.filterNot(_.isDirectory).map(_.name).toSet
             }
 
             val model = (diff base inputJar update outputJar).toModel

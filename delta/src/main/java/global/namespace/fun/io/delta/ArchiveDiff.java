@@ -45,11 +45,11 @@ abstract class ArchiveDiff implements WithMessageDigest {
         return baseSource().applyReader(baseInput -> updateSource().applyReader(updateInput -> function.apply(
                 new Engine() {
 
-                    ArchiveInput baseInput() {
+                    ArchiveInputStream baseInput() {
                         return baseInput;
                     }
 
-                    ArchiveInput updateInput() {
+                    ArchiveInputStream updateInput() {
                         return updateInput;
                     }
                 }
@@ -58,11 +58,11 @@ abstract class ArchiveDiff implements WithMessageDigest {
 
     private abstract class Engine {
 
-        abstract ArchiveInput baseInput();
+        abstract ArchiveInputStream baseInput();
 
-        abstract ArchiveInput updateInput();
+        abstract ArchiveInputStream updateInput();
 
-        void to(final ArchiveOutput deltaOutput) throws Exception {
+        void to(final ArchiveOutputStream deltaOutput) throws Exception {
 
             final class Streamer {
 

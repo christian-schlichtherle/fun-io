@@ -5,7 +5,7 @@
 package global.namespace.fun.io.commons.compress;
 
 import global.namespace.fun.io.api.ArchiveEntrySource;
-import global.namespace.fun.io.api.ArchiveInput;
+import global.namespace.fun.io.api.ArchiveInputStream;
 import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.spi.UncloseableInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -20,11 +20,11 @@ import java.util.Optional;
 import static global.namespace.fun.io.spi.ArchiveEntryNames.isInternal;
 
 /**
- * Adapts a {@link TarArchiveInputStream} to an {@link ArchiveInput}.
+ * Adapts a {@link TarArchiveInputStream} to an {@link ArchiveInputStream}.
  *
  * @author Christian Schlichtherle
  */
-final class TarArchiveInputStreamAdapter implements ArchiveInput {
+final class TarArchiveInputStreamAdapter implements ArchiveInputStream {
 
     private final TarArchiveInputStream tar;
 

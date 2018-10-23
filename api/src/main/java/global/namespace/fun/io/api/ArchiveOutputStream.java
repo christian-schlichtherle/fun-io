@@ -9,13 +9,13 @@ import java.io.Closeable;
 /**
  * An abstraction for writing archive entries to an archive file.
  *
+ * @see ArchiveInputStream
  * @author Christian Schlichtherle
- * @see ArchiveInput
  */
-public interface ArchiveOutput extends Closeable {
+public interface ArchiveOutputStream extends Closeable {
 
     /**
-     * Returns {@code true} if and only if this is a JAR file.
+     * Returns {@code true} if and only if this archive output is writing to a JAR file.
      */
     default boolean isJar() {
         return false;
