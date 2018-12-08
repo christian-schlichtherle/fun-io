@@ -80,6 +80,7 @@ object BuildSettings {
           }
         )
       },
+      scalaVersion := ScalaVersion_2_12, // set here or otherwise `+publishSigned` will fail
       scmInfo := Some(ScmInfo(
         browseUrl = url("https://github.com/christian-schlichtherle/fun-io"),
         connection = "scm:git:git@github.com:christian-schlichtherle/fun-io.git",
@@ -108,8 +109,7 @@ object BuildSettings {
       compileOrder := CompileOrder.JavaThenScala,
       javacOptions := DefaultOptions.javac ++ Seq(Opts.compile.deprecation, "-Xlint", "-source", "1.8", "-target", "1.8", "-g"),
       javacOptions in doc := DefaultOptions.javac ++ Seq("-source", "1.8"),
-      scalacOptions := DefaultOptions.scalac ++ Seq(Opts.compile.deprecation, "-feature", Opts.compile.unchecked, "-target:jvm-1.8"),
-      scalaVersion := ScalaVersion_2_12
+      scalacOptions := DefaultOptions.scalac ++ Seq(Opts.compile.deprecation, "-feature", Opts.compile.unchecked, "-target:jvm-1.8")
     )
   }
 
