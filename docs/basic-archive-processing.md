@@ -97,7 +97,7 @@ class Scratch {
 :::tip
 If provided, the key prefix must be either empty or a normalized path which ends with a `/`. 
 Absolute paths or referencing parent directories is not allowed.
-For example, the following key prefixes are invalid:
+For example, the following key prefixes are **invalid**:
 
 + `path` doesn't end with a `/`.
 + `/path/` is an absolute path.
