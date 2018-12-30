@@ -42,7 +42,7 @@ class Scratch {
 ## Transforming An Archive File
 
 The following code transforms the TAR.GZ file `archive.tar.gz` to the ZIP file `archive.zip`.
-All transformations work _without_ unpacking the entries in the source archive file to a temporary directory.
+When calling the `copy` method, all archive entries are directly "streamed" from the input archive to the output archive _without_ buffering them in a temporary file, so this operation is fast and space efficient:
 
 ```java
 import static global.namespace.fun.io.commons.compress.CommonsCompress.gzip;
