@@ -41,7 +41,8 @@ class Scratch {
 
 ## Transforming An Archive File
 
-The following code transforms the TAR.GZ file `archive.tar.gz` to the ZIP file `archive.zip`:
+The following code transforms the TAR.GZ file `archive.tar.gz` to the ZIP file `archive.zip`.
+When calling the `copy` method, all archive entries are directly "streamed" from the input archive to the output archive _without_ buffering them in a temporary file, so this operation is fast and space efficient:
 
 ```java
 import static global.namespace.fun.io.commons.compress.CommonsCompress.gzip;
@@ -96,7 +97,7 @@ class Scratch {
 :::tip
 If provided, the key prefix must be either empty or a normalized path which ends with a `/`. 
 Absolute paths or referencing parent directories is not allowed.
-For example, the following key prefixes are invalid:
+For example, the following key prefixes are **invalid**:
 
 + `path` doesn't end with a `/`.
 + `/path/` is an absolute path.
