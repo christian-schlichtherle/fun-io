@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Schlichtherle IT Services
+ * Copyright © 2017 - 2019 Schlichtherle IT Services
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import global.namespace.fun.io.bios.BIOS._
 import org.mockito.Mockito._
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
-import org.scalatest.mockito.MockitoSugar.mock
+import org.scalatestplus.mockito.MockitoSugar.mock
 
 class BIOSSpec extends WordSpec {
 
@@ -32,8 +32,8 @@ class BIOSSpec extends WordSpec {
         val in = mock[InputStream]
         val source = stream(in)
         source acceptReader (_.read)
-        verify(in) read ()
-        verify(in, never) close ()
+        verify(in).read()
+        verify(in, never).close()
       }
 
       "given an output stream" in {
@@ -41,8 +41,8 @@ class BIOSSpec extends WordSpec {
         val sink = stream(out)
         sink acceptWriter ((_: OutputStream) write 0)
         verify(out) write 0
-        verify(out) flush ()
-        verify(out, never) close ()
+        verify(out).flush()
+        verify(out, never).close()
       }
     }
   }

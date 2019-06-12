@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Schlichtherle IT Services
+ * Copyright © 2017 - 2019 Schlichtherle IT Services
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 package global.namespace.fun.io.spi
 
-import ArchiveEntryNames.requireInternal
+import global.namespace.fun.io.spi.ArchiveEntryNames.requireInternal
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
-import org.scalatest.prop.PropertyChecks._
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks._
 
 class ArchiveEntryNamesSpec extends WordSpec {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Schlichtherle IT Services
+ * Copyright © 2017 - 2019 Schlichtherle IT Services
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ import com.amazonaws.services.s3.AmazonS3
 import global.namespace.fun.io.aws.sdk1.AWS.s3
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
-import org.scalatest.mockito.MockitoSugar._
-import org.scalatest.prop.PropertyChecks._
+import org.scalatestplus.mockito.MockitoSugar._
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks._
 
 class AWSSpec extends WordSpec {
 

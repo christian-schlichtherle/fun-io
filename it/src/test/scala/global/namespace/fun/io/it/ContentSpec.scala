@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Schlichtherle IT Services
+ * Copyright © 2017 - 2019 Schlichtherle IT Services
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import global.namespace.fun.io.bios.BIOS._
 import global.namespace.fun.io.scala.api._
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
-import org.scalatest.prop.PropertyChecks._
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks._
 
 class ContentSpec extends WordSpec {
 
@@ -35,7 +35,7 @@ class ContentSpec extends WordSpec {
         () => memory,
         () => file {
           val file = File.createTempFile("tmp", null)
-          file delete ()
+          file.delete()
           file
         },
         () => path {
@@ -63,7 +63,7 @@ class ContentSpec extends WordSpec {
           new String(store content 3) shouldBe "123"
           intercept[ContentTooLargeException](store content 2)
 
-          store delete()
+          store.delete()
           store.exists shouldBe false
           intercept[IOException](store.content)
 
@@ -72,7 +72,7 @@ class ContentSpec extends WordSpec {
           new String(store content 2) shouldBe "23"
           intercept[ContentTooLargeException](store content 1)
 
-          store delete()
+          store.delete()
           store.exists shouldBe false
           intercept[IOException](store.content)
 
@@ -81,7 +81,7 @@ class ContentSpec extends WordSpec {
           new String(store content 1) shouldBe "3"
           intercept[ContentTooLargeException](store content 0)
 
-          store delete()
+          store.delete()
           store.exists shouldBe false
           intercept[IOException](store.content)
 
@@ -90,7 +90,7 @@ class ContentSpec extends WordSpec {
           new String(store content 0) shouldBe ""
           intercept[IllegalArgumentException](store content -1)
 
-          store delete()
+          store.delete()
           store.exists shouldBe false
           intercept[IOException](store.content)
         }

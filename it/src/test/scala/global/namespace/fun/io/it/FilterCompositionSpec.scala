@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Schlichtherle IT Services
+ * Copyright © 2017 - 2019 Schlichtherle IT Services
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import global.namespace.fun.io.it.FilterCompositionSpec._
 import global.namespace.fun.io.scala.api._
 import org.scalatest.Matchers.{a => _, _}
 import org.scalatest.WordSpec
-import org.scalatest.prop.PropertyChecks._
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks._
 
 import scala.io.Source
 

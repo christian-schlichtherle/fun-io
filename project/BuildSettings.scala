@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Schlichtherle IT Services
+ * Copyright © 2017 - 2019 Schlichtherle IT Services
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import Dependencies._
 import sbt.Keys._
 import sbt._
 import sbtrelease.ReleasePlugin.autoImport._
 import sbtrelease.ReleaseStateTransformations._
 
-/** @author Christian Schlichtherle */
 object BuildSettings {
 
   def releaseSettings: Seq[Setting[_]] = {
@@ -80,7 +78,7 @@ object BuildSettings {
           }
         )
       },
-      scalaVersion := ScalaVersion_2_12, // set here or otherwise `+publishSigned` will fail
+      scalaVersion := ScalaVersion_2_13, // set here or otherwise `+publishSigned` will fail
       scmInfo := Some(ScmInfo(
         browseUrl = url("https://github.com/christian-schlichtherle/fun-io"),
         connection = "scm:git:git@github.com:christian-schlichtherle/fun-io.git",
@@ -105,7 +103,7 @@ object BuildSettings {
 
   def librarySettings: Seq[Setting[_]] = {
     artifactSettings ++ Seq(
-      // Support testing Java projects with Scalatest et al:
+      // Support testing Java projects with ScalaTest et al:
       compileOrder := CompileOrder.JavaThenScala,
       javacOptions := DefaultOptions.javac ++ Seq(Opts.compile.deprecation, "-Xlint", "-source", "1.8", "-target", "1.8", "-g"),
       javacOptions in doc := DefaultOptions.javac ++ Seq("-source", "1.8"),
@@ -122,7 +120,7 @@ object BuildSettings {
 
   def scalaLibrarySettings: Seq[Setting[_]] = {
     librarySettings ++ Seq(
-      crossScalaVersions := Seq(ScalaVersion_2_10, ScalaVersion_2_11, ScalaVersion_2_12)
+      crossScalaVersions := Seq(ScalaVersion_2_10, ScalaVersion_2_11, ScalaVersion_2_12, ScalaVersion_2_13)
     )
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Schlichtherle IT Services
+ * Copyright © 2017 - 2019 Schlichtherle IT Services
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.scalatest.Matchers.{inOrder => _, _}
 import org.scalatest.WordSpec
-import org.scalatest.mockito.MockitoSugar.mock
+import org.scalatestplus.mockito.MockitoSugar.mock
 
 class InternalSpec extends WordSpec {
 
@@ -36,7 +36,7 @@ class InternalSpec extends WordSpec {
         val io = inOrder(a, b)
         io verify a output any[Socket[OutputStream]]
         io verify b output any[Socket[OutputStream]]
-        io verifyNoMoreInteractions ()
+        io.verifyNoMoreInteractions()
       }
 
       "being unapplied" in {
@@ -44,7 +44,7 @@ class InternalSpec extends WordSpec {
         val io = inOrder(a, b)
         io verify a input any[Socket[InputStream]]
         io verify b input any[Socket[InputStream]]
-        io verifyNoMoreInteractions ()
+        io.verifyNoMoreInteractions()
       }
     }
   }

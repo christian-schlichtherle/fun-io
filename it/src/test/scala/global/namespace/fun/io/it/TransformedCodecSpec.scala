@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Schlichtherle IT Services
+ * Copyright © 2017 - 2019 Schlichtherle IT Services
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import global.namespace.fun.io.zstd.Zstd._
 import javax.xml.bind.JAXBContext
 import org.scalatest.Matchers._
 import org.scalatest.WordSpec
-import org.scalatest.prop.PropertyChecks._
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks._
 
 import scala.language.existentials
 
@@ -139,13 +139,13 @@ class TransformedCodecSpec extends WordSpec {
   }
 
   private def assertThatStoreIsEmpty(store: Store): Unit = {
-    store.size should not be 'present
+    store.size should not be Symbol("present")
     store.exists shouldBe false
     intercept[Exception](store.acceptReader((_: InputStream) => ()))
   }
 
   private def assertThatStoreIsNotEmpty(store: Store): Unit = {
-    store.size shouldBe 'present
+    store.size shouldBe Symbol("present")
     store.exists shouldBe true
     store.acceptReader((_: InputStream) => ())
   }
@@ -160,7 +160,7 @@ class TransformedCodecSpec extends WordSpec {
         assertThatStoreIsEmpty(store)
         assertCloneableUsing((transformedCodec << store).clone)
         assertThatStoreIsNotEmpty(store)
-        store delete ()
+        store.delete()
         assertThatStoreIsEmpty(store)
       }
     }

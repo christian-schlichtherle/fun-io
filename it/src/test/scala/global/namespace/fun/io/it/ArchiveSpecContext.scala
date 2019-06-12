@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Schlichtherle IT Services
+ * Copyright © 2017 - 2019 Schlichtherle IT Services
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ trait ArchiveSpecContext {
 
   def withTempArchiveFile(factory: ArchiveStoreFactory)(test: ArchiveStore => Any): Unit = {
     val file = File.createTempFile("tmp", null)
-    file delete ()
+    file.delete()
     try {
       test(factory(file))
     } finally {
@@ -50,7 +50,7 @@ trait ArchiveSpecContext {
   }
 
   private def deleteAll(file: File): Unit = {
-    Option(file listFiles ()) foreach (_ foreach deleteAll)
-    file delete ()
+    Option(file.listFiles()) foreach (_ foreach deleteAll)
+    file.delete()
   }
 }

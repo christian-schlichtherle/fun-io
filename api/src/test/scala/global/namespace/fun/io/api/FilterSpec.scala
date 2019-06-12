@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Schlichtherle IT Services
+ * Copyright © 2017 - 2019 Schlichtherle IT Services
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,12 @@ package global.namespace.fun.io.api
 
 import java.io.{InputStream, OutputStream}
 
-import Filter._
+import global.namespace.fun.io.api.Filter._
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{inOrder, when}
+import org.mockito.Mockito.when
 import org.scalatest.Matchers.{inOrder => _, _}
 import org.scalatest.WordSpec
-import org.scalatest.mockito.MockitoSugar.mock
+import org.scalatestplus.mockito.MockitoSugar.mock
 
 /**
   * @author Christian Schlichtherle
@@ -59,20 +59,20 @@ class FilterSpec extends WordSpec {
         val oss1 = mock[Socket[OutputStream]]
         val oss2 = mock[Socket[OutputStream]]
 
-        when(s output ()) thenReturn oss1
+        when(s.output()) thenReturn oss1
         when(f output oss1) thenReturn oss2
 
-        fs output () shouldBe oss2
+        fs.output() shouldBe oss2
       }
 
       "apply to the input" in {
         val iss1 = mock[Socket[InputStream]]
         val iss2 = mock[Socket[InputStream]]
 
-        when(s input ()) thenReturn iss1
+        when(s.input()) thenReturn iss1
         when(f input iss1) thenReturn iss2
 
-        fs input () shouldBe iss2
+        fs.input() shouldBe iss2
       }
     }
 
