@@ -66,10 +66,8 @@ public final class Delta {
     }
 
     private static Codec jsonCodec() {
-        final ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(AUTO_CLOSE_TARGET, false);
-        mapper.setSerializationInclusion(NON_DEFAULT);
-        return json(mapper);
+        return json(() ->
+                new ObjectMapper().configure(AUTO_CLOSE_TARGET, false).setSerializationInclusion(NON_DEFAULT));
     }
 
     private static DeltaDTO marshal(final DeltaModel model) {

@@ -25,11 +25,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 
-final class JSONCodec implements Codec {
+final class JsonCodec implements Codec {
 
     private final ObjectMapper mapper;
 
-    JSONCodec(final ObjectMapper m) { this.mapper = m; }
+    JsonCodec(final ObjectMapper m) { this.mapper = m; }
 
     @Override
     public Encoder encoder(Socket<OutputStream> output) {

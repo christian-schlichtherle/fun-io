@@ -28,13 +28,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 
-final class XMLCodec implements Codec {
+final class XmlCodec implements Codec {
 
     private final JAXBContext context;
     private final XConsumer<Marshaller> marshallerModifier;
     private final XConsumer<Unmarshaller> unmarshallerModifier;
 
-    XMLCodec(
+    XmlCodec(
             final JAXBContext c,
             final XConsumer<Marshaller> marshallerModifier,
             final XConsumer<Unmarshaller> unmarshallerModifier) {

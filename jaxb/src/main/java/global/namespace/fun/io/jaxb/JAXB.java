@@ -31,13 +31,13 @@ import static java.util.Objects.requireNonNull;
  */
 public final class JAXB {
 
-    private JAXB() { }
-
     /**
      * Uses {@link Marshaller}s and {@link Unmarshaller}s derived from the given {@link JAXBContext} to encode and
      * decode object graphs to and from octet streams.
      */
-    public static Codec xml(JAXBContext c) { return new XMLCodec(requireNonNull(c), m -> {}, u -> {}); }
+    public static Codec xml(JAXBContext c) {
+        return new XmlCodec(requireNonNull(c), m -> { }, u -> { });
+    }
 
     /**
      * Uses {@link Marshaller}s and {@link Unmarshaller}s derived from the given {@link JAXBContext} to encode and
@@ -46,6 +46,9 @@ public final class JAXB {
      * consumer objects.
      */
     public static Codec xml(JAXBContext c, XConsumer<Marshaller> marshallerModifier, XConsumer<Unmarshaller> unmarshallerModifier) {
-        return new XMLCodec(requireNonNull(c), requireNonNull(marshallerModifier), requireNonNull(unmarshallerModifier));
+        return new XmlCodec(requireNonNull(c), requireNonNull(marshallerModifier), requireNonNull(unmarshallerModifier));
+    }
+
+    private JAXB() {
     }
 }

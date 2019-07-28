@@ -18,6 +18,8 @@ package global.namespace.fun.io.jackson;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import global.namespace.fun.io.api.Codec;
 
+import java.util.function.Supplier;
+
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -27,11 +29,32 @@ import static java.util.Objects.requireNonNull;
  */
 public final class Jackson {
 
-    private Jackson() { }
+    /**
+     * Returns a JSON codec using a new object mapper.
+     */
+    public static Codec json() {
+        return json(ObjectMapper::new);
+    }
 
-    /** Returns a JSON codec using a new object mapper. */
-    public static Codec json() { return json(new ObjectMapper()); }
+    /**
+     * Returns a JSON codec using the given object mapper.
+     *
+     * @deprecated since Fun I/O 2.2.0 because {@code ObjectMapper} is mutable and therefore should not be shared with
+     *             the caller.
+     * @see #json(Supplier)
+     */
+    @Deprecated
+    public static Codec json(ObjectMapper mapper) {
+        return json(() -> mapper);
+    }
 
-    /** Returns a JSON codec using the given object mapper. */
-    public static Codec json(ObjectMapper mapper) { return new JSONCodec(requireNonNull(mapper)); }
+    /**
+     * Returns a JSON codec using the given object mapper factory.
+     */
+    public static Codec json(Supplier<ObjectMapper> factory) {
+        return new JsonCodec(requireNonNull(factory.get()));
+    }
+
+    private Jackson() {
+    }
 }
