@@ -1,0 +1,12 @@
+---
+services:
+  s3:
+    command: --compat server /data
+    environment:
+      - MINIO_ACCESS_KEY=Santa-Claus
+      - MINIO_SECRET_KEY=Ho ho ho
+    image: minio/minio:RELEASE.2019-08-21T19-40-07Z
+    ports:
+      - "12345:9000"
+
+version: "3.7"
