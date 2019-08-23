@@ -23,12 +23,12 @@ import com.amazonaws.services.s3.model.{ListObjectsV2Request, ListObjectsV2Resul
 import com.amazonaws.services.s3.{AmazonS3, AmazonS3ClientBuilder}
 import global.namespace.fun.io.api.ArchiveStore
 import global.namespace.fun.io.aws.sdk1.AWS.s3
-import global.namespace.fun.io.it.{ArchiveSpecContext, MinIoContainer}
+import global.namespace.fun.io.it.{ArchiveSpecContext, S3Config}
 import org.scalatest._
 
 import scala.util.control.NonFatal
 
-trait S3SpecContext extends TestSuiteMixin with MinIoContainer {
+trait S3SpecContext extends TestSuiteMixin with S3Config {
   this: ArchiveSpecContext with TestSuite =>
 
   lazy val client: AmazonS3 = {

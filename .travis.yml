@@ -14,7 +14,11 @@ env:
   - COMPILE_IMAGE_TAG=8-jdk TEST_IMAGE_TAG=8-jdk
   - COMPILE_IMAGE_TAG=12-jdk TEST_IMAGE_TAG=12-jdk
 
-install: ./docker-sbtw $COMPILE_IMAGE_TAG +test:compile
+# TODO: Use docker-compose:
+install:
+  - docker run --detach --env MINIO_ACCESS_KEY=Santa-Claus --env MINIO_SECRET_KEY="Ho ho ho" --name s3-test --publish 12345:9000 --rm minio/minio:RELEASE.2019-08-21T19-40-07Z --compat server /data
+  - ./docker-sbtw $COMPILE_IMAGE_TAG +test:compile
+  - docker stop s3-test
 
 language: minimal
 
