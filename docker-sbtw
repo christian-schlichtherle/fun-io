@@ -7,6 +7,7 @@ set -x
 exec docker run \
     --env GUICE_VERSION \
     --interactive \
+    --network host \
     --rm \
     --tty \
     --volume "$HOME/.ivy2:/root/.ivy2" \
