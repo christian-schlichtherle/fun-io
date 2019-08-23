@@ -17,27 +17,26 @@ package global.namespace.fun.io.it.aws.sdk1
 
 import java.util.UUID.randomUUID
 
+import com.amazonaws.auth.{AWSStaticCredentialsProvider, BasicAWSCredentials}
+import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration
 import com.amazonaws.services.s3.model.{ListObjectsV2Request, ListObjectsV2Result}
 import com.amazonaws.services.s3.{AmazonS3, AmazonS3ClientBuilder}
 import global.namespace.fun.io.api.ArchiveStore
 import global.namespace.fun.io.aws.sdk1.AWS.s3
-import global.namespace.fun.io.it.ArchiveSpecContext
+import global.namespace.fun.io.it.{ArchiveSpecContext, MinIoContainer}
 import org.scalatest._
 
 import scala.util.control.NonFatal
 
-trait S3SpecContext extends TestSuiteMixin {
+trait S3SpecContext extends TestSuiteMixin with MinIoContainer {
   this: ArchiveSpecContext with TestSuite =>
 
-  lazy val client: AmazonS3 = AmazonS3ClientBuilder.defaultClient
-
-  abstract override protected def withFixture(test: NoArgTest): Outcome = {
-    try {
-      client
-    } catch {
-      case NonFatal(e) => return Canceled("Cannot create an AWS S3 client", e)
-    }
-    super.withFixture(test)
+  lazy val client: AmazonS3 = {
+    AmazonS3ClientBuilder
+      .standard
+      .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKeyId, secretAccessKey)))
+      .withEndpointConfiguration(new EndpointConfiguration(endpoint, region))
+      .build
   }
 
   override def withTempArchiveStore(test: ArchiveStore => Any): Unit = {

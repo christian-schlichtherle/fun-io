@@ -15,30 +15,31 @@
  */
 package global.namespace.fun.io.it.aws.sdk2
 
+import java.net.URI
 import java.util.UUID.randomUUID
 
 import global.namespace.fun.io.api.ArchiveStore
 import global.namespace.fun.io.aws.sdk2.AWS.s3
-import global.namespace.fun.io.it.ArchiveSpecContext
-import org.scalatest.{Canceled, Outcome, TestSuite, TestSuiteMixin}
+import global.namespace.fun.io.it.{ArchiveSpecContext, MinIoContainer}
+import org.scalatest.{TestSuite, TestSuiteMixin}
+import software.amazon.awssdk.auth.credentials.{AwsBasicCredentials, StaticCredentialsProvider}
+import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier
 
 import scala.jdk.CollectionConverters._
 import scala.util.control.NonFatal
 
-trait S3SpecContext extends TestSuiteMixin {
+trait S3SpecContext extends TestSuiteMixin with MinIoContainer {
   this: ArchiveSpecContext with TestSuite =>
 
-  lazy val client: S3Client = S3Client.create
-
-  abstract override protected def withFixture(test: NoArgTest): Outcome = {
-    try {
-      client
-    } catch {
-      case NonFatal(e) => return Canceled("Cannot create an AWS S3 client", e)
-    }
-    super.withFixture(test)
+  lazy val client: S3Client = {
+    S3Client
+      .builder
+      .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKeyId, secretAccessKey)))
+      .endpointOverride(URI create endpoint)
+      .region(Region of region)
+      .build
   }
 
   override def withTempArchiveStore(test: ArchiveStore => Any): Unit = {

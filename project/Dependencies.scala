@@ -19,13 +19,14 @@ object Dependencies {
 
   private val JAXB_Version = "2.3.1"
 
-  val AwsJavaSdkS3: ModuleID = "com.amazonaws" % "aws-java-sdk-s3" % "1.11.611"
+  val AwsJavaSdkS3: ModuleID = "com.amazonaws" % "aws-java-sdk-s3" % "1.11.617"
   val CommonsCompress: ModuleID = "org.apache.commons" % "commons-compress" % "1.18"
+  val Config: ModuleID = "com.typesafe" % "config" % "1.3.4"
   val JacksonDatabind: ModuleID = "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.9.3"
   val JaxbApi: ModuleID = "javax.xml.bind" % "jaxb-api" % JAXB_Version
   val JaxbRuntime: ModuleID = "org.glassfish.jaxb" % "jaxb-runtime" % JAXB_Version
   val MockitoCore: ModuleID = "org.mockito" % "mockito-core" % "3.0.0"
-  val S3: ModuleID = "software.amazon.awssdk" % "s3" % "2.7.24"
+  val S3: ModuleID = "software.amazon.awssdk" % "s3" % "2.7.30"
   val Scalacheck: ModuleID = "org.scalacheck" %% "scalacheck" % "1.14.0"
   val Scalatest: ModuleID = "org.scalatest" %% "scalatest" % "3.0.8"
   val Slf4jSimple: ModuleID = "org.slf4j" % "slf4j-simple" % "1.7.28"

@@ -111,6 +111,7 @@ lazy val it: Project = project
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
+      Config,
       JaxbRuntime,
       MockitoCore,
       Scalacheck,
