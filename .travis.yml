@@ -14,7 +14,9 @@ env:
   - COMPILE_IMAGE_TAG=8-jdk TEST_IMAGE_TAG=8-jdk
   - COMPILE_IMAGE_TAG=12-jdk TEST_IMAGE_TAG=12-jdk
 
-install: ./docker-sbtw $COMPILE_IMAGE_TAG +test:compile
+install:
+  - ./docker-sbtw $COMPILE_IMAGE_TAG +test:compile
+  - docker-compose up --detach
 
 language: minimal
 
@@ -22,7 +24,4 @@ language: minimal
 services:
   - docker
 
-script:
-  - docker-compose up --detach
-  - ./docker-sbtw $TEST_IMAGE_TAG +test
-  - docker-compose down
+script: ./docker-sbtw $TEST_IMAGE_TAG +test
