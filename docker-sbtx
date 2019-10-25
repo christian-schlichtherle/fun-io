@@ -15,4 +15,4 @@ exec docker run \
     --volume "$PWD:/workdir" \
     --workdir /workdir \
     "openjdk:$image_tag" \
-    ./sbtw $@
+    ./sbtx $@

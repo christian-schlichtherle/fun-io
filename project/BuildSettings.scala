@@ -95,7 +95,10 @@ object BuildSettings {
   }
 
   lazy val artifactSettings: Seq[Setting[_]] = {
-    commonSettings
+    commonSettings ++ Seq(
+      logBuffered := false, // http://www.scalatest.org/user_guide/using_scalatest_with_sbt
+      testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oF")
+    )
   }
 
   lazy val librarySettings: Seq[Setting[_]] = {
@@ -104,6 +107,9 @@ object BuildSettings {
       compileOrder := CompileOrder.JavaThenScala,
       javacOptions := DefaultOptions.javac ++ Seq(Opts.compile.deprecation, "-Xlint", "-source", "1.8", "-target", "1.8", "-g"),
       javacOptions in doc := DefaultOptions.javac ++ Seq("-source", "1.8"),
+      packageOptions in(Compile, packageBin) += Package.ManifestAttributes("Automatic-Module-Name" ->
+        ("global.namespace." + normalizedName.value.replace('-', '.'))
+      ),
       scalacOptions := DefaultOptions.scalac ++ Seq(Opts.compile.deprecation, "-feature", Opts.compile.unchecked, "-target:jvm-1.8")
     )
   }
