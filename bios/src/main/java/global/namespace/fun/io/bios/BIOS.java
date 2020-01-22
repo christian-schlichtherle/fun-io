@@ -53,23 +53,28 @@ import static java.util.Objects.requireNonNull;
  */
 public final class BIOS {
 
-    private BIOS() { }
+    private BIOS() {
+    }
 
-      //////////////////////////
-     ///////// CODECS /////////
+    //////////////////////////
+    ///////// CODECS /////////
     //////////////////////////
 
     /**
      * Uses {@link ObjectOutputStream}s and {@link ObjectInputStream}s to encode and decode object graphs to and from
      * octet streams.
      */
-    public static Codec serialization() { return new SerializationCodec(); }
+    public static Codec serialization() {
+        return new SerializationCodec();
+    }
 
     /**
      * Uses new {@link XMLEncoder}s and {@link XMLDecoder}s to encode and decode object graphs to and from octet
      * streams.
      */
-    public static Codec xml() { return xml(XMLEncoder::new, XMLDecoder::new); }
+    public static Codec xml() {
+        return xml(XMLEncoder::new, XMLDecoder::new);
+    }
 
     /**
      * Uses new {@link XMLEncoder}s and {@link XMLDecoder}s obtained by the given functions in order to encode and
@@ -80,23 +85,37 @@ public final class BIOS {
         return new XMLCodec(requireNonNull(xmlEncoders), requireNonNull(xmlDecoders));
     }
 
-      ///////////////////////////
-     ///////// FILTERS /////////
+    ///////////////////////////
+    ///////// FILTERS /////////
     ///////////////////////////
 
-    /** Returns a filter which encodes/decodes data using Base64. */
-    public static Filter base64() { return base64(Base64.getEncoder(), Base64.getDecoder()); }
+    /**
+     * Returns a filter which encodes/decodes data using Base64.
+     */
+    public static Filter base64() {
+        return base64(Base64.getEncoder(), Base64.getDecoder());
+    }
 
-    /** Returns a filter which encodes/decodes data using the given Base64 encoder and decoder. */
+    /**
+     * Returns a filter which encodes/decodes data using the given Base64 encoder and decoder.
+     */
     public static Filter base64(Base64.Encoder e, Base64.Decoder d) {
         return new Base64Filter(requireNonNull(e), requireNonNull(d));
     }
 
-    /** Returns a filter which buffers I/O using a buffer size of {@value Store#BUFSIZE} bytes. */
-    public static Filter buffer() { return buffer(Store.BUFSIZE); }
+    /**
+     * Returns a filter which buffers I/O using a buffer size of {@value Store#BUFSIZE} bytes.
+     */
+    public static Filter buffer() {
+        return buffer(Store.BUFSIZE);
+    }
 
-    /** Returns a filter which buffers I/O using the given buffer size in bytes. */
-    public static Filter buffer(int size) { return new BufferedIOFilter(size); }
+    /**
+     * Returns a filter which buffers I/O using the given buffer size in bytes.
+     */
+    public static Filter buffer(int size) {
+        return new BufferedIOFilter(size);
+    }
 
     /**
      * Returns a filter which encrypts/decrypts data using the given cipher suppliers for output and input.
@@ -114,7 +133,9 @@ public final class BIOS {
      * Returns a filter which compresses/decompresses data using a ZIP deflater/inflater with the default compression
      * level.
      */
-    public static Filter deflate() { return deflate(Deflater.DEFAULT_COMPRESSION); }
+    public static Filter deflate() {
+        return deflate(Deflater.DEFAULT_COMPRESSION);
+    }
 
     /**
      * Returns a filter which compresses/decompresses data using a ZIP deflater/inflater with the given compression
@@ -129,22 +150,34 @@ public final class BIOS {
         return deflate(() -> new Deflater(level), Inflater::new);
     }
 
-    /** Returns a filter which compresses/decompresses data using a ZIP deflater/inflater. */
+    /**
+     * Returns a filter which compresses/decompresses data using a ZIP deflater/inflater.
+     */
     public static Filter deflate(XSupplier<Deflater> deflaterSupplier, XSupplier<Inflater> inflaterSupplier) {
         return new DeflateFilter(requireNonNull(deflaterSupplier), requireNonNull(inflaterSupplier));
     }
 
-    /** Returns a filter which compresses/decompresses data using the GZIP format. */
-    public static Filter gzip() { return new GZIPFilter(); }
+    /**
+     * Returns a filter which compresses/decompresses data using the GZIP format.
+     */
+    public static Filter gzip() {
+        return new GZIPFilter();
+    }
 
-    /** Returns the identity filter. */
-    public static Filter identity() { return Filter.IDENTITY; }
+    /**
+     * Returns the identity filter.
+     */
+    public static Filter identity() {
+        return Filter.IDENTITY;
+    }
 
     /**
      * Returns a filter which decompresses/compresses data using a ZIP inflater/deflater with the default comporession
      * level.
      */
-    public static Filter inflate() { return inflate(Deflater.DEFAULT_COMPRESSION); }
+    public static Filter inflate() {
+        return inflate(Deflater.DEFAULT_COMPRESSION);
+    }
 
     /**
      * Returns a filter which decompresses/compresses data using a ZIP inflater/deflater with the given compression
@@ -157,20 +190,22 @@ public final class BIOS {
         return inflate(Inflater::new, () -> new Deflater(level));
     }
 
-    /** Returns a filter which decompresses/compresses data using a ZIP inflater/deflater. */
+    /**
+     * Returns a filter which decompresses/compresses data using a ZIP inflater/deflater.
+     */
     public static Filter inflate(XSupplier<Inflater> inflaterSupplier, XSupplier<Deflater> deflaterSupplier) {
         return new InflateFilter(requireNonNull(inflaterSupplier), requireNonNull(deflaterSupplier));
     }
 
-      ///////////////////////////
-     ///////// SOURCES /////////
+    ///////////////////////////
+    ///////// SOURCES /////////
     ///////////////////////////
 
     /**
      * Returns a source which loads the resource with the given {@code name} using the current thread's
      * {@linkplain Thread#getContextClassLoader() context class loader}.
      *
-     * @param  name the name of the resource to load.
+     * @param name the name of the resource to load.
      */
     public static Source resource(String name) {
         return resource(name, Thread.currentThread().getContextClassLoader());
@@ -179,10 +214,9 @@ public final class BIOS {
     /**
      * Returns a source which loads the resource with the given {@code name} using the given nullable class loader.
      *
-     * @param  name the name of the resource to load.
-     * @param  cl
-     *         The nullable class loader to use for loading the resource.
-     *         If this is {@code null}, then the system class loader is used.
+     * @param name the name of the resource to load.
+     * @param cl   The nullable class loader to use for loading the resource.
+     *             If this is {@code null}, then the system class loader is used.
      */
     public static Source resource(String name, ClassLoader cl) {
         return () -> () -> Optional
@@ -195,7 +229,9 @@ public final class BIOS {
      *
      * @see #stream(InputStream)
      */
-    public static Source stdin() { return stream(System.in); }
+    public static Source stdin() {
+        return stream(System.in);
+    }
 
     /**
      * Returns a source which will never {@linkplain InputStream#close() close} the given input stream.
@@ -206,14 +242,16 @@ public final class BIOS {
         return () -> () -> new UncloseableInputStream(in);
     }
 
-    /** Returns a source which reads the content of the given URL. */
+    /**
+     * Returns a source which reads the content of the given URL.
+     */
     public static Source url(URL url) {
         requireNonNull(url);
         return () -> url::openStream;
     }
 
-      /////////////////////////
-     ///////// SINKS /////////
+    /////////////////////////
+    ///////// SINKS /////////
     /////////////////////////
 
     /**
@@ -221,14 +259,18 @@ public final class BIOS {
      *
      * @see #stream(OutputStream)
      */
-    public static Sink stderr() { return stream(System.err); }
+    public static Sink stderr() {
+        return stream(System.err);
+    }
 
     /**
      * Returns a sink which writes to standard output without ever closing it.
      *
      * @see #stream(OutputStream)
      */
-    public static Sink stdout() { return stream(System.out); }
+    public static Sink stdout() {
+        return stream(System.out);
+    }
 
     /**
      * Returns a sink which will never {@linkplain OutputStream#close() close} the given output stream.
@@ -241,98 +283,173 @@ public final class BIOS {
         return () -> () -> new UncloseableOutputStream(out);
     }
 
-      //////////////////////////
-     ///////// STORES /////////
+    //////////////////////////
+    ///////// STORES /////////
     //////////////////////////
 
-    /** Returns a store for the file referenced by the given path. */
-    public static FileStore file(File path) { return file(path, false); }
-
-    /** Returns a store for the file referenced by the given path, potentially appending to it if {@code append} is {@code true}. */
-    public static FileStore file(final File path, final boolean append) {
-        final FileStore store = file(path.toPath());
-        return append ? store.onOutput(APPEND, CREATE) : store;
+    /**
+     * Returns a store for the file referenced by the given path.
+     */
+    public static FileStore file(File path) {
+        return file(path, false);
     }
-
-    /** Returns a store for the file referenced by the given path. */
-    public static FileStore file(Path path) { return new RealPathStore(requireNonNull(path)); }
-
-    /** Returns a store for the file referenced by the given path. */
-    public static FileStore file(String path) { return file(path, false); }
 
     /**
      * Returns a store for the file referenced by the given path, potentially appending to it if {@code append} is
      * {@code true}.
      */
-    public static FileStore file(final String path, final boolean append) {
-        final FileStore store = file(Paths.get(path));
+    public static FileStore file(File path, boolean append) {
+        return file(path.toPath(), append);
+    }
+
+    /**
+     * Returns a store for the file referenced by the given path.
+     */
+    public static FileStore file(Path path) {
+        return file(path, false);
+    }
+
+    /**
+     * Returns a store for the file referenced by the given path, potentially appending to it if {@code append} is
+     * {@code true}.
+     */
+    public static FileStore file(final Path path, final boolean append) {
+        final FileStore store = new RealPathStore(requireNonNull(path));
         return append ? store.onOutput(APPEND, CREATE) : store;
     }
 
-    /** Returns a new in-memory store with the default buffer size. */
-    public static Store memory() { return memory(BUFSIZE); }
+    /**
+     * Returns a store for the file referenced by the given path.
+     */
+    public static FileStore file(String path) {
+        return file(path, false);
+    }
 
-    /** Returns a new in-memory store with the given buffer size. */
-    public static Store memory(int bufferSize) { return new MemoryStore(bufferSize); }
+    /**
+     * Returns a store for the file referenced by the given path, potentially appending to it if {@code append} is
+     * {@code true}.
+     */
+    public static FileStore file(String path, boolean append) {
+        return file(Paths.get(path), append);
+    }
 
-    /** Returns a store for the given path. */
-    public static PathStore path(Path p) { return file(p); }
+    /**
+     * Returns a new in-memory store with the default buffer size.
+     */
+    public static Store memory() {
+        return memory(BUFSIZE);
+    }
 
-    /** Returns a store for the given preferences node and key. */
+    /**
+     * Returns a new in-memory store with the given buffer size.
+     */
+    public static Store memory(int bufferSize) {
+        return new MemoryStore(bufferSize);
+    }
+
+    /**
+     * Returns a store for the given path.
+     */
+    public static PathStore path(Path p) {
+        return path(p, false);
+    }
+
+    /**
+     * Returns a store for the given path, potentially appending to it if {@code append} is {@code true}.
+     */
+    public static PathStore path(Path p, boolean append) {
+        return file(p, append);
+    }
+
+    /**
+     * Returns a store for the given preferences node and key.
+     */
     public static Store preferences(Preferences p, String key) {
         return new PreferencesStore(requireNonNull(p), requireNonNull(key));
     }
 
-    /** Returns a store for the system preferences node for the package of the given class and the given key. */
+    /**
+     * Returns a store for the system preferences node for the package of the given class and the given key.
+     */
     public static Store systemPreferences(Class<?> classInPackage, String key) {
         return preferences(Preferences.systemNodeForPackage(classInPackage), key);
     }
 
-    /** Returns a store for the user preferences node for the package of the given class and the given key. */
+    /**
+     * Returns a store for the user preferences node for the package of the given class and the given key.
+     */
     public static Store userPreferences(Class<?> classInPackage, String key) {
         return preferences(Preferences.userNodeForPackage(classInPackage), key);
     }
 
-    /** A store which allows to switch open options for input and output. */
+    /**
+     * A store which allows to switch open options for input and output.
+     */
     public interface FileStore extends PathStore {
 
-        /** Returns a new file store which uses the given open options on input. */
+        /**
+         * Returns a new file store which uses the given open options on input.
+         */
         FileStore onInput(OpenOption... options);
 
-        /** Returns a new file store which uses the given open options on output. */
+        /**
+         * Returns a new file store which uses the given open options on output.
+         */
         FileStore onOutput(OpenOption... options);
     }
 
-    /** A store which allows to switch open options for input and output. */
+    /**
+     * A store which allows to switch open options for input and output.
+     */
     public interface PathStore extends Store {
 
-        /** Returns a new path store which uses the given open options on input. */
+        /**
+         * Returns a new path store which uses the given open options on input.
+         */
         PathStore onInput(OpenOption... options);
 
-        /** Returns a new path store which uses the given open options on output. */
+        /**
+         * Returns a new path store which uses the given open options on output.
+         */
         PathStore onOutput(OpenOption... options);
     }
 
-      //////////////////////////////////
-     ///////// ARCHIVE STORES /////////
+    //////////////////////////////////
+    ///////// ARCHIVE STORES /////////
     //////////////////////////////////
 
-    /** Returns an archive store for transparent read/write access to the directory referenced by the given path. */
-    public static ArchiveStore directory(File path) { return directory(path.toPath()); }
+    /**
+     * Returns an archive store for transparent read/write access to the directory referenced by the given path.
+     */
+    public static ArchiveStore directory(File path) {
+        return directory(path.toPath());
+    }
 
-    /** Returns an archive store for transparent read/write access to the directory referenced by the given path. */
-    public static ArchiveStore directory(Path path) { return new DirectoryStore(requireNonNull(path)); }
+    /**
+     * Returns an archive store for transparent read/write access to the directory referenced by the given path.
+     */
+    public static ArchiveStore directory(Path path) {
+        return new DirectoryStore(requireNonNull(path));
+    }
 
-    /** Returns an archive store for transparent read/write access to the directory referenced by the given path. */
-    public static ArchiveStore directory(String path) { return directory(Paths.get(path)); }
+    /**
+     * Returns an archive store for transparent read/write access to the directory referenced by the given path.
+     */
+    public static ArchiveStore directory(String path) {
+        return directory(Paths.get(path));
+    }
 
-    /** Returns an archive store for read/write access to the JAR file referenced by the given path. */
+    /**
+     * Returns an archive store for read/write access to the JAR file referenced by the given path.
+     */
     public static ArchiveStore jar(final File path) {
         requireNonNull(path);
         return new ArchiveStore() {
 
             @Override
-            public Socket<ArchiveInputStream> input() { return () -> new ZipFileAdapter(new ZipFile(path)); }
+            public Socket<ArchiveInputStream> input() {
+                return () -> new ZipFileAdapter(new ZipFile(path));
+            }
 
             @Override
             public Socket<ArchiveOutputStream> output() {
@@ -341,16 +458,24 @@ public final class BIOS {
         };
     }
 
-    /** Returns an archive store for read/write access to the JAR file referenced by the given path. */
-    public static ArchiveStore jar(String path) { return jar(new File(path)); }
+    /**
+     * Returns an archive store for read/write access to the JAR file referenced by the given path.
+     */
+    public static ArchiveStore jar(String path) {
+        return jar(new File(path));
+    }
 
-    /** Returns an archive store for read/write access to the ZIP file referenced by the given path. */
+    /**
+     * Returns an archive store for read/write access to the ZIP file referenced by the given path.
+     */
     public static ArchiveStore zip(final File path) {
         requireNonNull(path);
         return new ArchiveStore() {
 
             @Override
-            public Socket<ArchiveInputStream> input() { return () -> new ZipFileAdapter(new ZipFile(path)); }
+            public Socket<ArchiveInputStream> input() {
+                return () -> new ZipFileAdapter(new ZipFile(path));
+            }
 
             @Override
             public Socket<ArchiveOutputStream> output() {
@@ -359,11 +484,15 @@ public final class BIOS {
         };
     }
 
-    /** Returns an archive store for read/write access to the ZIP file referenced by the given path. */
-    public static ArchiveStore zip(String path) { return zip(new File(path)); }
+    /**
+     * Returns an archive store for read/write access to the ZIP file referenced by the given path.
+     */
+    public static ArchiveStore zip(String path) {
+        return zip(new File(path));
+    }
 
-      /////////////////////////////
-     ///////// UTILITIES /////////
+    /////////////////////////////
+    ///////// UTILITIES /////////
     /////////////////////////////
 
     /**
@@ -374,9 +503,11 @@ public final class BIOS {
      * It performs best when used with <em>unbuffered</em> streams.
      *
      * @param source the archive source to read the entries from.
-     * @param sink the archive sink to write the entries to.
+     * @param sink   the archive sink to write the entries to.
      */
-    public static void copy(ArchiveSource source, ArchiveSink sink) throws Exception { Copy.copy(source, sink); }
+    public static void copy(ArchiveSource source, ArchiveSink sink) throws Exception {
+        Copy.copy(source, sink);
+    }
 
     /**
      * Copies the data from the given source to the given sink.
@@ -386,9 +517,11 @@ public final class BIOS {
      * It performs best when used with <em>unbuffered</em> streams.
      *
      * @param source the source for reading the data from.
-     * @param sink the sink for writing the data to.
+     * @param sink   the sink for writing the data to.
      */
-    public static void copy(Source source, Sink sink) throws Exception { Copy.copy(source, sink); }
+    public static void copy(Source source, Sink sink) throws Exception {
+        Copy.copy(source, sink);
+    }
 
     /**
      * Copies the data from the given input stream socket to the given output stream socket.
@@ -397,7 +530,7 @@ public final class BIOS {
      * which is concurrently flushed by the current thread.
      * It performs best when used with <em>unbuffered</em> streams.
      *
-     * @param input the input stream socket for reading the data from.
+     * @param input  the input stream socket for reading the data from.
      * @param output the output stream socket for writing the data to.
      */
     public static void copy(Socket<? extends InputStream> input, Socket<? extends OutputStream> output) throws Exception {
@@ -411,7 +544,9 @@ public final class BIOS {
      * @see #serialization()
      * @see #memory()
      */
-    public static <T extends Serializable> T clone(T t) throws Exception { return clone(t, Store.BUFSIZE); }
+    public static <T extends Serializable> T clone(T t) throws Exception {
+        return clone(t, Store.BUFSIZE);
+    }
 
     /**
      * Returns a deep clone of the given object by serializing it to a memory store and de-serializing it again.
@@ -428,16 +563,18 @@ public final class BIOS {
      * Returns the content of the given source.
      *
      * @throws ContentTooLargeException if the content exceeds {@link Integer#MAX_VALUE} bytes.
-     * @throws IOException if there is no content or if the content cannot be read for some reason.
+     * @throws IOException              if there is no content or if the content cannot be read for some reason.
      */
-    public static byte[] content(Source source) throws Exception { return content(source, Integer.MAX_VALUE); }
+    public static byte[] content(Source source) throws Exception {
+        return content(source, Integer.MAX_VALUE);
+    }
 
     /**
      * Returns the content of the given source.
      *
      * @throws IllegalArgumentException if {@code max} is less than zero.
      * @throws ContentTooLargeException if the content exceeds {@code max } bytes.
-     * @throws IOException if there is no content or if the content cannot be read for some reason.
+     * @throws IOException              if there is no content or if the content cannot be read for some reason.
      */
     public static byte[] content(final Source source, final int max) throws Exception {
         if (source instanceof Store) {
