@@ -15,7 +15,7 @@ module.exports = {
         sidebar: [
             '/',
             'module-structure-and-features',
-            'basic-usage',
+            'getting-started',
             'basic-archive-processing',
             'advanced-archive-processing'
         ],

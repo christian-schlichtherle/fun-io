@@ -1,6 +1,6 @@
 ---
-actionLink: module-structure-and-features
-actionText: Module Structure And Features →
+actionLink: getting-started
+actionText: Getting Started →
 home: true
 title: Fun I/O
 ---
