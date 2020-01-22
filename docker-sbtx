@@ -5,7 +5,6 @@ shift
 [[ -z "$image_tag" ]] && { echo "Usage: $0 IMAGE_TAG [...]"; exit 1; }
 set -x
 exec docker run \
-    --env GUICE_VERSION \
     --interactive \
     --network host \
     --rm \
