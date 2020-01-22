@@ -7,7 +7,7 @@
     <meta name="description" content="Functional I/O for Java and Scala">
     
     
-    <link rel="preload" href="/fun-io/assets/css/0.styles.6963bb8e.css" as="style"><link rel="preload" href="/fun-io/assets/js/app.60f4b554.js" as="script"><link rel="preload" href="/fun-io/assets/js/7.1d28b16f.js" as="script"><link rel="prefetch" href="/fun-io/assets/js/2.d202cb91.js"><link rel="prefetch" href="/fun-io/assets/js/3.b1f57a15.js"><link rel="prefetch" href="/fun-io/assets/js/4.65eb385c.js"><link rel="prefetch" href="/fun-io/assets/js/5.abe7762f.js"><link rel="prefetch" href="/fun-io/assets/js/6.74cc7dbe.js"><link rel="prefetch" href="/fun-io/assets/js/8.10bc08c1.js"><link rel="prefetch" href="/fun-io/assets/js/9.0666aee1.js">
+    <link rel="preload" href="/fun-io/assets/css/0.styles.6963bb8e.css" as="style"><link rel="preload" href="/fun-io/assets/js/app.6955aee8.js" as="script"><link rel="preload" href="/fun-io/assets/js/7.8ee39e84.js" as="script"><link rel="prefetch" href="/fun-io/assets/js/2.d202cb91.js"><link rel="prefetch" href="/fun-io/assets/js/3.b1f57a15.js"><link rel="prefetch" href="/fun-io/assets/js/4.65eb385c.js"><link rel="prefetch" href="/fun-io/assets/js/5.abe7762f.js"><link rel="prefetch" href="/fun-io/assets/js/6.74cc7dbe.js"><link rel="prefetch" href="/fun-io/assets/js/8.10bc08c1.js"><link rel="prefetch" href="/fun-io/assets/js/9.0666aee1.js">
     <link rel="stylesheet" href="/fun-io/assets/css/0.styles.6963bb8e.css">
   </head>
   <body>
@@ -18,7 +18,7 @@ classes.
 It's perfectly fine to import all static factory methods using a wildcard like <code>*</code>.
 However, for the purpose of showing the originating facade class, the examples on this page do not use wildcard imports
 for static factory methods.</p></div> <h2 id="configuring-the-classpath"><a href="#configuring-the-classpath" class="header-anchor">#</a> Configuring The Classpath</h2> <div><p>Once you've decided on the set of features required by your application you need to add the respective modules to the
-class path - see <a href="/fun-io/module-structure-and-features.html">Module Structure And Features</a> .
+class path - see <a href="/fun-io/module-structure-and-features.html">Module Structure And Features</a>.
 A Java application typically has a dependency on <code>fun-io-bios</code>.
 A Scala application typically has the same dependencies as a Java application plus an additional dependency on
 <code>fun-io-scala-api</code> to improve the development experience in Scala.</p></div> <div><p>The examples on this page depend on <code>fun-io-bios</code>, <code>fun-io-jackson</code>, <code>fun-io-scala-api</code> and, transitively, <code>fun-io-api</code>.
@@ -67,7 +67,7 @@ Finally, the encoder is used to encode the string <code>&quot;Hello world!&quot;
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre></div></div><div><!----></div></div> <div><p>Note that importing static members of facade classes like <code>BIOS</code> and <code>Jackson</code> is the canonical way to use their API.
-As you can see, this leads to concise, easily comprehensible code.</p></div> <div><p>There are many other <code>Codecs</code> and <code>Sinks</code> available - see [Module Structure And Features].
+As you can see, this leads to concise, easily comprehensible code.</p></div> <div><p>There are many other <code>Codecs</code> and <code>Sinks</code> available - see <a href="/fun-io/module-structure-and-features.html">Module Structure And Features</a>.
 Also, the <code>Sink</code> interface is extended by the <code>Store</code> interface, of which you will find plenty implementations provided
 by facade classes like <code>BIOS</code> and others, as you will see in the next example.</p></div> <h2 id="applying-filters"><a href="#applying-filters" class="header-anchor">#</a> Applying Filters</h2> <h3 id="encoding-objects-to-files"><a href="#encoding-objects-to-files" class="header-anchor">#</a> Encoding Objects To Files</h3> <div><p>The following example is only slightly more complex than the previous one.
 Again, the string <code>&quot;Hello world!&quot;</code> is encoded to JSON, but this time it also gets compressed using GZIP and the result
@@ -209,6 +209,6 @@ The result is a significant performance boost due to much better utilization of 
         </a>
         →
       </span></p></div> </div> <!----></div></div>
-    <script src="/fun-io/assets/js/app.60f4b554.js" defer></script><script src="/fun-io/assets/js/7.1d28b16f.js" defer></script>
+    <script src="/fun-io/assets/js/app.6955aee8.js" defer></script><script src="/fun-io/assets/js/7.8ee39e84.js" defer></script>
   </body>
 </html>
