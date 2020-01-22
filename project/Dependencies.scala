@@ -19,19 +19,19 @@ object Dependencies {
 
   private val JAXB_Version = "2.3.1"
 
-  val AwsJavaSdkS3: ModuleID = "com.amazonaws" % "aws-java-sdk-s3" % "1.11.659"
+  val AwsJavaSdkS3: ModuleID = "com.amazonaws" % "aws-java-sdk-s3" % "1.11.712"
   val CommonsCompress: ModuleID = "org.apache.commons" % "commons-compress" % "1.19"
   val Config: ModuleID = "com.typesafe" % "config" % "1.4.0"
-  val JacksonDatabind: ModuleID = "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.10.1"
+  val JacksonDatabind: ModuleID = "com.fasterxml.jackson.core" % "jackson-databind" % "2.10.2"
   val JaxbApi: ModuleID = "javax.xml.bind" % "jaxb-api" % JAXB_Version
   val JaxbRuntime: ModuleID = "org.glassfish.jaxb" % "jaxb-runtime" % JAXB_Version
-  val MockitoCore: ModuleID = "org.mockito" % "mockito-core" % "3.1.0"
-  val S3: ModuleID = "software.amazon.awssdk" % "s3" % "2.10.1"
-  val Scalacheck: ModuleID = "org.scalacheck" %% "scalacheck" % "1.14.2"
+  val MockitoCore: ModuleID = "org.mockito" % "mockito-core" % "3.2.4"
+  val S3: ModuleID = "software.amazon.awssdk" % "s3" % "2.10.54"
+  val Scalacheck: ModuleID = "org.scalacheck" %% "scalacheck" % "1.14.3"
   val Scalatest: ModuleID = "org.scalatest" %% "scalatest" % "3.0.8"
-  val Slf4jSimple: ModuleID = "org.slf4j" % "slf4j-simple" % "1.7.28"
+  val Slf4jSimple: ModuleID = "org.slf4j" % "slf4j-simple" % "1.7.30"
   val Xz: ModuleID = "org.tukaani" % "xz" % "1.8"
-  val ZstdJni: ModuleID = "com.github.luben" % "zstd-jni" % "1.4.3-1"
+  val ZstdJni: ModuleID = "com.github.luben" % "zstd-jni" % "1.4.4-5"
 
   val ScalaVersion_2_10: String = sys.env.getOrElse("SCALA_VERSION_2_10", "2.10.7")
   val ScalaVersion_2_11: String = sys.env.getOrElse("SCALA_VERSION_2_11", "2.11.12")
