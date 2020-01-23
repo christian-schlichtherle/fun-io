@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import Dependencies._
 import sbt.Keys._
 import sbt._
@@ -90,6 +91,7 @@ object BuildSettings {
   lazy val aggregateSettings: Seq[Setting[_]] = {
     commonSettings ++ Seq(
       crossPaths := false,
+      crossScalaVersions := Seq.empty,
       publishArtifact := false
     )
   }
@@ -117,7 +119,8 @@ object BuildSettings {
   lazy val javaLibrarySettings: Seq[Setting[_]] = {
     librarySettings ++ Seq(
       autoScalaLibrary := false,
-      crossPaths := false
+      crossPaths := false,
+      crossScalaVersions := Seq(scalaVersion.value)
     )
   }
 

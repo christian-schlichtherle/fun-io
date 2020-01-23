@@ -3,15 +3,22 @@
 declare -r image_tag="$1"
 shift
 [[ -z "$image_tag" ]] && { echo "Usage: $0 IMAGE_TAG [...]"; exit 1; }
+
+[[ -z "$COURSIER_CACHE" ]] && case $(uname) in
+  Darwin) COURSIER_CACHE=$HOME/Library/Caches/Coursier/v1 ;;
+  Linux)  COURSIER_CACHE=$HOME/.cache/coursier/v1 ;;
+  *)      echo "Unsupported platform: $(uname)"; exit 2 ;;
+esac
+
 set -x
 exec docker run \
     --interactive \
     --network host \
     --rm \
     --tty \
-    --volume "$HOME/.ivy2:/root/.ivy2" \
+    --volume "$COURSIER_CACHE:/root/.cache/coursier/v1" \
     --volume "$HOME/.sbt:/root/.sbt" \
     --volume "$PWD:/workdir" \
     --workdir /workdir \
     "openjdk:$image_tag" \
-    ./sbtx $@
+    ./sbtx "$@"

@@ -1,5 +1,4 @@
 before_cache:
-  - find $HOME/.ivy2 -name "ivydata-*.properties" | xargs rm
   - find $HOME/.sbt -name "*.lock" | xargs rm
 
 cache:
