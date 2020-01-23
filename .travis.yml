@@ -9,7 +9,7 @@ cache:
 
 dist: xenial
 
-# Don't use slim or alpine images here - the SBT Wrapper runs a shell script which wouldn't always work then:
+# Don't use -slim or -alpine image tags here - the SBT Wrapper runs a shell script which wouldn't always work then:
 env:
   - COMPILE_IMAGE_TAG=8-jdk TEST_IMAGE_TAG=8-jdk
   - COMPILE_IMAGE_TAG=13-jdk TEST_IMAGE_TAG=13-jdk
@@ -20,8 +20,8 @@ install:
 
 language: minimal
 
-# Run the build in Docker to shield it from changes in the Travis environment:
 services:
+  # Let's run the build in Docker to protect it from changes in the environment:
   - docker
 
 script: ./docker-sbtx $TEST_IMAGE_TAG -batch +test
