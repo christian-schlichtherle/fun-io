@@ -15,7 +15,7 @@ env:
   - COMPILE_IMAGE_TAG=13-jdk TEST_IMAGE_TAG=13-jdk
 
 install:
-  - ./docker-sbtx $COMPILE_IMAGE_TAG +test:compile
+  - ./docker-sbtx $COMPILE_IMAGE_TAG --no-colors --supershell=false +test:compile
   - docker-compose up --detach
 
 language: minimal
@@ -24,4 +24,4 @@ language: minimal
 services:
   - docker
 
-script: ./docker-sbtx $TEST_IMAGE_TAG +test
+script: ./docker-sbtx $TEST_IMAGE_TAG --no-colors --supershell=false +test
