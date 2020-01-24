@@ -24,7 +24,7 @@ private[api] trait Operators {
 
   implicit class WithFilter(f1: Filter) {
 
-    def +(t2: Filter): Filter = f1 compose t2
+    def +(f2: Filter): Filter = f1 compose f2
 
     def <<(f2: Filter): Filter = f1 compose f2
     def <<(s: Store): Store = f1 store s
