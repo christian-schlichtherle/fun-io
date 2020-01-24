@@ -3,7 +3,7 @@ before_cache:
 
 cache:
   directories:
-    - $HOME/.ivy2
+    - $HOME/.cache/coursier/v1
     - $HOME/.sbt
 
 dist: xenial
