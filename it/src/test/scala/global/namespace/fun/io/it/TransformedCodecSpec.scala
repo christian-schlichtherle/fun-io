@@ -16,6 +16,7 @@
 package global.namespace.fun.io.it
 
 import java.io.InputStream
+import java.util.OptionalLong
 
 import global.namespace.fun.io.api.{Codec, Filter, Store}
 import global.namespace.fun.io.bios.BIOS._
@@ -131,21 +132,21 @@ class TransformedCodecSpec extends WordSpec {
     }
   }
 
-  private def assertCloneableUsing(f: AnyRef => AnyRef): Unit = {
+  private def assertCloneableUsing(f: Bean => Bean): Unit = {
     val bean = Bean("Hello world!")
     val clone = f(bean)
     clone shouldBe bean
     clone shouldNot be theSameInstanceAs bean
   }
 
-  private def assertThatStoreIsEmpty(store: Store): Unit = {
-    store.size should not be Symbol("present")
+  private def assertEmptyStore(store: Store): Unit = {
+    store.size shouldBe OptionalLong.empty
     store.exists shouldBe false
     intercept[Exception](store.acceptReader((_: InputStream) => ()))
   }
 
-  private def assertThatStoreIsNotEmpty(store: Store): Unit = {
-    store.size shouldBe Symbol("present")
+  private def assertNonEmptyStore(store: Store): Unit = {
+    store.size should not be OptionalLong.empty
     store.exists shouldBe true
     store.acceptReader((_: InputStream) => ())
   }
@@ -154,14 +155,14 @@ class TransformedCodecSpec extends WordSpec {
 
   "All transformed codecs" should {
 
-    "pass the lifecycle " in {
+    "pass the lifecycle" in {
       forAllTransformedCodecs { transformedCodec =>
         val store = memory
-        assertThatStoreIsEmpty(store)
+        assertEmptyStore(store)
         assertCloneableUsing((transformedCodec << store).clone)
-        assertThatStoreIsNotEmpty(store)
+        assertNonEmptyStore(store)
         store.delete()
-        assertThatStoreIsEmpty(store)
+        assertEmptyStore(store)
       }
     }
 

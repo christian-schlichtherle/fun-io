@@ -86,8 +86,6 @@ private object FilterCompositionSpec {
     }
   }
 
-  private def rot13: Filter = new ROTFilter
-
   private val a: Filter = new MessageFilter("a")
 
   private val b: Filter = new MessageFilter("b")
@@ -102,5 +100,4 @@ private object FilterCompositionSpec {
 
     def input(iss: Socket[InputStream]): Socket[InputStream] = iss
   }
-
 }
