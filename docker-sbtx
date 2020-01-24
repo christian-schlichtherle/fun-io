@@ -17,6 +17,7 @@ exec docker run \
     --rm \
     --tty \
     --volume "$COURSIER_CACHE:/root/.cache/coursier/v1" \
+    --volume "$HOME/.ivy2:/root/.ivy2" \
     --volume "$HOME/.sbt:/root/.sbt" \
     --volume "$PWD:/workdir" \
     --workdir /workdir \
