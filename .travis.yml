@@ -1,11 +1,9 @@
 before_cache:
-  - find $HOME/.ivy2 -name "ivydata-*.properties" | xargs rm
   - find $HOME/.sbt -name "*.lock" | xargs rm
 
 cache:
   directories:
     - $HOME/.cache/coursier/v1
-    - $HOME/.ivy2
     - $HOME/.sbt
 
 dist: xenial
