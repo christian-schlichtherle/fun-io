@@ -29,7 +29,7 @@ private[api] trait Operators {
     def <<(f2: Filter): Filter = f1 compose f2
     def <<(s: Store): Store = f1 store s
 
-    def >>(f2: Filter): Filter = f1 andThen f2
+    def >>(f2: Filter): Filter = f2 compose f1
     def >>(c: Codec): Codec = f1 codec c
   }
 

@@ -97,13 +97,14 @@ public interface Filter {
         }
 
         @Override
-        public Filter compose(Filter before) {
-            return before;
+        public Filter compose(Filter other) {
+            return other;
         }
 
         @Override
-        public Filter andThen(Filter after) {
-            return after;
+        @Deprecated
+        public Filter andThen(Filter other) {
+            return other;
         }
     };
 
@@ -206,16 +207,30 @@ public interface Filter {
     }
 
     /**
-     * Returns a filter which applies the given filter <em>before</em> this filter.
+     * Returns a filter which applies the given filter after this filter on output and before this filter on input.
+     * For example, to compose a filter which would compress and then encrypt the data on output:
+     * <pre>{@code
+     * Filter compression = [...];
+     * Filter encryption = [...];
+     * Filter compressionAndEncryption = compression.compose(encryption);
+     * }</pre>
+     * On input, this filter would first decrypt the data and then decompress it again.
+     * <p>
+     * Note that before version 2.3.0, this method was erroneously documented to compose the filters in the opposite
+     * order.
      */
-    default Filter compose(Filter before) {
-        return Internal.compose(requireNonNull(before), this);
+    default Filter compose(Filter other) {
+        return Internal.compose(requireNonNull(other), this);
     }
 
     /**
-     * Returns a filter which applies the given filter <em>after</em> this filter.
+     * Returns a filter which applies the given filter before this filter on output and after this filter on input.
+     *
+     * @deprecated since 2.3.0: The name of this method is completely misleading and in previous versions, it was
+     *             erroneously documented to compose the filters in the opposite order - <strong>DO NOT USE<strong>!
      */
-    default Filter andThen(Filter after) {
-        return Internal.compose(this, requireNonNull(after));
+    @Deprecated
+    default Filter andThen(Filter other) {
+        return Internal.compose(this, requireNonNull(other));
     }
 }
