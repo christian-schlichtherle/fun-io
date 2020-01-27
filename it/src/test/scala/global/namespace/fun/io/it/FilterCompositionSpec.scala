@@ -31,43 +31,44 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks._
 import scala.io.Source
 
 /**
-  * @author Christian Schlichtherle
-  */
+ * @author Christian Schlichtherle
+ */
 class FilterCompositionSpec extends WordSpec {
 
-  "A sequence of filters" when {
-    "composed in different, yet equivalent ways" should {
-
-      "produce identical output" in {
-        val table = Table[Filter](
-          "filter",
-          buffer,
-          BIOS.deflate + inflate,
-          CommonsCompress.deflate + inflate
-        )
-        forAll(table) { filter =>
-          filter should not be identity
-          string << filter connect memory clone "Hello world!" shouldBe "Hello world!"
-        }
+  "A composition of filters" should {
+    "produce identical output" in {
+      val table = Table[Filter](
+        "filter",
+        buffer,
+        BIOS.deflate + inflate,
+        CommonsCompress.deflate + inflate
+      )
+      forAll(table) { filter =>
+        filter should not be identity
+        val store = memory
+        codec << filter << store clone "c" shouldBe "c"
+        new String(store.content) shouldBe "c"
       }
+    }
 
-      "be associative" in {
-        val table = Table[ConnectedCodec](
-          "connectedCodec",
+    "be associative" in {
+      val store = memory
+      val table = Table[ConnectedCodec](
+        "connectedCodec",
 
-          string << b << a << memory,
-          ((string << b) << a) << memory,
-          string << (b << (a << memory)),
-          string << (b << a) << memory,
+        codec << b << a << store,
+        ((codec << b) << a) << store,
+        codec << (b << (a << store)),
+        codec << (b << a) << store,
 
-          memory >> a >> b >> string,
-          ((memory >> a) >> b) >> string,
-          memory >> (a >> (b >> string)),
-          memory >> (a >> b) >> string
-        )
-        forAll(table) { connectedCodec =>
-          connectedCodec clone "c" shouldBe "abc"
-        }
+        store >> a >> b >> codec,
+        ((store >> a) >> b) >> codec,
+        store >> (a >> (b >> codec)),
+        store >> (a >> b) >> codec
+      )
+      forAll(table) { connectedCodec =>
+        connectedCodec clone "c" shouldBe "c"
+        new String(store.content) shouldBe "abc"
       }
     }
   }
@@ -75,29 +76,38 @@ class FilterCompositionSpec extends WordSpec {
 
 private object FilterCompositionSpec {
 
-  private object string extends Codec {
+  private val codec: Codec = new Codec {
 
-    def encoder(l: Socket[OutputStream]): Encoder = new Encoder {
-      def encode(obj: AnyRef): Unit = l.accept((_: OutputStream).write(obj.toString.getBytes))
+    def encoder(output: Socket[OutputStream]): Encoder = new Encoder {
+      def encode(obj: AnyRef): Unit = output.accept(_.write(obj.toString.getBytes))
     }
 
-    def decoder(l: Socket[InputStream]): Decoder = new Decoder {
-      def decode[T](expected: Type): T = l(Source.fromInputStream(_: InputStream).mkString.asInstanceOf[T])
+    def decoder(input: Socket[InputStream]): Decoder = new Decoder {
+      def decode[T](expected: Type): T = input(Source.fromInputStream(_).mkString.asInstanceOf[T])
     }
   }
 
-  private val a: Filter = new MessageFilter("a")
+  private val a: Filter = new PrefixFilter('a')
 
-  private val b: Filter = new MessageFilter("b")
+  private val b: Filter = new PrefixFilter('b')
 
-  private[this] class MessageFilter(message: String) extends Filter {
+  private[this] class PrefixFilter(prefix: Byte) extends Filter {
 
-    def output(oss: Socket[OutputStream]): Socket[OutputStream] = {
-      oss.map((out: OutputStream) => {
-        out write message.getBytes; out
+    override def output(oss: Socket[OutputStream]): Socket[OutputStream] = {
+      oss.map(out => {
+        out write prefix
+        out
       })
     }
 
-    def input(iss: Socket[InputStream]): Socket[InputStream] = iss
+    override def input(iss: Socket[InputStream]): Socket[InputStream] = {
+      iss.map(in => {
+        val c = in.read()
+        if (c != prefix) {
+          throw new IOException(s"Input '$c' doesn't match prefix '$prefix'.")
+        }
+        in
+      })
+    }
   }
 }

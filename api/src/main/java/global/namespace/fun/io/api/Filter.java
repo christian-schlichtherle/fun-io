@@ -207,7 +207,7 @@ public interface Filter {
     }
 
     /**
-     * Returns a filter which applies the given filter after this filter on output and before this filter on input.
+     * Returns a filter which applies the other filter after this filter on output and before this filter on input.
      * For example, to compose a filter which would compress and then encrypt the data on output:
      * <pre>{@code
      * Filter compression = [...];
@@ -220,17 +220,17 @@ public interface Filter {
      * order.
      */
     default Filter compose(Filter other) {
-        return Internal.compose(requireNonNull(other), this);
+        return Internal.compose(this, requireNonNull(other));
     }
 
     /**
-     * Returns a filter which applies the given filter before this filter on output and after this filter on input.
+     * Returns a filter which applies the other filter before this filter on output and after this filter on input.
      *
      * @deprecated since 2.3.0: The name of this method is completely misleading and in previous versions, it was
      *             erroneously documented to compose the filters in the opposite order - <strong>DO NOT USE<strong>!
      */
     @Deprecated
     default Filter andThen(Filter other) {
-        return Internal.compose(this, requireNonNull(other));
+        return other.compose(this);
     }
 }
