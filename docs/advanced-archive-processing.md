@@ -8,8 +8,8 @@ In addition to the `CommonsCompress` facade for accessing the archive files, it 
 them:
 
 ```java
-import static global.namespace.fun.io.commons.compress.CommonsCompress.jar; // from `fun-io-commons-compress`
-import static global.namespace.fun.io.delta.Delta.diff;                     // from `fun-io-delta`
+import static global.namespace.fun.io.commons.compress.CommonsCompress.jar; // from module `fun-io-commons-compress`
+import static global.namespace.fun.io.delta.Delta.diff;                     // from module `fun-io-delta`
 
 class Scratch {
     public static void main(String[] args) throws Exception {
@@ -31,7 +31,7 @@ For production, using the `CommonsCompress` facade is recommend for better accur
 It also uses the `Delta` facade again for patching the base archive file with the delta archive file:
 
 ```java
-import static global.namespace.fun.io.bios.BIOS.jar;     // from `fun-io-bios`
+import static global.namespace.fun.io.bios.BIOS.jar;     // from module `fun-io-bios`
 import static global.namespace.fun.io.delta.Delta.patch;
 
 class Scratch {
