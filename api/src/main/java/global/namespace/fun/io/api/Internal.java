@@ -31,12 +31,12 @@ final class Internal {
 
             @Override
             public Socket<OutputStream> output(Socket<OutputStream> output) {
-                return second.output(first.output(output));
+                return first.output(second.output(output));
             }
 
             @Override
             public Socket<InputStream> input(Socket<InputStream> input) {
-                return second.input(first.input(input));
+                return first.input(second.input(input));
             }
         };
     }
