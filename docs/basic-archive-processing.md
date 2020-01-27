@@ -8,9 +8,9 @@ Commons Compress.
 It also uses the `BIOS` facade for accessing directories like archive files and copying them:
 
 ```java
-import static global.namespace.fun.io.commons.compress.CommonsCompress.gzip; // from `fun-io-commons-compress`
+import static global.namespace.fun.io.commons.compress.CommonsCompress.gzip; // from module `fun-io-commons-compress`
 import static global.namespace.fun.io.commons.compress.CommonsCompress.tar;
-import static global.namespace.fun.io.bios.BIOS.copy;                        // from `fun-io-bios`
+import static global.namespace.fun.io.bios.BIOS.copy;                        // from module `fun-io-bios`
 import static global.namespace.fun.io.bios.BIOS.directory;
 import static global.namespace.fun.io.bios.BIOS.file;
 
@@ -80,7 +80,7 @@ key prefix `archive/`:
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
-import static global.namespace.fun.io.aws.sdk1.AWS.s3; // from `fun-io-aws-sdk1`
+import static global.namespace.fun.io.aws.sdk1.AWS.s3; // from module `fun-io-aws-sdk1`
 import static global.namespace.fun.io.bios.BIOS.copy;
 import static global.namespace.fun.io.bios.BIOS.file;
 import static global.namespace.fun.io.commons.compress.CommonsCompress.gzip;
