@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement
 import scala.beans.BeanProperty
 
 @XmlRootElement
-case class Bean(@BeanProperty var bar: String) {
+case class Bean(@BeanProperty var property: String) {
 
-  def this() = this(bar = null)
+  def this() = this(property = null)
 }

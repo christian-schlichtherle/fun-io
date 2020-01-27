@@ -15,8 +15,8 @@
  */
 package global.namespace.fun.io.it;
 
-import global.namespace.fun.io.api.Socket;
 import global.namespace.fun.io.api.Filter;
+import global.namespace.fun.io.api.Socket;
 
 import java.io.*;
 
@@ -27,7 +27,7 @@ public class ROTFilter implements Filter {
 
     private static final int ALPHABET_LENGTH = 'Z' - 'A' + 1;
 
-    private int apply[] = new int[ALPHABET_LENGTH], unapply[] = new int[ALPHABET_LENGTH];
+    private int[] apply = new int[ALPHABET_LENGTH], unapply = new int[ALPHABET_LENGTH];
 
     public ROTFilter() {
         this(13);
@@ -41,6 +41,29 @@ public class ROTFilter implements Filter {
             apply[i] = (i + positions) % ALPHABET_LENGTH;
             unapply[i] = (ALPHABET_LENGTH + i - positions) % ALPHABET_LENGTH;
         }
+    }
+
+    @Override
+    public Socket<OutputStream> output(Socket<OutputStream> output) {
+        return output.map(out -> new FilterOutputStream(out) {
+
+            @Override
+            public void write(int b) throws IOException {
+                out.write(apply(b));
+            }
+
+            @Override
+            public void write(final byte[] b, final int off, final int len) throws IOException {
+                if ((off | len | (b.length - (len + off)) | (off + len)) < 0) {
+                    throw new IndexOutOfBoundsException();
+                }
+                final byte[] rotated = new byte[len];
+                for (int i = 0; i < len; i++) {
+                    rotated[i] = (byte) apply(b[off + i]);
+                }
+                out.write(rotated);
+            }
+        });
     }
 
     @Override
@@ -63,30 +86,7 @@ public class ROTFilter implements Filter {
         });
     }
 
-    @Override
-    public Socket<OutputStream> output(Socket<OutputStream> output) {
-        return output.map(out -> new FilterOutputStream(out) {
-
-            @Override
-            public void write(int b) throws IOException {
-                out.write(apply2output(b));
-            }
-
-            @Override
-            public void write(final byte[] b, final int off, final int len) throws IOException {
-                if ((off | len | (b.length - (len + off)) | (off + len)) < 0) {
-                    throw new IndexOutOfBoundsException();
-                }
-                final byte[] rotated = new byte[len];
-                for (int i = 0; i < len; i++) {
-                    rotated[i] = (byte) apply2output(b[off + i]);
-                }
-                out.write(rotated);
-            }
-        });
-    }
-
-    private int apply2output(int b) {
+    private int apply(int b) {
         return rotate(b, apply);
     }
 
