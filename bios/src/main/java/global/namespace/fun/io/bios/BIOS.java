@@ -114,7 +114,7 @@ public final class BIOS {
      * Returns a filter which buffers I/O using the given buffer size in bytes.
      */
     public static Filter buffer(int size) {
-        return new BufferedIOFilter(size);
+        return new BufferFilter(size);
     }
 
     /**

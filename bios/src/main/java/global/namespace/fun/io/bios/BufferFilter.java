@@ -11,11 +11,11 @@ import java.io.OutputStream;
 /**
  * @author Christian Schlichtherle
  */
-final class BufferedIOFilter implements Filter {
+final class BufferFilter implements Filter {
 
     private final int size;
 
-    BufferedIOFilter(final int size) {
+    BufferFilter(final int size) {
         if (size <= 0) {
             throw new IllegalArgumentException("Buffer size " + size + " is <= 0.");
         }
