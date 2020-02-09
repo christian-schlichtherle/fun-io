@@ -18,31 +18,31 @@ package global.namespace.fun.io.it
 import java.security.SecureRandom
 
 import global.namespace.fun.io.api.Filter
-import global.namespace.fun.io.bios.BIOS
-import javax.crypto.Cipher.{DECRYPT_MODE, ENCRYPT_MODE, getInstance}
-import javax.crypto.SecretKeyFactory
+import global.namespace.fun.io.bios.BIOS.cipher
+import javax.crypto.Cipher.{DECRYPT_MODE, ENCRYPT_MODE}
 import javax.crypto.spec.{PBEKeySpec, PBEParameterSpec}
+import javax.crypto.{Cipher, SecretKeyFactory}
 
 object PBE {
 
-  private val algorithm = "PBEWithMD5AndDES"
+  private[this] val Algorithm = "PBEWithMD5AndDES"
 
-  private val secretKeyFactory = SecretKeyFactory getInstance algorithm
+  private[this] val Skf = SecretKeyFactory getInstance Algorithm
 
-  private val pbeKeySpec = new PBEKeySpec("secret".toCharArray)
+  private[this] val PbeKeySpec = new PBEKeySpec("secret".toCharArray)
 
-  private val pbeParameterSpec = {
+  private[this] val PbeParameterSpec = {
     val salt = new Array[Byte](8)
-    new SecureRandom() nextBytes salt
+    new SecureRandom nextBytes salt
     new PBEParameterSpec(salt, 2017)
   }
 
-  // MUST be `def` or `pbe - pbe` may get optimized to `identity`!
+  // MUST be a `def` or the expression `pbe - pbe` may get optimized to the `identity` filter!
   def pbe: Filter = {
-    BIOS cipher { outputMode: java.lang.Boolean =>
-      val secretKey = secretKeyFactory generateSecret pbeKeySpec
-      val cipher = getInstance(algorithm)
-      cipher.init(if (outputMode) ENCRYPT_MODE else DECRYPT_MODE, secretKey, pbeParameterSpec)
+    cipher { outputMode: java.lang.Boolean =>
+      val secretKey = Skf generateSecret PbeKeySpec
+      val cipher = Cipher getInstance Algorithm
+      cipher.init(if (outputMode) ENCRYPT_MODE else DECRYPT_MODE, secretKey, PbeParameterSpec)
       cipher
     }
   }
