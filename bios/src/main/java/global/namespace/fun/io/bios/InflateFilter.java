@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Schlichtherle IT Services
+ * Copyright © 2017 - 2020 Schlichtherle IT Services
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ final class InflateFilter implements Filter {
                 finish();
                 if (!closed) {
                     closed = true;
-                    Close.bothIO(inf::end, super::close);
+                    SideEffect.runAll(inf::end, super::close);
                 }
             }
         });
@@ -68,7 +68,7 @@ final class InflateFilter implements Filter {
             public void close() throws IOException {
                 if (!closed) {
                     closed = true;
-                    Close.bothIO(def::end, super::close);
+                    SideEffect.runAll(def::end, super::close);
                 }
             }
         });
