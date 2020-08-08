@@ -19,8 +19,7 @@ import Dependencies._
 lazy val root: Project = project
   .in(file("."))
   .aggregate(api, awsSdk1, awsSdk2, bios, commonsCompress, delta, it, jackson, jaxb, scalaApi, spi, xz, zstd)
-  .settings(releaseSettings)
-  .settings(aggregateSettings)
+  .settings(aggregateSettings, releaseSettings)
   .settings(name := "Fun I/O")
 
 lazy val api: Project = project
