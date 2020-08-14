@@ -33,15 +33,15 @@ import static java.util.Objects.requireNonNull;
  * {@link javax.crypto.CipherInputStream} in order to decrypt the data after reading it from the underlying input
  * stream.
  * <p>
- * As another example, with a compression filter the {@code apply} method would decorate the loaned output
+ * As another example, with a compression filter the {@link #output} method would decorate the loaned output
  * streams with a new {@link java.util.zip.DeflaterOutputStream} in order to compress the data before writing it to the
  * underlying output stream.
- * Likewise, the {@code unapply} method would decorate the loaned input streams with a new
+ * Likewise, the {@link #input} method would decorate the loaned input streams with a new
  * {@link java.util.zip.InflaterInputStream} in order to decompress the data after reading it from the underlying input
  * stream.
  * <p>
- * The benefit of this interface is that you can easily chain the {@code apply} and {@code unapply} methods in order to
- * from rich decorators without needing to know anything about the implementation of the filters.
+ * The benefit of this interface is that you can easily compose it in order to create rich filters without needing to
+ * know anything about their implementation.
  * <p>
  * For example, depending on the previous examples, the following test code would assert the round-trip processing of
  * the string {@code "Hello world!"} using the composition of some compression and encryption filters on
@@ -50,16 +50,19 @@ import static java.util.Objects.requireNonNull;
  * Filter compression = ...;
  * Filter encryption = ...;
  * Store store = ...;
- * Socket<OutputStream> compressAndEncryptData = compression.apply(encryption.apply(store.output()));
- * Socket<InputStream> decryptAndDecompressData = compression.unapply(encryption.unapply(store.input()));
- * compressAndEncryptData.map(PrintWriter::new).accept(writer -> writer.println("Hello world!"));
- * decryptAndDecompressData.map(InputStreamReader::new).map(BufferedReader::new).accept(reader ->
+ * Store compressedAndEncryptedStore = store.map(compression.compose(encryption));
+ * // ... which is the same as:
+ * // Store compressedAndEncryptedStore = store.map(encryption).map(compression);
+ * Socket<OutputStream> compressedAndEncryptedData = store.output();
+ * Socket<InputStream> decryptedAndDecompressedData = store.input();
+ * compressedAndEncryptedData.map(PrintWriter::new).accept(writer -> writer.println("Hello world!"));
+ * decryptedAndDecompressedData.map(InputStreamReader::new).map(BufferedReader::new).accept(reader ->
  *     assertTrue("Hello world!".equals(reader.readLine())));
  * }</pre>
  *
  * @author Christian Schlichtherle
  */
-public interface Filter {
+public interface Filter extends OutputFilter, InputFilter {
 
     /**
      * The identity filter.
@@ -109,27 +112,31 @@ public interface Filter {
     };
 
     /**
-     * Returns an output stream socket which applies this filter to the given output stream socket.
+     * Returns a filter which applies the other filter AFTER this filter on output and BEFORE this filter on input.
+     * For example, to compose a filter which would first compress and then encrypt the data on output:
+     * <pre>{@code
+     * Filter compression = [...];
+     * Filter encryption = [...];
+     * Filter compressionAndEncryption = compression.compose(encryption);
+     * }</pre>
+     * On input, the filter would first decrypt the data and then decompress it.
+     * <p>
+     * Note that before version 2.3.0, this method was erroneously documented to compose the filters in the opposite
+     * order.
      */
-    Socket<OutputStream> output(Socket<OutputStream> output);
-
-    /**
-     * Returns an input stream socket which applies this filter to the given input stream socket.
-     */
-    Socket<InputStream> input(Socket<InputStream> input);
-
-    /**
-     * Returns a sink which applies this filter to the given sink.
-     */
-    default Sink sink(Sink sink) {
-        return () -> output(sink.output());
+    default Filter compose(Filter other) {
+        return Internal.compose(this, requireNonNull(other));
     }
 
     /**
-     * Returns a source which applies this filter to the given source.
+     * Returns a filter which applies the other filter BEFORE this filter on output and AFTER this filter on input.
+     *
+     * @deprecated since 2.3.0: The name of this method is completely misleading and in previous versions, it was
+     *             erroneously documented to compose the filters in the opposite order - <strong>DO NOT USE</strong>!
      */
-    default Source source(Source source) {
-        return () -> input(source.input());
+    @Deprecated
+    default Filter andThen(Filter other) {
+        return other.compose(this);
     }
 
     /**
@@ -204,33 +211,5 @@ public interface Filter {
                 return codec.decoder(input(input));
             }
         };
-    }
-
-    /**
-     * Returns a filter which applies the other filter after this filter on output and before this filter on input.
-     * For example, to compose a filter which would compress and then encrypt the data on output:
-     * <pre>{@code
-     * Filter compression = [...];
-     * Filter encryption = [...];
-     * Filter compressionAndEncryption = compression.compose(encryption);
-     * }</pre>
-     * On input, this filter would first decrypt the data and then decompress it again.
-     * <p>
-     * Note that before version 2.3.0, this method was erroneously documented to compose the filters in the opposite
-     * order.
-     */
-    default Filter compose(Filter other) {
-        return Internal.compose(this, requireNonNull(other));
-    }
-
-    /**
-     * Returns a filter which applies the other filter before this filter on output and after this filter on input.
-     *
-     * @deprecated since 2.3.0: The name of this method is completely misleading and in previous versions, it was
-     *             erroneously documented to compose the filters in the opposite order - <strong>DO NOT USE<strong>!
-     */
-    @Deprecated
-    default Filter andThen(Filter other) {
-        return other.compose(this);
     }
 }
