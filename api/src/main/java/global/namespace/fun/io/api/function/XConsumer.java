@@ -18,7 +18,7 @@ package global.namespace.fun.io.api.function;
 import java.util.Objects;
 
 /**
- * Like {@link java.util.function.Consumer}, but can throw any type of exception.
+ * Like {@link java.util.function.Consumer}, but may throw any type of exception.
  *
  * @author Christian Schlichtherle
  */
