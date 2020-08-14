@@ -35,7 +35,7 @@ object BuildSettings {
         releaseStepCommandAndRemaining("+publishSigned"),
         setNextVersion,
         commitNextVersion,
-        pushChanges
+        pushChanges,
       )
     )
   }
@@ -83,21 +83,21 @@ object BuildSettings {
         browseUrl = url("https://github.com/christian-schlichtherle/fun-io"),
         connection = "scm:git:git@github.com:christian-schlichtherle/fun-io.git",
         devConnection = Some("scm:git:git@github.com:christian-schlichtherle/fun-io.git")
-      ))
+      )),
     )
   }
 
   lazy val aggregateSettings: Seq[Setting[_]] = {
     commonSettings ++ Seq(
       crossPaths := false,
-      publishArtifact := false
+      publish / skip := true,
     )
   }
 
   lazy val artifactSettings: Seq[Setting[_]] = {
     commonSettings ++ Seq(
       logBuffered := false, // http://www.scalatest.org/user_guide/using_scalatest_with_sbt
-      testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oF")
+      testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oF"),
     )
   }
 
@@ -110,20 +110,20 @@ object BuildSettings {
       packageOptions in(Compile, packageBin) += Package.ManifestAttributes("Automatic-Module-Name" ->
         ("global.namespace." + normalizedName.value.replace('-', '.'))
       ),
-      scalacOptions := DefaultOptions.scalac ++ Seq(Opts.compile.deprecation, "-feature", Opts.compile.unchecked, "-target:jvm-1.8")
+      scalacOptions := DefaultOptions.scalac ++ Seq(Opts.compile.deprecation, "-feature", Opts.compile.unchecked, "-target:jvm-1.8"),
     )
   }
 
   lazy val javaLibrarySettings: Seq[Setting[_]] = {
     librarySettings ++ Seq(
       autoScalaLibrary := false,
-      crossPaths := false
+      crossPaths := false,
     )
   }
 
   lazy val scalaLibrarySettings: Seq[Setting[_]] = {
     librarySettings ++ Seq(
-      crossScalaVersions := Seq(ScalaVersion_2_10, ScalaVersion_2_11, ScalaVersion_2_12, ScalaVersion_2_13)
+      crossScalaVersions := Seq(ScalaVersion_2_10, ScalaVersion_2_11, ScalaVersion_2_12, ScalaVersion_2_13),
     )
   }
 }

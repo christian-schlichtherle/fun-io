@@ -28,10 +28,10 @@ lazy val api: Project = project
   .settings(
     libraryDependencies ++= Seq(
       MockitoCore % Test,
-      Scalatest % Test
+      Scalatest % Test,
     ),
     name := "Fun I/O API",
-    normalizedName := "fun-io-api"
+    normalizedName := "fun-io-api",
   )
 
 lazy val awsSdk1: Project = project
@@ -43,10 +43,10 @@ lazy val awsSdk1: Project = project
       MockitoCore % Test,
       AwsJavaSdkS3,
       Scalacheck % Test,
-      Scalatest % Test
+      Scalatest % Test,
     ),
     name := "Fun I/O AWS SDK1",
-    normalizedName := "fun-io-aws-sdk1"
+    normalizedName := "fun-io-aws-sdk1",
   )
 
 lazy val awsSdk2: Project = project
@@ -58,10 +58,10 @@ lazy val awsSdk2: Project = project
       MockitoCore % Test,
       S3,
       Scalacheck % Test,
-      Scalatest % Test
+      Scalatest % Test,
     ),
     name := "Fun I/O AWS SDK2",
-    normalizedName := "fun-io-aws-sdk2"
+    normalizedName := "fun-io-aws-sdk2",
   )
 
 lazy val bios: Project = project
@@ -72,10 +72,10 @@ lazy val bios: Project = project
     libraryDependencies ++= Seq(
       MockitoCore % Test,
       Scalacheck % Test,
-      Scalatest % Test
+      Scalatest % Test,
     ),
     name := "Fun I/O BIOS",
-    normalizedName := "fun-io-bios"
+    normalizedName := "fun-io-bios",
   )
 
 lazy val commonsCompress: Project = project
@@ -85,10 +85,10 @@ lazy val commonsCompress: Project = project
   .settings(
     libraryDependencies ++= Seq(
       CommonsCompress,
-      Xz % Optional
+      Xz % Optional,
     ),
     name := "Fun I/O Commons Compress",
-    normalizedName := "fun-io-commons-compress"
+    normalizedName := "fun-io-commons-compress",
   )
 
 lazy val delta: Project = project
@@ -98,10 +98,10 @@ lazy val delta: Project = project
   .settings(
     libraryDependencies ++= Seq(
       Scalacheck % Test,
-      Scalatest % Test
+      Scalatest % Test,
     ),
     name := "Fun I/O Delta",
-    normalizedName := "fun-io-delta"
+    normalizedName := "fun-io-delta",
   )
 
 lazy val it: Project = project
@@ -115,10 +115,10 @@ lazy val it: Project = project
       MockitoCore,
       Scalacheck,
       Scalatest,
-      Slf4jSimple % Runtime
+      Slf4jSimple % Runtime,
     ),
     name := "Fun I/O IT",
-    publishArtifact := false
+    publish / skip := true,
   )
 
 lazy val jackson: Project = project
@@ -127,10 +127,10 @@ lazy val jackson: Project = project
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
-      JacksonDatabind
+      JacksonDatabind,
     ),
     name := "Fun I/O Jackson",
-    normalizedName := "fun-io-jackson"
+    normalizedName := "fun-io-jackson",
   )
 
 lazy val jaxb: Project = project
@@ -139,10 +139,10 @@ lazy val jaxb: Project = project
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
-      JaxbApi % Provided
+      JaxbApi % Provided,
     ),
     name := "Fun I/O JAXB",
-    normalizedName := "fun-io-jaxb"
+    normalizedName := "fun-io-jaxb",
   )
 
 lazy val scalaApi: Project = project
@@ -151,10 +151,10 @@ lazy val scalaApi: Project = project
   .settings(scalaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
-      Scalatest % Test
+      Scalatest % Test,
     ),
     name := "Fun I/O Scala API",
-    normalizedName := "fun-io-scala-api"
+    normalizedName := "fun-io-scala-api",
   )
 
 lazy val spi: Project = project
@@ -164,10 +164,10 @@ lazy val spi: Project = project
   .settings(
     libraryDependencies ++= Seq(
       Scalacheck % Test,
-      Scalatest % Test
+      Scalatest % Test,
     ),
     name := "Fun I/O SPI",
-    normalizedName := "fun-io-spi"
+    normalizedName := "fun-io-spi",
   )
 
 lazy val xz: Project = project
@@ -176,10 +176,10 @@ lazy val xz: Project = project
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
-      Xz
+      Xz,
     ),
     name := "Fun I/O XZ",
-    normalizedName := "fun-io-xz"
+    normalizedName := "fun-io-xz",
   )
 
 lazy val zstd: Project = project
@@ -188,8 +188,8 @@ lazy val zstd: Project = project
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
-      ZstdJni
+      ZstdJni,
     ),
     name := "Fun I/O Zstd",
-    normalizedName := "fun-io-zstd"
+    normalizedName := "fun-io-zstd",
   )
