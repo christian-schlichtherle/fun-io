@@ -1,5 +1,9 @@
+*.iml
 /.idea
 /docs/.vuepress/dist
 /node_modules
-*.iml
+/project/.boot
+/project/.coursier
+/project/.ivy
+/project/.sbtboot
 target/
