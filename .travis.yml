@@ -21,7 +21,7 @@ cache:
     - project/.ivy
     - project/.sbtboot
 
-dist: xenial
+dist: focal
 
 # Don't use -slim or -alpine image tags here - the SBT Wrapper runs a shell script which wouldn't always work then:
 env:
