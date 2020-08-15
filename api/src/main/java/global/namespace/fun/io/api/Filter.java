@@ -59,10 +59,14 @@ import static java.util.Objects.requireNonNull;
  * decryptedAndDecompressedData.map(InputStreamReader::new).map(BufferedReader::new).accept(reader ->
  *     assertTrue("Hello world!".equals(reader.readLine())));
  * }</pre>
+ * <p>
+ * For the mathematically inclined, this class forms a
+ * <a href="https://en.wikipedia.org/wiki/Group_(mathematics)">group</a> under its {@link #compose(Filter)}
+ * operator and its {@link #IDENTITY} instance.
  *
  * @author Christian Schlichtherle
  */
-public interface Filter extends OutputFilter, InputFilter {
+public interface Filter extends InputFilter, OutputFilter {
 
     /**
      * The identity filter.

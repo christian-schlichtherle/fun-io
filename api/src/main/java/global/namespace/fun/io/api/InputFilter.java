@@ -17,6 +17,10 @@ import static java.util.Objects.requireNonNull;
  * <p>
  * The benefit of this interface is that you can easily compose it in order to create rich filters without needing to
  * know anything about their implementation.
+ * <p>
+ * For the mathematically inclined, this class forms a
+ * <a href="https://en.wikipedia.org/wiki/Group_(mathematics)">group</a> under its {@link #compose(InputFilter)}
+ * operator and its {@link #IDENTITY} instance.
  *
  * @author Christian Schlichtherle
  */
