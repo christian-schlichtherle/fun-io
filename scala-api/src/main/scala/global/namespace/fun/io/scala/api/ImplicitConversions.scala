@@ -22,7 +22,7 @@ import global.namespace.fun.io.api.{Sink, Socket, Source}
 
 import _root_.scala.language.implicitConversions
 
-/** Implicit conversions for use with Scala 2.10 and 2.11. Not required for Scala 2.12.
+/** Implicit conversions for use with Scala 2.10 and 2.11. Not required for Scala 2.12 and Scala 2.13.
   *
   * @author Christian Schlichtherle
   */

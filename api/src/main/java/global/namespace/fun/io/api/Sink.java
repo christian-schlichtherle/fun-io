@@ -30,7 +30,7 @@ public interface Sink extends GenSink<OutputStream> {
      *
      * @param f the filter to apply to this sink.
      */
-    default Sink map(Filter f) {
+    default Sink map(OutputFilter f) {
         return f.sink(this);
     }
 }

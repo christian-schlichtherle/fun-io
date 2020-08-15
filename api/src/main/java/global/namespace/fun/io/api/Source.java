@@ -30,7 +30,7 @@ public interface Source extends GenSource<InputStream> {
      *
      * @param f the filter to apply to this source.
      */
-    default Source map(Filter f) {
+    default Source map(InputFilter f) {
         return f.source(this);
     }
 }

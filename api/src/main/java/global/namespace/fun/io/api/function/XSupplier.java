@@ -16,7 +16,7 @@
 package global.namespace.fun.io.api.function;
 
 /**
- * Like {@link java.util.function.Supplier}, but can throw any type of exception.
+ * Like {@link java.util.function.Supplier}, but may throw any type of exception.
  *
  * @author Christian Schlichtherle
  */
