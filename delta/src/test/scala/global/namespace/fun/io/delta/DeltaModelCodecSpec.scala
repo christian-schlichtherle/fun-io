@@ -23,14 +23,14 @@ import global.namespace.fun.io.bios.BIOS.memory
 import global.namespace.fun.io.delta.Delta._
 import global.namespace.fun.io.delta.DeltaModelCodecSpec._
 import global.namespace.fun.io.delta.model.{DeltaModel, EntryNameAndDigestValue, EntryNameAndTwoDigestValues}
-import org.scalatest.Matchers._
-import org.scalatest.WordSpec
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks._
+import org.scalatest.matchers.should.Matchers._
+import org.scalatest.prop.TableDrivenPropertyChecks._
+import org.scalatest.wordspec.AnyWordSpec
 
 import scala.jdk.CollectionConverters._
 
 /** @author Christian Schlichtherle */
-class DeltaModelCodecSpec extends WordSpec {
+class DeltaModelCodecSpec extends AnyWordSpec {
 
   "A delta model" should {
     "support round-trip encoding/decoding to/from JSON" in {

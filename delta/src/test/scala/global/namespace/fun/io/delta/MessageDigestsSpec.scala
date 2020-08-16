@@ -16,12 +16,12 @@
 package global.namespace.fun.io.delta
 
 import global.namespace.fun.io.delta.MessageDigests._
-import org.scalatest.Matchers._
-import org.scalatest.WordSpec
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks._
+import org.scalatest.matchers.should.Matchers._
+import org.scalatest.prop.TableDrivenPropertyChecks._
+import org.scalatest.wordspec.AnyWordSpec
 
 /** @author Christian Schlichtherle */
-class MessageDigestsSpec extends WordSpec {
+class MessageDigestsSpec extends AnyWordSpec {
 
   "Computation of digests" should {
     "yield correct values" in {

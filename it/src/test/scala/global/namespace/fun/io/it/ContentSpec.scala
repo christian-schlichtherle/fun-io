@@ -22,11 +22,11 @@ import java.util.UUID
 import global.namespace.fun.io.api._
 import global.namespace.fun.io.bios.BIOS._
 import global.namespace.fun.io.scala.api._
-import org.scalatest.Matchers._
-import org.scalatest.WordSpec
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks._
+import org.scalatest.matchers.should.Matchers._
+import org.scalatest.prop.TableDrivenPropertyChecks._
+import org.scalatest.wordspec.AnyWordSpec
 
-class ContentSpec extends WordSpec {
+class ContentSpec extends AnyWordSpec {
 
   "Every type of store" should {
     "support reading and writing its content" in {

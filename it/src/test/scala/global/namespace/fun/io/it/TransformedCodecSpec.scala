@@ -30,13 +30,13 @@ import global.namespace.fun.io.scala.api._
 import global.namespace.fun.io.xz.XZ
 import global.namespace.fun.io.zstd.Zstd._
 import javax.xml.bind.JAXBContext
-import org.scalatest.Matchers._
-import org.scalatest.WordSpec
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks._
+import org.scalatest.matchers.should.Matchers._
+import org.scalatest.prop.TableDrivenPropertyChecks._
+import org.scalatest.wordspec.AnyWordSpec
 
 import scala.language.existentials
 
-class TransformedCodecSpec extends WordSpec {
+class TransformedCodecSpec extends AnyWordSpec {
 
   private val codecs = Table[Codec](
     "codec",

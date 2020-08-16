@@ -19,11 +19,11 @@ import java.io.{ByteArrayInputStream, ByteArrayOutputStream, InputStream, Output
 
 import global.namespace.fun.io.api._
 import global.namespace.fun.io.scala.api.ApiSpec._
-import org.scalatest.Matchers._
-import org.scalatest.WordSpec
+import org.scalatest.matchers.should.Matchers._
+import org.scalatest.wordspec.AnyWordSpec
 
 /** @author Christian Schlichtherle */
-class ApiSpec extends WordSpec {
+class ApiSpec extends AnyWordSpec {
 
   "A socket" should {
     "be creatable from a by-name parameter" in {

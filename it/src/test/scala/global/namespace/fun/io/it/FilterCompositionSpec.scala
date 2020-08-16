@@ -24,16 +24,16 @@ import global.namespace.fun.io.bios.BIOS._
 import global.namespace.fun.io.commons.compress.CommonsCompress
 import global.namespace.fun.io.it.FilterCompositionSpec._
 import global.namespace.fun.io.scala.api._
-import org.scalatest.Matchers.{a => _, _}
-import org.scalatest.WordSpec
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks._
+import org.scalatest.matchers.should.Matchers.{a => _, _}
+import org.scalatest.prop.TableDrivenPropertyChecks._
+import org.scalatest.wordspec.AnyWordSpec
 
 import scala.io.Source
 
 /**
  * @author Christian Schlichtherle
  */
-class FilterCompositionSpec extends WordSpec {
+class FilterCompositionSpec extends AnyWordSpec {
 
   "A composition of filters" should {
     "produce identical output" in {

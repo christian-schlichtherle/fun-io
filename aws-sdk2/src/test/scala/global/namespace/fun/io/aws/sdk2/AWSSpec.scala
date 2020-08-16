@@ -16,13 +16,13 @@
 package global.namespace.fun.io.aws.sdk2
 
 import global.namespace.fun.io.aws.sdk2.AWS.s3
-import org.scalatest.Matchers._
-import org.scalatest.WordSpec
+import org.scalatest.matchers.should.Matchers._
+import org.scalatest.prop.TableDrivenPropertyChecks._
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar._
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks._
 import software.amazon.awssdk.services.s3.S3Client
 
-class AWSSpec extends WordSpec {
+class AWSSpec extends AnyWordSpec {
 
   private val client = mock[S3Client]
   private val bucket = "???"

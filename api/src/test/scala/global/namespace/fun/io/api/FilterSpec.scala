@@ -20,14 +20,14 @@ import java.io.{InputStream, OutputStream}
 import global.namespace.fun.io.api.Filter._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import org.scalatest.Matchers.{inOrder => _, _}
-import org.scalatest.WordSpec
+import org.scalatest.matchers.should.Matchers.{inOrder => _, _}
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar.mock
 
 /**
   * @author Christian Schlichtherle
   */
-class FilterSpec extends WordSpec {
+class FilterSpec extends AnyWordSpec {
 
   "The identity filter" should {
 

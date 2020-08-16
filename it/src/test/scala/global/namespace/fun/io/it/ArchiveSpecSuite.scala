@@ -18,14 +18,14 @@ package global.namespace.fun.io.it
 import global.namespace.fun.io.api.{ArchiveInputStream, ArchiveStore}
 import global.namespace.fun.io.delta.Delta.diff
 import global.namespace.fun.io.spi.Copy.copy
-import org.scalatest.Matchers._
-import org.scalatest.WordSpec
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks._
+import org.scalatest.matchers.should.Matchers._
+import org.scalatest.prop.TableDrivenPropertyChecks._
+import org.scalatest.wordspec.AnyWordSpec
 
 import scala.jdk.CollectionConverters._
 
 /** @author Christian Schlichtherle */
-abstract class ArchiveSpecSuite extends WordSpec with ArchiveSpecContext {
+abstract class ArchiveSpecSuite extends AnyWordSpec with ArchiveSpecContext {
 
   "An archive store" should {
     "support copying its entries" in {

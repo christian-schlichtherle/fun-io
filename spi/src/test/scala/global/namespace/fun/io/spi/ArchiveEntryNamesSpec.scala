@@ -16,11 +16,11 @@
 package global.namespace.fun.io.spi
 
 import global.namespace.fun.io.spi.ArchiveEntryNames.requireInternal
-import org.scalatest.Matchers._
-import org.scalatest.WordSpec
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks._
+import org.scalatest.matchers.should.Matchers._
+import org.scalatest.prop.TableDrivenPropertyChecks._
+import org.scalatest.wordspec.AnyWordSpec
 
-class ArchiveEntryNamesSpec extends WordSpec {
+class ArchiveEntryNamesSpec extends AnyWordSpec {
 
   "The `requireInternal` method" should {
     "return the original value for any internal archive entry name" in {

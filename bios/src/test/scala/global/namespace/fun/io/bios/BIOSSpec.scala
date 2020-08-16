@@ -20,11 +20,11 @@ import java.io.{ByteArrayInputStream, InputStream, OutputStream}
 import global.namespace.fun.io.api.{Socket, Source, Store}
 import global.namespace.fun.io.bios.BIOS._
 import org.mockito.Mockito._
-import org.scalatest.Matchers._
-import org.scalatest.WordSpec
+import org.scalatest.matchers.should.Matchers._
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar.mock
 
-class BIOSSpec extends WordSpec {
+class BIOSSpec extends AnyWordSpec {
 
   "A socket returned from BIOS.stream" should {
     "never close the given stream" when {

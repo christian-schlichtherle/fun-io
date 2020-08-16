@@ -21,13 +21,13 @@ import global.namespace.fun.io.api.{ArchiveInputStream, ArchiveStore}
 import global.namespace.fun.io.bios.BIOS._
 import global.namespace.fun.io.delta.Delta.{diff, patch}
 import global.namespace.fun.io.it.DiffAndPatchSpecSuite._
-import org.scalatest.Matchers._
-import org.scalatest.WordSpec
+import org.scalatest.matchers.should.Matchers._
+import org.scalatest.wordspec.AnyWordSpec
 
 import scala.jdk.CollectionConverters._
 
 /** @author Christian Schlichtherle */
-abstract class DiffAndPatchSpecSuite extends WordSpec with ArchiveSpecContext {
+abstract class DiffAndPatchSpecSuite extends AnyWordSpec with ArchiveSpecContext {
 
   "Diffing two archive stores and patching the first with the delta" should {
     "produce a clone of the second archive store" in {

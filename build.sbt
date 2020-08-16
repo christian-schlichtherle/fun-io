@@ -29,6 +29,7 @@ lazy val api: Project = project
     libraryDependencies ++= Seq(
       MockitoCore % Test,
       Scalatest % Test,
+      ScalatestplusMockito % Test,
     ),
     name := "Fun I/O API",
     normalizedName := "fun-io-api",
@@ -42,8 +43,8 @@ lazy val awsSdk1: Project = project
     libraryDependencies ++= Seq(
       MockitoCore % Test,
       AwsJavaSdkS3,
-      Scalacheck % Test,
       Scalatest % Test,
+      ScalatestplusMockito % Test,
     ),
     name := "Fun I/O AWS SDK1",
     normalizedName := "fun-io-aws-sdk1",
@@ -57,8 +58,8 @@ lazy val awsSdk2: Project = project
     libraryDependencies ++= Seq(
       MockitoCore % Test,
       S3,
-      Scalacheck % Test,
       Scalatest % Test,
+      ScalatestplusMockito % Test,
     ),
     name := "Fun I/O AWS SDK2",
     normalizedName := "fun-io-aws-sdk2",
@@ -71,8 +72,8 @@ lazy val bios: Project = project
   .settings(
     libraryDependencies ++= Seq(
       MockitoCore % Test,
-      Scalacheck % Test,
       Scalatest % Test,
+      ScalatestplusMockito % Test,
     ),
     name := "Fun I/O BIOS",
     normalizedName := "fun-io-bios",
@@ -97,7 +98,6 @@ lazy val delta: Project = project
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
-      Scalacheck % Test,
       Scalatest % Test,
     ),
     name := "Fun I/O Delta",
@@ -113,7 +113,6 @@ lazy val it: Project = project
       Config,
       JaxbRuntime,
       MockitoCore,
-      Scalacheck,
       Scalatest,
       Slf4jSimple % Runtime,
     ),
@@ -163,8 +162,8 @@ lazy val spi: Project = project
   .settings(javaLibrarySettings)
   .settings(
     libraryDependencies ++= Seq(
-      Scalacheck % Test,
       Scalatest % Test,
+      ScalatestplusMockito % Test,
     ),
     name := "Fun I/O SPI",
     normalizedName := "fun-io-spi",

@@ -17,14 +17,14 @@ package global.namespace.fun.io.bios
 
 import java.nio.file.Paths
 
-import org.scalatest.Matchers._
-import org.scalatest.WordSpec
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks._
+import org.scalatest.matchers.should.Matchers._
+import org.scalatest.prop.TableDrivenPropertyChecks._
+import org.scalatest.wordspec.AnyWordSpec
 
 import scala.jdk.CollectionConverters._
 
 /** @author Christian Schlichtherle */
-class DirectoryStoreSpec extends WordSpec {
+class DirectoryStoreSpec extends AnyWordSpec {
 
   "A directory store" when {
     "addressing the parent directory of the directory containing this class file" should {
