@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Schlichtherle IT Services
+ * Copyright © 2017 - 2020 Schlichtherle IT Services
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import static java.util.Objects.requireNonNull;
  * operator and its {@link #IDENTITY} instance.
  *
  * @author Christian Schlichtherle
+ * @since 2.4.0
  */
 @FunctionalInterface
 public interface OutputFilter {
