@@ -34,6 +34,8 @@ final class MemoryStore implements Store {
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private Optional<byte[]> optContent = Optional.empty();
 
+    private int length; // only valid if optContent.isPresent() == true
+
     MemoryStore(final int bufferSize) {
         if (0 > (this.bufferSize = bufferSize)) {
             throw new IllegalArgumentException(bufferSize + " is a negative buffer size.");
@@ -41,13 +43,19 @@ final class MemoryStore implements Store {
     }
 
     @Override
-    public Socket<InputStream> input() { return () -> new ByteArrayInputStream(checkedContent()); }
+    public Socket<InputStream> input() {
+        return () -> new ByteArrayInputStream(checkedContent(), 0, length);
+    }
 
     @Override
     public Socket<OutputStream> output() {
         return () -> new ByteArrayOutputStream(bufferSize) {
+
             @Override
-            public void close() { optContent = Optional.of(copyOf(buf, count)); }
+            public void close() {
+                optContent = Optional.of(buf);
+                length = count;
+            }
         };
     }
 
@@ -59,11 +67,13 @@ final class MemoryStore implements Store {
 
     @Override
     public OptionalLong size() throws IOException {
-        return optContent.map(bytes -> OptionalLong.of(bytes.length)).orElseGet(OptionalLong::empty);
+        return optContent.isPresent() ? OptionalLong.of(length) : OptionalLong.empty();
     }
 
     @Override
-    public boolean exists() { return optContent.isPresent(); }
+    public boolean exists() {
+        return optContent.isPresent();
+    }
 
     private byte[] checkedContent() throws NoContentException {
         return optContent.orElseThrow(NoContentException::new);
@@ -77,9 +87,9 @@ final class MemoryStore implements Store {
         final Optional<byte[]> optContent = this.optContent;
         if (optContent.isPresent()) {
             final byte[] content = optContent.get();
-            final int length = content.length;
+            final int length = this.length;
             if (length <= max) {
-                return content.clone();
+                return copyOf(content, length);
             } else {
                 throw new ContentTooLargeException(length, max);
             }
@@ -91,5 +101,6 @@ final class MemoryStore implements Store {
     @Override
     public void content(byte[] b, int off, int len) {
         optContent = Optional.of(copyOfRange(b, off, off + len));
+        length = len;
     }
 }
