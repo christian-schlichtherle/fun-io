@@ -24,6 +24,7 @@ import java.io.*;
 import java.util.Optional;
 import java.util.OptionalLong;
 
+import static java.util.Arrays.copyOf;
 import static java.util.Arrays.copyOfRange;
 
 final class MemoryStore implements Store {
@@ -46,7 +47,7 @@ final class MemoryStore implements Store {
     public Socket<OutputStream> output() {
         return () -> new ByteArrayOutputStream(bufferSize) {
             @Override
-            public void close() throws IOException { content(toByteArray()); }
+            public void close() { optContent = Optional.of(copyOf(buf, count)); }
         };
     }
 
@@ -88,7 +89,7 @@ final class MemoryStore implements Store {
     }
 
     @Override
-    public void content(byte[] b, int off, int len) throws IOException {
+    public void content(byte[] b, int off, int len) {
         optContent = Optional.of(copyOfRange(b, off, off + len));
     }
 }
