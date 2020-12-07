@@ -98,6 +98,7 @@ public interface Socket<T extends AutoCloseable> extends XSupplier<T> {
      *
      * @deprecated This method should not be used by clients because it would defeat the purpose of this interface.
      */
+    @Override
     @Deprecated
     T get() throws Exception;
 
